@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../controllers/product_studio_controller.dart';
 import '../../../domain/models/product_studio_enums.dart';
+import 'aurora_profile_visibility.dart';
 
 class AuroraTabDefinition {
   final AuroraStudioTab id;
@@ -55,7 +56,8 @@ class AuroraTabComposer {
       );
     }
 
-    tabs.addAll([
+    // Only add tabs that have visible content for the active profile.
+    final candidateTabs = <AuroraTabDefinition>[
       const AuroraTabDefinition(
         id: AuroraStudioTab.logistics,
         label: 'Logistics',
@@ -86,7 +88,13 @@ class AuroraTabComposer {
         label: 'Media',
         icon: Icons.image_outlined,
       ),
-    ]);
+    ];
+
+    for (var t in candidateTabs) {
+      if (hasAuroraContentForTab(controller, t.id)) {
+        tabs.add(t);
+      }
+    }
 
     return tabs;
   }
