@@ -1,5 +1,4 @@
 import '../product_studio_data.dart';
-import '../product_studio_enums.dart';
 import '../product.dart';
 import '../variant_matrix_item.dart';
 

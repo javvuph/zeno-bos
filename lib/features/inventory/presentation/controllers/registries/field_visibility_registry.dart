@@ -18,59 +18,100 @@ final List<String> healthcareStandard = [
   "title", "genericSalt", "brand", "potency", "dosageForm", "sku", "barcode", "healthLicense", "unit", "unitsPerStrip", "stripsPerBox", "prescriptionClass", "allowLooseBilling", "taxCode"
 ];
 
+const List<String> retailCanonicalProfiles = [
+  "Hypermarket", "Supermarket", "Grocery / Kirana", "Mini Market", "Fresh Produce",
+  "Butchery & Meat", "Fish & Seafood", "Organic Store", "Liquor & Wine", "Tobacco Store",
+  "Duty Free", "Convenience Store", "Department Store", "Dairy Booth"
+];
+
+const List<String> fnbCanonicalProfiles = [
+  "Fine Dining", "Casual Dining", "Express QSR", "Cloud Delivery", "Bakery & Pastry",
+  "Cafe / Barista", "Juice & Beverage", "Pizzeria", "Bar & Pub", "Ice Cream & Gelato",
+  "Sweet Shop / Mithai", "Banquet & Catering", "Shisha Lounge"
+];
+
+const List<String> fashionCanonicalProfiles = [
+  "Clothing", "Footwear", "Jewelry & Metals", "Watches", "Eyewear", "Cosmetics",
+  "Perfume", "Boutique", "Bridal Wear", "Bags & Luggage", "Accessories", "Innerwear",
+  "Kids Fashion", "Sportswear"
+];
+
+final Map<String, String> canonicalProfileAliases = {
+  "Grocery": "Grocery / Kirana",
+  "Kirana": "Grocery / Kirana",
+  "Cafe": "Cafe / Barista",
+  "Bakery": "Bakery & Pastry",
+  "Coffee Shop": "Cafe / Barista",
+  "Footwear / Shoes": "Footwear",
+  "Shoes": "Footwear",
+  "Watch Store": "Watches",
+  "Eyewear / Opticals": "Eyewear",
+  "Jewelry": "Jewelry & Metals",
+  "Departmental Store": "Department Store",
+  "Liquor Store": "Liquor & Wine",
+  "Tobacco Shop": "Tobacco Store",
+  "Duty Free Shop": "Duty Free",
+  "Restaurant": "Casual Dining",
+  "Fast Food": "Express QSR",
+  "Cloud Kitchen": "Cloud Delivery",
+  "Ice Cream Parlor": "Ice Cream & Gelato",
+  "Sweet Shop": "Sweet Shop / Mithai",
+  "Mithai": "Sweet Shop / Mithai",
+  "Bar / Pub": "Bar & Pub",
+  "Fashion": "Clothing",
+};
+
+String resolveCanonicalProfile(String profile, {String? fallback}) {
+  final value = (profile ?? '').trim();
+  if (value.isEmpty) return fallback ?? '';
+  return canonicalProfileAliases[value] ?? value;
+}
+
 final Map<String, List<String>> categoryFieldRegistry = {
-  // Retail
+  "Retail": retailCanonicalProfiles,
+  "Food & Beverage": fnbCanonicalProfiles,
+  "Fashion": fashionCanonicalProfiles,
   "Supermarket": [...retailStandard, "department", "planogramId", "warehouseLocation", "reorderLevel", "safetyStock", "caseMultiplier"],
   "Hypermarket": [...retailStandard, "department", "floorZone", "planogramId", "warehouseLocation", "reorderLevel", "safetyStock", "caseMultiplier", "palletStacking", "unitDimensions", "grossWeight", "storageClass"],
-  "Grocery": [...retailStandard, "allowLooseBilling", "purchaseUnit", "weight", "stockUnit", "inHouseRepack", "conversionFactor", "ingredients", "storageClass", "bakeryShelfLife", "countryOfOrigin"],
+  "Grocery / Kirana": [...retailStandard, "allowLooseBilling", "purchaseUnit", "weight", "stockUnit", "inHouseRepack", "conversionFactor", "ingredients", "storageClass", "bakeryShelfLife", "countryOfOrigin"],
   "Mini Market": [...retailStandard, "fastMovingFlag", "planogramId", "reorderLevel", "supplierLeadTime"],
   "Convenience Store": [...retailStandard, "planogramId", "readyToEatItem", "ageRestriction", "reorderLevel", "isRoomServiceAvailable"],
-  "Departmental Store": [...retailStandard, "department", "staffCommissionRate", "planogramId"],
+  "Department Store": [...retailStandard, "department", "staffCommissionRate", "planogramId"],
   "Organic Store": [...retailStandard, "organicCertification", "organicCertNo", "discontinueDate", "farmTraceabilityId", "countryOfOrigin"],
   "Fresh Produce": [...retailStandard, "pluCode", "styleCategory", "countryOfOrigin", "harvestDate", "isCatchWeight", "freshnessDuration", "freshnessUnit", "coldStorageIndicator", "isLiveMarketPrice", "wastagePct"],
-  "Butchery": [...retailStandard, "fitType", "styleCategory", "countryOfOrigin", "weight", "isCatchWeight", "wastagePct", "hallmarkCert", "storageCondition", "manufacturingDate", "freshnessDuration", "freshnessUnit", "coldStorageIndicator", "compatibility"],
+  "Butchery & Meat": [...retailStandard, "fitType", "styleCategory", "countryOfOrigin", "weight", "isCatchWeight", "wastagePct", "hallmarkCert", "storageCondition", "manufacturingDate", "freshnessDuration", "freshnessUnit", "coldStorageIndicator", "compatibility"],
   "Fish & Seafood": [...retailStandard, "patternDesign", "closureType", "countryOfOrigin", "manufacturingDate", "weight", "isCatchWeight", "storageCondition", "freshnessDuration", "freshnessUnit", "coldStorageIndicator", "recipePrepNotes"],
-  "Liquor Store": [...retailStandard, "barLiquorClass", "abv", "volume", "collectionEdition", "countryOfOrigin", "ssccBarcode", "healthLicense", "posAgeGate", "containerDepositFee"],
-  "Tobacco Shop": [...retailStandard, "apparelCategory", "unitsPerStrip", "nicotineContent", "ssccBarcode", "posAgeGate", "hallmarkCert", "manufacturerName", "countryOfOrigin"],
-  "Duty Free Shop": [...retailStandard, "importDutyClass", "countryOfOrigin", "passportVerificationRequired", "flightNumberRequired", "currency", "onlinePrice"],
+  "Liquor & Wine": [...retailStandard, "barLiquorClass", "abv", "volume", "collectionEdition", "countryOfOrigin", "ssccBarcode", "healthLicense", "posAgeGate", "containerDepositFee"],
+  "Tobacco Store": [...retailStandard, "apparelCategory", "unitsPerStrip", "nicotineContent", "ssccBarcode", "posAgeGate", "hallmarkCert", "manufacturerName", "countryOfOrigin"],
+  "Duty Free": [...retailStandard, "importDutyClass", "countryOfOrigin", "passportVerificationRequired", "flightNumberRequired", "currency", "onlinePrice"],
   "Dairy Booth": [...retailStandard, "bakeryType", "nutritionalTransFats", "nutritionalProtein", "manufacturingDate", "freshnessDuration", "freshnessUnit", "storageCondition", "coldStorageIndicator", "containerDepositFee"],
-  "Gift Shop": retailStandard,
-  "General Store": retailStandard,
-  "Kiosk": retailStandard,
-  "Pop-up Store": retailStandard,
-  
-  // Fashion
-  "Shoes": [...fashionStandard, "material", "soleMaterial", "closureType", "widthFit", "sizeStandard", "apparelCategory"],
-  "Clothing": [...fashionStandard, "apparelCategory", "patternDesign", "fitType", "sleeveNeckType", "careGuide"],
-  "Boutique": [...fashionStandard, "artisanLabel", "madeToOrder", "collectionEdition", "exclusiveSinglePiece"],
-  "Jewelry": [...fashionStandard, "metalType", "purity", "stoneType", "stoneWeight", "gemstoneCount", "hallmarkCert", "makingChargeMode", "makingChargeRate", "wastagePct"],
-  "Watch Store": [...fashionStandard, "material", "closureType", "soleMaterial", "widthFit", "styleCategory"],
-  "Eyewear / Opticals": [...fashionStandard, "styleCategory", "lensIndex", "frameParameters"],
-  "Cosmetics": [...fashionStandard, "shade", "shadeHexColor", "skinType", "periodAfterOpening"],
-  "Perfume": [...fashionStandard, "fragranceFamily", "concentration", "topNotes", "middleNotes", "baseNotes"],
-  "Bags & Luggage": [...fashionStandard, "apparelCategory", "material", "volume"],
-  "Accessories": [...fashionStandard, "material", "styleCategory"],
-  "Innerwear": [...fashionStandard, "material", "apparelCategory", "careGuide"],
-  "Bridal Wear": [...fashionStandard, "artisanLabel", "madeToOrder", "collectionEdition", "fabricComposition"],
-  "Kids Fashion": [...fashionStandard, "targetAgeGroup", "material", "careGuide"],
-  "Sportswear": [...fashionStandard, "material", "fitType", "patternDesign"],
-
-  // F&B
-  "Restaurant": [...fnbStandard, "cuisineType", "kotStation", "kdsCategory", "courseFireDelay", "recipeVersion", "targetFoodCostPct"],
   "Fine Dining": [...fnbStandard, "cuisineType", "winePairing", "kotStation", "recipeVersion", "targetFoodCostPct"],
-  "Cafe": [...fnbStandard, "cupSizes", "milkOptions", "sugarLevels", "flavorProfile", "bakeryType"],
-  "Coffee Shop": [...fnbStandard, "cupSizes", "milkOptions", "flavorProfile"],
-  "Bakery": [...fnbStandard, "cakeSize", "cakeShape", "cakeFilling", "cakeFrosting", "bakeryShelfLife"],
-  "Juice Shop": [...fnbStandard, "juiceCategory", "fruitBases", "freshnessDuration", "freshnessUnit"],
-  "Fast Food": [...fnbStandard, "swiggySku", "zomatoSku", "uberEatsSku", "talabatSku"],
-  "Cloud Kitchen": [...fnbStandard, "containerType", "packagingCost", "stallAssignment", "managementRoyaltyPct"],
-  "Ice Cream Parlor": [...fnbStandard, "flavorProfile", "bakeryType", "freshnessDuration"],
-  "Catering Service": [...fnbStandard, "minPax", "maxPax", "setupInclusions"],
-  "Bar / Pub": [...fnbStandard, "barLiquorClass", "abv", "posAgeGate"],
-  "Bistro": fnbStandard,
-  "Food Court": fnbStandard,
-
-  // Healthcare
+  "Casual Dining": [...fnbStandard, "cuisineType", "kdsCategory", "courseFireDelay", "recipeVersion", "recipePrepNotes", "targetFoodCostPct"],
+  "Express QSR": [...fnbStandard, "aggregatorSku", "packaging", "tamperSeal", "oosBehavior", "expressDispatch", "isCombo"],
+  "Cloud Delivery": [...fnbStandard, "virtualBrandId", "multiAggregatorSkuMatrix", "packagingContainer", "insulationPack", "stagingShelf"],
+  "Bakery & Pastry": [...fnbStandard, "flavor", "cakeSize", "sponge", "storageTemperature", "shelfLife", "customMessage", "photoPrint", "eggless", "bakeryType"],
+  "Cafe / Barista": [...fnbStandard, "cupVolume", "extractionMethod", "steamingTemperature", "beanRoast", "origin", "plantMilk", "extraShot"],
+  "Juice & Beverage": [...fnbStandard, "volume", "sugar", "ice", "addIns", "coldPressed"],
+  "Pizzeria": [...fnbStandard, "size", "crust", "sauce", "cheeseDip", "seasoning"],
+  "Bar & Pub": [...fnbStandard, "abv", "pourVolume", "liquorClass", "exciseId", "happyHour", "ageGate"],
+  "Ice Cream & Gelato": [...fnbStandard, "base", "servingFormat", "coneCup", "dryIce"],
+  "Sweet Shop / Mithai": [...fnbStandard, "sellingMetric", "fatBase", "shelfLife", "storage", "tare"],
+  "Banquet & Catering": [...fnbStandard, "minimumPax", "perHeadCost", "serviceSetup", "liveStation", "hotBoxTransport"],
+  "Shisha Lounge": [...fnbStandard, "flavor", "baseLiquid", "duration", "disposablePipe", "ageGate"],
+  "Clothing": [...fashionStandard, "apparelCategory", "patternDesign", "fitType", "sleeveNeckType", "careGuide", "fabric", "sizeScale", "color", "hex", "childSku", "barcodeRegistry"],
+  "Footwear": [...fashionStandard, "material", "soleMaterial", "closureType", "widthFit", "sizeStandard", "apparelCategory", "upper", "outsole", "heel", "toe", "occasion", "pairWeight", "childSku", "barcode"],
+  "Jewelry & Metals": [...fashionStandard, "metalType", "purity", "stoneType", "stoneWeight", "gemstoneCount", "hallmarkCert", "makingChargeMode", "makingChargeRate", "wastagePct"],
+  "Watches": [...fashionStandard, "material", "closureType", "styleCategory", "movement", "caliber", "case", "diameter", "thickness", "strap", "glass", "waterResistance", "powerReserve"],
+  "Eyewear": [...fashionStandard, "styleCategory", "lensIndex", "frameParameters", "shape", "material", "coatings", "rx"],
+  "Cosmetics": [...fashionStandard, "shade", "shadeHexColor", "skinType", "periodAfterOpening", "finish", "volumeWeight", "pao", "crueltyFree", "vegan"],
+  "Perfume": [...fashionStandard, "fragranceFamily", "concentration", "topNotes", "middleNotes", "baseNotes"],
+  "Boutique": [...fashionStandard, "artisanLabel", "madeToOrder", "collectionEdition", "exclusiveSinglePiece", "designer", "measurementProfile", "rfid", "alteration", "graceDays", "trial", "delivery"],
+  "Bridal Wear": [...fashionStandard, "artisanLabel", "madeToOrder", "collectionEdition", "fabricComposition", "designer", "embroidery", "measurementLedger", "rfid", "customization", "trial", "delivery"],
+  "Bags & Luggage": [...fashionStandard, "apparelCategory", "material", "volume", "style", "capacity", "tsa", "compartments", "laptopSleeve"],
+  "Accessories": [...fashionStandard, "material", "styleCategory", "classification", "giftBox"],
+  "Innerwear": [...fashionStandard, "material", "apparelCategory", "careGuide", "silhouette", "coverage", "support", "fabricComposition", "antimicrobial", "bandCupMatrix"],
+  "Kids Fashion": [...fashionStandard, "targetAgeGroup", "material", "careGuide", "ageGrowth", "closure", "oekoTex", "organicCotton", "nickelFree", "growthSizeGrid", "childSku"],
+  "Sportswear": [...fashionStandard, "material", "fitType", "patternDesign", "activity", "compression", "moistureWicking", "stretch", "quickDry", "upf", "antiOdor", "sizeColorMatrix", "childSku"],
   "Medical Shop": [...healthcareStandard, "exemptionReason", "drugLicenseWholesale"],
   "Pharmacy": [...healthcareStandard, "exemptionReason", "drugLicenseWholesale"],
   "Clinic": [...healthcareStandard, "serviceProcedureType", "diagnosticCharge", "labRouting"],
@@ -82,8 +123,6 @@ final Map<String, List<String>> categoryFieldRegistry = {
   "Ayurvedic Medicine": healthcareStandard,
   "Homeopathy Store": healthcareStandard,
   "Health Supplements": healthcareStandard,
-
-  // Others
   "Mobile & Accessories": ["title", "brand", "sku", "barcode", "serialNumber", "imei", "modelNumber"],
   "Computers & Laptops": ["title", "brand", "sku", "barcode", "serialNumber", "modelNumber"],
   "Car Parts": ["title", "brand", "sku", "barcode", "partNumber", "oemNumber", "compatibility", "vehicleMake", "vehicleModel"],

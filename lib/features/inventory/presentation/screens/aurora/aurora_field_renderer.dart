@@ -73,7 +73,7 @@ class AuroraFieldRenderer extends StatelessWidget {
         onAdd = (n) => controller.addCategory(n);
       } else if (fieldId == 'department') {
         items = controller.categoriesList; 
-        currentVal = p.department; typeLabel = "Department";
+        currentVal = p.departmentId; typeLabel = "Department";
         onAdd = (n) => {}; 
       } else if (fieldId == 'warehouseLocation') {
         items = controller.locationsList; currentVal = p.warehouseLocation; typeLabel = "Location";

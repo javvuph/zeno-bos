@@ -37,6 +37,10 @@ mixin ProductStudioDataCore {
   set subCategoryId(String v) => subcategory = v;
   String get brandId => brand;
   set brandId(String v) => brand = v;
+  String get department => departmentId;
+  set department(String v) => departmentId = v;
+  String get subDepartment => subDepartmentId;
+  set subDepartment(String v) => subDepartmentId = v;
 
   // Global marketing fields
   String marketingTitle = "";

@@ -1,20 +1,93 @@
+const List<String> retailCanonicalProfiles = [
+  "Hypermarket",
+  "Supermarket",
+  "Grocery / Kirana",
+  "Mini Market",
+  "Fresh Produce",
+  "Butchery & Meat",
+  "Fish & Seafood",
+  "Organic Store",
+  "Liquor & Wine",
+  "Tobacco Store",
+  "Duty Free",
+  "Convenience Store",
+  "Department Store",
+  "Dairy Booth",
+];
+
+const List<String> fnbCanonicalProfiles = [
+  "Fine Dining",
+  "Casual Dining",
+  "Express QSR",
+  "Cloud Delivery",
+  "Bakery & Pastry",
+  "Cafe / Barista",
+  "Juice & Beverage",
+  "Pizzeria",
+  "Bar & Pub",
+  "Ice Cream & Gelato",
+  "Sweet Shop / Mithai",
+  "Banquet & Catering",
+  "Shisha Lounge",
+];
+
+const List<String> fashionCanonicalProfiles = [
+  "Clothing",
+  "Footwear",
+  "Jewelry & Metals",
+  "Watches",
+  "Eyewear",
+  "Cosmetics",
+  "Perfume",
+  "Boutique",
+  "Bridal Wear",
+  "Bags & Luggage",
+  "Accessories",
+  "Innerwear",
+  "Kids Fashion",
+  "Sportswear",
+];
+
+final Map<String, String> canonicalProfileAliases = {
+  "Grocery": "Grocery / Kirana",
+  "Kirana": "Grocery / Kirana",
+  "Grocer / Kirana": "Grocery / Kirana",
+  "Cafe": "Cafe / Barista",
+  "Barista": "Cafe / Barista",
+  "Bakery": "Bakery & Pastry",
+  "Pastry": "Bakery & Pastry",
+  "Coffee Shop": "Cafe / Barista",
+  "Footwear / Shoes": "Footwear",
+  "Shoes": "Footwear",
+  "Watch Store": "Watches",
+  "Eyewear / Opticals": "Eyewear",
+  "Jewelry": "Jewelry & Metals",
+  "Bags": "Bags & Luggage",
+  "Departmental Store": "Department Store",
+  "Liquor Store": "Liquor & Wine",
+  "Tobacco Shop": "Tobacco Store",
+  "Duty Free Shop": "Duty Free",
+  "Fine Dining Restaurant": "Fine Dining",
+  "Restaurant": "Casual Dining",
+  "Fast Food": "Express QSR",
+  "Cloud Kitchen": "Cloud Delivery",
+  "Ice Cream Parlor": "Ice Cream & Gelato",
+  "Sweet Shop": "Sweet Shop / Mithai",
+  "Mithai": "Sweet Shop / Mithai",
+  "Bar / Pub": "Bar & Pub",
+  "Fashion": "Clothing",
+};
+
+String resolveCanonicalProfile(String profile, {String? fallback}) {
+  final value = (profile ?? '').trim();
+  if (value.isEmpty) return fallback ?? '';
+  return canonicalProfileAliases[value] ?? value;
+}
+
 final Map<String, List<String>> businessCategoryMap = {
-  "Retail": [
-    "Supermarket", "Hypermarket", "Grocery", "Mini Market", "Convenience Store",
-    "Departmental Store", "Organic Store", "Gift Shop", "Duty Free Shop",
-    "Liquor Store", "Tobacco Shop", "General Store", "Kiosk", "Pop-up Store",
-    "Fresh Produce", "Butchery", "Fish & Seafood", "Dairy Booth"
-  ],
-  "Food & Beverage": [
-    "Restaurant", "Cafe", "Bakery", "Juice Shop", "Fast Food", "Hotel",
-    "Cloud Kitchen", "Food Court", "Bar / Pub", "Coffee Shop", "Ice Cream Parlor",
-    "Catering Service", "Food Truck", "Fine Dining", "Bistro"
-  ],
-  "Fashion": [
-    "Shoes", "Clothing", "Boutique", "Jewelry", "Cosmetics", "Perfume",
-    "Watch Store", "Eyewear / Opticals", "Bags & Luggage", "Accessories",
-    "Innerwear", "Bridal Wear", "Kids Fashion", "Sportswear"
-  ],
+  "Retail": retailCanonicalProfiles,
+  "Food & Beverage": fnbCanonicalProfiles,
+  "Fashion": fashionCanonicalProfiles,
   "Healthcare": [
     "Medical Shop", "Clinic", "Pharmacy", "Diagnostics Center", "Hospital Supply",
     "Medical Equipment", "Ayurvedic Medicine", "Homeopathy Store", "Health Supplements",
