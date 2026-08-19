@@ -1,0 +1,9 @@
+- `[x]` Update `ZenoTheme` with neon green and chart colors
+- `[x]` Add AI assistant indicator to `TopHeader`
+- `[x]` Implement `_DonutChart` and `_RadialProgress` widgets
+- `[x]` Implement `_PillarLineChart` (3D capsule style)
+- `[x]` Refactor `DashboardScreen` for high density
+    - `[x]` High-density Financial Cards
+    - `[x]` Combined Pillar + Line Chart section
+    - `[x]` Detailed Customer Insights (badges, timestamps, CLV)
+    - `[x]` Inventory Category Donut Chart

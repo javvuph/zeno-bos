@@ -1,0 +1,6 @@
+- [x] Implement "Zeno Night" Professional Theme
+- [/] Overhaul `MenuRegistry` with full high-density column data
+- [/] Build 4-Pane Workspace Shell (`ZenoShell`)
+- [ ] Implement Hover Mega Menu using `OverlayPortal`
+- [ ] Design high-fidelity Home Dashboard (KPI Cards, Charts, AI Insight)
+- [ ] Verify UI in Chrome Browser

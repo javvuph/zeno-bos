@@ -1,0 +1,5 @@
+- [x] Optimize `ZenoWindowShell` for zero-lag snappy movement
+- [x] Relocate [EDIT] button to far right and group Name + Badge on left
+- [x] Adjust default Store Setup window size to 820x600
+- [x] Tighten form headers and footers for guaranteed button visibility
+- [x] Verify instant mouse tracking and layout handy-ness

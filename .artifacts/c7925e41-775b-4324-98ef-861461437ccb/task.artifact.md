@@ -1,0 +1,9 @@
+- [x] Fix warnings and logic in `BakingViewModel.kt`
+- [x] Refactor and fix UX/persistence in `BakingScreen.kt`
+- [x] Verify build and code quality
+- [x] Create walkthrough
+- [x] Implement Store Setup UI Polish & Features
+    - [x] Update StoreBranch model and controller logic
+    - [x] Add Personnel tab and access control
+    - [x] Add Status toggle and Address fields
+    - [x] Implement Duplicate and Delete actions in Sidebar

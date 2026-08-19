@@ -1,0 +1,181 @@
+import 'package:zeno/core/database/database_service.dart';
+import 'package:zeno/core/database/collections/transaction_collections.dart';
+import 'package:zeno/core/database/collections/inventory_collections.dart';
+import 'package:zeno/core/database/collections/crm_collections.dart';
+import 'package:zeno/core/di/service_locator.dart';
+import 'package:zeno/features/inventory/domain/repositories/i_inventory_repository.dart';
+import 'package:zeno/features/inventory/domain/models/stock_transaction.dart';
+import 'package:zeno/features/inventory/domain/services/recipe_deduction_service.dart';
+import 'package:zeno/features/orders/domain/services/kot_engine.dart';
+import 'package:zeno/core/database/collections/fnb_collections.dart';
+import '../../domain/services/billing_finance_service.dart';
+import '../../domain/models/payment.dart';
+import '../../domain/repositories/i_billing_repository.dart';
+import '../../domain/models/bill.dart';
+import '../../domain/models/bill_item.dart';
+import '../../domain/models/billing_customer.dart';
+import '../../domain/models/tax_details.dart';
+import 'package:isar/isar.dart';
+
+class IsarBillingRepository implements IBillingRepository {
+  final DatabaseService db;
+  IsarBillingRepository(this.db);
+
+  @override
+  Future<void> saveBill(Bill bill) async {
+    final order = SalesOrderCollection()
+      ..uuid = bill.id
+      ..orderNumber = bill.id
+      ..customerId = bill.customer?.id ?? 'Walk-in'
+      ..warehouseId = 'POS-WH'
+      ..date = bill.timestamp
+      ..status = bill.status.toLowerCase()
+      ..totalAmount = bill.grandTotal
+      ..totalTax = bill.totalTax
+      ..currency = 'USD'
+      ..items = bill.items
+          .map((item) => TransactionItem()
+            ..productId = item.productId
+            ..description = item.productName
+            ..quantity = item.quantity.toDouble()
+            ..unitPrice = item.unitPrice
+            ..taxRate =
+                item.taxes.isNotEmpty ? item.taxes.first.percentage : 0.0
+            ..subtotal = item.totalAmount)
+          .toList()
+      ..payments = bill.payments
+          .map((p) => PaymentEmbedded()
+            ..transactionId = p.transactionId
+            ..method = p.method.name
+            ..amount = p.amount
+            ..timestamp = p.timestamp
+            ..status = p.status)
+          .toList();
+
+    await db.isar.writeTxn(() async {
+      await db.isar.collection<SalesOrderCollection>().put(order);
+
+      if (bill.status == 'Completed') {
+        final bool isRefund = bill.grandTotal < 0;
+        final invoice = InvoiceCollection()
+          ..uuid = 'INV-${bill.id}'
+          ..invoiceNumber = 'INV-${bill.id}'
+          ..orderId = bill.id
+          ..date = DateTime.now()
+          ..dueDate = DateTime.now()
+          ..status = isRefund ? 'refunded' : 'paid'
+          ..totalAmount = bill.grandTotal
+          ..balanceDue = 0.0;
+        await db.isar.collection<InvoiceCollection>().put(invoice);
+      }
+    });
+
+    if (bill.status == 'Completed') {
+      await _handleCompletionSideEffects(bill);
+    }
+  }
+
+  Future<void> _handleCompletionSideEffects(Bill bill) async {
+    // 1. Inventory Deduction
+    final invRepo = sl<IInventoryRepository>();
+    final List<StockTransaction> transactions = [];
+
+    for (var item in bill.items) {
+      final bool isItemReturn = item.quantity < 0;
+      transactions.add(StockTransaction(
+        id: 'POS-${isItemReturn ? 'IN' : 'OUT'}-${bill.id}-${item.productId}',
+        stockItemId: item.productId,
+        quantityDelta: -item.quantity.toDouble(),
+        type: isItemReturn ? TransactionType.inReturn : TransactionType.outSale,
+        referenceId: bill.id,
+        timestamp: DateTime.now(),
+        userId: 'current_user',
+      ));
+    }
+    await invRepo.recordTransactions(transactions);
+
+    // 2. Finance
+    final finService = sl<BillingFinanceService>();
+    await finService.recordSale(bill.id, bill.grandTotal, bill.totalTax);
+
+    // 2.1 Recipe Deduction
+    final recipeService = sl<RecipeDeductionService>();
+    for (var item in bill.items) {
+      if (item.quantity > 0) {
+        await recipeService.deductIngredientsForSale(item.productId, item.quantity.toDouble());
+      }
+    }
+
+    // 2.2 KOT Generation
+    final kotEngine = sl<KotEngine>();
+    final List<KotItemEmbedded> kotItems = bill.items.map((i) {
+      final k = KotItemEmbedded();
+      k.productId = i.productId;
+      k.name = i.productName;
+      k.quantity = i.quantity.toDouble();
+      k.notes = i.notes;
+      return k;
+    }).toList();
+    await kotEngine.generateKotsFromOrder(bill.id, kotItems);
+
+    // 3. Customer
+    if (bill.customer != null) {
+      final customer = await db.isar.collection<CustomerCollection>()
+          .filter()
+          .uuidEqualTo(bill.customer!.id)
+          .findFirst();
+      if (customer != null) {
+        await db.isar.writeTxn(() async {
+          customer.lifetimeSpent += bill.grandTotal;
+          customer.loyaltyPoints += (bill.grandTotal / 10).floor();
+          customer.updatedAt = DateTime.now();
+          await db.isar.collection<CustomerCollection>().put(customer);
+        });
+      }
+    }
+  }
+
+  @override
+  Future<Bill?> getBill(String id) async {
+    final order = await db.isar.collection<SalesOrderCollection>().filter().uuidEqualTo(id).findFirst();
+    if (order == null) return null;
+
+    return Bill(
+      id: order.uuid, timestamp: order.date, status: order.status,
+      grandTotal: order.totalAmount, totalTax: order.totalTax,
+      items: order.items?.map((i) => BillItem(
+        productId: i.productId, productName: i.description, sku: '', variant: '',
+        unitPrice: i.unitPrice, quantity: i.quantity.toInt(), totalAmount: i.subtotal,
+        taxes: [TaxDetails(label: 'Tax', percentage: i.taxRate, amount: (i.subtotal * i.taxRate) / 100)],
+      )).toList() ?? [],
+      payments: order.payments?.map((p) => Payment(
+        transactionId: p.transactionId ?? '',
+        method: PaymentMethod.values.firstWhere((e) => e.name == p.method, orElse: () => PaymentMethod.cash),
+        amount: p.amount, timestamp: p.timestamp, status: p.status,
+      )).toList() ?? [],
+    );
+  }
+
+  @override
+  Future<List<Bill>> getHeldBills() async {
+    final heldOrders = await db.isar.collection<SalesOrderCollection>().filter().statusEqualTo('held').findAll();
+    return heldOrders.map((order) => Bill(id: order.uuid, timestamp: order.date, status: 'Held', grandTotal: order.totalAmount, totalTax: order.totalTax)).toList();
+  }
+
+  @override
+  Future<BillingCustomer?> findCustomer(String query) async {
+    final customer = await db.isar.collection<CustomerCollection>().filter().nameContains(query, caseSensitive: false).or().phoneContains(query).findFirst();
+    if (customer == null) return null;
+    return BillingCustomer(id: customer.uuid, name: customer.name, phone: customer.phone, loyaltyTier: 'Retail');
+  }
+
+  @override
+  Future<BillItem?> findProduct(String query) async {
+    final product = await db.isar.collection<ProductCollection>().filter().skuEqualTo(query).or().barcodeEqualTo(query).or().nameContains(query, caseSensitive: false).findFirst();
+    if (product == null) return null;
+    return BillItem(productId: product.uuid, productName: product.name, sku: product.sku, variant: '', unitPrice: product.basePrice, totalAmount: product.basePrice, taxes: [TaxDetails(label: 'GST', percentage: product.taxRate, amount: 0)]);
+  }
+
+  @override
+  Future<void> saveHeldBill(Bill bill) async => await saveBill(bill.copyWith(status: 'Held'));
+}

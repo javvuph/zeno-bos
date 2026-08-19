@@ -1,0 +1,11 @@
+final List<String> genders = ["Men", "Women", "Unisex", "Boys", "Girls", "Infant"];
+final List<String> seasons = ["Spring", "Summer", "Autumn", "Winter", "All Season", "Holiday"];
+final List<String> weaves = ["Solid", "Checked", "Striped", "Floral", "Embroidered", "Printed"];
+final List<String> fits = ["Slim", "Regular", "Relaxed", "Skinny", "Tailored"];
+final List<String> neckTypes = ["Round Neck", "V-Neck", "Polo / Collar", "Crew Neck", "Hooded"];
+final List<String> sleeveLengths = ["Sleeveless", "Short Sleeve", "Half Sleeve", "Full Sleeve"];
+final List<String> metalTypes = ["Gold", "Silver", "Platinum", "Rose Gold", "Brass"];
+final List<String> goldPurities = ["24K", "22K", "18K", "14K"];
+final List<String> shoeStandards = ["EU", "UK", "US"];
+final List<String> paoOptions = ["6M", "12M", "18M", "24M"];
+final List<String> fragranceConcentrations = ["EDP", "EDT", "Attar / Oil", "Body Mist"];
