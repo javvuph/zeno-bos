@@ -16,118 +16,51 @@ class RetailPackagingTab extends StatelessWidget {
       children: [
         ZenoCard(
           title: "Packaging & Units",
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
           child: Column(
             children: [
               Row(
                 children: [
-                  Expanded(
-                    child: ZenoDropdown<String>(
-                      label: "Package Type",
-                      value: p.packageType.isEmpty ? null : p.packageType,
-                      items: ["Box", "Bottle", "Pouch", "Can", "Crate", "Tray"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
-                      onChanged: (v) => controller.updateField(packageType: v),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: ZenoDropdown<String>(
-                      label: "Sales UOM *",
-                      value: p.salesUnit,
-                      items: ["Piece", "Kg", "Gram", "Liter", "Meter", "Pouch", "Can"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
-                      onChanged: (v) => controller.updateField(salesUnit: v),
-                      isRequired: true,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: ZenoDropdown<String>(
-                      label: "Purchase UOM *",
-                      value: p.purchaseUnit,
-                      items: ["Master Carton", "Outer Case", "Pallet", "Sack", "Drum"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
-                      onChanged: (v) => controller.updateField(purchaseUnit: v),
-                      isRequired: true,
-                    ),
-                  ),
+                  Expanded(child: ZenoDropdown<String>(label: "Package Type", value: p.packageType.isEmpty ? null : p.packageType, items: ["Box", "Bottle", "Pouch", "Can"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => controller.updateField(packageType: v))),
+                  const SizedBox(width: 8),
+                  Expanded(child: ZenoDropdown<String>(label: "Sales UOM *", value: p.salesUnit, items: ["Piece", "Kg", "Gram", "Liter"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => controller.updateField(salesUnit: v), isRequired: true)),
+                  const SizedBox(width: 8),
+                  Expanded(child: ZenoDropdown<String>(label: "Purchase UOM *", value: p.purchaseUnit, items: ["Master Carton", "Outer Case", "Pallet"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => controller.updateField(purchaseUnit: v), isRequired: true)),
                 ],
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 6),
               Row(
                 children: [
-                  Expanded(
-                    child: ZenoTextField(
-                      label: "Package Quantity",
-                      initialValue: p.packageQuantity.toString(),
-                      onChanged: (v) => controller.updateField(packageQuantity: double.tryParse(v)),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: ZenoDropdown<String>(
-                      label: "Base UOM",
-                      value: p.unit,
-                      items: ["Piece", "Kg", "Gram", "Liter", "Meter", "Pouch", "Can"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
-                      onChanged: (v) => controller.updateField(unit: v),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: ZenoTextField(
-                      label: "Conversion Factor",
-                      initialValue: p.conversionFactor.toString(),
-                      onChanged: (v) => controller.updateField(conversionFactor: double.tryParse(v)),
-                    ),
-                  ),
+                  Expanded(child: ZenoTextField(label: "Pkg Qty", initialValue: p.packageQuantity.toString(), onChanged: (v) => controller.updateField(packageQuantity: double.tryParse(v)), keyboardType: TextInputType.number)),
+                  const SizedBox(width: 8),
+                  Expanded(child: ZenoDropdown<String>(label: "Base UOM", value: p.unit, items: ["Piece", "Kg", "Gram"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => controller.updateField(unit: v))),
+                  const SizedBox(width: 8),
+                  Expanded(child: ZenoTextField(label: "Conv Factor", initialValue: p.conversionFactor.toString(), onChanged: (v) => controller.updateField(conversionFactor: double.tryParse(v)), keyboardType: TextInputType.number)),
                 ],
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 6),
               Row(
                 children: [
-                  Expanded(
-                    child: ZenoTextField(
-                      label: "Net Weight (Kg)",
-                      initialValue: p.netWeight.toString(),
-                      onChanged: (v) => controller.updateField(netWeight: double.tryParse(v)),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: ZenoTextField(
-                      label: "Volume (L)",
-                      initialValue: p.volume,
-                      onChanged: (v) => controller.updateField(volume: v),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: ZenoTextField(
-                      label: "Inner Pack Qty",
-                      initialValue: p.innerPackQuantity.toString(),
-                      onChanged: (v) => controller.updateField(innerPackQuantity: int.tryParse(v)),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: ZenoTextField(
-                      label: "Case Multiplier",
-                      initialValue: p.caseMultiplier.toString(),
-                      onChanged: (v) => controller.updateField(caseMultiplier: int.tryParse(v)),
-                    ),
-                  ),
+                  Expanded(child: ZenoTextField(label: "Net Wt (Kg)", initialValue: p.netWeight.toString(), onChanged: (v) => controller.updateField(netWeight: double.tryParse(v)), keyboardType: TextInputType.number)),
+                  const SizedBox(width: 8),
+                  Expanded(child: ZenoTextField(label: "Volume (L)", initialValue: p.volume, onChanged: (v) => controller.updateField(volume: v))),
+                  const SizedBox(width: 8),
+                  Expanded(child: ZenoTextField(label: "Inner Qty", initialValue: p.innerPackQuantity.toString(), onChanged: (v) => controller.updateField(innerPackQuantity: int.tryParse(v)), keyboardType: TextInputType.number)),
+                  const SizedBox(width: 8),
+                  Expanded(child: ZenoTextField(label: "Case Mult", initialValue: p.caseMultiplier.toString(), onChanged: (v) => controller.updateField(caseMultiplier: int.tryParse(v)), keyboardType: TextInputType.number)),
                 ],
               ),
             ],
           ),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 8),
         ZenoCard(
-          title: "Special Logic & Flags",
-          padding: const EdgeInsets.all(16),
-          child: Wrap(
-            spacing: 24,
-            runSpacing: 12,
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _toggle("ALLOW LOOSE BILLING", p.allowLooseBilling, (v) => controller.updateField(allowLooseBilling: v)),
+              _toggle("ALLOW LOOSE", p.allowLooseBilling, (v) => controller.updateField(allowLooseBilling: v)),
+              const SizedBox(width: 24),
               _toggle("IN-HOUSE REPACK", p.inHouseRepack, (v) => controller.updateField(inHouseRepack: v)),
             ],
           ),

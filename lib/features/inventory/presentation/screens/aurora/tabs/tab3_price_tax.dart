@@ -14,7 +14,7 @@ class Tab3PriceTax extends StatelessWidget {
     final colors = Theme.of(context).extension<ZenoSemanticColors>()!;
 
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -24,89 +24,38 @@ class Tab3PriceTax extends StatelessWidget {
               children: [
                 ZenoCard(
                   title: "Commercial Pricing",
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                   child: Column(
                     children: [
                       Row(
                         children: [
-                          Expanded(
-                            child: ZenoTextField(
-                              label: "Cost Price",
-                              initialValue: p.costPrice.toString(),
-                              onChanged: (v) => controller.updateField(costPrice: double.tryParse(v)),
-                              keyboardType: TextInputType.number,
-                            ),
-                          ),
+                          Expanded(child: ZenoTextField(label: "Cost Price", initialValue: p.costPrice.toString(), onChanged: (v) => controller.updateField(costPrice: double.tryParse(v)), keyboardType: TextInputType.number)),
                           const SizedBox(width: 8),
-                          Expanded(
-                            child: ZenoTextField(
-                              label: "Selling Price",
-                              initialValue: p.sellingPrice.toString(),
-                              onChanged: (v) => controller.updateField(sellingPrice: double.tryParse(v)),
-                              keyboardType: TextInputType.number,
-                            ),
-                          ),
+                          Expanded(child: ZenoTextField(label: "Selling Price", initialValue: p.sellingPrice.toString(), onChanged: (v) => controller.updateField(sellingPrice: double.tryParse(v)), keyboardType: TextInputType.number)),
                         ],
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 6),
                       Row(
                         children: [
-                          Expanded(
-                            child: ZenoTextField(
-                              label: "MRP",
-                              initialValue: p.mrp.toString(),
-                              onChanged: (v) => controller.updateField(mrp: double.tryParse(v)),
-                              keyboardType: TextInputType.number,
-                            ),
-                          ),
+                          Expanded(child: ZenoTextField(label: "MRP", initialValue: p.mrp.toString(), onChanged: (v) => controller.updateField(mrp: double.tryParse(v)), keyboardType: TextInputType.number)),
                           const SizedBox(width: 8),
-                          Expanded(
-                            child: ZenoTextField(
-                              label: "Wholesale Price",
-                              initialValue: p.wholesalePrice.toString(),
-                              onChanged: (v) => controller.updateField(wholesalePrice: double.tryParse(v)),
-                              keyboardType: TextInputType.number,
-                            ),
-                          ),
+                          Expanded(child: ZenoTextField(label: "Wholesale", initialValue: p.wholesalePrice.toString(), onChanged: (v) => controller.updateField(wholesalePrice: double.tryParse(v)), keyboardType: TextInputType.number)),
                         ],
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 6),
                       Row(
                         children: [
-                          Expanded(
-                            child: ZenoDropdown<String>(
-                              label: "Discount Type",
-                              value: p.discountType,
-                              items: ["Percentage", "Amount", "Flat"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
-                              onChanged: (v) => controller.updateField(discountType: v),
-                            ),
-                          ),
+                          Expanded(child: ZenoDropdown<String>(label: "Disc Type", value: p.discountType, items: ["Percentage", "Amount"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => controller.updateField(discountType: v))),
                           const SizedBox(width: 8),
-                          Expanded(
-                            child: ZenoTextField(
-                              label: "Discount Value",
-                              initialValue: p.discountValue.toString(),
-                              onChanged: (v) => controller.updateField(discountValue: double.tryParse(v)),
-                              keyboardType: TextInputType.number,
-                            ),
-                          ),
+                          Expanded(child: ZenoTextField(label: "Disc Value", initialValue: p.discountValue.toString(), onChanged: (v) => controller.updateField(discountValue: double.tryParse(v)), keyboardType: TextInputType.number)),
                         ],
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 6),
                       Row(
                         children: [
-                          Expanded(
-                            child: ZenoTextField(
-                              label: "Promotional Price",
-                              initialValue: p.promotionalPrice.toString(),
-                              onChanged: (v) => controller.updateField(promotionalPrice: double.tryParse(v)),
-                              keyboardType: TextInputType.number,
-                            ),
-                          ),
+                          Expanded(child: ZenoTextField(label: "Promo Price", initialValue: p.promotionalPrice.toString(), onChanged: (v) => controller.updateField(promotionalPrice: double.tryParse(v)), keyboardType: TextInputType.number)),
                           const SizedBox(width: 8),
-                          Expanded(
-                            child: _buildSwitchRow(colors, "Price Floor Lock", p.priceFloorLock, (v) => controller.updateField(priceFloorLock: v)),
-                          ),
+                          Expanded(child: _buildSwitchRow(colors, "Floor Lock", p.priceFloorLock, (v) => controller.updateField(priceFloorLock: v))),
                         ],
                       ),
                     ],
@@ -115,65 +64,31 @@ class Tab3PriceTax extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 10),
           // Right Column: Taxation
           Expanded(
             child: Column(
               children: [
                 ZenoCard(
                   title: "Taxation & Compliance",
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                   child: Column(
                     children: [
-                      ZenoTextField(
-                        key: const ValueKey('hsnCodeTax'),
-                        label: "HSN Code",
-                        initialValue: p.hsnCode,
-                        onChanged: (v) => controller.updateField(hsnCode: v),
-                        width: ZenoFieldWidth.full,
-                      ),
-                      const SizedBox(height: 8),
+                      ZenoTextField(key: const ValueKey('hsnCodeTax'), label: "HSN Code", initialValue: p.hsnCode, onChanged: (v) => controller.updateField(hsnCode: v), width: ZenoFieldWidth.full),
+                      const SizedBox(height: 6),
                       Row(
                         children: [
-                          Expanded(
-                            child: ZenoDropdown<String>(
-                              label: "Tax Status",
-                              value: p.taxStatus,
-                              items: ["Taxable", "Exempt", "Zero Rated"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
-                              onChanged: (v) => controller.updateField(taxStatus: v),
-                            ),
-                          ),
+                          Expanded(child: ZenoDropdown<String>(label: "Tax Status", value: p.taxStatus, items: ["Taxable", "Exempt"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => controller.updateField(taxStatus: v))),
                           const SizedBox(width: 8),
-                          Expanded(
-                            child: ZenoDropdown<String>(
-                              label: "Tax Category",
-                              value: p.taxCategory,
-                              items: ["Standard", "Nil", "Luxury"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
-                              onChanged: (v) => controller.updateField(taxCategory: v),
-                            ),
-                          ),
+                          Expanded(child: ZenoDropdown<String>(label: "Tax Category", value: p.taxCategory, items: ["Standard", "Luxury"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => controller.updateField(taxCategory: v))),
                         ],
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 6),
                       Row(
                         children: [
-                          Expanded(
-                            child: ZenoTextField(
-                              label: "Tax Rate (%)",
-                              initialValue: p.taxRate.toString(),
-                              onChanged: (v) => controller.updateField(taxRate: double.tryParse(v)),
-                              keyboardType: TextInputType.number,
-                            ),
-                          ),
+                          Expanded(child: ZenoTextField(label: "Tax Rate (%)", initialValue: p.taxRate.toString(), onChanged: (v) => controller.updateField(taxRate: double.tryParse(v)), keyboardType: TextInputType.number)),
                           const SizedBox(width: 8),
-                          Expanded(
-                            child: ZenoDropdown<String>(
-                              label: "GST Tax Mode",
-                              value: p.gstTaxMode,
-                              items: ["Intra-State", "Inter-State"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
-                              onChanged: (v) => controller.updateField(gstTaxMode: v),
-                            ),
-                          ),
+                          Expanded(child: ZenoDropdown<String>(label: "GST Mode", value: p.gstTaxMode, items: ["Intra-State", "Inter-State"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => controller.updateField(gstTaxMode: v))),
                         ],
                       ),
                     ],

@@ -28,7 +28,7 @@ class _Tab2SpecsState extends State<Tab2Specs> {
     final colors = Theme.of(context).extension<ZenoSemanticColors>()!;
 
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       child: Column(
         children: [
           Row(
@@ -36,141 +36,131 @@ class _Tab2SpecsState extends State<Tab2Specs> {
             children: [
               // Section 1: Classification
               Expanded(
-                flex: 3,
+                flex: 4,
                 child: ZenoCard(
                   title: "Classification",
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  child: Column(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  child: Row(
                     children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: ZenoDropdown<String>(
-                              label: "Department *",
-                              value: p.departmentId.isEmpty ? null : p.departmentId,
-                              items: widget.controller.departmentsList.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
-                              onChanged: (v) => widget.controller.updateField(departmentId: v),
-                              isRequired: true,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: ZenoDropdown<String>(
-                              label: "Category *",
-                              value: p.category.isEmpty ? null : p.category,
-                              items: widget.controller.categoriesList.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
-                              onChanged: (v) => widget.controller.updateField(category: v),
-                              isRequired: true,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: ZenoDropdown<String>(
-                              label: "Subcategory *",
-                              value: p.subcategory.isEmpty ? null : p.subcategory,
-                              items: widget.controller.categoriesList.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
-                              onChanged: (v) => widget.controller.updateField(subcategory: v),
-                              isRequired: true,
-                            ),
-                          ),
-                        ],
+                      Expanded(
+                        child: ZenoDropdown<String>(
+                          label: "Department *",
+                          value: p.departmentId.isEmpty ? null : p.departmentId,
+                          items: widget.controller.departmentsList.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+                          onChanged: (v) => widget.controller.updateField(departmentId: v),
+                          isRequired: true,
+                        ),
                       ),
-                      const SizedBox(height: 8),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: ZenoDropdown<String>(
-                              label: "Product Type *",
-                              value: p.productType.isEmpty ? null : p.productType,
-                              items: ["Standard", "Service", "Digital", "Bundle"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
-                              onChanged: (v) => widget.controller.updateField(productType: v),
-                              isRequired: true,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: ZenoTextField(
-                              key: const ValueKey('segment'),
-                              label: "Segment",
-                              initialValue: p.segment,
-                              onChanged: (v) => widget.controller.updateField(segment: v),
-                            ),
-                          ),
-                        ],
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: ZenoDropdown<String>(
+                          label: "Category *",
+                          value: p.category.isEmpty ? null : p.category,
+                          items: widget.controller.categoriesList.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+                          onChanged: (v) => widget.controller.updateField(category: v),
+                          isRequired: true,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: ZenoDropdown<String>(
+                          label: "Subcategory *",
+                          value: p.subcategory.isEmpty ? null : p.subcategory,
+                          items: widget.controller.categoriesList.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+                          onChanged: (v) => widget.controller.updateField(subcategory: v),
+                          isRequired: true,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: ZenoDropdown<String>(
+                          label: "Type *",
+                          value: p.productType.isEmpty ? null : p.productType,
+                          items: ["Standard", "Service", "Digital", "Bundle"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+                          onChanged: (v) => widget.controller.updateField(productType: v),
+                          isRequired: true,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: ZenoTextField(
+                          key: const ValueKey('segment'),
+                          label: "Segment",
+                          initialValue: p.segment,
+                          onChanged: (v) => widget.controller.updateField(segment: v),
+                        ),
                       ),
                     ],
                   ),
                 ),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: 10),
               // Tags
               Expanded(
                 flex: 2,
                 child: ZenoCard(
                   title: "Tags",
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  child: Row(
                     children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: ZenoTextField(
-                              controller: _tagController,
-                              label: "Add Tag",
-                              onSubmitted: (v) {
-                                if (v.isNotEmpty) {
-                                  final tags = p.tags.isEmpty ? [] : p.tags.split(',').map((e)=>e.trim()).toList();
-                                  if (!tags.contains(v)) {
-                                    tags.add(v);
-                                    widget.controller.updateField(tags: tags.join(', '));
-                                  }
-                                  _tagController.clear();
-                                  setState(() {});
-                                }
-                              },
-                            ),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.add_circle_outline, color: Color(0xFFC00000), size: 20),
-                            onPressed: () {
-                              final v = _tagController.text;
-                              if (v.isNotEmpty) {
-                                final tags = p.tags.isEmpty ? [] : p.tags.split(',').map((e)=>e.trim()).toList();
-                                if (!tags.contains(v)) {
-                                  tags.add(v);
-                                  widget.controller.updateField(tags: tags.join(', '));
-                                }
-                                _tagController.clear();
-                                setState(() {});
-                              }
-                            },
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 4),
-                      SizedBox(
-                        height: 44,
-                        child: Wrap(
-                          spacing: 4,
-                          runSpacing: 0,
-                          children: (p.tags.isEmpty ? [] : p.tags.split(',')).map((tag) {
-                            final trimmedTag = tag.trim();
-                            if (trimmedTag.isEmpty) return const SizedBox.shrink();
-                            return Chip(
-                              label: Text(trimmedTag, style: const TextStyle(fontSize: 8, fontWeight: FontWeight.bold)),
-                              onDeleted: () {
-                                final tags = p.tags.split(',').map((e)=>e.trim()).where((e)=>e != trimmedTag).toList();
+                      Expanded(
+                        child: ZenoTextField(
+                          controller: _tagController,
+                          label: "Add Tag",
+                          onSubmitted: (v) {
+                            if (v.isNotEmpty) {
+                              final tags = p.tags.isEmpty ? [] : p.tags.split(',').map((e)=>e.trim()).toList();
+                              if (!tags.contains(v)) {
+                                tags.add(v);
                                 widget.controller.updateField(tags: tags.join(', '));
-                                setState(() {});
-                              },
-                              deleteIcon: const Icon(Icons.close, size: 10),
-                              backgroundColor: colors.bgTier3,
-                              side: BorderSide(color: colors.borderSubtle),
-                              padding: EdgeInsets.zero,
-                              visualDensity: VisualDensity.compact,
-                            );
-                          }).toList(),
+                              }
+                              _tagController.clear();
+                              setState(() {});
+                            }
+                          },
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.add_circle_outline, color: Color(0xFFC00000), size: 20),
+                        onPressed: () {
+                          final v = _tagController.text;
+                          if (v.isNotEmpty) {
+                            final tags = p.tags.isEmpty ? [] : p.tags.split(',').map((e)=>e.trim()).toList();
+                            if (!tags.contains(v)) {
+                              tags.add(v);
+                              widget.controller.updateField(tags: tags.join(', '));
+                            }
+                            _tagController.clear();
+                            setState(() {});
+                          }
+                        },
+                      ),
+                      const SizedBox(width: 4),
+                      Expanded(
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: (p.tags.isEmpty ? [] : p.tags.split(',')).map((tag) {
+                              final trimmedTag = tag.trim();
+                              if (trimmedTag.isEmpty) return const SizedBox.shrink();
+                              return Padding(
+                                padding: const EdgeInsets.only(right: 4),
+                                child: Chip(
+                                  label: Text(trimmedTag, style: const TextStyle(fontSize: 8, fontWeight: FontWeight.bold)),
+                                  onDeleted: () {
+                                    final tags = p.tags.split(',').map((e)=>e.trim()).where((e)=>e != trimmedTag).toList();
+                                    widget.controller.updateField(tags: tags.join(', '));
+                                    setState(() {});
+                                  },
+                                  deleteIcon: const Icon(Icons.close, size: 10),
+                                  backgroundColor: colors.bgTier3,
+                                  side: BorderSide(color: colors.borderSubtle),
+                                  padding: EdgeInsets.zero,
+                                  visualDensity: VisualDensity.compact,
+                                ),
+                              );
+                            }).toList(),
+                          ),
                         ),
                       ),
                     ],
@@ -179,40 +169,34 @@ class _Tab2SpecsState extends State<Tab2Specs> {
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 8),
           // Section 2: Product Capabilities
           ZenoCard(
             title: "Product Capabilities",
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            child: GridView.count(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              crossAxisCount: 5,
-              childAspectRatio: 3.5,
-              mainAxisSpacing: 4,
-              crossAxisSpacing: 4,
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _capabilityTile("WEIGHED", p.capWeighed, (v) => widget.controller.updateField(capWeighed: v)),
-                _capabilityTile("PLU CODE", p.capPluCode, (v) => widget.controller.updateField(capPluCode: v)),
-                _capabilityTile("BULK", p.capBulk, (v) => widget.controller.updateField(capBulk: v)),
-                _capabilityTile("REPACK", p.capRepack, (v) => widget.controller.updateField(capRepack: v)),
-                _capabilityTile("TARE", p.capTare, (v) => widget.controller.updateField(capTare: v)),
-                _capabilityTile("CATCH WEIGHT", p.capCatchWeight, (v) => widget.controller.updateField(capCatchWeight: v)),
-                _capabilityTile("VARIANT", p.capVariant, (v) => widget.controller.updateField(capVariant: v)),
-                _capabilityTile("DEPOSIT", p.capDeposit, (v) => widget.controller.updateField(capDeposit: v)),
-                _capabilityTile("COLD CHAIN", p.capColdChain, (v) => widget.controller.updateField(capColdChain: v)),
-                _capabilityTile("AGE RESTRICT", p.capAgeRestriction, (v) => widget.controller.updateField(capAgeRestriction: v)),
+                _capabilityCompactTile("WEIGHED", p.capWeighed, (v) => widget.controller.updateField(capWeighed: v)),
+                _capabilityCompactTile("PLU CODE", p.capPluCode, (v) => widget.controller.updateField(capPluCode: v)),
+                _capabilityCompactTile("BULK", p.capBulk, (v) => widget.controller.updateField(capBulk: v)),
+                _capabilityCompactTile("REPACK", p.capRepack, (v) => widget.controller.updateField(capRepack: v)),
+                _capabilityCompactTile("TARE", p.capTare, (v) => widget.controller.updateField(capTare: v)),
+                _capabilityCompactTile("CATCH WT", p.capCatchWeight, (v) => widget.controller.updateField(capCatchWeight: v)),
+                _capabilityCompactTile("VARIANT", p.capVariant, (v) => widget.controller.updateField(capVariant: v)),
+                _capabilityCompactTile("DEPOSIT", p.capDeposit, (v) => widget.controller.updateField(capDeposit: v)),
+                _capabilityCompactTile("COLD CHAIN", p.capColdChain, (v) => widget.controller.updateField(capColdChain: v)),
+                _capabilityCompactTile("AGE RESTRICT", p.capAgeRestriction, (v) => widget.controller.updateField(capAgeRestriction: v)),
               ],
             ),
           ),
-          const SizedBox(height: 12),
-          // Section 3: Dynamic Capability Details (FIXED HEIGHT / COMPACT)
+          const SizedBox(height: 8),
+          // Section 3: Dynamic Capability Details
           if (_hasAnyCapability(p))
             ZenoCard(
               title: "Capability Details",
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   if (p.capWeighed) _buildDetailGroup("WEIGHED", _buildWeighedDetails(p)),
                   if (p.capPluCode) _buildDetailGroup("PLU CODE", _buildPluDetails(p)),
@@ -232,43 +216,30 @@ class _Tab2SpecsState extends State<Tab2Specs> {
     );
   }
 
-  Widget _buildDetailGroup(String title, Widget child) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Text(title, style: const TextStyle(fontSize: 7, fontWeight: FontWeight.w900, color: Color(0xFFC00000), letterSpacing: 1.0)),
-            const SizedBox(width: 8),
-            const Expanded(child: Divider(height: 1)),
-          ],
-        ),
-        const SizedBox(height: 8),
-        child,
-        const SizedBox(height: 8),
-      ],
-    );
-  }
-
-  Widget _capabilityTile(String label, bool value, ValueChanged<bool> onChanged) {
+  Widget _capabilityCompactTile(String label, bool value, ValueChanged<bool> onChanged) {
     return InkWell(
       onTap: () => onChanged(!value),
       child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
           color: value ? const Color(0xFFC00000).withValues(alpha: 0.1) : Colors.transparent,
           border: Border.all(color: value ? const Color(0xFFC00000) : const Color(0xFFE2E8F0)),
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(6),
         ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Checkbox(
-              value: value,
-              onChanged: (v) => onChanged(v ?? false),
-              activeColor: const Color(0xFFC00000),
-              visualDensity: VisualDensity.compact,
+            SizedBox(
+              width: 16, height: 16,
+              child: Checkbox(
+                value: value,
+                onChanged: (v) => onChanged(v ?? false),
+                activeColor: const Color(0xFFC00000),
+                visualDensity: VisualDensity.compact,
+              ),
             ),
-            Text(label, style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: value ? const Color(0xFFC00000) : const Color(0xFF64748B))),
+            const SizedBox(width: 4),
+            Text(label, style: TextStyle(fontSize: 8, fontWeight: FontWeight.bold, color: value ? const Color(0xFFC00000) : const Color(0xFF64748B))),
           ],
         ),
       ),
@@ -371,4 +342,17 @@ class _Tab2SpecsState extends State<Tab2Specs> {
       const Spacer(flex: 2),
     ],
   );
+
+  Widget _buildDetailGroup(String title, Widget child) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 6),
+      child: Row(
+        children: [
+          SizedBox(width: 80, child: Text(title, style: const TextStyle(fontSize: 7, fontWeight: FontWeight.w900, color: Color(0xFFC00000), letterSpacing: 0.5))),
+          const SizedBox(width: 10),
+          Expanded(child: child),
+        ],
+      ),
+    );
+  }
 }
