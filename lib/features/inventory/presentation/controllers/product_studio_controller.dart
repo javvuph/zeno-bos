@@ -13,6 +13,7 @@ import '../../domain/services/replenishment_service.dart';
 import '../../domain/services/fashion_analytics_service.dart';
 import '../../domain/services/markdown_approval_service.dart';
 import '../../domain/models/mappers/product_studio_mapper.dart';
+import '../../domain/models/combo_item.dart';
 import 'registries/sub_business_registry.dart' as sub;
 import 'registries/capability_registry.dart' as cap;
 import 'registries/capability_fashion.dart';
@@ -69,7 +70,7 @@ class ProductStudioController extends ChangeNotifier {
   bool isSaving = false;
   bool isFullscreen = false;
 
-  final List<String> categoriesList = [], brandsList = [], unitsList = [], locationsList = [], subcategoriesList = [], suppliersList = [];
+  final List<String> departmentsList = [], categoriesList = [], brandsList = [], unitsList = [], locationsList = [], subcategoriesList = [], suppliersList = [];
   final List<String> taxCategoriesList = ["Standard", "Zero Rated", "Exempt"], jurisdictionsList = ["Default", "India"];
 
   final List<ScanSessionItem> scanSession = [];

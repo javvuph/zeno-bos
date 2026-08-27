@@ -4,12 +4,16 @@ extension ProductStudioControllerUpdateCore on ProductStudioController {
   void _updateCoreFields(ProductStudioData p, {
     String? title, String? arabicTitle, String? sku, String? barcode, List<String>? multiBarcodes,
     String? category, String? subcategory,
-    String? brand, String? status, String? productLifecycleStatus, String? visibility,
-    String? countryOfOrigin, String? manufacturerName, DateTime? launchDate, DateTime? discontinueDate,
+    String? brand, String? subBrand, String? manufacturer,
+    String? status, String? productLifecycleStatus, String? visibility,
+    String? countryOfOrigin, String? manufacturerPartNumber, String? vendorSku, String? internalBarcode,
+    DateTime? launchDate, DateTime? discontinueDate,
     String? marketingTitle, String? shortDescription, String? description, String? metaDescription,
     String? urlSlug, String? tags, List<String>? searchKeywords, String? promotionalBadges,
     String? primaryImageUrl, List<String>? galleryUrls, bool? featuredProduct, String? targetAudience,
     String? seoTitle, String? sectorId, String? departmentId, String? subDepartmentId,
+    String? productType, String? segment,
+    bool? appVisibility, bool? b2bVisibility,
   }) {
     if (title != null) p.title = title;
     if (arabicTitle != null) p.arabicTitle = arabicTitle;
@@ -19,11 +23,15 @@ extension ProductStudioControllerUpdateCore on ProductStudioController {
     if (category != null) p.category = category;
     if (subcategory != null) p.subcategory = subcategory;
     if (brand != null) p.brand = brand;
+    if (subBrand != null) p.subBrand = subBrand;
+    if (manufacturer != null) p.manufacturer = manufacturer;
     if (status != null) p.status = status;
     if (productLifecycleStatus != null) p.productLifecycleStatus = productLifecycleStatus;
     if (visibility != null) p.visibility = visibility;
     if (countryOfOrigin != null) p.countryOfOrigin = countryOfOrigin;
-    if (manufacturerName != null) p.manufacturerName = manufacturerName;
+    if (manufacturerPartNumber != null) p.manufacturerPartNumber = manufacturerPartNumber;
+    if (vendorSku != null) p.vendorSku = vendorSku;
+    if (internalBarcode != null) p.internalBarcode = internalBarcode;
     if (launchDate != null) p.launchDate = launchDate;
     if (discontinueDate != null) p.discontinueDate = discontinueDate;
     if (marketingTitle != null) p.marketingTitle = marketingTitle;
@@ -42,6 +50,10 @@ extension ProductStudioControllerUpdateCore on ProductStudioController {
     if (sectorId != null) p.sectorId = sectorId;
     if (departmentId != null) p.departmentId = departmentId;
     if (subDepartmentId != null) p.subDepartmentId = subDepartmentId;
+    if (productType != null) p.productType = productType;
+    if (segment != null) p.segment = segment;
+    if (appVisibility != null) p.appVisibility = appVisibility;
+    if (b2bVisibility != null) p.b2bVisibility = b2bVisibility;
   }
 
   void _updateEnterpriseFields(ProductStudioData p, {
@@ -50,7 +62,8 @@ extension ProductStudioControllerUpdateCore on ProductStudioController {
     String? discountType, double? discountValue, double? maxDiscountPct,
     bool? autoComputeLandedCost, bool? isLiveMarketPrice, DateTime? priceEffectiveFrom,
     String? currency, double? targetMarginPct, double? targetMarkupPct, double? branchSellingPrice,
-    bool? trackInventory, bool? allowNegativeStock, int? openingStock, int? safetyStock,
+    bool? trackInventory, bool? allowNegativeStock, int? openingStock,
+    int? minStock, int? safetyStock,
     int? maxStock, double? reorderLevel, String? warehouseLocation, String? stockUnit,
     String? salesUnit, String? purchaseUnit, double? conversionFactor,
     double? grossWeight, double? netWeight, double? tareWeight, String? unitDimensions,
@@ -59,7 +72,7 @@ extension ProductStudioControllerUpdateCore on ProductStudioController {
     String? storageClass, String? storageCondition, String? floorZone,
     bool? coldStorageIndicator, bool? coldChainRequired, String? logisticsSlab,
     String? volumetricWeight, String? countryRestrictions, String? valuationMethod,
-    int? leadTimeBuffer, bool? autoReplenish,
+    int? leadTimeBuffer, bool? autoReplenish, int? innerPackQuantity,
     String? taxStatus, String? taxCategory, double? taxRate, String? taxJurisdiction,
     String? taxCode, String? gstTaxMode, String? taxTreatment, String? vatCategory,
     String? selectiveExciseTax, String? zatcaCode, String? sacCode, String? hsnCode,
@@ -76,6 +89,7 @@ extension ProductStudioControllerUpdateCore on ProductStudioController {
     int? minDisplayQty, int? maxDisplayQty, bool? isEasTagRequired, bool? mandatorySerialScan,
     String? planogramAisle, String? planogramBay, String? planogramRack, String? planogramShelf,
     String? planogramBin, String? planogramEndcap, bool? cashierOverride, double? maxCashierDisc,
+    bool? priceFloorLock, double? promotionalPrice,
   }) {
     if (costPrice != null) p.costPrice = costPrice;
     if (sellingPrice != null) p.sellingPrice = sellingPrice;
@@ -97,6 +111,7 @@ extension ProductStudioControllerUpdateCore on ProductStudioController {
     if (trackInventory != null) p.trackInventory = trackInventory;
     if (allowNegativeStock != null) p.allowNegativeStock = allowNegativeStock;
     if (openingStock != null) p.openingStock = openingStock.toDouble();
+    if (minStock != null) p.minStock = minStock.toDouble();
     if (safetyStock != null) p.safetyStock = safetyStock.toDouble();
     if (maxStock != null) p.maxStock = maxStock.toDouble();
     if (reorderLevel != null) p.reorderLevel = reorderLevel;
@@ -126,6 +141,7 @@ extension ProductStudioControllerUpdateCore on ProductStudioController {
     if (valuationMethod != null) p.valuationMethod = valuationMethod;
     if (leadTimeBuffer != null) p.leadTimeBuffer = leadTimeBuffer;
     if (autoReplenish != null) p.autoReplenish = autoReplenish;
+    if (innerPackQuantity != null) p.innerPackQuantity = innerPackQuantity;
     if (taxStatus != null) p.taxStatus = taxStatus;
     if (taxCategory != null) p.taxCategory = taxCategory;
     if (taxRate != null) p.taxRate = taxRate;
@@ -179,5 +195,7 @@ extension ProductStudioControllerUpdateCore on ProductStudioController {
     if (planogramEndcap != null) p.planogramEndcap = planogramEndcap;
     if (cashierOverride != null) p.cashierOverride = cashierOverride;
     if (maxCashierDisc != null) p.maxCashierDisc = maxCashierDisc;
+    if (priceFloorLock != null) p.priceFloorLock = priceFloorLock;
+    if (promotionalPrice != null) p.promotionalPrice = promotionalPrice;
   }
 }

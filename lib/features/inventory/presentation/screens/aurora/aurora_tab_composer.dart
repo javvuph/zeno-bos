@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import '../../controllers/product_studio_controller.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:zeno/features/inventory/presentation/controllers/product_studio_controller.dart';
 import '../../../domain/models/product_studio_enums.dart';
 import 'aurora_profile_visibility.dart';
 
@@ -19,125 +19,86 @@ class AuroraTabComposer {
   static List<AuroraTabDefinition> compose(
     ProductStudioController controller,
   ) {
-    final profile = controller.activeProfile.toLowerCase();
-    final business = controller.activeBusiness.toLowerCase();
+    final profile = controller.activeProfile;
+    final isGroceryKirana = profile == "Grocery / Kirana";
 
-    final tabs = <AuroraTabDefinition>[
-      const AuroraTabDefinition(
-        id: AuroraStudioTab.identity,
-        label: 'Identity',
-        icon: Icons.badge_outlined,
-      ),
-    ];
-
-    if (_isFashion(business, profile)) {
-      tabs.add(
-        const AuroraTabDefinition(
-          id: AuroraStudioTab.planogram,
-          label: 'Specifications',
-          icon: Icons.checkroom_outlined,
+    if (isGroceryKirana) {
+      return const [
+        AuroraTabDefinition(
+          id: AuroraStudioTab.identity,
+          label: 'BASIC INFO',
+          icon: Icons.badge_outlined,
         ),
-      );
-    } else if (_isFood(business, profile)) {
-      tabs.add(
-        const AuroraTabDefinition(
+        AuroraTabDefinition(
           id: AuroraStudioTab.planogram,
-          label: 'Kitchen & Recipe',
-          icon: Icons.restaurant_menu_outlined,
-        ),
-      );
-    } else {
-      tabs.add(
-        const AuroraTabDefinition(
-          id: AuroraStudioTab.planogram,
-          label: 'Operations',
+          label: 'DEPARTMENT',
           icon: Icons.account_tree_outlined,
         ),
-      );
+        AuroraTabDefinition(
+          id: AuroraStudioTab.logistics,
+          label: 'PACK & SIZE',
+          icon: Icons.inventory_2_outlined,
+        ),
+        AuroraTabDefinition(
+          id: AuroraStudioTab.pricing,
+          label: 'PRICE & TAX',
+          icon: Icons.payments_outlined,
+        ),
+        AuroraTabDefinition(
+          id: AuroraStudioTab.stock,
+          label: 'STOCK & SUPPLIER',
+          icon: Icons.warehouse_outlined,
+        ),
+        AuroraTabDefinition(
+          id: AuroraStudioTab.media,
+          label: 'PHOTOS & ONLINE',
+          icon: Icons.image_outlined,
+        ),
+      ];
     }
 
-    // Only add tabs that have visible content for the active profile.
-    final candidateTabs = <AuroraTabDefinition>[
-      const AuroraTabDefinition(
+    // Default 8-tab for other profiles
+    return const [
+      AuroraTabDefinition(
+        id: AuroraStudioTab.identity,
+        label: 'IDENTITY',
+        icon: Icons.badge_outlined,
+      ),
+      AuroraTabDefinition(
+        id: AuroraStudioTab.planogram,
+        label: 'SPECS',
+        icon: Icons.settings_suggest_outlined,
+      ),
+      AuroraTabDefinition(
         id: AuroraStudioTab.logistics,
-        label: 'Logistics',
+        label: 'LOGISTICS',
         icon: Icons.inventory_2_outlined,
       ),
-      const AuroraTabDefinition(
+      AuroraTabDefinition(
         id: AuroraStudioTab.pricing,
-        label: 'Pricing',
+        label: 'COMMERCIAL',
         icon: Icons.payments_outlined,
       ),
-      const AuroraTabDefinition(
+      AuroraTabDefinition(
         id: AuroraStudioTab.stock,
-        label: 'Stock',
+        label: 'STOCK',
         icon: Icons.bar_chart_outlined,
       ),
-      const AuroraTabDefinition(
+      AuroraTabDefinition(
         id: AuroraStudioTab.vendors,
-        label: 'Suppliers',
+        label: 'SUPPLIERS',
         icon: Icons.local_shipping_outlined,
       ),
-      const AuroraTabDefinition(
+      AuroraTabDefinition(
         id: AuroraStudioTab.tax,
-        label: 'Tax',
+        label: 'COMPLIANCE',
         icon: Icons.receipt_long_outlined,
       ),
-      const AuroraTabDefinition(
+      AuroraTabDefinition(
         id: AuroraStudioTab.media,
-        label: 'Media',
+        label: 'CHANNELS',
         icon: Icons.image_outlined,
       ),
     ];
-
-    for (var t in candidateTabs) {
-      if (hasAuroraContentForTab(controller, t.id)) {
-        tabs.add(t);
-      }
-    }
-
-    return tabs;
-  }
-
-  static bool _isFashion(String business, String profile) {
-    return business.contains('fashion') ||
-        business.contains('apparel') ||
-        [
-          'clothing',
-          'shoes',
-          'footwear',
-          'jewelry',
-          'watch store',
-          'eyewear / opticals',
-          'cosmetics',
-          'perfume',
-          'boutique',
-          'bridal wear',
-          'bags & luggage',
-          'accessories',
-          'innerwear',
-          'kids fashion',
-          'sportswear',
-        ].contains(profile);
-  }
-
-  static bool _isFood(String business, String profile) {
-    return business.contains('food') ||
-        business.contains('beverage') ||
-        [
-          'restaurant',
-          'fine dining',
-          'cafe',
-          'coffee shop',
-          'bakery',
-          'juice shop',
-          'fast food',
-          'cloud kitchen',
-          'ice cream parlor',
-          'catering service',
-          'bar / pub',
-          'bistro',
-          'food court',
-        ].contains(profile);
   }
 }

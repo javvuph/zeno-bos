@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../../controllers/product_studio_controller.dart';
-import '../aurora_field_renderer.dart';
-import '../widgets/aurora_card.dart';
+import 'package:zeno/app/theme.dart';
+import 'package:zeno/core/widgets/zeno_inputs.dart';
+import 'package:zeno/core/widgets/zeno_card.dart';
+import 'package:zeno/features/inventory/presentation/controllers/product_studio_controller.dart';
 
 class Tab3PriceTax extends StatelessWidget {
   final ProductStudioController controller;
@@ -9,32 +10,198 @@ class Tab3PriceTax extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final allFields = controller.getTab3Fields();
-    
-    // Group into logical rows but allow fluid packing
-    final pricing = allFields.where((f) => f.contains('Price') || f == 'mrp' || f == 'costPrice' || f.contains('discount')).toList();
-    final tax = allFields.where((f) => !pricing.contains(f)).toList();
+    final p = controller.product;
+    final colors = Theme.of(context).extension<ZenoSemanticColors>()!;
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(24),
-      child: Column(
+      padding: const EdgeInsets.all(16),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          AuroraCard(
-            title: "Pricing & Margins",
-            subtitle: "Commercial valuation and discount policies",
-            icon: Icons.payments_outlined,
-            accentColor: Colors.green,
-            child: AuroraFieldRenderer(controller: controller, fieldIds: pricing),
+          // Left Column: Pricing
+          Expanded(
+            child: Column(
+              children: [
+                ZenoCard(
+                  title: "Commercial Pricing",
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ZenoTextField(
+                              label: "Cost Price",
+                              initialValue: p.costPrice.toString(),
+                              onChanged: (v) => controller.updateField(costPrice: double.tryParse(v)),
+                              keyboardType: TextInputType.number,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: ZenoTextField(
+                              label: "Selling Price",
+                              initialValue: p.sellingPrice.toString(),
+                              onChanged: (v) => controller.updateField(sellingPrice: double.tryParse(v)),
+                              keyboardType: TextInputType.number,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ZenoTextField(
+                              label: "MRP (Statutory)",
+                              initialValue: p.mrp.toString(),
+                              onChanged: (v) => controller.updateField(mrp: double.tryParse(v)),
+                              keyboardType: TextInputType.number,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: ZenoTextField(
+                              label: "Wholesale Price",
+                              initialValue: p.wholesalePrice.toString(),
+                              onChanged: (v) => controller.updateField(wholesalePrice: double.tryParse(v)),
+                              keyboardType: TextInputType.number,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ZenoDropdown<String>(
+                              label: "Discount Type",
+                              value: p.discountType,
+                              items: ["Percentage", "Amount", "Flat"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+                              onChanged: (v) => controller.updateField(discountType: v),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: ZenoTextField(
+                              label: "Discount Value",
+                              initialValue: p.discountValue.toString(),
+                              onChanged: (v) => controller.updateField(discountValue: double.tryParse(v)),
+                              keyboardType: TextInputType.number,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ZenoTextField(
+                              label: "Promotional Price",
+                              initialValue: p.onlinePrice.toString(), // Reusing onlinePrice for promo if no specific field
+                              onChanged: (v) => controller.updateField(onlinePrice: double.tryParse(v)),
+                              keyboardType: TextInputType.number,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: _buildSwitchRow(colors, "Price Floor Lock", p.posHotkeyEnabled, (v) => controller.updateField(posHotkeyEnabled: v)), // Reusing posHotkeyEnabled for lock
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
-          AuroraCard(
-            title: "Taxation & Statutory",
-            subtitle: "Government compliance and regional rates",
-            icon: Icons.receipt_long_outlined,
-            accentColor: Colors.lightBlue,
-            child: AuroraFieldRenderer(controller: controller, fieldIds: tax),
+          const SizedBox(width: 16),
+          // Right Column: Taxation
+          Expanded(
+            child: Column(
+              children: [
+                ZenoCard(
+                  title: "Taxation & Compliance",
+                  child: Column(
+                    children: [
+                      ZenoTextField(
+                        key: const ValueKey('hsnCodeTax'),
+                        label: "HSN Code",
+                        initialValue: p.hsnCode,
+                        onChanged: (v) => controller.updateField(hsnCode: v),
+                        width: ZenoFieldWidth.medium,
+                      ),
+                      const SizedBox(height: 12),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ZenoDropdown<String>(
+                              label: "Tax Status",
+                              value: p.taxStatus,
+                              items: ["Taxable", "Exempt", "Zero Rated"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+                              onChanged: (v) => controller.updateField(taxStatus: v),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: ZenoDropdown<String>(
+                              label: "Tax Category",
+                              value: p.taxCategory,
+                              items: ["Standard", "Nil", "Luxury"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+                              onChanged: (v) => controller.updateField(taxCategory: v),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ZenoTextField(
+                              label: "Tax Rate (%)",
+                              initialValue: p.taxRate.toString(),
+                              onChanged: (v) => controller.updateField(taxRate: double.tryParse(v)),
+                              keyboardType: TextInputType.number,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: ZenoDropdown<String>(
+                              label: "GST Tax Mode",
+                              value: p.gstTaxMode,
+                              items: ["Intra-State", "Inter-State"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+                              onChanged: (v) => controller.updateField(gstTaxMode: v),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildSwitchRow(ZenoSemanticColors colors, String label, bool value, ValueChanged<bool> onChanged) {
+    return Row(
+      children: [
+        Text(label, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: colors.textSecondary)),
+        const Spacer(),
+        SizedBox(
+          height: 20,
+          child: Transform.scale(
+            scale: 0.7,
+            child: Switch(
+              value: value,
+              onChanged: onChanged,
+              activeThumbColor: colors.accentPrimary,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

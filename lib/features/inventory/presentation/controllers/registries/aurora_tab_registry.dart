@@ -1,7 +1,7 @@
 import '../../../domain/models/product_studio_enums.dart';
 
 final Map<String, AuroraStudioTab> fieldToAuroraTab = {
-  // IDENTITY
+  // 1. BASIC INFO
   'title': AuroraStudioTab.identity,
   'arabicTitle': AuroraStudioTab.identity,
   'description': AuroraStudioTab.identity,
@@ -10,36 +10,45 @@ final Map<String, AuroraStudioTab> fieldToAuroraTab = {
   'multiBarcodes': AuroraStudioTab.identity,
   'posShortThermalName': AuroraStudioTab.identity,
   'barcodeType': AuroraStudioTab.identity,
-  'eslId': AuroraStudioTab.identity,
-  'productClassification': AuroraStudioTab.identity,
-  'brandType': AuroraStudioTab.identity,
-  'brand': AuroraStudioTab.identity,
-  'category': AuroraStudioTab.identity,
-  'subcategory': AuroraStudioTab.identity,
-  'subDepartment': AuroraStudioTab.identity,
-  'department': AuroraStudioTab.identity,
-  'returnPolicy': AuroraStudioTab.identity,
-  'productLifecycleStatus': AuroraStudioTab.identity,
   'status': AuroraStudioTab.identity,
-  'gender': AuroraStudioTab.identity,
-  'targetAgeGroup': AuroraStudioTab.identity,
+  'productLifecycleStatus': AuroraStudioTab.identity,
+  'visibility': AuroraStudioTab.identity,
   'countryOfOrigin': AuroraStudioTab.identity,
-  'season': AuroraStudioTab.identity,
-  'collectionEdition': AuroraStudioTab.identity,
-  'healthLicense': AuroraStudioTab.identity,
-  'genericSalt': AuroraStudioTab.identity,
-  'potency': AuroraStudioTab.identity,
-  'dosageForm': AuroraStudioTab.identity,
-  'fineDiningCourse': AuroraStudioTab.identity,
-  'foodClass': AuroraStudioTab.identity,
-  'spiceLevel': AuroraStudioTab.identity,
-  'prepTime': AuroraStudioTab.identity,
-  'packagingSurcharge': AuroraStudioTab.identity,
-  'freshnessDuration': AuroraStudioTab.identity,
-  'freshnessUnit': AuroraStudioTab.identity,
-  'coldStorageIndicator': AuroraStudioTab.identity,
+  'returnPolicy': AuroraStudioTab.identity,
+  'taxCode': AuroraStudioTab.identity,
 
-  // PRICING
+  // 2. DEPARTMENT
+  'brand': AuroraStudioTab.planogram,
+  'category': AuroraStudioTab.planogram,
+  'department': AuroraStudioTab.planogram,
+  'subDepartment': AuroraStudioTab.planogram,
+  'subcategory': AuroraStudioTab.planogram,
+  'sectorId': AuroraStudioTab.planogram,
+  'floorZone': AuroraStudioTab.planogram,
+  'planogramId': AuroraStudioTab.planogram,
+  'planogramAisle': AuroraStudioTab.planogram,
+  'planogramBay': AuroraStudioTab.planogram,
+  'planogramRack': AuroraStudioTab.planogram,
+  'planogramShelf': AuroraStudioTab.planogram,
+  'planogramBin': AuroraStudioTab.planogram,
+  'storageClass': AuroraStudioTab.planogram,
+
+  // 3. PACK & SIZE
+  'unit': AuroraStudioTab.logistics,
+  'purchaseUnit': AuroraStudioTab.logistics,
+  'conversionFactor': AuroraStudioTab.logistics,
+  'innerPackQuantity': AuroraStudioTab.logistics,
+  'masterCaseMultiplier': AuroraStudioTab.logistics,
+  'palletStacking': AuroraStudioTab.logistics,
+  'grossWeight': AuroraStudioTab.logistics,
+  'netWeight': AuroraStudioTab.logistics,
+  'unitDimensions': AuroraStudioTab.logistics,
+  'packaging': AuroraStudioTab.logistics,
+  'packageType': AuroraStudioTab.logistics,
+  'allowLooseBilling': AuroraStudioTab.logistics,
+  'inHouseRepack': AuroraStudioTab.logistics,
+
+  // 4. PRICE & TAX
   'costPrice': AuroraStudioTab.pricing,
   'sellingPrice': AuroraStudioTab.pricing,
   'mrp': AuroraStudioTab.pricing,
@@ -50,51 +59,36 @@ final Map<String, AuroraStudioTab> fieldToAuroraTab = {
   'taxCategory': AuroraStudioTab.pricing,
   'taxRate': AuroraStudioTab.pricing,
   'taxJurisdiction': AuroraStudioTab.pricing,
-  'taxCode': AuroraStudioTab.pricing,
   'gstTaxMode': AuroraStudioTab.pricing,
 
-  // STOCK
+  // 5. STOCK & SUPPLIER
   'openingStock': AuroraStudioTab.stock,
   'safetyStock': AuroraStudioTab.stock,
   'reorderLevel': AuroraStudioTab.stock,
   'warehouseLocation': AuroraStudioTab.stock,
+  'autoReplenish': AuroraStudioTab.stock,
+  'leadTimeBuffer': AuroraStudioTab.stock,
   'supplier': AuroraStudioTab.stock,
+  'primarySupplierId': AuroraStudioTab.stock,
   'supplierProductCode': AuroraStudioTab.stock,
-  'supplierPurchaseCost': AuroraStudioTab.stock,
   'supplierMOQ': AuroraStudioTab.stock,
   'supplierLeadTime': AuroraStudioTab.stock,
-  'secondarySupplier': AuroraStudioTab.stock,
-  'floorZone': AuroraStudioTab.stock,
-  'planogramId': AuroraStudioTab.stock,
-  'planogramAisle': AuroraStudioTab.stock,
-  'planogramBay': AuroraStudioTab.stock,
-  'planogramRack': AuroraStudioTab.stock,
-  'planogramShelf': AuroraStudioTab.stock,
-  'planogramBin': AuroraStudioTab.stock,
-  'palletStacking': AuroraStudioTab.stock,
-  'unitDimensions': AuroraStudioTab.stock,
-  'grossWeight': AuroraStudioTab.stock,
-  'storageClass': AuroraStudioTab.stock,
-  'minDisplayQty': AuroraStudioTab.stock,
-  'maxDisplayQty': AuroraStudioTab.stock,
 
-  // MEDIA & CHANNELS
+  // 6. PHOTOS & ONLINE
   'marketingTitle': AuroraStudioTab.media,
   'metaDescription': AuroraStudioTab.media,
   'urlSlug': AuroraStudioTab.media,
   'featuredProduct': AuroraStudioTab.media,
+  'primaryImageUrl': AuroraStudioTab.media,
+  'galleryUrls': AuroraStudioTab.media,
   'isQuickPOSSale': AuroraStudioTab.media,
-  'visibility': AuroraStudioTab.media,
+  'showOnPos': AuroraStudioTab.media,
+  'showOnApp': AuroraStudioTab.media,
+  'showOnWeb': AuroraStudioTab.media,
 };
 
 final List<String> auroraEngineFields = [
-  // F&B Engine (KitchenRecipeSpecsTab)
-  'kotStation', 'kdsCategory', 'courseFireDelay', 'recipeVersion', 'targetFoodCostPct', 'recipePrepNotes',
-  // Retail Engine (RetailPackagingTab)
-  'unit', 'purchaseUnit', 'conversionFactor', 'unitsPerStrip', 'masterOuterBarcode', 'palletStacking', 
-  'grossWeight', 'unitDimensions', 'isEasTagRequired', 'allowLooseBilling', 'inHouseRepack', 'containerDepositFee',
-  // Healthcare Engine (Batch & Expiry Sections)
-  'enableBatchTracking', 'enableExpiryTracking', 'expiryWarningThreshold', 'freshnessDuration', 'freshnessUnit', 'coldStorageIndicator',
+  // This version consolidates engine fields into specific tabs
 ];
 
 AuroraStudioTab getTabForField(String fieldId) {

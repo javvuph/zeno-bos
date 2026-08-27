@@ -27,7 +27,7 @@ extension ProductStudioToDomain on ProductStudioData {
       createdAt: DateTime.now(), updatedAt: DateTime.now(),
       itemType: itemType, status: ProductStatus.values.firstWhere((e) => e.name.toLowerCase() == status.toLowerCase(), orElse: () => ProductStatus.active),
       businessScale: businessScale ?? BusinessScale.small,
-      manufacturer: manufacturerName, tags: tags.split(',').map((e) => e.trim()).toList(),
+      manufacturer: manufacturer, tags: tags.split(',').map((e) => e.trim()).toList(),
       minStock: safetyStock, maxStock: maxStock, reorderLevel: reorderLevel,
       batchTracking: enableBatchTracking, supplierProductName: supplierProductName,
       supplierProductCode: supplierProductCode, supplierPurchaseCost: supplierPurchaseCost,

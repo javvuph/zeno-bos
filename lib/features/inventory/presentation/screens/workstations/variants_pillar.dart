@@ -103,28 +103,107 @@ class VariantsPillar extends StatelessWidget {
 
   Widget _colorChip(String color) {
     final isSelected = controller.selectedColors.contains(color);
-    return InkWell(
-      onTap: () => controller.toggleColor(color),
-      child: Container(
-        padding: const EdgeInsets.fromLTRB(6, 4, 10, 4),
-        decoration: BoxDecoration(color: isSelected ? colors.accentPrimary : colors.bgTier3, borderRadius: BorderRadius.circular(16), border: Border.all(color: isSelected ? colors.accentPrimary : colors.borderSubtle)),
-        child: Row(mainAxisSize: MainAxisSize.min, children: [
-          Container(width: 12, height: 12, decoration: BoxDecoration(color: controller.getColorValue(color), shape: BoxShape.circle, border: Border.all(color: Colors.white.withValues(alpha: 0.5), width: 1))),
-          const SizedBox(width: 6),
-          Text(color, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: isSelected ? colors.bgTier1 : colors.textPrimary)),
-        ]),
+    
+    // Check if any variant of this color has stock
+    final variantsOfColor = controller.generatedVariants.where((v) => v.color == color);
+    final int totalStock = variantsOfColor.fold(0, (sum, v) => sum + v.stock);
+    final bool hasStock = controller.generatedVariants.isEmpty || totalStock > 0;
+
+    return Tooltip(
+      message: hasStock ? (controller.generatedVariants.isEmpty ? color : "$color ($totalStock in stock)") : "$color (No Stock)",
+      child: InkWell(
+        onTap: () => controller.toggleColor(color),
+        child: Opacity(
+          opacity: hasStock ? 1.0 : 0.4,
+          child: Container(
+            padding: const EdgeInsets.fromLTRB(6, 4, 10, 4),
+            decoration: BoxDecoration(
+              color: isSelected ? colors.accentPrimary : colors.bgTier3, 
+              borderRadius: BorderRadius.circular(16), 
+              border: Border.all(color: isSelected ? colors.accentPrimary : colors.borderSubtle),
+              boxShadow: isSelected ? [
+                BoxShadow(color: colors.accentPrimary.withValues(alpha: 0.2), blurRadius: 4, offset: const Offset(0, 2))
+              ] : null,
+            ),
+            child: Row(mainAxisSize: MainAxisSize.min, children: [
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  Container(
+                    width: 12, height: 12, 
+                    decoration: BoxDecoration(
+                      color: controller.getColorValue(color), 
+                      shape: BoxShape.circle, 
+                      border: Border.all(color: Colors.white.withValues(alpha: 0.5), width: 1)
+                    )
+                  ),
+                  if (!hasStock && controller.generatedVariants.isNotEmpty)
+                    Container(
+                      width: 14, height: 1,
+                      transform: Matrix4.rotationZ(0.785), // 45 degrees
+                      color: Colors.white.withValues(alpha: 0.8),
+                    ),
+                ],
+              ),
+              const SizedBox(width: 6),
+              Text(
+                color, 
+                style: TextStyle(
+                  fontSize: 10, 
+                  fontWeight: FontWeight.bold, 
+                  color: isSelected ? Colors.white : colors.textPrimary,
+                  decoration: hasStock ? null : TextDecoration.lineThrough,
+                  decorationColor: colors.textDisabled,
+                )
+              ),
+            ]),
+          ),
+        ),
       ),
     );
   }
 
   Widget _sizeChip(String size) {
     final isSelected = controller.selectedSizes.contains(size);
-    return InkWell(
-      onTap: () => controller.toggleSize(size),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-        decoration: BoxDecoration(color: isSelected ? colors.accentPrimary : colors.bgTier3, borderRadius: BorderRadius.circular(6), border: Border.all(color: isSelected ? colors.accentPrimary : colors.borderSubtle)),
-        child: Text(size, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: isSelected ? colors.bgTier1 : colors.textPrimary)),
+
+    // Check stock for this size
+    final activeColor = controller.activeVariantIndex != null 
+        ? controller.generatedVariants[controller.activeVariantIndex!].color 
+        : (controller.selectedColors.isNotEmpty ? controller.selectedColors.first : null);
+    
+    int stockCount = 0;
+    if (activeColor != null) {
+      stockCount = controller.generatedVariants.where((v) => v.size == size && v.color == activeColor).fold(0, (sum, v) => sum + v.stock);
+    } else {
+      stockCount = controller.generatedVariants.where((v) => v.size == size).fold(0, (sum, v) => sum + v.stock);
+    }
+    final bool hasStock = controller.generatedVariants.isEmpty || stockCount > 0;
+
+    return Tooltip(
+      message: hasStock ? (controller.generatedVariants.isEmpty ? "Size $size" : "Size $size ($stockCount in stock)") : "Size $size (No Stock)",
+      child: InkWell(
+        onTap: () => controller.toggleSize(size),
+        child: Opacity(
+          opacity: hasStock ? 1.0 : 0.4,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6), 
+            decoration: BoxDecoration(
+              color: isSelected ? colors.accentPrimary : colors.bgTier3, 
+              borderRadius: BorderRadius.circular(6), 
+              border: Border.all(color: isSelected ? colors.accentPrimary : colors.borderSubtle)
+            ), 
+            child: Text(
+              size, 
+              style: TextStyle(
+                fontSize: 10, 
+                fontWeight: FontWeight.bold, 
+                color: isSelected ? Colors.white : colors.textPrimary,
+                decoration: hasStock ? null : TextDecoration.lineThrough,
+                decorationColor: colors.textDisabled,
+              )
+            ),
+          ),
+        ),
       ),
     );
   }

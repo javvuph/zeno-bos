@@ -10,6 +10,8 @@ import '../../../domain/models/supplier_relationship.dart';
 import '../../../domain/models/recipe_ingredient.dart';
 import '../../../domain/models/product_enums.dart';
 import '../../../domain/models/product_industry_fields.dart';
+import '../../../domain/models/combo_item.dart';
+import '../../../domain/models/product_studio_enums.dart';
 
 class ProductMapper {
   static Product mapToDomain(ProductCollection pc) {
@@ -81,7 +83,8 @@ class ProductMapper {
         bakeryType: pc.bakeryType, flavorProfile: pc.flavorProfile, bakeTimestamp: pc.bakeTimestamp,
         freshnessDuration: pc.freshnessDuration ?? 0, freshnessUnit: pc.freshnessUnit,
         juiceCategory: pc.juiceCategory, fruitBases: pc.fruitBases ?? [], isCombo: pc.isCombo ?? false,
-        comboItems: pc.comboItems ?? [], hotelDepartment: pc.hotelDepartment,
+        comboItems: pc.comboItems?.map((s) => ComboItem(sku: s)).toList() ?? [],
+        hotelDepartment: pc.hotelDepartment,
         allowRoomFolio: pc.allowRoomFolio ?? false, roomDeliveryCharge: pc.roomDeliveryCharge ?? 0.0,
         virtualBrand: pc.virtualBrand, aggregatorMappings: pc.aggregatorMappings ?? {},
         containerType: pc.containerType, packagingCost: pc.packagingCost ?? 0.0,
@@ -141,7 +144,7 @@ class ProductMapper {
       ..cafeCategory = product.cafeCategory..temperatureProfile = product.temperatureProfile..cupSizes = product.cupSizes..milkOptions = product.milkOptions
       ..sugarLevels = product.sugarLevels..bakeryType = product.bakeryType..flavorProfile = product.flavorProfile..bakeTimestamp = product.bakeTimestamp
       ..freshnessDuration = product.freshnessDuration..freshnessUnit = product.freshnessUnit..juiceCategory = product.juiceCategory..fruitBases = product.fruitBases
-      ..isCombo = product.isCombo..comboItems = product.comboItems..hotelDepartment = product.hotelDepartment..allowRoomFolio = product.allowRoomFolio
+      ..isCombo = product.isCombo..comboItems = product.comboItems.map((e) => e.sku).toList()..hotelDepartment = product.hotelDepartment..allowRoomFolio = product.allowRoomFolio
       ..roomDeliveryCharge = product.roomDeliveryCharge..virtualBrand = product.virtualBrand..aggregatorMappings = product.aggregatorMappings..containerType = product.containerType
       ..packagingCost = product.packagingCost..stallAssignment = product.stallAssignment..managementRoyaltyPct = product.managementRoyaltyPct
       ..batches = product.batches.map((b) => BatchEmbed()..uuid = b.id..batchNumber = b.batchNumber..manufacturingDate = b.manufacturingDate..expiryDate = b.expiryDate..quantity = b.quantity..purchaseCost = b.purchaseCost..sellingPrice = b.sellingPrice..mrp = b.mrp..supplier = b.supplier..warehouse = b.warehouse..notes = b.notes).toList()

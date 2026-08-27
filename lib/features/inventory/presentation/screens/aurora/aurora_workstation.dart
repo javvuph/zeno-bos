@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:zeno/app/theme.dart';
 
-import '../../controllers/product_studio_controller.dart';
+import 'package:zeno/features/inventory/presentation/controllers/product_studio_controller.dart';
 import '../../../domain/models/product_studio_enums.dart';
 import '../widgets/studio_navigation.dart';
 import 'aurora_tab_composer.dart';
 
 import 'tabs/tab1_identity.dart';
-import 'tabs/tab2_planogram.dart';
-import 'tabs/tab3_logistics.dart';
-import 'tabs/tab4_pricing.dart';
-import 'tabs/tab5_stock.dart';
-import 'tabs/tab6_vendors.dart';
-import 'tabs/tab7_tax.dart';
-import 'tabs/tab8_media.dart';
+import 'tabs/tab2_specs.dart';
+import 'tabs/tab2_engine.dart';
+import 'tabs/tab3_price_tax.dart';
+import 'tabs/tab4_stock_supply.dart';
+import 'tabs/tab8_channels.dart';
 
 class AuroraWorkstation extends StatelessWidget {
   final ProductStudioController controller;
@@ -79,27 +77,18 @@ class AuroraWorkstation extends StatelessWidget {
     switch (controller.activeTab) {
       case AuroraStudioTab.identity:
         return Tab1Identity(controller: controller);
-
       case AuroraStudioTab.planogram:
-        return Tab2Planogram(controller: controller);
-
+        return Tab2Specs(controller: controller);
       case AuroraStudioTab.logistics:
-        return Tab3Logistics(controller: controller);
-
+        return Tab2Engine(controller: controller);
       case AuroraStudioTab.pricing:
-        return Tab4Pricing(controller: controller);
-
+        return Tab3PriceTax(controller: controller);
       case AuroraStudioTab.stock:
-        return Tab5Stock(controller: controller);
-
-      case AuroraStudioTab.vendors:
-        return Tab6Vendors(controller: controller);
-
-      case AuroraStudioTab.tax:
-        return Tab7Tax(controller: controller);
-
+        return Tab4StockSupply(controller: controller);
       case AuroraStudioTab.media:
-        return Tab8Media(controller: controller);
+        return Tab8Channels(controller: controller);
+      default:
+        return Tab1Identity(controller: controller);
     }
   }
 }

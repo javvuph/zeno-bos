@@ -6,6 +6,15 @@ extension ProductStudioControllerUpdateTraceability on ProductStudioController {
     bool? breakBulkAllowed, bool? caseSerialTracking, bool? mtcRequired,
     bool? bulkNarcoticLogging, bool? coldChainLogger, int? expiryWarningThreshold,
     int? expiryAlertThreshold, int? freshnessDuration, String? freshnessUnit,
+    int? unitsPerStrip, bool? allowLooseBilling,
+    bool? capWeighed, bool? capPluCode, bool? capBulk, bool? capRepack,
+    bool? capTare, bool? capCatchWeight, bool? capVariant, bool? capDeposit,
+    bool? capColdChain, bool? capAgeRestriction,
+    String? scaleMode, String? pluType, String? bulkSourceProduct,
+    double? availableBulkQuantity, String? repackSourceProduct,
+    double? repackConversionRatio, double? minWeight, double? maxWeight, String? tareMode, int? minAge,
+    String? legalReference, String? depositType, double? depositAmount,
+    String? variantGroup, String? variantType,
     DateTime? manufacturingDate, DateTime? sterilizationExpiry,
     String? periodAfterOpening, bool? isRecalledBatch,
     String? dataLoggerSerialId, String? inspectionId, String? rfidId,
@@ -53,6 +62,33 @@ extension ProductStudioControllerUpdateTraceability on ProductStudioController {
     if (expiryAlertThreshold != null) p.expiryAlertThreshold = expiryAlertThreshold;
     if (freshnessDuration != null) p.freshnessDuration = freshnessDuration;
     if (freshnessUnit != null) p.freshnessUnit = freshnessUnit;
+    if (unitsPerStrip != null) p.unitsPerStrip = unitsPerStrip;
+    if (allowLooseBilling != null) p.allowLooseBilling = allowLooseBilling;
+    if (capWeighed != null) p.capWeighed = capWeighed;
+    if (capPluCode != null) p.capPluCode = capPluCode;
+    if (capBulk != null) p.capBulk = capBulk;
+    if (capRepack != null) p.capRepack = capRepack;
+    if (capTare != null) p.capTare = capTare;
+    if (capCatchWeight != null) p.capCatchWeight = capCatchWeight;
+    if (capVariant != null) p.capVariant = capVariant;
+    if (capDeposit != null) p.capDeposit = capDeposit;
+    if (capColdChain != null) p.capColdChain = capColdChain;
+    if (capAgeRestriction != null) p.capAgeRestriction = capAgeRestriction;
+    if (scaleMode != null) p.scaleMode = scaleMode;
+    if (pluType != null) p.pluType = pluType;
+    if (bulkSourceProduct != null) p.bulkSourceProduct = bulkSourceProduct;
+    if (availableBulkQuantity != null) p.availableBulkQuantity = availableBulkQuantity;
+    if (repackSourceProduct != null) p.repackSourceProduct = repackSourceProduct;
+    if (repackConversionRatio != null) p.repackConversionRatio = repackConversionRatio;
+    if (minWeight != null) p.minWeight = minWeight;
+    if (maxWeight != null) p.maxWeight = maxWeight;
+    if (tareMode != null) p.tareMode = tareMode;
+    if (minAge != null) p.minAge = minAge;
+    if (legalReference != null) p.legalReference = legalReference;
+    if (depositType != null) p.depositType = depositType;
+    if (depositAmount != null) p.depositAmount = depositAmount;
+    if (variantGroup != null) p.variantGroup = variantGroup;
+    if (variantType != null) p.variantType = variantType;
     if (manufacturingDate != null) p.manufacturingDate = manufacturingDate;
     if (sterilizationExpiry != null) p.sterilizationExpiry = sterilizationExpiry;
     if (periodAfterOpening != null) p.periodAfterOpening = periodAfterOpening;
@@ -139,7 +175,7 @@ extension ProductStudioControllerUpdateTraceability on ProductStudioController {
     if (dietaryBadges != null) p.dietaryBadges = dietaryBadges;
     if (cupSizes != null) p.cupSizes = cupSizes;
     if (fruitBases != null) p.fruitBases = fruitBases;
-    if (comboItems != null) p.comboItems = comboItems;
+    if (comboItems != null) p.comboItems = comboItems.map((e) => ComboItem(sku: e)).toList();
     if (allowRoomFolio != null) p.allowRoomFolio = allowRoomFolio;
     if (roomDeliveryCharge != null) p.roomDeliveryCharge = roomDeliveryCharge;
     if (takeawaySurcharge != null) p.takeawaySurcharge = takeawaySurcharge;

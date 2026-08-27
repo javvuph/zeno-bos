@@ -14,16 +14,16 @@ class Tab1Identity extends StatelessWidget {
     final colors = Theme.of(context).extension<ZenoSemanticColors>()!;
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(12),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      padding: const EdgeInsets.all(16),
+      child: Column(
         children: [
-          // Left Column
-          Expanded(
-            child: Column(
-              children: [
-                ZenoCard(
-                  title: "Basic Identity",
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Left Column: Product Identity
+              Expanded(
+                child: ZenoCard(
+                  title: "Product Identity",
                   child: Column(
                     children: [
                       ZenoTextField(
@@ -60,93 +60,25 @@ class Tab1Identity extends StatelessWidget {
                       const SizedBox(height: 12),
                       ZenoTextField(
                         key: const ValueKey('description'),
-                        label: "Marketing Description",
+                        label: "Product Description",
                         initialValue: p.description,
                         onChanged: (v) => controller.updateField(description: v),
-                        maxLines: 2,
+                        maxLines: 3,
                         width: ZenoFieldWidth.full,
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 12),
-                ZenoCard(
-                  title: "Classification",
+              ),
+              const SizedBox(width: 16),
+              // Right Column: Identification
+              Expanded(
+                child: ZenoCard(
+                  title: "Identification",
                   child: Column(
                     children: [
                       Row(
                         children: [
-                          Expanded(
-                            child: ZenoDropdown<String>(
-                              label: "Sector",
-                              value: p.sectorId.isEmpty ? null : p.sectorId,
-                              items: controller.categoriesList.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
-                              onChanged: (v) => controller.updateField(sectorId: v),
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: ZenoDropdown<String>(
-                              label: "Department",
-                              value: p.departmentId.isEmpty ? null : p.departmentId,
-                              items: controller.categoriesList.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
-                              onChanged: (v) => controller.updateField(departmentId: v),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: ZenoDropdown<String>(
-                              label: "Category",
-                              value: p.category.isEmpty ? null : p.category,
-                              items: controller.categoriesList.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
-                              onChanged: (v) => controller.updateField(category: v),
-                              isRequired: true,
-                              onQuickAdd: () => controller.addCategory("New Category"),
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: ZenoDropdown<String>(
-                              label: "Brand",
-                              value: p.brand.isEmpty ? null : p.brand,
-                              items: controller.brandsList.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
-                              onChanged: (v) => controller.updateField(brand: v),
-                              isRequired: true,
-                              onQuickAdd: () => controller.addBrand("New Brand"),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 12),
-          // Right Column
-          Expanded(
-            child: Column(
-              children: [
-                ZenoCard(
-                  title: "Identifiers",
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: ZenoTextField(
-                              key: const ValueKey('barcode'),
-                              label: "Primary Barcode",
-                              initialValue: p.barcode,
-                              onChanged: (v) => controller.updateField(barcode: v),
-                            ),
-                          ),
-                          const SizedBox(width: 12),
                           Expanded(
                             child: ZenoTextField(
                               key: const ValueKey('sku'),
@@ -156,94 +88,155 @@ class Tab1Identity extends StatelessWidget {
                               isRequired: true,
                             ),
                           ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: ZenoTextField(
+                              key: const ValueKey('productId'),
+                              label: "Product ID (Internal)",
+                              initialValue: p.id,
+                              readOnly: true,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ZenoTextField(
+                              key: const ValueKey('barcode'),
+                              label: "Primary GTIN / Barcode",
+                              initialValue: p.barcode,
+                              onChanged: (v) => controller.updateField(barcode: v),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: ZenoTextField(
+                              key: const ValueKey('internalBarcode'),
+                              label: "Internal Barcode",
+                              initialValue: p.internalBarcode,
+                              onChanged: (v) => controller.updateField(internalBarcode: v),
+                            ),
+                          ),
                         ],
                       ),
                       const SizedBox(height: 12),
                       ZenoTextField(
                         key: const ValueKey('multiBarcodes'),
-                        label: "Secondary Barcodes (Comma Separated)",
+                        label: "Alternate / Secondary Barcodes",
                         initialValue: p.multiBarcodes.join(", "),
-                        onChanged: (v) {
-                          final list = v.split(",")
-                            .map((e) => e.trim())
-                            .where((e) => e.isNotEmpty)
-                            .toSet() // Prevent duplicates
-                            .toList();
-                          controller.updateField(multiBarcodes: list);
-                        },
+                        onChanged: (v) => controller.updateField(multiBarcodes: v.split(',').map((e)=>e.trim()).toList()),
                         width: ZenoFieldWidth.full,
                       ),
                       const SizedBox(height: 12),
-                      ZenoTextField(
-                        key: const ValueKey('hsnCode'),
-                        label: "HSN Code",
-                        initialValue: p.hsnCode,
-                        onChanged: (v) => controller.updateField(hsnCode: v),
-                        width: ZenoFieldWidth.medium,
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ZenoTextField(
+                              key: const ValueKey('vendorSku'),
+                              label: "Vendor SKU",
+                              initialValue: p.vendorSku,
+                              onChanged: (v) => controller.updateField(vendorSku: v),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: ZenoTextField(
+                              key: const ValueKey('mfrPartNo'),
+                              label: "Mfr Part Number",
+                              initialValue: p.manufacturerPartNumber,
+                              onChanged: (v) => controller.updateField(manufacturerPartNumber: v),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 12),
-                ZenoCard(
-                  title: "Policy & Status",
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Brand / Manufacturer
+              Expanded(
+                child: ZenoCard(
+                  title: "Brand / Manufacturer",
                   child: Column(
                     children: [
                       Row(
                         children: [
                           Expanded(
                             child: ZenoDropdown<String>(
-                              label: "Return Policy",
-                              value: p.returnPolicy.isEmpty ? null : p.returnPolicy,
-                              items: ["Standard 30-Day", "No Return", "Exchange Only"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
-                              onChanged: (v) => controller.updateField(returnPolicy: v),
+                              label: "Brand",
+                              value: p.brand.isEmpty ? null : p.brand,
+                              items: controller.brandsList.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+                              onChanged: (v) => controller.updateField(brand: v),
+                              onQuickAdd: () => controller.addBrand("New Brand"),
                             ),
                           ),
                           const SizedBox(width: 12),
                           Expanded(
-                            child: ZenoDropdown<String>(
-                              label: "Lifecycle Status",
-                              value: p.productLifecycleStatus.isEmpty ? "Active" : p.productLifecycleStatus,
-                              items: ["Active", "Phase-Out", "Discontinued"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
-                              onChanged: (v) => controller.updateField(productLifecycleStatus: v),
+                            child: ZenoTextField(
+                              key: const ValueKey('subBrand'),
+                              label: "Sub Brand",
+                              initialValue: p.subBrand,
+                              onChanged: (v) => controller.updateField(subBrand: v),
                             ),
                           ),
                         ],
                       ),
                       const SizedBox(height: 12),
-                      _buildSwitchRow(colors, "POS Quick-Sale", p.isQuickPOSSale, (v) => controller.updateField(isQuickPOSSale: v)),
-                      const SizedBox(height: 4),
-                      _buildSwitchRow(colors, "Weighable (Catch Weight)", p.isCatchWeight, (v) => controller.updateField(isCatchWeight: v)),
-                      const SizedBox(height: 4),
-                      _buildSwitchRow(colors, "Age Gate Required", p.ageGate, (v) => controller.updateField(ageGate: v)),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ZenoTextField(
+                              key: const ValueKey('manufacturer'),
+                              label: "Manufacturer",
+                              initialValue: p.manufacturer,
+                              onChanged: (v) => controller.updateField(manufacturer: v),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: ZenoDropdown<String>(
+                              label: "Country of Origin",
+                              value: p.countryOfOrigin.isEmpty ? null : p.countryOfOrigin,
+                              items: ["India", "USA", "UK", "China", "UAE"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+                              onChanged: (v) => controller.updateField(countryOfOrigin: v),
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),
-              ],
-            ),
+              ),
+              const SizedBox(width: 16),
+              // Lifecycle / Status
+              Expanded(
+                child: ZenoCard(
+                  title: "Lifecycle / Status",
+                  child: Column(
+                    children: [
+                      ZenoDropdown<String>(
+                        label: "Status",
+                        value: p.status,
+                        items: ["Active", "Inactive", "Archived"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+                        onChanged: (v) => controller.updateField(status: v),
+                        width: ZenoFieldWidth.medium,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildSwitchRow(ZenoSemanticColors colors, String label, bool value, ValueChanged<bool> onChanged) {
-    return Row(
-      children: [
-        Text(label, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: colors.textSecondary)),
-        const Spacer(),
-        SizedBox(
-          height: 20,
-          child: Transform.scale(
-            scale: 0.7,
-            child: Switch(
-              value: value,
-              onChanged: onChanged,
-              activeThumbColor: colors.accentPrimary,
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

@@ -25,7 +25,7 @@ extension ProductStudioFromDomain on ProductStudioData {
     p.supplierPaymentTerms = domain.supplierPaymentTerms ?? "";
     p.supplierContact = domain.supplierContact ?? "";
     p.supplierNotes = domain.supplierNotes ?? "";
-    p.manufacturerName = domain.manufacturer ?? "";
+    p.manufacturer = domain.manufacturer ?? "";
     p.tags = domain.tags.join(', ');
     p.itemType = domain.itemType;
     p.businessScale = domain.businessScale;

@@ -2,6 +2,7 @@ part of '../product_studio_controller.dart';
 
 extension ProductStudioControllerLogic on ProductStudioController {
   void _initMD() {
+    departmentsList.addAll(md.getDepartments().map((e)=>e.name));
     categoriesList.addAll(md.getCategories().map((e)=>e.name));
     brandsList.addAll(md.getBrands().map((e)=>e.name));
     unitsList.addAll(md.getUnits().map((e)=>e.name));

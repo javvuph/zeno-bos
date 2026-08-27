@@ -11,6 +11,7 @@ import 'supplier_relationship.dart';
 import 'recipe_ingredient.dart';
 import 'product_studio_enums.dart';
 import 'product_industry_fields.dart';
+import 'combo_item.dart';
 
 export 'extensions/product_extensions.dart';
 
@@ -23,9 +24,10 @@ class Product {
   final DateTime createdAt, updatedAt;
   final ItemType itemType; final ProductStatus status;
   final BusinessScale businessScale;
-  final bool batchTracking, serialTracking; final int unitsPerPackage, supplierMOQ, supplierLeadTime;
+  final int unitsPerPackage, supplierMOQ, supplierLeadTime;
   final List<String> tags, supplierIds;
   final ProductIndustryFields industry; final Map<String, dynamic> customFields;
+  final bool batchTracking, serialTracking;
 
   const Product({
     required this.id, required this.name, this.description, required this.sku, this.barcode, this.category, this.brand, required this.unit, this.taxProfile,
@@ -85,7 +87,7 @@ class Product {
   List<String> get sugarLevels => industry.sugarLevels; String? get bakeryType => industry.bakeryType; String? get flavorProfile => industry.flavorProfile;
   DateTime? get bakeTimestamp => industry.bakeTimestamp; int get freshnessDuration => industry.freshnessDuration; String? get freshnessUnit => industry.freshnessUnit;
   String? get juiceCategory => industry.juiceCategory; List<String> get fruitBases => industry.fruitBases; bool get isCombo => industry.isCombo;
-  List<String> get comboItems => industry.comboItems; String? get hotelDepartment => industry.hotelDepartment; bool get allowRoomFolio => industry.allowRoomFolio;
+  List<ComboItem> get comboItems => industry.comboItems; String? get hotelDepartment => industry.hotelDepartment; bool get allowRoomFolio => industry.allowRoomFolio;
   double get roomDeliveryCharge => industry.roomDeliveryCharge; String? get virtualBrand => industry.virtualBrand;
   Map<String, String> get aggregatorMappings => industry.aggregatorMappings; String? get containerType => industry.containerType;
   double get packagingCost => industry.packagingCost; String? get stallAssignment => industry.stallAssignment; double get managementRoyaltyPct => industry.managementRoyaltyPct;
@@ -146,17 +148,17 @@ class Product {
   String? get audioType => industry.audioType; String? get driverSize => industry.driverSize; String? get bluetoothVersion => industry.bluetoothVersion;
   String? get batteryLife => industry.batteryLife; String? get panelTechnology => industry.panelTechnology; String? get resolution => industry.resolution;
   String? get refreshRate => industry.refreshRate; String? get smartTvOs => industry.smartTvOs; String? get hdrFormat => industry.hdrFormat;
-  String? get hdmiPorts => industry.hdmiPorts; String? get energyRating => industry.energyRating; String? get refrigerantType => industry.reagentType;
-  String? get annualEnergyConsumption => industry.annualEnergyConsumption; String? get motorWattage => industry.motorWattage; String? get jarCapacity => industry.jarCapacity;
+  String? get hdmiPorts => industry.hdmiPorts; String? get energyRating => industry.energyRating; String? get refrigerantType => industry.refrigerantType;
+  double get annualEnergyConsumption => industry.annualEnergyConsumption; String? get motorWattage => industry.motorWattage; String? get jarCapacity => industry.jarCapacity;
   String? get speedControls => industry.speedControls; String? get heatingElements => industry.heatingElements; String? get gamingPlatform => industry.gamingPlatform;
-  String? get gamingEdition => industry.gamingEdition; String? get controllerCount => industry.controllerCount; String? get includedGames => industry.includedGames;
+  String? get gamingEdition => industry.gamingEdition; int? get controllerCount => industry.controllerCount; String? get includedGames => industry.includedGames;
   String? get sensorType => industry.sensorType; String? get megapixels => industry.megapixels; String? get lensMount => industry.lensMount;
   String? get maxVideoResolution => industry.maxVideoResolution; String? get isoRange => industry.isoRange; String? get imageStabilization => industry.imageStabilization;
   String? get shutterRating => industry.shutterRating; String? get networkingDeviceType => industry.networkingDeviceType; String? get portConfig => industry.portConfig;
   String? get wirelessBandwidth => industry.wirelessBandwidth; String? get cosmeticGrade => industry.cosmeticGrade; String? get batteryHealth => industry.batteryHealth;
   String? get inspectionId => industry.inspectionId; String? get sellerWarranty => industry.sellerWarranty; String? get replacedParts => industry.replacedParts;
   String? get operatingVoltage => industry.operatingVoltage; String? get mountingType => industry.mountingType; String? get packageForm => industry.packageForm;
-  String? get pinCount => industry.pinCount; String? get takeoffWeight => industry.takeoffWeight; String? get flightTime => industry.flightTime;
+  int? get pinCount => industry.pinCount; String? get takeoffWeight => industry.takeoffWeight; String? get flightTime => industry.flightTime;
   String? get transmissionRange => industry.transmissionRange; String? get batteryChemistry => industry.batteryChemistry; String? get peakOutput => industry.peakOutput;
   String? get solarChargeController => industry.solarChargeController; String? get nightVision => industry.nightVision; String? get focalLength => industry.focalLength;
   String? get iotProtocol => industry.iotProtocol; String? get weatherproofRating => industry.weatherproofRating;
