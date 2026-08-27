@@ -22,6 +22,10 @@ This document records the exact state of the project for recovery by any AI tool
 5. **STOCK & SUPPLIER**: Inventory levels, Rack/Shelf/Bin & Suppliers.
 6. **PHOTOS & ONLINE**: Media Studio & SEO.
 
+## ⚠️ STRICT IMMUTABILITY RULE
+**DO NOT MODIFY the Grocery/Kirana implementation unless explicitly instructed to "Modify the Grocery architecture."**
+Any changes to shared components, themes, or other business profiles (Fashion, F&B, etc.) MUST NOT break or alter the fields, layout, or 6-tab structure of the Grocery/Kirana Product Studio. This logic is LOCKED.
+
 ## 🛠️ Recovery Instruction for AI
 To restore this exact logic, the AI tool should perform:
 1. `git checkout STABLE-GROCERY-V1`
