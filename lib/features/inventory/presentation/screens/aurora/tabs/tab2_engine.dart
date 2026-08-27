@@ -48,14 +48,12 @@ class Tab2Engine extends StatelessWidget {
       engine = const Center(child: Text("No specialized engine for this profile."));
     }
 
-    return SingleChildScrollView(
-      child: AuroraCard(
-        title: title,
-        subtitle: subtitle,
-        icon: Icons.auto_awesome_motion_outlined,
-        accentColor: colors.accentPurple,
-        child: engine,
-      ),
+    return AuroraCard(
+      title: title,
+      subtitle: subtitle,
+      icon: Icons.auto_awesome_motion_outlined,
+      accentColor: colors.accentPurple,
+      child: engine,
     );
   }
 }

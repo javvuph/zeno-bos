@@ -29,12 +29,18 @@ class _ProductStudioScreenState extends State<ProductStudioScreen> {
   }
 
   void _handleStateChange() {
-    if (controller.isFullscreen && _fullscreenEntry == null) {
-      _showFullscreen();
-    } else if (!controller.isFullscreen && _fullscreenEntry != null) {
-      _hideFullscreen();
-    }
-    if (mounted) setState(() {});
+    if (!mounted) return;
+    
+    // Use a post-frame callback to avoid mutating state during build/layout
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      if (controller.isFullscreen && _fullscreenEntry == null) {
+        _showFullscreen();
+      } else if (!controller.isFullscreen && _fullscreenEntry != null) {
+        _hideFullscreen();
+      }
+      setState(() {});
+    });
   }
 
   void _showFullscreen() {

@@ -13,7 +13,7 @@ class Tab4StockSupply extends StatelessWidget {
     final p = controller.product;
     final colors = Theme.of(context).extension<ZenoSemanticColors>()!;
 
-    return SingleChildScrollView(
+    return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
         children: [
@@ -26,6 +26,7 @@ class Tab4StockSupply extends StatelessWidget {
                   children: [
                     ZenoCard(
                       title: "Stock Control",
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                       child: Column(
                         children: [
                           Row(
@@ -38,7 +39,7 @@ class Tab4StockSupply extends StatelessWidget {
                                   keyboardType: TextInputType.number,
                                 ),
                               ),
-                              const SizedBox(width: 12),
+                              const SizedBox(width: 8),
                               Expanded(
                                 child: ZenoTextField(
                                   label: "Reorder Level",
@@ -49,30 +50,30 @@ class Tab4StockSupply extends StatelessWidget {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 12),
+                          const SizedBox(height: 8),
                           Row(
                             children: [
                               Expanded(
                                 child: ZenoTextField(
-                                  label: "Minimum Stock",
+                                  label: "Min",
                                   initialValue: p.minStock.toString(),
                                   onChanged: (v) => controller.updateField(minStock: int.tryParse(v)),
                                   keyboardType: TextInputType.number,
                                 ),
                               ),
-                              const SizedBox(width: 12),
+                              const SizedBox(width: 8),
                               Expanded(
                                 child: ZenoTextField(
-                                  label: "Safety Stock",
+                                  label: "Safety",
                                   initialValue: p.safetyStock.toString(),
                                   onChanged: (v) => controller.updateField(safetyStock: int.tryParse(v)),
                                   keyboardType: TextInputType.number,
                                 ),
                               ),
-                              const SizedBox(width: 12),
+                              const SizedBox(width: 8),
                               Expanded(
                                 child: ZenoTextField(
-                                  label: "Maximum Stock",
+                                  label: "Max",
                                   initialValue: p.maxStock.toString(),
                                   onChanged: (v) => controller.updateField(maxStock: int.tryParse(v)),
                                   keyboardType: TextInputType.number,
@@ -86,6 +87,7 @@ class Tab4StockSupply extends StatelessWidget {
                     const SizedBox(height: 12),
                     ZenoCard(
                       title: "Storage Location",
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                       child: Column(
                         children: [
                           ZenoDropdown<String>(
@@ -95,7 +97,7 @@ class Tab4StockSupply extends StatelessWidget {
                             onChanged: (v) => controller.updateField(warehouseLocation: v),
                             width: ZenoFieldWidth.full,
                           ),
-                          const SizedBox(height: 12),
+                          const SizedBox(height: 8),
                           Row(
                             children: [
                               Expanded(
@@ -105,7 +107,7 @@ class Tab4StockSupply extends StatelessWidget {
                                   onChanged: (v) => controller.updateField(planogramRack: v),
                                 ),
                               ),
-                              const SizedBox(width: 12),
+                              const SizedBox(width: 8),
                               Expanded(
                                 child: ZenoTextField(
                                   label: "Shelf",
@@ -113,7 +115,7 @@ class Tab4StockSupply extends StatelessWidget {
                                   onChanged: (v) => controller.updateField(planogramShelf: v),
                                 ),
                               ),
-                              const SizedBox(width: 12),
+                              const SizedBox(width: 8),
                               Expanded(
                                 child: ZenoTextField(
                                   label: "Bin",
@@ -129,13 +131,14 @@ class Tab4StockSupply extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(width: 16),
+              const SizedBox(width: 12),
               // Right Column: Supplier & Purchasing
               Expanded(
                 child: Column(
                   children: [
                     ZenoCard(
                       title: "Supplier Information",
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                       child: Column(
                         children: [
                           Row(
@@ -148,7 +151,7 @@ class Tab4StockSupply extends StatelessWidget {
                                   onChanged: (v) => controller.updateField(supplier: v),
                                 ),
                               ),
-                              const SizedBox(width: 12),
+                              const SizedBox(width: 8),
                               Expanded(
                                 child: ZenoTextField(
                                   label: "Supplier SKU",
@@ -158,7 +161,7 @@ class Tab4StockSupply extends StatelessWidget {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 12),
+                          const SizedBox(height: 8),
                           ZenoDropdown<String>(
                             label: "Secondary Supplier",
                             value: p.secondarySupplier.isEmpty ? null : p.secondarySupplier,
@@ -172,41 +175,42 @@ class Tab4StockSupply extends StatelessWidget {
                     const SizedBox(height: 12),
                     ZenoCard(
                       title: "Purchasing Terms",
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                       child: Column(
                         children: [
                           Row(
                             children: [
                               Expanded(
                                 child: ZenoDropdown<String>(
-                                  label: "Purchase Pack UOM",
+                                  label: "Pack UOM",
                                   value: p.purchaseUnit,
                                   items: ["Case", "Pallet", "Pouch", "Box"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
                                   onChanged: (v) => controller.updateField(purchaseUnit: v),
                                 ),
                               ),
-                              const SizedBox(width: 12),
+                              const SizedBox(width: 8),
                               Expanded(
                                 child: ZenoTextField(
-                                  label: "Supplier MOQ",
+                                  label: "MOQ",
                                   initialValue: p.supplierMOQ.toString(),
                                   onChanged: (v) => controller.updateField(supplierMOQ: int.tryParse(v)),
                                   keyboardType: TextInputType.number,
                                 ),
                               ),
-                            ],
-                          ),
-                          const SizedBox(height: 12),
-                          Row(
-                            children: [
+                              const SizedBox(width: 8),
                               Expanded(
                                 child: ZenoTextField(
-                                  label: "Supplier Cost",
+                                  label: "Cost",
                                   initialValue: p.supplierPurchaseCost.toString(),
                                   onChanged: (v) => controller.updateField(supplierPurchaseCost: double.tryParse(v)),
                                   keyboardType: TextInputType.number,
                                 ),
                               ),
-                              const SizedBox(width: 12),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          Row(
+                            children: [
                               Expanded(
                                 child: ZenoTextField(
                                   label: "Lead Time (Days)",
@@ -215,15 +219,16 @@ class Tab4StockSupply extends StatelessWidget {
                                   keyboardType: TextInputType.number,
                                 ),
                               ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: ZenoTextField(
+                                  label: "Payment Terms",
+                                  initialValue: p.supplierPaymentTerms,
+                                  onChanged: (v) => controller.updateField(supplierPaymentTerms: v),
+                                  hint: "e.g. Net 30",
+                                ),
+                              ),
                             ],
-                          ),
-                          const SizedBox(height: 12),
-                          ZenoTextField(
-                            label: "Payment Terms",
-                            initialValue: p.supplierPaymentTerms,
-                            onChanged: (v) => controller.updateField(supplierPaymentTerms: v),
-                            width: ZenoFieldWidth.full,
-                            hint: "e.g. Net 30",
                           ),
                         ],
                       ),

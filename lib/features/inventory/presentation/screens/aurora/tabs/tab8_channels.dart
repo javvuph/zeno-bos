@@ -18,8 +18,8 @@ class _Tab8ChannelsState extends State<Tab8Channels> {
     final p = widget.controller.product;
     final colors = Theme.of(context).extension<ZenoSemanticColors>()!;
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
+    return Padding(
+      padding: const EdgeInsets.all(12),
       child: Column(
         children: [
           Row(
@@ -30,55 +30,56 @@ class _Tab8ChannelsState extends State<Tab8Channels> {
                 flex: 4,
                 child: ZenoCard(
                   title: "Media Studio",
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text("PRIMARY IMAGE", style: TextStyle(fontSize: 10, fontWeight: FontWeight.w900, color: Colors.grey, letterSpacing: 0.5)),
-                      const SizedBox(height: 12),
+                      const Text("PRIMARY IMAGE", style: TextStyle(fontSize: 8, fontWeight: FontWeight.w900, color: Colors.grey, letterSpacing: 0.5)),
+                      const SizedBox(height: 8),
                       Container(
                         width: double.infinity,
-                        height: 220,
+                        height: 180,
                         decoration: BoxDecoration(
                           color: colors.bgTier3,
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(color: colors.borderSubtle),
                         ),
                         child: p.primaryImageUrl.isEmpty 
-                          ? Center(child: IconButton(icon: const Icon(Icons.add_a_photo_outlined, size: 40, color: Colors.grey), onPressed: () => widget.controller.pickPrimaryImage()))
+                          ? Center(child: IconButton(icon: const Icon(Icons.add_a_photo_outlined, size: 32, color: Colors.grey), onPressed: () => widget.controller.pickPrimaryImage()))
                           : Stack(
                               children: [
-                                ClipRRect(borderRadius: BorderRadius.circular(11), child: Image.network(p.primaryImageUrl, width: double.infinity, height: 220, fit: BoxFit.contain)),
-                                Positioned(top: 8, right: 8, child: IconButton(icon: const Icon(Icons.edit_outlined, color: Colors.white), onPressed: () => widget.controller.pickPrimaryImage(), style: IconButton.styleFrom(backgroundColor: Colors.black45))),
+                                ClipRRect(borderRadius: BorderRadius.circular(11), child: Image.network(p.primaryImageUrl, width: double.infinity, height: 180, fit: BoxFit.contain)),
+                                Positioned(top: 4, right: 4, child: IconButton(icon: const Icon(Icons.edit_outlined, color: Colors.white, size: 18), onPressed: () => widget.controller.pickPrimaryImage(), style: IconButton.styleFrom(backgroundColor: Colors.black45, padding: EdgeInsets.zero, visualDensity: VisualDensity.compact))),
                               ],
                             ),
                       ),
-                      const SizedBox(height: 24),
-                      const Text("GALLERY IMAGES", style: TextStyle(fontSize: 10, fontWeight: FontWeight.w900, color: Colors.grey, letterSpacing: 0.5)),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 16),
+                      const Text("GALLERY IMAGES", style: TextStyle(fontSize: 8, fontWeight: FontWeight.w900, color: Colors.grey, letterSpacing: 0.5)),
+                      const SizedBox(height: 8),
                       SizedBox(
-                        height: 100,
+                        height: 80,
                         child: ListView(
                           scrollDirection: Axis.horizontal,
                           children: [
                             ...p.galleryUrls.asMap().entries.map((e) => Padding(
-                              padding: const EdgeInsets.only(right: 12),
+                              padding: const EdgeInsets.only(right: 8),
                               child: Stack(
                                 children: [
                                   Container(
-                                    width: 100, height: 100,
+                                    width: 80, height: 80,
                                     decoration: BoxDecoration(color: colors.bgTier3, borderRadius: BorderRadius.circular(8), border: Border.all(color: colors.borderSubtle)),
                                     child: ClipRRect(borderRadius: BorderRadius.circular(7), child: Image.network(e.value, fit: BoxFit.cover)),
                                   ),
-                                  Positioned(top: 4, right: 4, child: InkWell(onTap: () => widget.controller.removeGalleryImage(e.key), child: Container(padding: const EdgeInsets.all(2), decoration: const BoxDecoration(color: Colors.black54, shape: BoxShape.circle), child: const Icon(Icons.close, size: 12, color: Colors.white)))),
+                                  Positioned(top: 2, right: 2, child: InkWell(onTap: () => widget.controller.removeGalleryImage(e.key), child: Container(padding: const EdgeInsets.all(1), decoration: const BoxDecoration(color: Colors.black54, shape: BoxShape.circle), child: const Icon(Icons.close, size: 10, color: Colors.white)))),
                                 ],
                               ),
                             )),
                             InkWell(
                               onTap: () => widget.controller.addToGallery(),
                               child: Container(
-                                width: 100, height: 100,
+                                width: 80, height: 80,
                                 decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), border: Border.all(color: colors.borderSubtle, style: BorderStyle.solid)),
-                                child: const Center(child: Icon(Icons.add_photo_alternate_outlined, color: Colors.grey)),
+                                child: const Center(child: Icon(Icons.add_photo_alternate_outlined, color: Colors.grey, size: 20)),
                               ),
                             ),
                           ],
@@ -88,7 +89,7 @@ class _Tab8ChannelsState extends State<Tab8Channels> {
                   ),
                 ),
               ),
-              const SizedBox(width: 16),
+              const SizedBox(width: 12),
               // Right Column: Online & Visibility
               Expanded(
                 flex: 5,
@@ -96,6 +97,7 @@ class _Tab8ChannelsState extends State<Tab8Channels> {
                   children: [
                     ZenoCard(
                       title: "Online Presentation",
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                       child: Column(
                         children: [
                           ZenoTextField(
@@ -104,7 +106,7 @@ class _Tab8ChannelsState extends State<Tab8Channels> {
                             onChanged: (v) => widget.controller.updateField(marketingTitle: v),
                             width: ZenoFieldWidth.full,
                           ),
-                          const SizedBox(height: 12),
+                          const SizedBox(height: 8),
                           Row(
                             children: [
                               Expanded(
@@ -114,17 +116,17 @@ class _Tab8ChannelsState extends State<Tab8Channels> {
                                   onChanged: (v) => widget.controller.updateField(urlSlug: v),
                                 ),
                               ),
-                              const SizedBox(width: 12),
+                              const SizedBox(width: 8),
                               Expanded(
                                 child: ZenoTextField(
-                                  label: "Keywords (SEO)",
+                                  label: "Keywords",
                                   initialValue: p.searchKeywords.join(", "),
                                   onChanged: (v) => widget.controller.updateField(searchKeywords: v.split(',').map((e)=>e.trim()).toList()),
                                 ),
                               ),
                             ],
                           ),
-                          const SizedBox(height: 12),
+                          const SizedBox(height: 8),
                           ZenoTextField(
                             label: "Meta Description",
                             initialValue: p.metaDescription,
@@ -132,13 +134,13 @@ class _Tab8ChannelsState extends State<Tab8Channels> {
                             width: ZenoFieldWidth.full,
                             maxLines: 2,
                           ),
-                          const SizedBox(height: 12),
+                          const SizedBox(height: 8),
                           ZenoTextField(
                             label: "Online Description",
                             initialValue: p.description, 
                             onChanged: (v) => widget.controller.updateField(description: v),
                             width: ZenoFieldWidth.full,
-                            maxLines: 3,
+                            maxLines: 2,
                           ),
                         ],
                       ),
@@ -146,14 +148,15 @@ class _Tab8ChannelsState extends State<Tab8Channels> {
                     const SizedBox(height: 12),
                     ZenoCard(
                       title: "Channel Visibility",
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                       child: Wrap(
-                        spacing: 24,
-                        runSpacing: 12,
+                        spacing: 16,
+                        runSpacing: 8,
                         children: [
                           _channelToggle("POS STORE", p.isQuickPOSSale, (v) => widget.controller.updateField(isQuickPOSSale: v)),
                           _channelToggle("WEB STORE", p.visibility == "Public", (v) => widget.controller.updateField(visibility: v ? "Public" : "Private")),
-                          _channelToggle("MOBILE APP", p.featuredProduct, (v) => widget.controller.updateField(featuredProduct: v)),
-                          _channelToggle("B2B PORTAL", p.posHotkeyEnabled, (v) => widget.controller.updateField(posHotkeyEnabled: v)),
+                          _channelToggle("MOBILE APP", p.appVisibility, (v) => widget.controller.updateField(appVisibility: v)),
+                          _channelToggle("B2B PORTAL", p.b2bVisibility, (v) => widget.controller.updateField(b2bVisibility: v)),
                         ],
                       ),
                     ),

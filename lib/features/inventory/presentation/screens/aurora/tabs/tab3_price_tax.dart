@@ -13,7 +13,7 @@ class Tab3PriceTax extends StatelessWidget {
     final p = controller.product;
     final colors = Theme.of(context).extension<ZenoSemanticColors>()!;
 
-    return SingleChildScrollView(
+    return Padding(
       padding: const EdgeInsets.all(16),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -24,6 +24,7 @@ class Tab3PriceTax extends StatelessWidget {
               children: [
                 ZenoCard(
                   title: "Commercial Pricing",
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   child: Column(
                     children: [
                       Row(
@@ -36,7 +37,7 @@ class Tab3PriceTax extends StatelessWidget {
                               keyboardType: TextInputType.number,
                             ),
                           ),
-                          const SizedBox(width: 12),
+                          const SizedBox(width: 8),
                           Expanded(
                             child: ZenoTextField(
                               label: "Selling Price",
@@ -47,18 +48,18 @@ class Tab3PriceTax extends StatelessWidget {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 8),
                       Row(
                         children: [
                           Expanded(
                             child: ZenoTextField(
-                              label: "MRP (Statutory)",
+                              label: "MRP",
                               initialValue: p.mrp.toString(),
                               onChanged: (v) => controller.updateField(mrp: double.tryParse(v)),
                               keyboardType: TextInputType.number,
                             ),
                           ),
-                          const SizedBox(width: 12),
+                          const SizedBox(width: 8),
                           Expanded(
                             child: ZenoTextField(
                               label: "Wholesale Price",
@@ -69,7 +70,7 @@ class Tab3PriceTax extends StatelessWidget {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 8),
                       Row(
                         children: [
                           Expanded(
@@ -80,7 +81,7 @@ class Tab3PriceTax extends StatelessWidget {
                               onChanged: (v) => controller.updateField(discountType: v),
                             ),
                           ),
-                          const SizedBox(width: 12),
+                          const SizedBox(width: 8),
                           Expanded(
                             child: ZenoTextField(
                               label: "Discount Value",
@@ -91,20 +92,20 @@ class Tab3PriceTax extends StatelessWidget {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 8),
                       Row(
                         children: [
                           Expanded(
                             child: ZenoTextField(
                               label: "Promotional Price",
-                              initialValue: p.onlinePrice.toString(), // Reusing onlinePrice for promo if no specific field
-                              onChanged: (v) => controller.updateField(onlinePrice: double.tryParse(v)),
+                              initialValue: p.promotionalPrice.toString(),
+                              onChanged: (v) => controller.updateField(promotionalPrice: double.tryParse(v)),
                               keyboardType: TextInputType.number,
                             ),
                           ),
-                          const SizedBox(width: 12),
+                          const SizedBox(width: 8),
                           Expanded(
-                            child: _buildSwitchRow(colors, "Price Floor Lock", p.posHotkeyEnabled, (v) => controller.updateField(posHotkeyEnabled: v)), // Reusing posHotkeyEnabled for lock
+                            child: _buildSwitchRow(colors, "Price Floor Lock", p.priceFloorLock, (v) => controller.updateField(priceFloorLock: v)),
                           ),
                         ],
                       ),
@@ -114,13 +115,14 @@ class Tab3PriceTax extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(width: 16),
+          const SizedBox(width: 12),
           // Right Column: Taxation
           Expanded(
             child: Column(
               children: [
                 ZenoCard(
                   title: "Taxation & Compliance",
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   child: Column(
                     children: [
                       ZenoTextField(
@@ -128,9 +130,9 @@ class Tab3PriceTax extends StatelessWidget {
                         label: "HSN Code",
                         initialValue: p.hsnCode,
                         onChanged: (v) => controller.updateField(hsnCode: v),
-                        width: ZenoFieldWidth.medium,
+                        width: ZenoFieldWidth.full,
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 8),
                       Row(
                         children: [
                           Expanded(
@@ -141,7 +143,7 @@ class Tab3PriceTax extends StatelessWidget {
                               onChanged: (v) => controller.updateField(taxStatus: v),
                             ),
                           ),
-                          const SizedBox(width: 12),
+                          const SizedBox(width: 8),
                           Expanded(
                             child: ZenoDropdown<String>(
                               label: "Tax Category",
@@ -152,7 +154,7 @@ class Tab3PriceTax extends StatelessWidget {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 8),
                       Row(
                         children: [
                           Expanded(
@@ -163,7 +165,7 @@ class Tab3PriceTax extends StatelessWidget {
                               keyboardType: TextInputType.number,
                             ),
                           ),
-                          const SizedBox(width: 12),
+                          const SizedBox(width: 8),
                           Expanded(
                             child: ZenoDropdown<String>(
                               label: "GST Tax Mode",
