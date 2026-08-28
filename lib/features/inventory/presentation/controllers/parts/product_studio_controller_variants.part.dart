@@ -1,3 +1,5 @@
+// @LOCKED: VERSION_CLOTHING_V1
+// DO NOT MODIFY THE CLOTHING/FASHION LOGIC WITHOUT EXPLICIT PERMISSION.
 part of '../product_studio_controller.dart';
 
 extension ProductStudioControllerVariants on ProductStudioController {
@@ -12,7 +14,27 @@ extension ProductStudioControllerVariants on ProductStudioController {
     generateMatrix();
   }
   
-  void addCustomColor(String color) { if (!availableColors.contains(color)) { availableColors.add(color); toggleColor(color); } }
+  void addCustomColor(String color, [Color? colorValue]) { 
+    if (!availableColors.contains(color)) { 
+      availableColors.add(color); 
+      if (colorValue != null) customColorMap[color] = colorValue;
+      toggleColor(color); 
+    } 
+  }
+
+  void toggleColorManageMode() {
+    isColorManageMode = !isColorManageMode;
+    notify();
+  }
+  
+  void removeCustomColor(String color) {
+    if (availableColors.contains(color)) {
+      availableColors.remove(color);
+      selectedColors.remove(color);
+      customColorMap.remove(color);
+      generateMatrix();
+    }
+  }
   void addCustomSize(String size) { toggleSize(size); }
 
   void toggleSize(String size) { 
@@ -20,14 +42,14 @@ extension ProductStudioControllerVariants on ProductStudioController {
     else selectedSizes.add(size); 
     generateMatrix();
   }
-  void setSizeType(VariantSizeType t) { sizeType = t; selectedSizes.clear(); notify(); }
+  void setSizeType(VariantSizeType t) { sizeType = t; selectedSizes.clear(); generateMatrix(); }
   void setActiveVariant(int index) { activeVariantIndex = index; notify(); }
 
   List<String> getSizesForType(VariantSizeType type) {
     switch (type) {
       case VariantSizeType.alpha:
       case VariantSizeType.alphabetic:
-        return ["XS", "S", "M", "L", "XL", "XXL"];
+        return ["S", "M", "L", "XL", "XXL", "XXXL"];
       case VariantSizeType.numeric:
       case VariantSizeType.numericUK:
         return ["6", "7", "8", "9", "10", "11"];
@@ -65,10 +87,19 @@ extension ProductStudioControllerVariants on ProductStudioController {
   }
 
   Color getColorValue(String colorName) {
+    if (customColorMap.containsKey(colorName)) return customColorMap[colorName]!;
     switch (colorName.toLowerCase()) {
-      case 'black': return Colors.black; case 'white': return Colors.white; case 'red': return Colors.red;
-      case 'blue': return Colors.blue; case 'green': return Colors.green; case 'beige': return const Color(0xFFF5F5DC);
-      default: return Colors.grey;
+      case 'black': return Colors.black;
+      case 'white': return Colors.white;
+      case 'red': return Colors.red;
+      case 'blue': return Colors.blue;
+      case 'navy': return const Color(0xFF000080);
+      case 'green': return Colors.green;
+      case 'beige': return const Color(0xFFF5F5DC);
+      case 'yellow': return Colors.yellow;
+      case 'orange': return Colors.orange;
+      case 'grey': return Colors.grey;
+      default: return Colors.blueGrey;
     }
   }
 

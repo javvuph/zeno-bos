@@ -4,6 +4,7 @@ class StoreBranch {
   String legalName;
   String industry;
   String subType;
+  List<String> enabledSubTypes;
   String country;
   String state;
   String address;
@@ -37,6 +38,7 @@ class StoreBranch {
     required this.legalName,
     required this.industry,
     required this.subType,
+    this.enabledSubTypes = const [],
     required this.country,
     required this.state,
     this.address = "",
@@ -52,7 +54,7 @@ class StoreBranch {
     required this.qrUrl,
     this.autoPrintPos = false,
     this.assignedUsers = const [],
-    this.businessSize = "Small (SMB)",
+    this.businessSize = "SMALL",
     this.operationMode = "Counter-Service",
     this.barcodeTemplate = "EAN-13 Standard",
     this.receiptTemplate = "Thermal 80mm Standard",
@@ -74,6 +76,7 @@ class StoreBranch {
     String? legalName,
     String? industry,
     String? subType,
+    List<String>? enabledSubTypes,
     String? country,
     String? state,
     String? address,
@@ -105,6 +108,7 @@ class StoreBranch {
       legalName: legalName ?? this.legalName,
       industry: industry ?? this.industry,
       subType: subType ?? this.subType,
+      enabledSubTypes: enabledSubTypes ?? List.from(this.enabledSubTypes),
       country: country ?? this.country,
       state: state ?? this.state,
       address: address ?? this.address,
@@ -138,6 +142,7 @@ class StoreBranch {
         'legalName': legalName,
         'industry': industry,
         'subType': subType,
+        'enabledSubTypes': enabledSubTypes,
         'country': country,
         'state': state,
         'address': address,
@@ -164,12 +169,22 @@ class StoreBranch {
         'numberingPrefixes': numberingPrefixes,
       };
 
-  factory StoreBranch.fromJson(Map<String, dynamic> json) => StoreBranch(
+  factory StoreBranch.fromJson(Map<String, dynamic> json) {
+    final subType = json['subType'] as String? ?? "";
+    final enabledSubTypesJson = json['enabledSubTypes'] as List<dynamic>?;
+    
+    // Migration: If enabledSubTypes is missing but subType exists, use subType
+    final enabledSubTypes = (enabledSubTypesJson != null)
+        ? List<String>.from(enabledSubTypesJson)
+        : (subType.isNotEmpty ? [subType] : <String>[]);
+
+    return StoreBranch(
         id: json['id'],
         name: json['name'],
         legalName: json['legalName'],
         industry: json['industry'],
-        subType: json['subType'],
+        subType: subType,
+        enabledSubTypes: enabledSubTypes,
         country: json['country'],
         state: json['state'],
         address: json['address'] ?? "",
@@ -196,4 +211,5 @@ class StoreBranch {
         numberingPrefixes:
             Map<String, String>.from(json['numberingPrefixes'] ?? {}),
       );
+  }
 }

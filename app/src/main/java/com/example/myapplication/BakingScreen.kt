@@ -55,14 +55,16 @@ val imageDescriptions = arrayOf(
 
 @Composable
 fun BakingScreen(
+    modifier: Modifier = Modifier,
     bakingViewModel: BakingViewModel = viewModel(),
 ) {
     val selectedImage = rememberSaveable { mutableIntStateOf(0) }
     var prompt by rememberSaveable { mutableStateOf("") }
     val uiState by bakingViewModel.uiState.collectAsState()
     val resources = LocalResources.current
+    val scrollState = rememberScrollState()
 
-    Scaffold { innerPadding ->
+    Scaffold(modifier = modifier) { innerPadding ->
         Column(
             modifier = Modifier.padding(innerPadding).fillMaxSize(),
         ) {
@@ -128,7 +130,7 @@ fun BakingScreen(
                         )
                         bakingViewModel.sendPrompt(bitmap, prompt)
                     },
-                    enabled = prompt.isNotEmpty(),
+                    enabled = prompt.isNotEmpty() && uiState !is UiState.Loading,
                     modifier = Modifier
                         .align(Alignment.CenterVertically)
                 ) {
@@ -143,9 +145,8 @@ fun BakingScreen(
                     is UiState.Error -> state.errorMessage to MaterialTheme.colorScheme.error
                     is UiState.Success -> state.outputText to MaterialTheme.colorScheme.onSurface
                     is UiState.Initial -> stringResource(R.string.results_placeholder) to MaterialTheme.colorScheme.onSurface
-                    else -> "" to MaterialTheme.colorScheme.onSurface
+                    UiState.Loading -> "" to MaterialTheme.colorScheme.onSurface
                 }
-                val scrollState = rememberScrollState()
                 Surface(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)

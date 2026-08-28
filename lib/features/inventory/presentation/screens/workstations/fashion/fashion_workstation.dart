@@ -1,3 +1,5 @@
+// @LOCKED: VERSION_CLOTHING_V1
+// DO NOT MODIFY THIS FILE WITHOUT EXPLICIT PERMISSION FROM THE USER.
 import 'package:flutter/material.dart';
 import 'package:zeno/app/theme.dart';
 import '../../../controllers/product_studio_controller.dart';
@@ -47,7 +49,12 @@ class FashionWorkstation extends StatelessWidget {
       color: colors.bgTier1,
       child: Column(children: [
         ProductStudioTabs(controller: controller, profileTitle: config.tabTitle),
-        Expanded(child: SingleChildScrollView(padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20), child: _buildActiveTab(sub, config))),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+            child: _buildActiveTab(sub, config),
+          ),
+        ),
         buildStickyFooter(colors),
       ]),
     );

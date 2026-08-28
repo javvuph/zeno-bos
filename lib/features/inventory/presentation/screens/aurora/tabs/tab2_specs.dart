@@ -3,6 +3,7 @@ import 'package:zeno/app/theme.dart';
 import 'package:zeno/core/widgets/zeno_inputs.dart';
 import 'package:zeno/core/widgets/zeno_card.dart';
 import '../../../../domain/models/product_studio_data.dart';
+import '../../../../domain/models/product_studio_enums.dart';
 import '../../../controllers/product_studio_controller.dart';
 
 class Tab2Specs extends StatefulWidget {
@@ -25,7 +26,96 @@ class _Tab2SpecsState extends State<Tab2Specs> {
   @override
   Widget build(BuildContext context) {
     final p = widget.controller.product;
+    final bType = p.businessType.toUpperCase();
+    final scale = p.businessScale;
+    final profile = widget.controller.activeProfile;
+    final isClothingSmall = profile == "Clothing" && bType == "FASHION" && scale == BusinessScale.small;
     final colors = Theme.of(context).extension<ZenoSemanticColors>()!;
+
+    if (isClothingSmall) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Column(
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: Column(
+                    children: [
+                      _compactSection("CLASSIFICATION", colors, [
+                        ZenoDropdown<String>(label: "Apparel Category", value: p.apparelCategory.isEmpty ? null : p.apparelCategory, items: ["T-Shirt", "Shirt", "Dress", "Trousers", "Saree", "Suit"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => widget.controller.updateField(apparelCategory: v)),
+                        const SizedBox(height: 12),
+                        Row(
+                          children: [
+                            Expanded(child: ZenoDropdown<String>(label: "Gender", value: p.gender.isEmpty ? null : p.gender, items: ["Men", "Women", "Unisex", "Boys", "Girls", "Infant"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => widget.controller.updateField(gender: v))),
+                            const SizedBox(width: 8),
+                            Expanded(child: ZenoDropdown<String>(label: "Age Group", value: p.targetAgeGroup.isEmpty ? null : p.targetAgeGroup, items: ["Adult", "Teen", "Kids", "Toddler", "Baby"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => widget.controller.updateField(targetAgeGroup: v))),
+                          ],
+                        ),
+                      ]),
+                      const SizedBox(height: 12),
+                      _compactSection("COLLECTION & SEASON", colors, [
+                        Row(
+                          children: [
+                            Expanded(child: ZenoDropdown<String>(label: "Season", value: p.season.isEmpty ? null : p.season, items: ["Summer", "Winter", "Spring", "Autumn", "All-Season"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => widget.controller.updateField(season: v))),
+                            const SizedBox(width: 8),
+                            Expanded(child: ZenoTextField(label: "Collection / Edition", initialValue: p.collectionEdition, onChanged: (v) => widget.controller.updateField(collectionEdition: v))),
+                          ],
+                        ),
+                      ]),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  flex: 4,
+                  child: Column(
+                    children: [
+                      _compactSection("FABRIC & MATERIAL", colors, [
+                        Row(
+                          children: [
+                            Expanded(child: ZenoTextField(label: "Material", initialValue: p.material, onChanged: (v) => widget.controller.updateField(material: v))),
+                            const SizedBox(width: 8),
+                            Expanded(child: ZenoTextField(label: "Fabric Composition", initialValue: p.ingredients, onChanged: (v) => widget.controller.updateField(ingredients: v))),
+                          ],
+                        ),
+                      ]),
+                      const SizedBox(height: 12),
+                      _compactSection("DESIGN", colors, [
+                        Row(
+                          children: [
+                            Expanded(child: ZenoDropdown<String>(label: "Pattern / Design", value: p.patternDesign.isEmpty ? null : p.patternDesign, items: ["Solid", "Striped", "Checked", "Printed", "Floral"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => widget.controller.updateField(patternDesign: v))),
+                            const SizedBox(width: 8),
+                            Expanded(child: ZenoDropdown<String>(label: "Fit Type", value: p.fitType.isEmpty ? null : p.fitType, items: ["Regular", "Slim", "Relaxed", "Oversized"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => widget.controller.updateField(fitType: v))),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                        Row(
+                          children: [
+                            Expanded(child: ZenoDropdown<String>(label: "Sleeve Type", value: p.styleCategory.isEmpty ? null : p.styleCategory, items: ["Sleeveless", "Short Sleeve", "Full Sleeve", "3/4 Sleeve"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => widget.controller.updateField(styleCategory: v))),
+                            const SizedBox(width: 8),
+                            Expanded(child: ZenoDropdown<String>(label: "Neck Type", value: p.sleeveNeckType.isEmpty ? null : p.sleeveNeckType, items: ["Round Neck", "V-Neck", "Polo", "Collar"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => widget.controller.updateField(sleeveNeckType: v))),
+                          ],
+                        ),
+                      ]),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  flex: 2,
+                  child: _compactSection("CARE", colors, [
+                    ZenoTextField(label: "Care Guide", initialValue: p.careGuide, onChanged: (v) => widget.controller.updateField(careGuide: v), maxLines: 6),
+                  ]),
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+    }
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
@@ -352,6 +442,17 @@ class _Tab2SpecsState extends State<Tab2Specs> {
           const SizedBox(width: 10),
           Expanded(child: child),
         ],
+      ),
+    );
+  }
+
+  Widget _compactSection(String title, ZenoSemanticColors colors, List<Widget> children) {
+    return ZenoCard(
+      title: title,
+      padding: const EdgeInsets.all(12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: children,
       ),
     );
   }

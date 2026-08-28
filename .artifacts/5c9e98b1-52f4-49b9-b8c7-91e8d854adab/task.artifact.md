@@ -1,0 +1,5 @@
+- `[x]` Rebuild `FashionVariantsTab` with Size Row and Colour Row
+- `[x]` Update `VariantMatrix` for compact toolbar and internal scroll
+- `[x]` Redesign `VariantMatrixRow` for compact numbered layout
+- `[x]` Verify dynamic generation and functionality (SKU, Price, Stock, etc.)
+- `[x]` Added Navy to colours and updated Size System logic

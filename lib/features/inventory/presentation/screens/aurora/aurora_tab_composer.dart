@@ -1,7 +1,6 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:zeno/features/inventory/presentation/controllers/product_studio_controller.dart';
 import '../../../domain/models/product_studio_enums.dart';
-import 'aurora_profile_visibility.dart';
 
 class AuroraTabDefinition {
   final AuroraStudioTab id;
@@ -20,6 +19,40 @@ class AuroraTabComposer {
     ProductStudioController controller,
   ) {
     final profile = controller.activeProfile;
+    final bType = controller.product.businessType.toUpperCase();
+    final scale = controller.product.businessScale;
+    final isClothingSmall = profile == "Clothing" && bType == "FASHION" && scale == BusinessScale.small;
+
+    if (isClothingSmall) {
+      return const [
+        AuroraTabDefinition(
+          id: AuroraStudioTab.identity,
+          label: 'BASIC INFO',
+          icon: Icons.badge_outlined,
+        ),
+        AuroraTabDefinition(
+          id: AuroraStudioTab.planogram,
+          label: 'SPECS',
+          icon: Icons.settings_suggest_outlined,
+        ),
+        AuroraTabDefinition(
+          id: AuroraStudioTab.logistics,
+          label: 'VARIANTS',
+          icon: Icons.layers_outlined,
+        ),
+        AuroraTabDefinition(
+          id: AuroraStudioTab.pricing,
+          label: 'STOCK & PRICE',
+          icon: Icons.payments_outlined,
+        ),
+        AuroraTabDefinition(
+          id: AuroraStudioTab.media,
+          label: 'MEDIA & SEO',
+          icon: Icons.image_outlined,
+        ),
+      ];
+    }
+
     final isGroceryKirana = profile == "Grocery / Kirana";
 
     if (isGroceryKirana) {

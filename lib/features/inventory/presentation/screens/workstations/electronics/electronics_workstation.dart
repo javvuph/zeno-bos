@@ -40,7 +40,12 @@ class ElectronicsWorkstation extends StatelessWidget {
       color: colors.bgTier1,
       child: Column(children: [
         _buildTopTabs(config),
-        Expanded(child: SingleChildScrollView(padding: const EdgeInsets.all(16), child: _buildActiveTab(profile, config))),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: _buildActiveTab(profile, config),
+          ),
+        ),
         buildStickyFooter(colors),
       ]),
     );

@@ -101,7 +101,16 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
       Row(children: [
         Expanded(child: ZenoTextField(label: "SKU / Barcode ID", controller: _skuController, hint: "e.g. PRD-9001", isRequired: true)),
         const SizedBox(width: 24),
-        Expanded(child: ZenoDropdown<String>(label: "Master Category", items: const [DropdownMenuItem(value: "e", child: Text("ELECTRONICS")), DropdownMenuItem(value: "f", child: Text("FASHION"))], onChanged: (v) {})),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text("Business Configuration", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.grey)),
+              const SizedBox(height: 8),
+              Text("🔒 ${controller.currentProduct?.category?.name ?? 'Standard Retail'}", style: const TextStyle(fontWeight: FontWeight.w600)),
+            ],
+          ),
+        ),
       ]),
     ]));
   }

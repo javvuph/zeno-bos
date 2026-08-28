@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:zeno/app/theme.dart';
+import '../../../../domain/models/product_studio_enums.dart';
 import '../../../controllers/product_studio_controller.dart';
 import '../../../controllers/registries/fashion_config.dart';
 import '../../workstations/fashion/fashion_variants_tab.dart';
@@ -16,18 +17,29 @@ class Tab2Engine extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<ZenoSemanticColors>()!;
-    final bType = controller.product.businessType;
+    final p = controller.product;
+    final scale = p.businessScale;
+    final profile = controller.activeProfile;
+    final isClothingSmall = profile == "Clothing" && scale == BusinessScale.small;
+    final bType = p.businessType.toUpperCase();
 
     Widget engine;
     String title = "Engine & Logic";
     String subtitle = "Sector-specific computational workstations";
 
-    if (bType == "Fashion") {
+    if (bType == "FASHION") {
       final sub = getFashionSubBusiness(controller.product.businessCategory);
       final config = fashionConfigMap[sub]!;
       title = "Variant Matrix";
       subtitle = "Cartesian generation of colors and sizes";
       engine = FashionVariantsTab(controller: controller, colors: colors, config: config);
+      
+      if (isClothingSmall) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: engine,
+        );
+      }
     } else if (bType == "Food & Beverage") {
       title = "Kitchen & Recipe";
       subtitle = "Raw materials and production orchestration";

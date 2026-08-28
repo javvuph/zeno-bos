@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:zeno/app/theme.dart';
 import 'package:zeno/core/widgets/zeno_inputs.dart';
 import 'package:zeno/features/administration/presentation/controllers/store_setup_controller.dart';
+import 'business_setup_selector.dart';
 
 class StoreSetupModal extends StatefulWidget {
   const StoreSetupModal({super.key});
@@ -17,7 +18,83 @@ class _StoreSetupModalState extends State<StoreSetupModal> {
   int _activeTab = 0;
   String _searchQuery = "";
 
-  // EDITING STATE
+  bool _showConfigWarning = false;
+  bool _isAdmin = true; // Placeholder: In real ZENO this would come from AuthProvider
+  bool get _isConfigLocked => _editingStore.industry.isNotEmpty && _editingStore.subType.isNotEmpty;
+
+  void _handleConfigChange(String? main, String? sub, String? scale, {bool isToggle = false}) {
+    if (_isConfigLocked) {
+      if (!_isAdmin) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Only administrators can change business configuration")),
+        );
+        return;
+      }
+      _showConfigurationChangeWarning(() {
+        _applyConfigChange(main, sub, scale, isToggle: isToggle);
+      });
+    } else {
+      _applyConfigChange(main, sub, scale, isToggle: isToggle);
+    }
+  }
+
+  void _applyConfigChange(String? main, String? sub, String? scale, {bool isToggle = false}) {
+    setState(() {
+      if (main != null) {
+        _editingStore.industry = main;
+        final subTypes = controller.getSubTypes(main);
+        _editingStore.subType = subTypes.first;
+        _editingStore.enabledSubTypes = [subTypes.first];
+      }
+      if (sub != null) {
+        if (isToggle) {
+          if (_editingStore.enabledSubTypes.contains(sub)) {
+            if (_editingStore.enabledSubTypes.length > 1) {
+              _editingStore.enabledSubTypes.remove(sub);
+              if (_editingStore.subType == sub) {
+                _editingStore.subType = _editingStore.enabledSubTypes.first;
+              }
+            }
+          } else {
+            _editingStore.enabledSubTypes.add(sub);
+          }
+        } else {
+          _editingStore.subType = sub;
+          _editingStore.enabledSubTypes = [sub];
+        }
+      }
+      if (scale != null) {
+        _editingStore.businessSize = scale;
+      }
+    });
+  }
+
+  void _showConfigurationChangeWarning(VoidCallback onConfirm) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Change Configuration?"),
+        content: const Text(
+          "Changing your business configuration may change product fields, "
+          "workflows, inventory behavior, reports and other business features. "
+          "Are you sure you want to proceed?"
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("CANCEL"),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              onConfirm();
+            },
+            child: const Text("CONFIRM CHANGE"),
+          ),
+        ],
+      ),
+    );
+  }
   bool _isNew = false;
   late StoreBranch _editingStore;
 
@@ -108,8 +185,8 @@ class _StoreSetupModalState extends State<StoreSetupModal> {
         id: "PENDING",
         name: "",
         legalName: "",
-        industry: "Retail & General Trading",
-        subType: "General Retail",
+        industry: "RETAIL",
+        subType: "Hypermarket",
         country: "India",
         state: "Kerala",
         address: "",
@@ -123,7 +200,7 @@ class _StoreSetupModalState extends State<StoreSetupModal> {
         isTaxExempt: false,
         status: "Draft",
         qrUrl: "",
-        businessSize: "Small (SMB)",
+        businessSize: "SMALL",
         operationMode: "Counter-Service",
         barcodeTemplate: "EAN-13 Standard",
         receiptTemplate: "Thermal 80mm Standard",
@@ -622,31 +699,17 @@ class _StoreSetupModalState extends State<StoreSetupModal> {
           ],
         ),
         const SizedBox(height: 16),
-        Row(
-          children: [
-            Expanded(
-              child: ZenoDropdown<String>(
-                label: "Industry Vertical",
-                value: _editingStore.industry,
-                items: controller.industries
-                    .map((i) => DropdownMenuItem(value: i, child: Text(i)))
-                    .toList(),
-                onChanged: _handleIndustryChange,
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: ZenoDropdown<String>(
-                label: "Sub-Business Type",
-                value: _editingStore.subType,
-                items: controller
-                    .getSubTypes(_editingStore.industry)
-                    .map((i) => DropdownMenuItem(value: i, child: Text(i)))
-                    .toList(),
-                onChanged: (v) => setState(() => _editingStore.subType = v!),
-              ),
-            ),
-          ],
+        BusinessSetupSelector(
+          mainBusinesses: controller.industries,
+          subBusinesses: controller.getSubTypes(_editingStore.industry),
+          scales: controller.businessSizes,
+          selectedMain: _editingStore.industry,
+          enabledSubs: _editingStore.enabledSubTypes,
+          selectedScale: _editingStore.businessSize,
+          onMainChanged: (v) => _handleConfigChange(v, null, null),
+          onSubToggled: (v) => _handleConfigChange(null, v, null, isToggle: true),
+          onScaleChanged: (v) => _handleConfigChange(null, null, v),
+          isLocked: _isConfigLocked && !_isAdmin,
         ),
       ],
     );
@@ -661,18 +724,6 @@ class _StoreSetupModalState extends State<StoreSetupModal> {
           children: [
             Expanded(
               child: ZenoDropdown<String>(
-                label: "Business Size",
-                value: _editingStore.businessSize,
-                items: controller.businessSizes
-                    .map((i) => DropdownMenuItem(value: i, child: Text(i)))
-                    .toList(),
-                onChanged: (v) =>
-                    setState(() => _editingStore.businessSize = v!),
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: ZenoDropdown<String>(
                 label: "Operation Mode",
                 value: _editingStore.operationMode,
                 items: controller.operationModes
@@ -682,6 +733,8 @@ class _StoreSetupModalState extends State<StoreSetupModal> {
                     setState(() => _editingStore.operationMode = v!),
               ),
             ),
+            const SizedBox(width: 16),
+            const Spacer(),
           ],
         ),
         const SizedBox(height: 24),

@@ -5,7 +5,7 @@ import 'package:zeno/navigation/widgets/enterprise/top_command_bar.dart';
 import 'package:zeno/navigation/widgets/enterprise/enterprise_bottom_status_bar.dart';
 import 'package:zeno/navigation/widgets/enterprise/enterprise_right_panel.dart';
 import 'package:zeno/navigation/widgets/zeno_nav_rail.dart';
-import 'package:zeno/navigation/widgets/quick_access_workspace.dart';
+import 'package:zeno/navigation/widgets/zeno_quick_access_toolbar.dart';
 import 'package:zeno/navigation/menu_registry.dart';
 import 'package:zeno/navigation/widgets/enterprise/workspace_control_bar.dart';
 import 'package:zeno/navigation/widgets/zeno_mega_menu_overlay.dart';
@@ -87,7 +87,7 @@ class _ZenoShellState extends State<ZenoShell> {
                               Expanded(
                                 child: Column(
                                   children: [
-                                    const QuickAccessWorkspace(),
+                                    const ZenoQuickAccessToolbar(),
                                     if (_isDashboardPage)
                                       const WorkspaceControlBar(),
                                     Expanded(

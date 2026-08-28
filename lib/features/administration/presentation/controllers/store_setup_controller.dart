@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:zeno/features/administration/domain/models/store_branch.dart';
 import 'package:zeno/features/administration/data/services/store_sync_service.dart';
+import 'package:zeno/features/inventory/presentation/controllers/registries/sub_business_registry.dart';
 
 export 'package:zeno/features/administration/domain/models/store_branch.dart';
 
@@ -20,8 +21,9 @@ class StoreSetupController extends ChangeNotifier {
       id: "STR-9821-IND",
       name: "Tagsole Main",
       legalName: "Tagsole Apparel Private Limited",
-      industry: "Fashion & Apparel",
-      subType: "Clothing Store",
+      industry: "FASHION",
+      subType: "Clothing",
+      enabledSubTypes: ["Clothing", "Footwear"],
       country: "India",
       state: "Kerala",
       currency: "INR (₹)",
@@ -30,146 +32,41 @@ class StoreSetupController extends ChangeNotifier {
       isTaxExempt: false,
       status: "Active",
       qrUrl: "https://zeno.store/str-9821-ind",
+      businessSize: "SMALL",
     ),
   ];
 
   List<StoreBranch> get stores => List.unmodifiable(_stores);
 
   final List<String> industries = [
-    'Retail & General Trading',
-    'Supermarket & Grocery',
-    'Food & Beverage',
-    'Pharmacy & Healthcare',
-    'Fashion & Apparel',
-    'Electronics',
-    'Hardware',
-    'Automotive',
-    'Wholesale',
-    'Manufacturing',
-    'Services',
-    'Books & Stationery',
-    'Beauty & Cosmetics',
-    'Jewelry & Watches',
-    'Home & Furniture',
-    'Pet Supplies',
-    'Sports & Outdoors',
-    'Toy Store',
-    'Optical & Eye Care',
-    'Footwear',
-    'Electronics & IT',
-    'Gift & Souvenir',
-    'Digital Products',
-    'Telecommunications',
-    'Hospitality',
-    'Real Estate',
-    'Logistics & Shipping',
-    'Education',
-    'Agriculture',
-    'Other'
+    'RETAIL',
+    'FOOD & BEVERAGE',
+    'FASHION',
+    'HEALTHCARE',
+    'SERVICES',
+    'WHOLESALE',
+    'ELECTRONICS',
+    'FURNITURE',
+    'HARDWARE',
+    'AUTOMOBILE',
+    'AGRICULTURE',
+    'PET SHOP',
+    'STATIONERY',
+    'BOOK STORE',
+    'TOY STORE',
+    'SPORTS STORE',
+    'HOME DECOR',
+    'GENERAL / STANDARD'
   ];
 
-  final Map<String, List<String>> industryMatrix = {
-    'Retail & General Trading': [
-      'General Retail',
-      'Boutique',
-      'Kiosk',
-      'Department Store'
-    ],
-    'Supermarket & Grocery': [
-      'Convenience Store',
-      'Organic Market',
-      'Hypermarket',
-      'Specialty Grocery'
-    ],
-    'Food & Beverage': [
-      'Restaurant',
-      'Cafe',
-      'Fast Food',
-      'Bakery',
-      'Bar/Lounge',
-      'Food Truck'
-    ],
-    'Pharmacy & Healthcare': [
-      'Retail Pharmacy',
-      'Clinic',
-      'Wellness Center',
-      'Medical Supplies'
-    ],
-    'Fashion & Apparel': [
-      'Clothing Store',
-      'Footwear',
-      'Accessories',
-      'Kids Wear'
-    ],
-    'Electronics': [
-      'Mobile & Gadgets',
-      'Home Appliances',
-      'Computer Hardware',
-      'Audio/Video'
-    ],
-    'Hardware': ['Construction Supplies', 'Tools', 'Plumbing', 'Electrical'],
-    'Automotive': ['Spare Parts', 'Service Center', 'Car Wash', 'Tyre Shop'],
-    'Wholesale': [
-      'FMCG Wholesale',
-      'Industrial Wholesale',
-      'Distribution Center'
-    ],
-    'Manufacturing': ['Small Scale Mfg', 'Custom Fabrication', 'Assembly Unit'],
-    'Services': ['Salon & Spa', 'Laundry', 'Repair Services', 'Consulting'],
-    'Books & Stationery': ['Bookstore', 'Office Supplies', 'Art Gallery'],
-    'Beauty & Cosmetics': [
-      'Cosmetic Shop',
-      'Skincare Boutique',
-      'Fragrance Store'
-    ],
-    'Jewelry & Watches': ['Fine Jewelry', 'Watch Store', 'Fashion Accessories'],
-    'Home & Furniture': [
-      'Furniture Showroom',
-      'Interior Decor',
-      'Bedding & Linen'
-    ],
-    'Pet Supplies': [
-      'Pet Food & Accessories',
-      'Grooming Center',
-      'Veterinary Clinic'
-    ],
-    'Sports & Outdoors': ['Sports Equipment', 'Gym Gear', 'Outdoor Adventure'],
-    'Toy Store': ['Educational Toys', 'Hobby Shop', 'Gift Toys'],
-    'Optical & Eye Care': ['Eyewear Boutique', 'Contact Lens Clinic'],
-    'Footwear': ['Shoe Store', 'Luxury Footwear', 'Sports Shoes'],
-    'Electronics & IT': [
-      'Software Sales',
-      'Networking Equipment',
-      'IT Services'
-    ],
-    'Gift & Souvenir': ['Gift Shop', 'Antique Store', 'Local Crafts'],
-    'Digital Products': ['Software Licenses', 'Digital Content', 'Gaming'],
-    'Telecommunications': [
-      'Mobile Service Point',
-      'SIM & Recharge',
-      'Network Solutions'
-    ],
-    'Hospitality': ['Hotel', 'Guesthouse', 'Resort', 'Event Management'],
-    'Real Estate': [
-      'Property Agency',
-      'Facility Management',
-      'Co-working Space'
-    ],
-    'Logistics & Shipping': [
-      'Courier Service',
-      'Freight Forwarding',
-      'Warehousing'
-    ],
-    'Education': ['Training Center', 'Coaching Institute', 'School Supplies'],
-    'Agriculture': ['Farm Supplies', 'Nursery', 'Agri-Tech Services'],
-    'Other': ['Custom Business', 'Non-Profit', 'Miscellaneous'],
-  };
+  final Map<String, List<String>> industryMatrix = businessCategoryMap;
 
   final List<String> businessSizes = [
-    'Small (SMB)',
-    'Medium (Mid-Market)',
-    'Large (Enterprise)'
+    'SMALL',
+    'GROWING',
+    'ENTERPRISE'
   ];
+
   final List<String> operationModes = [
     'Counter-Service',
     'Self-Service',
@@ -308,7 +205,13 @@ class StoreSetupController extends ChangeNotifier {
   }
 
   List<String> getSubTypes(String industry) {
-    return industryMatrix[industry] ??
-        ['General Retail', 'Wholesale', 'Service Point'];
+    // Case-insensitive lookup
+    final normalizedIndustry = industry.toUpperCase();
+    for (var key in industryMatrix.keys) {
+      if (key.toUpperCase() == normalizedIndustry) {
+        return industryMatrix[key]!;
+      }
+    }
+    return ['General Retail', 'Wholesale', 'Service Point'];
   }
 }

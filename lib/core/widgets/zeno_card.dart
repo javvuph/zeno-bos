@@ -74,7 +74,7 @@ class _ZenoCardState extends State<ZenoCard> {
             children: [
               if (widget.title != null || widget.trailing != null)
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(12, 10, 8, 0),
+                  padding: const EdgeInsets.fromLTRB(12, 6, 8, 0),
                   child: Row(
                     children: [
                       if (widget.title != null)

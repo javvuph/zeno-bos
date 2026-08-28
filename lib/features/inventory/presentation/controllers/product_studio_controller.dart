@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:zeno/core/database/database_service.dart';
 import 'package:zeno/core/di/service_locator.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:zeno/features/administration/presentation/controllers/store_setup_controller.dart';
 import '../../domain/repositories/i_product_repository.dart';
 import '../../domain/models/product_studio_models.dart';
 import '../../domain/services/product_business_logic.dart';
@@ -33,7 +34,36 @@ part 'parts/product_studio_controller_dynamic_update.part.dart';
 class ProductStudioController extends ChangeNotifier {
   static final ProductStudioController _instance = ProductStudioController._internal();
   factory ProductStudioController() => _instance;
-  ProductStudioController._internal() { _initMD(); }
+  ProductStudioController._internal() { 
+    _initMD();
+    _loadBusinessConfig();
+  }
+
+  List<String> get enabledProductTypes {
+    final setup = StoreSetupController();
+    if (setup.stores.isNotEmpty) {
+      return setup.stores.first.enabledSubTypes;
+    }
+    return [activeProfile];
+  }
+
+  void _loadBusinessConfig() {
+    final setup = StoreSetupController();
+    if (setup.stores.isNotEmpty) {
+      final store = setup.stores.first;
+      _product.businessType = store.industry;
+      _product.businessCategory = store.subType;
+      _product.businessScale = BusinessScale.values.firstWhere(
+        (e) => e.toString().split('.').last.toUpperCase() == store.businessSize.toUpperCase(),
+        orElse: () => BusinessScale.small,
+      );
+      
+      // Auto-activate Variant capability for Fashion profile
+      if (_product.businessType.toUpperCase() == "FASHION") {
+        _product.capVariant = true;
+      }
+    }
+  }
 
   final ProductBusinessLogic logic = ProductBusinessLogic();
   final MasterDataService md = MasterDataService();
@@ -54,6 +84,12 @@ class ProductStudioController extends ChangeNotifier {
   void setProfile(String business, String profile) {
     _product.businessType = business;
     _product.businessCategory = profile;
+    
+    // Ensure Variant capability is active for Fashion products
+    if (business.toUpperCase() == "FASHION") {
+      _product.capVariant = true;
+    }
+    
     notify();
   }
 
@@ -77,8 +113,10 @@ class ProductStudioController extends ChangeNotifier {
   final List<BulkScanItem> bulkScanItems = [], importItems = [];
   bool isScanning = false, isBulkScanning = false, isImporting = false;
 
-  final List<String> availableColors = ["Black", "White", "Red", "Blue", "Green", "Beige", "Yellow", "Orange", "Grey"];
+  final List<String> availableColors = ["Black", "Navy", "White", "Red", "Blue", "Green", "Beige", "Yellow", "Orange", "Grey"];
+  final Map<String, Color> customColorMap = {};
   final List<String> selectedColors = [], selectedSizes = [];
+  bool isColorManageMode = false;
   VariantSizeType sizeType = VariantSizeType.alpha;
   int? activeVariantIndex;
   String? _activeMediaColor;

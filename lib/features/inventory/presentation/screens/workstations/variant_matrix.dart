@@ -1,3 +1,4 @@
+// @LOCKED: VERSION_CLOTHING_V1
 import 'package:flutter/material.dart';
 import 'package:zeno/app/theme.dart';
 import 'package:zeno/core/widgets/zeno_card.dart';
@@ -11,72 +12,165 @@ class VariantMatrix extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ZenoCard(
-      title: "Variant Matrix",
-      trailing: Text("${controller.generatedVariants.length} VARIANTS", style: TextStyle(fontSize: 9, fontWeight: FontWeight.w900, color: colors.accentPrimary)),
-      titleColor: Colors.blue, padding: const EdgeInsets.all(8),
-      child: Column(children: [
-        _buildActionToolbar(),
-        const SizedBox(height: 12),
-        _buildMatrixTable(context),
-      ]),
-    );
-  }
-
-  Widget _buildActionToolbar() {
-    return Row(children: [
-      _toolbarBtn("SYNC ALL FROM FIRST ROW", Icons.sync_rounded, colors.accentPrimary, controller.syncAllFromFirstRow),
-      const SizedBox(width: 8),
-      _toolbarBtn("GENERATE BARCODES", Icons.qr_code_rounded, colors.accentPrimary, controller.generateAllVariantBarcodes),
-      const SizedBox(width: 8),
-      _toolbarBtn("APPLY BASE PRICE TO ALL", Icons.payments_outlined, Colors.green, controller.syncBasePriceToAllVariants),
-      const SizedBox(width: 8),
-      _toolbarBtn("APPLY BASE STOCK TO ALL", Icons.inventory_2_outlined, Colors.blue, controller.syncBaseStockToAllVariants),
-    ]);
-  }
-
-  Widget _buildMatrixTable(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal, physics: const BouncingScrollPhysics(),
-      child: SizedBox(
-        width: 1200,
-        child: Column(children: [
-          _buildHeader(),
-          ListView.separated(
-            shrinkWrap: true, physics: const NeverScrollableScrollPhysics(),
-            itemCount: controller.generatedVariants.length,
-            separatorBuilder: (_, __) => Divider(height: 1, color: colors.borderSubtle),
-            itemBuilder: (context, i) => VariantMatrixRow(index: i, variant: controller.generatedVariants[i], controller: controller, colors: colors, isActive: controller.activeVariantIndex == i),
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: colors.borderSubtle.withOpacity(0.5)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "GENERATED VARIANTS (${controller.generatedVariants.length})",
+                style: TextStyle(fontSize: 10, fontWeight: FontWeight.w900, color: colors.textPrimary),
+              ),
+              InkWell(
+                onTap: () => controller.product.variants.clear(),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.delete_outline_rounded, size: 14, color: colors.statusDanger),
+                    const SizedBox(width: 4),
+                    Text("Clear All", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: colors.statusDanger)),
+                  ],
+                ),
+              ),
+            ],
           ),
-        ]),
+          const SizedBox(height: 10),
+          _buildActionToolbar(),
+          const SizedBox(height: 10),
+          _buildTableHeader(),
+          const Divider(height: 1),
+          Expanded(
+            child: controller.generatedVariants.isEmpty
+              ? _buildEmptyState()
+              : ListView.builder(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  itemCount: controller.generatedVariants.length,
+                  itemBuilder: (context, i) => VariantMatrixRow(
+                    index: i,
+                    variant: controller.generatedVariants[i],
+                    controller: controller,
+                    colors: colors,
+                    isActive: controller.activeVariantIndex == i,
+                  ),
+                ),
+          ),
+          _buildFooter(),
+        ],
       ),
     );
   }
 
-  Widget _buildHeader() {
-    return Container(
-      height: 32, padding: const EdgeInsets.symmetric(horizontal: 8),
-      decoration: BoxDecoration(color: colors.bgTier3, border: Border.all(color: colors.borderSubtle)),
-      child: const Row(children: [
-        _H(80, "VARIANT"), _H(100, "SKU"), _H(100, "BARCODE"),
-        _HG(320, Colors.blue, ["STOCK", "SAFETY", "REORDER", "WH LOCATION"], [50, 50, 50, 170]),
-        _HG(320, Colors.green, ["PURCHASE", "SELLING", "MRP", "WHOLESALE"], [80, 80, 80, 80]),
-        _H(44, "DEL"),
-      ]),
+  Widget _buildActionToolbar() {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: [
+          _toolbarBtn("Sync First Row", Icons.sync_rounded, colors.textPrimary, controller.syncAllFromFirstRow),
+          const SizedBox(width: 4),
+          _toolbarBtn("Barcodes", Icons.qr_code_rounded, colors.textPrimary, controller.generateAllVariantBarcodes),
+          const SizedBox(width: 4),
+          _toolbarBtn("Bulk Price", Icons.payments_outlined, colors.textPrimary, controller.syncBasePriceToAllVariants),
+          const SizedBox(width: 4),
+          _toolbarBtn("Bulk Stock", Icons.inventory_2_outlined, colors.textPrimary, controller.syncBaseStockToAllVariants),
+        ],
+      ),
     );
   }
 
-  Widget _toolbarBtn(String l, IconData i, Color c, VoidCallback onPressed) => InkWell(onTap: onPressed, child: Container(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6), decoration: BoxDecoration(color: c.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(4), border: Border.all(color: c.withValues(alpha: 0.3))), child: Row(children: [Icon(i, size: 10, color: c), const SizedBox(width: 6), Text(l, style: TextStyle(fontSize: 8, fontWeight: FontWeight.w900, color: c))])));
-}
+  Widget _toolbarBtn(String l, IconData i, Color c, VoidCallback onPressed) => OutlinedButton.icon(
+    onPressed: onPressed,
+    icon: Icon(i, size: 12, color: c.withOpacity(0.7)),
+    label: Text(l, style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: c)),
+    style: OutlinedButton.styleFrom(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+      side: BorderSide(color: colors.borderSubtle),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+      minimumSize: Size.zero,
+      visualDensity: VisualDensity.compact,
+    ),
+  );
 
-class _H extends StatelessWidget {
-  final double w; final String l;
-  const _H(this.w, this.l);
-  @override Widget build(BuildContext context) => SizedBox(width: w, child: Text(l, textAlign: TextAlign.center, style: const TextStyle(fontSize: 8, fontWeight: FontWeight.w900)));
-}
+  Widget _buildTableHeader() {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+      color: Colors.grey.shade50.withOpacity(0.5),
+      child: Row(
+        children: [
+          _headerCell("#", width: 24),
+          _headerCell("COLOUR", width: 90),
+          _headerCell("SIZE", width: 50),
+          Expanded(flex: 2, child: _headerCell("VARIANT SKU")),
+          const SizedBox(width: 6),
+          Expanded(flex: 2, child: _headerCell("BARCODE")),
+          const SizedBox(width: 6),
+          _headerCell("STOCK", width: 60),
+          const SizedBox(width: 6),
+          _headerCell("PRICE (₹)", width: 80),
+          const SizedBox(width: 6),
+          _headerCell("ACTIONS", width: 50, alignment: Alignment.centerRight),
+        ],
+      ),
+    );
+  }
 
-class _HG extends StatelessWidget {
-  final double w; final Color c; final List<String> ls; final List<double> ws;
-  const _HG(this.w, this.c, this.ls, this.ws);
-  @override Widget build(BuildContext context) => SizedBox(width: w, child: Row(children: List.generate(ls.length, (i) => SizedBox(width: ws[i], child: Text(ls[i], textAlign: TextAlign.center, style: TextStyle(fontSize: 8, fontWeight: FontWeight.w900, color: c))))));
+  Widget _headerCell(String label, {double? width, Alignment alignment = Alignment.centerLeft}) {
+    return Container(
+      width: width,
+      alignment: alignment,
+      child: Text(
+        label,
+        style: TextStyle(fontSize: 8, fontWeight: FontWeight.w900, color: colors.textSecondary.withOpacity(0.8), letterSpacing: 0.5),
+      ),
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.layers_outlined, size: 40, color: colors.textDisabled.withOpacity(0.5)),
+          const SizedBox(height: 8),
+          Text("NO VARIANTS GENERATED", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: colors.textDisabled)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFooter() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 12),
+      child: Row(
+        children: [
+          Text(
+            "Showing 1 to ${controller.generatedVariants.length} of ${controller.generatedVariants.length}",
+            style: TextStyle(fontSize: 9, fontWeight: FontWeight.w600, color: colors.textSecondary),
+          ),
+          const Spacer(),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            decoration: BoxDecoration(
+              border: Border.all(color: colors.borderSubtle),
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Row(
+              children: [
+                Text("View All", style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: colors.textPrimary)),
+                const SizedBox(width: 6),
+                Icon(Icons.keyboard_arrow_down_rounded, size: 14, color: colors.textPrimary),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }

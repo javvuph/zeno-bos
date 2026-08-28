@@ -106,7 +106,7 @@ class _ZenoTextFieldState extends State<ZenoTextField> {
     }
 
     final textField = Container(
-      height: widget.maxLines == 1 ? 38 : null,
+      height: widget.maxLines == 1 ? 34 : null,
       width: pixelWidth,
       decoration: BoxDecoration(
         color: _effectiveFocusNode.hasFocus ? colors.bgTier1 : colors.bgTier2,
@@ -170,7 +170,7 @@ class _ZenoTextFieldState extends State<ZenoTextField> {
                 Text(" *", style: TextStyle(color: colors.statusDanger, fontSize: 13)),
             ],
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 2),
           textField,
         ],
       ),
@@ -252,9 +252,9 @@ class ZenoDropdown<T> extends StatelessWidget {
               ],
             ],
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 2),
           Container(
-            height: 38,
+            height: 34,
             padding: const EdgeInsets.symmetric(horizontal: 10),
             decoration: BoxDecoration(
               color: colors.bgTier2,

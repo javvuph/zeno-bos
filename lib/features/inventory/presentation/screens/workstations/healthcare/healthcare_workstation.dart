@@ -42,7 +42,12 @@ class HealthcareWorkstation extends StatelessWidget {
       color: colors.bgTier1,
       child: Column(children: [
         ProductStudioTabs(controller: controller, profileTitle: config.tabTitle),
-        Expanded(child: SingleChildScrollView(padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20), child: _buildActiveTab(profile))),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+            child: _buildActiveTab(profile),
+          ),
+        ),
         buildStickyFooter(colors),
       ]),
     );

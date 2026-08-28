@@ -7,7 +7,9 @@ final List<String> retailStandard = [
 ];
 
 final List<String> fashionStandard = [
-  "title", "description", "brand", "sku", "barcode", "gender", "targetAgeGroup", "countryOfOrigin", "season", "collectionEdition", "taxCode", "rfidTagId", "returnPolicy", "status", "isQuickPOSSale"
+  "title", "arabicTitle", "description", "brand", "subBrand", "manufacturer", "sku", "barcode", "internalBarcode", "vendorSku",
+  "gender", "targetAgeGroup", "countryOfOrigin", "season", "collectionEdition", "taxCode", "rfidTagId", "returnPolicy", "status",
+  "discountType", "discountValue", "marketingTitle", "urlSlug", "searchKeywords", "metaDescription", "primaryImageUrl", "galleryUrls", "isQuickPOSSale"
 ];
 
 final List<String> fnbStandard = [
@@ -177,4 +179,16 @@ final Map<String, String> fieldLabels = {
   "palletStacking": "PALLET MULTIPLIER",
   "grossWeight": "GROSS WEIGHT",
   "unitDimensions": "SHELF DIMENSIONS",
+  "internalBarcode": "INTERNAL BARCODE",
+  "vendorSku": "VENDOR SKU",
+  "subBrand": "SUB BRAND",
+  "manufacturer": "MANUFACTURER",
+  "discountType": "DISCOUNT TYPE",
+  "discountValue": "DISCOUNT VALUE",
+  "marketingTitle": "MARKETING TITLE",
+  "urlSlug": "URL SLUG",
+  "searchKeywords": "KEYWORDS",
+  "metaDescription": "META DESCRIPTION",
+  "primaryImageUrl": "PRIMARY IMAGE",
+  "galleryUrls": "GALLERY",
 };

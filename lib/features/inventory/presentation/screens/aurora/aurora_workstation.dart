@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:zeno/app/theme.dart';
-
 import 'package:zeno/features/inventory/presentation/controllers/product_studio_controller.dart';
 import '../../../domain/models/product_studio_enums.dart';
 import '../widgets/studio_navigation.dart';
@@ -26,10 +25,10 @@ class AuroraWorkstation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: colors.bgTier1,
+      color: colors.bgTier1, 
       child: Column(
         children: [
-          _buildPillNavigation(),
+          _buildModernNavigation(),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
@@ -42,31 +41,38 @@ class AuroraWorkstation extends StatelessWidget {
     );
   }
 
-  Widget _buildPillNavigation() {
+  Widget _buildModernNavigation() {
     final tabs = AuroraTabComposer.compose(controller);
 
     return Container(
-      height: 44,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      decoration: const BoxDecoration(
         color: Colors.white,
-        border: Border(
-          bottom: BorderSide(color: colors.borderSubtle),
-        ),
+        border: Border(bottom: BorderSide(color: Color(0xFFE2E8F0))),
       ),
       child: Row(
-        children: tabs.map((tab) {
+        children: tabs.asMap().entries.map((entry) {
+          final index = entry.key;
+          final tab = entry.value;
           final isActive = controller.activeTab == tab.id;
 
-          return Padding(
-            padding: const EdgeInsets.only(right: 8),
-            child: _PillTab(
-              label: tab.label,
-              icon: tab.icon,
-              isActive: isActive,
-              onTap: () => controller.setTab(tab.id),
-              colors: colors,
-            ),
+          return Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _ModernTab(
+                label: tab.label,
+                icon: tab.icon,
+                isActive: isActive,
+                onTap: () => controller.setTab(tab.id),
+              ),
+              if (index < tabs.length - 1)
+                Container(
+                  width: 1,
+                  height: 24,
+                  color: const Color(0xFFE2E8F0),
+                  margin: const EdgeInsets.symmetric(horizontal: 16),
+                ),
+            ],
           );
         }).toList(),
       ),
@@ -93,71 +99,61 @@ class AuroraWorkstation extends StatelessWidget {
   }
 }
 
-class _PillTab extends StatelessWidget {
+class _ModernTab extends StatelessWidget {
   final String label;
   final IconData icon;
   final bool isActive;
   final VoidCallback onTap;
-  final ZenoSemanticColors colors;
 
-  const _PillTab({
+  const _ModernTab({
     required this.label,
     required this.icon,
     required this.isActive,
     required this.onTap,
-    required this.colors,
   });
 
   @override
   Widget build(BuildContext context) {
+    final activeColor = const Color(0xFF6366F1);
+    final inactiveColor = const Color(0xFF64748B);
+
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 10,
-        ),
-        decoration: BoxDecoration(
-          color: isActive
-              ? colors.accentPrimary
-              : Colors.transparent,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: isActive
-              ? [
-            BoxShadow(
-              color: colors.accentPrimary.withValues(alpha: 0.25),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ]
-              : null,
-        ),
-        child: Row(
-          children: [
-            Icon(
-              icon,
-              size: 18,
-              color: isActive
-                  ? Colors.white
-                  : colors.textDisabled,
-            ),
-            const SizedBox(width: 10),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: isActive
-                    ? FontWeight.w600
-                    : FontWeight.w500,
-                color: isActive
-                    ? Colors.white
-                    : colors.textSecondary,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const SizedBox(height: 12),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                icon,
+                size: 18,
+                color: isActive ? activeColor : inactiveColor,
               ),
+              const SizedBox(width: 10),
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w900,
+                  color: isActive ? activeColor : inactiveColor,
+                  letterSpacing: 0.5,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            height: 3,
+            width: label.length * 8.0 + 28, 
+            decoration: BoxDecoration(
+              color: isActive ? activeColor : Colors.transparent,
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(3)),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

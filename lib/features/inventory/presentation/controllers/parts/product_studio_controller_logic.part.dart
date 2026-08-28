@@ -32,7 +32,7 @@ extension ProductStudioControllerLogic on ProductStudioController {
   void updateBusinessScale(BusinessScale? s) { _product.businessScale = s ?? BusinessScale.small; notify(); }
 
   bool isSectionVisible(ProductStudioSection s) {
-    if (_product.businessType == "Fashion") {
+    if (_product.businessType.toUpperCase() == "FASHION") {
       return getFashionCapabilities(_product.businessScale ?? BusinessScale.small).contains(s);
     }
     return (cap.categoryCapabilityRegistry[_product.businessCategory] ?? cap.businessTypeCapabilities[_product.businessType] ?? []).contains(s);
@@ -43,7 +43,7 @@ extension ProductStudioControllerLogic on ProductStudioController {
     final categoryFields = field.categoryFieldRegistry[_product.businessCategory] ?? [];
     if (categoryFields.contains(f)) return true;
     
-    if (_product.businessType == "Fashion") {
+    if (_product.businessType.toUpperCase() == "FASHION") {
       final scaleFields = field.scaleFieldRegistry[_product.businessScale] ?? [];
       if (scaleFields.contains(f)) return true;
     }
@@ -122,7 +122,7 @@ extension ProductStudioControllerLogic on ProductStudioController {
     final categoryFields = field.categoryFieldRegistry[_product.businessCategory] ?? [];
     fields.addAll(categoryFields);
 
-    if (_product.businessType == "Fashion") {
+    if (_product.businessType.toUpperCase() == "FASHION") {
       final scaleFields = field.scaleFieldRegistry[_product.businessScale] ?? [];
       for (var f in scaleFields) {
         if (!fields.contains(f)) fields.add(f);
@@ -162,9 +162,10 @@ extension ProductStudioControllerLogic on ProductStudioController {
   List<String> getTab1CoreFields() {
     final tab1Fields = getFieldsForTab(AuroraStudioTab.identity);
     final List<String> standard;
-    if (_product.businessType == "Fashion") standard = field.fashionStandard;
-    else if (_product.businessType == "Food & Beverage") standard = field.fnbStandard;
-    else if (_product.businessType == "Healthcare") standard = field.healthcareStandard;
+    final bType = _product.businessType.toUpperCase();
+    if (bType == "FASHION") standard = field.fashionStandard;
+    else if (bType == "FOOD & BEVERAGE") standard = field.fnbStandard;
+    else if (bType == "HEALTHCARE") standard = field.healthcareStandard;
     else standard = field.retailStandard;
 
     return tab1Fields.where((f) => standard.contains(f)).toList();
