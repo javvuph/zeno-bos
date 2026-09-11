@@ -3,6 +3,40 @@
 part of '../product_studio_controller.dart';
 
 extension ProductStudioControllerVariants on ProductStudioController {
+  Future<void> uploadColorMedia(String color) async {
+    final assets = await _pickImageAssets();
+    if (assets.isEmpty) return;
+    final colorAssets = _product.colorMediaLibrary.putIfAbsent(color, () => <MediaAsset>[]);
+    colorAssets.addAll(assets);
+    notify();
+  }
+
+  Future<void> uploadVariantMedia(int index) async {
+    if (index < 0 || index >= _product.variants.length) return;
+    final assets = await _pickImageAssets();
+    if (assets.isEmpty) return;
+    final variant = _product.variants[index];
+    final existingMedia = variant.customMedia ?? <MediaAsset>[];
+    variant.customMedia = [...existingMedia, ...assets];
+    variant.mediaMode = MediaMode.overridden;
+    notify();
+  }
+
+  List<MediaAsset> getColorMedia(String color) {
+    return _product.colorMediaLibrary[color] ?? const <MediaAsset>[];
+  }
+
+  List<MediaAsset> getVariantMedia(int index) {
+    if (index < 0 || index >= _product.variants.length) return const <MediaAsset>[];
+    final variant = _product.variants[index];
+    if (variant.mediaMode == MediaMode.overridden && variant.customMedia != null) {
+      return variant.customMedia!;
+    }
+    return getColorMedia(variant.color);
+  }
+
+  int getVariantMediaCount(int index) => getVariantMedia(index).length;
+
   void toggleColor(String color) { 
     if (selectedColors.contains(color)) {
       selectedColors.remove(color);
@@ -240,6 +274,30 @@ extension ProductStudioControllerVariants on ProductStudioController {
 
   String _generateVariantBarcode() {
     return (100000000000 + (DateTime.now().microsecondsSinceEpoch % 899999999999)).toString();
+  }
+
+  Future<List<MediaAsset>> _pickImageAssets() async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: const ['jpg', 'jpeg', 'png', 'webp'],
+      allowMultiple: true,
+      withData: true,
+    );
+
+    if (result == null || result.files.isEmpty) {
+      return const <MediaAsset>[];
+    }
+
+    return result.files
+        .where((file) => file.path != null)
+        .map((file) => MediaAsset(
+              id: 'M-${DateTime.now().microsecondsSinceEpoch}-${file.name}',
+              url: file.path!,
+              thumbnailUrl: file.path!,
+              sortOrder: 0,
+              altText: file.name,
+            ))
+        .toList();
   }
   
   bool aiSynthesizeAnglesForColor(String color, String promptDescription, BuildContext context) {

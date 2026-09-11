@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart' hide TableCell;
+import 'dart:io';
 import 'package:zeno/app/theme.dart';
 import '../../../../domain/models/variant_matrix_item.dart';
+import '../../../../domain/models/media_asset.dart';
 import '../../../controllers/product_studio_controller.dart';
 
 class VariantMatrixRow extends StatelessWidget {
@@ -89,13 +91,16 @@ class VariantMatrixRow extends StatelessWidget {
               width: 60,
               child: Center(
                 child: InkWell(
-                  onTap: () {},
-                  child: const Row(
+                  onTap: () => _showVariantMediaDialog(context),
+                  child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.image_outlined, size: 14, color: Color(0xFF3B66F5)),
-                      SizedBox(width: 4),
-                      Text("3", style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: Color(0xFF3B66F5))),
+                      const Icon(Icons.image_outlined, size: 14, color: Color(0xFF3B66F5)),
+                      const SizedBox(width: 4),
+                      Text(
+                        '${controller.getVariantMediaCount(index)}',
+                        style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: Color(0xFF3B66F5)),
+                      ),
                     ],
                   ),
                 ),
@@ -138,6 +143,76 @@ class VariantMatrixRow extends StatelessWidget {
           contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
           border: InputBorder.none,
           isDense: true,
+        ),
+      ),
+    );
+  }
+
+  Future<void> _showVariantMediaDialog(BuildContext context) async {
+    await showDialog<void>(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) {
+          final media = controller.getVariantMedia(index);
+          return AlertDialog(
+            title: Text('Variant Media • ${variant.sku}', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700)),
+            content: SizedBox(
+              width: 420,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      ...media.map(_mediaThumb),
+                      InkWell(
+                        onTap: () async {
+                          await controller.uploadVariantMedia(index);
+                          setState(() {});
+                        },
+                        child: Container(
+                          width: 84,
+                          height: 84,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: const Color(0xFFE2E8F0)),
+                          ),
+                          child: const Icon(Icons.add_a_photo_outlined, color: Color(0xFF64748B), size: 20),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('Close'),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _mediaThumb(MediaAsset asset) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(8),
+      child: Image.file(
+        File(asset.url),
+        width: 84,
+        height: 84,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => Container(
+          width: 84,
+          height: 84,
+          color: const Color(0xFFF8FAFC),
+          alignment: Alignment.center,
+          child: const Icon(Icons.image_outlined, color: Color(0xFF94A3B8)),
         ),
       ),
     );
