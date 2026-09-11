@@ -113,7 +113,7 @@ class ProductStudioController extends ChangeNotifier {
   final List<BulkScanItem> bulkScanItems = [], importItems = [];
   bool isScanning = false, isBulkScanning = false, isImporting = false;
 
-  final List<String> availableColors = ["Black", "Navy", "White", "Red", "Blue", "Green", "Beige", "Yellow", "Orange", "Grey"];
+  final List<String> availableColors = ["Black", "Navy", "White", "Red", "Blue", "Grey"];
   final Map<String, Color> customColorMap = {};
   final List<String> selectedColors = [], selectedSizes = [];
   bool isColorManageMode = false;

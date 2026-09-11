@@ -17,24 +17,31 @@ class ExpenseAnalytics extends StatelessWidget {
           children: [
             Expanded(
               flex: 5,
-              child: SfCartesianChart(
-                margin: EdgeInsets.zero,
-                plotAreaBorderWidth: 0,
-                primaryXAxis: CategoryAxis(isVisible: false),
-                primaryYAxis: NumericAxis(isVisible: false),
-                series: <CartesianSeries>[
-                  StackedBarSeries<_ExpenseData, String>(
-                    dataSource: [
-                      _ExpenseData('Logistics', 45, Colors.blue),
-                      _ExpenseData('Rent', 30, Colors.purple),
-                      _ExpenseData('Salaries', 60, Colors.orange),
-                      _ExpenseData('Marketing', 25, Colors.pink),
+              child: SelectionContainer.disabled(
+                child: RepaintBoundary(
+                  key: const ValueKey('expense_analytics_repaint_boundary'),
+                  child: SfCartesianChart(
+                    key: const ValueKey('expense_analytics_cartesian_chart'),
+                    margin: EdgeInsets.zero,
+                    plotAreaBorderWidth: 0,
+                    primaryXAxis: const CategoryAxis(isVisible: false),
+                    primaryYAxis: const NumericAxis(isVisible: false),
+                    series: <CartesianSeries>[
+                      StackedBarSeries<_ExpenseData, String>(
+                        dataSource: [
+                          _ExpenseData('Logistics', 45, Colors.blue),
+                          _ExpenseData('Rent', 30, Colors.purple),
+                          _ExpenseData('Salaries', 60, Colors.orange),
+                          _ExpenseData('Marketing', 25, Colors.pink),
+                        ],
+                        xValueMapper: (_ExpenseData data, _) => "Expenses",
+                        yValueMapper: (_ExpenseData data, _) => data.value,
+                        pointColorMapper: (_ExpenseData data, _) => data.color,
+                        animationDuration: 0,
+                      )
                     ],
-                    xValueMapper: (_ExpenseData data, _) => "Expenses",
-                    yValueMapper: (_ExpenseData data, _) => data.value,
-                    pointColorMapper: (_ExpenseData data, _) => data.color,
-                  )
-                ],
+                  ),
+                ),
               ),
             ),
             const SizedBox(height: 12),
@@ -42,7 +49,7 @@ class ExpenseAnalytics extends StatelessWidget {
               flex: 5,
               child: ListView(
                 physics: const AlwaysScrollableScrollPhysics(),
-                children: [
+                children: const [
                   _ExpenseItem(
                       label: "Salaries", value: "\$60k", color: Colors.orange),
                   _ExpenseItem(

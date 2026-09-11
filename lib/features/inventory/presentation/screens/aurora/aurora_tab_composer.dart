@@ -18,10 +18,10 @@ class AuroraTabComposer {
   static List<AuroraTabDefinition> compose(
     ProductStudioController controller,
   ) {
-    final profile = controller.activeProfile;
+    final profile = controller.activeProfile.toLowerCase();
     final bType = controller.product.businessType.toUpperCase();
     final scale = controller.product.businessScale;
-    final isClothingSmall = profile == "Clothing" && bType == "FASHION" && scale == BusinessScale.small;
+    final isClothingSmall = profile == "clothing" && bType == "FASHION" && scale == BusinessScale.small;
 
     if (isClothingSmall) {
       return const [
@@ -53,7 +53,7 @@ class AuroraTabComposer {
       ];
     }
 
-    final isGroceryKirana = profile == "Grocery / Kirana";
+    final isGroceryKirana = profile.contains("grocery") || profile.contains("kirana");
 
     if (isGroceryKirana) {
       return const [

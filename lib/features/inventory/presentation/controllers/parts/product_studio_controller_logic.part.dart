@@ -60,8 +60,27 @@ extension ProductStudioControllerLogic on ProductStudioController {
     }
   }
 
-  Future<void> saveProduct() async { setSaving(true); try { await repository.saveProduct(_product.toDomain()); } finally { setSaving(false); } }
-  Future<void> saveDraft() async { _product.lifecycleState = ProductLifecycleState.draft; await saveProduct(); }
+  Future<void> saveProduct() async { 
+    setSaving(true); 
+    try { 
+      _product.lifecycleState = ProductLifecycleState.published;
+      await repository.saveProduct(_product.toDomain()); 
+      resetToNew(); 
+    } finally { 
+      setSaving(false); 
+    } 
+  }
+
+  Future<void> saveDraft() async { 
+    setSaving(true); 
+    try { 
+      _product.lifecycleState = ProductLifecycleState.draft; 
+      await repository.saveProduct(_product.toDomain()); 
+    } finally { 
+      setSaving(false); 
+    } 
+  }
+
   void resetToNew() { resetProduct(); selectedSizes.clear(); selectedColors.clear(); notify(); }
 
   void updatePrice(double p) { _product.sellingPrice = p; notify(); }
@@ -74,10 +93,43 @@ extension ProductStudioControllerLogic on ProductStudioController {
   void addUnit(String n) { if (!unitsList.contains(n)) { unitsList.add(n); notify(); } }
   void addTaxJurisdiction(String n) { if (!jurisdictionsList.contains(n)) { jurisdictionsList.add(n); notify(); } }
 
-  void pickPrimaryImage() { _product.primaryImageUrl = "https://picsum.photos/400/400?random=${DateTime.now().millisecond}"; notify(); }
+  Future<void> pickPrimaryImage() async {
+    try {
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.image,
+        allowMultiple: false,
+      );
+      if (result != null && result.files.isNotEmpty && result.files.first.path != null) {
+        _product.primaryImageUrl = result.files.first.path!;
+        notify();
+      }
+    } catch (e) {
+      debugPrint("Error picking primary image: $e");
+    }
+  }
+
   void generateSuggestedSKU() { if (_product.title.length >= 3) { _product.sku = "${_product.title.substring(0, 3).toUpperCase()}-${DateTime.now().millisecondsSinceEpoch.toString().substring(7)}"; notify(); } }
   void generateSuggestedBarcode() { _product.barcode = (100000000000 + (DateTime.now().millisecondsSinceEpoch % 899999999999)).toString(); notify(); }
-  void addToGallery() { _product.galleryUrls.add("https://picsum.photos/400/400?random=${DateTime.now().microsecond}"); notify(); }
+
+  Future<void> addToGallery() async {
+    try {
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.image,
+        allowMultiple: true,
+      );
+      if (result != null && result.files.isNotEmpty) {
+        for (var file in result.files) {
+          if (file.path != null) {
+            _product.galleryUrls.add(file.path!);
+          }
+        }
+        notify();
+      }
+    } catch (e) {
+      debugPrint("Error adding to gallery: $e");
+    }
+  }
+
   void removeGalleryImage(int i) { if (i >= 0 && i < _product.galleryUrls.length) { _product.galleryUrls.removeAt(i); notify(); } }
 
   void analyzeFashionImage() {

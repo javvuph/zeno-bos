@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:zeno/app/theme.dart';
+import 'package:zeno/core/layouts/zeno_responsive_layout.dart';
 import '../../../controllers/product_studio_controller.dart';
-import '../../workstations/fashion/variant_matrix.dart';
+import '../../workstations/variant_matrix.dart';
+import '../widgets/aurora_card.dart';
 
 class TabVariants extends StatelessWidget {
   final ProductStudioController controller;
@@ -11,14 +13,16 @@ class TabVariants extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<ZenoSemanticColors>()!;
     
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(12),
+    return ZenoResponsiveLayout(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          ZenoCard(
-            title: "≡ƒº¼ CARTESIAN VARIANT ENGINE",
+          AuroraCard(
+            title: "CARTESIAN VARIANT ENGINE",
+            icon: Icons.layers_outlined,
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 IntrinsicHeight(
                   child: Row(
@@ -44,6 +48,7 @@ class TabVariants extends StatelessWidget {
 
   Widget _buildAttributePanel(ZenoSemanticColors colors) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text("SELECT VARIANT ATTRIBUTES", style: TextStyle(fontSize: 10, fontWeight: FontWeight.w900, color: colors.textSecondary)),
@@ -72,6 +77,7 @@ class TabVariants extends StatelessWidget {
       decoration: BoxDecoration(color: colors.bgTier2, borderRadius: BorderRadius.circular(8), border: Border.all(color: colors.borderSubtle)),
       padding: const EdgeInsets.all(16),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(Icons.add_a_photo_outlined, color: colors.textDisabled, size: 32),
@@ -86,10 +92,7 @@ class TabVariants extends StatelessWidget {
 
   Widget _colorChip(ZenoSemanticColors colors, String c) {
     final isSelected = controller.selectedColors.contains(c);
-    
-    // Determine if this color has stock across generated variants
     final variantsOfColor = controller.generatedVariants.where((v) => v.color == c);
-    // If no variants generated yet, we assume it's "available" for selection
     final bool hasStock = controller.generatedVariants.isEmpty || variantsOfColor.any((v) => v.stock > 0);
 
     return Tooltip(
@@ -105,9 +108,6 @@ class TabVariants extends StatelessWidget {
               color: isSelected ? colors.accentPrimary : colors.bgTier3,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(color: isSelected ? colors.accentPrimary : colors.borderSubtle),
-              boxShadow: isSelected ? [
-                BoxShadow(color: colors.accentPrimary.withValues(alpha: 0.2), blurRadius: 4, offset: const Offset(0, 2))
-              ] : null,
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -140,7 +140,6 @@ class TabVariants extends StatelessWidget {
   Widget _sizeChip(ZenoSemanticColors colors, String s) {
     final isSelected = controller.selectedSizes.contains(s);
     
-    // Check stock for this size
     final activeColor = controller.activeVariantIndex != null 
         ? controller.generatedVariants[controller.activeVariantIndex!].color 
         : (controller.selectedColors.isNotEmpty ? controller.selectedColors.first : null);

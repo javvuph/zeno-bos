@@ -17,27 +17,34 @@ class FinancialOverview extends StatelessWidget {
           children: [
             Expanded(
               flex: 4,
-              child: SfCartesianChart(
-                margin: EdgeInsets.zero,
-                plotAreaBorderWidth: 0,
-                primaryXAxis: CategoryAxis(isVisible: false),
-                primaryYAxis: NumericAxis(isVisible: false),
-                series: <CartesianSeries>[
-                  AreaSeries<_FinanceData, String>(
-                    dataSource: [
-                      _FinanceData('Jan', 120),
-                      _FinanceData('Feb', 150),
-                      _FinanceData('Mar', 140),
-                      _FinanceData('Apr', 180),
-                      _FinanceData('May', 210),
+              child: SelectionContainer.disabled(
+                child: RepaintBoundary(
+                  key: const ValueKey('financial_overview_repaint_boundary'),
+                  child: SfCartesianChart(
+                    key: const ValueKey('financial_overview_cartesian_chart'),
+                    margin: EdgeInsets.zero,
+                    plotAreaBorderWidth: 0,
+                    primaryXAxis: const CategoryAxis(isVisible: false),
+                    primaryYAxis: const NumericAxis(isVisible: false),
+                    series: <CartesianSeries>[
+                      AreaSeries<_FinanceData, String>(
+                        dataSource: [
+                          _FinanceData('Jan', 120),
+                          _FinanceData('Feb', 150),
+                          _FinanceData('Mar', 140),
+                          _FinanceData('Apr', 180),
+                          _FinanceData('May', 210),
+                        ],
+                        xValueMapper: (_FinanceData data, _) => data.month,
+                        yValueMapper: (_FinanceData data, _) => data.value,
+                        color: ZenoTheme.neonGreen.withValues(alpha: 0.2),
+                        borderColor: ZenoTheme.neonGreen,
+                        borderWidth: 2,
+                        animationDuration: 0,
+                      )
                     ],
-                    xValueMapper: (_FinanceData data, _) => data.month,
-                    yValueMapper: (_FinanceData data, _) => data.value,
-                    color: ZenoTheme.neonGreen.withValues(alpha: 0.2),
-                    borderColor: ZenoTheme.neonGreen,
-                    borderWidth: 2,
-                  )
-                ],
+                  ),
+                ),
               ),
             ),
             const SizedBox(height: 12),
@@ -51,7 +58,7 @@ class FinancialOverview extends StatelessWidget {
                   childAspectRatio: 2.2,
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  children: [
+                  children: const [
                     _FinanceCard(
                         label: "Cash Flow", value: "\$840k", isPositive: true),
                     _FinanceCard(

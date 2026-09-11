@@ -30,10 +30,7 @@ class AuroraWorkstation extends StatelessWidget {
         children: [
           _buildModernNavigation(),
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
-              child: _buildActiveTab(),
-            ),
+            child: _buildActiveTab(),
           ),
           buildStickyFooter(controller, colors),
         ],

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart' hide TableCell;
 import 'package:zeno/app/theme.dart';
 import '../../../../domain/models/variant_matrix_item.dart';
 import '../../../controllers/product_studio_controller.dart';
-import '../../widgets/product_studio_widgets.dart';
 
 class VariantMatrixRow extends StatelessWidget {
   final int index;
@@ -23,38 +22,51 @@ class VariantMatrixRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorValue = controller.getColorValue(variant.color);
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border(bottom: BorderSide(color: colors.borderSubtle.withOpacity(0.2))),
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-      child: Row(
-        children: [
-          // Index
-          SizedBox(width: 24, child: Text("${index + 1}", style: TextStyle(fontSize: 9, fontWeight: FontWeight.w600, color: colors.textSecondary))),
+    return InkWell(
+      onTap: () => controller.setActiveMediaColor(variant.color),
+      child: Container(
+        decoration: BoxDecoration(
+          color: isActive ? const Color(0xFFF5F3FF) : Colors.white,
+          border: Border(bottom: BorderSide(color: const Color(0xFFF1F5F9))),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+        child: Row(
+          children: [
+          const SizedBox(width: 8),
+          // Checkbox
+          SizedBox(width: 20, child: Icon(Icons.check_box_outline_blank_rounded, size: 14, color: isActive ? const Color(0xFF6366F1) : const Color(0xFFCBD5E1))),
+          const SizedBox(width: 8),
           
           // Colour
           SizedBox(
-            width: 90,
+            width: 100,
             child: Row(
               children: [
-                Container(width: 8, height: 8, decoration: BoxDecoration(color: colorValue, shape: BoxShape.circle, border: Border.all(color: Colors.grey.shade300, width: 0.5))),
-                const SizedBox(width: 6),
-                Expanded(child: Text(variant.color, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.black87), overflow: TextOverflow.ellipsis)),
+                Container(width: 10, height: 10, decoration: BoxDecoration(color: colorValue, shape: BoxShape.circle, border: Border.all(color: Colors.black12, width: 0.5))),
+                const SizedBox(width: 8),
+                Expanded(child: Text(variant.color, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Color(0xFF1E293B)), overflow: TextOverflow.ellipsis)),
               ],
             ),
           ),
 
           // Size
-          SizedBox(width: 50, child: Text(variant.size, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: Colors.black87))),
+          SizedBox(
+            width: 50, 
+            child: Center(
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                decoration: BoxDecoration(color: const Color(0xFFF8FAFC), borderRadius: BorderRadius.circular(4), border: Border.all(color: const Color(0xFFE2E8F0))),
+                child: Text(variant.size, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: Color(0xFF475569))),
+              ),
+            ),
+          ),
 
           // SKU
           Expanded(flex: 2, child: _tableInput(variant.sku, (v) => controller.updateVariantField(index, sku: v))),
           const SizedBox(width: 6),
           
           // Barcode
-          Expanded(flex: 2, child: _tableInput(variant.barcode, (v) => controller.updateVariantField(index, barcode: v))),
+          Expanded(flex: 2, child: Text(variant.barcode, style: const TextStyle(fontSize: 10, fontFamily: 'monospace', color: Color(0xFF64748B)))),
           const SizedBox(width: 6),
           
           // Stock
@@ -62,7 +74,26 @@ class VariantMatrixRow extends StatelessWidget {
           const SizedBox(width: 6),
           
           // Price
-          SizedBox(width: 80, child: _tableInput(variant.price.toString(), (v) => controller.updateVariantField(index, price: double.tryParse(v)))),
+          SizedBox(width: 80, child: _tableInput(variant.price.toString(), (v) => controller.updateVariantField(index, price: double.tryParse(v)), isBold: true)),
+          const SizedBox(width: 6),
+
+          // Media
+          SizedBox(
+            width: 60,
+            child: Center(
+              child: InkWell(
+                onTap: () {},
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.image_outlined, size: 12, color: Color(0xFF6366F1)),
+                    const SizedBox(width: 4),
+                    Text("3", style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: Color(0xFF4F46E5))),
+                  ],
+                ),
+              ),
+            ),
+          ),
           const SizedBox(width: 6),
 
           // Actions
@@ -71,32 +102,31 @@ class VariantMatrixRow extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Icon(Icons.qr_code_2_rounded, size: 14, color: colors.textSecondary.withOpacity(0.5)),
-                const SizedBox(width: 8),
                 InkWell(
                   onTap: () => controller.removeVariantItem(index),
-                  child: Icon(Icons.delete_outline_rounded, size: 14, color: colors.textSecondary.withOpacity(0.5)),
+                  child: const Icon(Icons.delete_outline_rounded, size: 14, color: Color(0xFF94A3B8)),
                 ),
               ],
             ),
           ),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 
-  Widget _tableInput(String value, Function(String) onChanged) {
+  Widget _tableInput(String value, Function(String) onChanged, {bool isBold = false}) {
     return Container(
       height: 28,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(4),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: const Color(0xFFE2E8F0)),
       ),
       child: TextField(
         controller: TextEditingController(text: value)..selection = TextSelection.collapsed(offset: value.length),
         onChanged: onChanged,
-        style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w600, color: Colors.black87),
+        style: TextStyle(fontSize: 10, fontWeight: isBold ? FontWeight.w800 : FontWeight.w600, color: const Color(0xFF1E293B)),
         decoration: const InputDecoration(
           contentPadding: EdgeInsets.symmetric(horizontal: 6, vertical: 0),
           border: InputBorder.none,

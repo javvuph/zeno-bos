@@ -9,131 +9,144 @@ import 'package:intl/intl.dart';
 class BIChartsFactory {
   // --- ROW 1: LARGE SALES TREND (COMPOSED AREA + LINE + BAR CHART) ---
   static Widget buildSalesTrendChart(List<SalesPoint> data) {
-    return charts.SfCartesianChart(
-      plotAreaBorderWidth: 0,
-      margin: const EdgeInsets.all(0),
-      primaryXAxis: charts.DateTimeAxis(
-        majorGridLines: const charts.MajorGridLines(width: 0),
-        axisLine: const charts.AxisLine(width: 0),
-        labelStyle: const TextStyle(
-            color: Color(0xFF8A92A6), fontSize: 10, fontFamily: 'Inter'),
-        dateFormat: DateFormat('MMM dd'), // Spec: MMM DD format
-      ),
-      primaryYAxis: charts.NumericAxis(
-        majorGridLines: const charts.MajorGridLines(
-            color: Color(0xFFE2E8F0), dashArray: [5, 5]),
-        axisLine: const charts.AxisLine(width: 0),
-        labelStyle: const TextStyle(
-            color: Color(0xFF64748B), fontSize: 10, fontFamily: 'Inter'),
-        numberFormat: NumberFormat.compactSimpleCurrency(
-            decimalDigits: 0), // Spec: $300K format
-      ),
-      tooltipBehavior: charts.TooltipBehavior(
-        enable: true,
-        header: "",
-        canShowMarker: true,
-        color: const Color(0xFF1E293B),
-        textStyle: const TextStyle(color: Colors.white),
-      ),
-      series: <charts.CartesianSeries>[
-        // Dataset 3: Order Volume (Baseline vertical bars)
-        charts.ColumnSeries<SalesPoint, DateTime>(
-          dataSource: data,
-          xValueMapper: (SalesPoint s, _) => s.date,
-          yValueMapper: (SalesPoint s, _) =>
-              s.revenue * 0.4, // Mock scaling for volume
-          name: 'Order Volume',
-          color: const Color(0xFF64748B).withValues(alpha: 0.1),
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(2)),
-          animationDuration: 1000,
+    return SelectionContainer.disabled(
+      child: RepaintBoundary(
+        key: const ValueKey('bi_sales_trend_repaint_boundary'),
+        child: charts.SfCartesianChart(
+        key: const ValueKey('bi_sales_trend_cartesian_chart'),
+        plotAreaBorderWidth: 0,
+        margin: const EdgeInsets.all(0),
+        primaryXAxis: charts.DateTimeAxis(
+          majorGridLines: const charts.MajorGridLines(width: 0),
+          axisLine: const charts.AxisLine(width: 0),
+          labelStyle: const TextStyle(
+              color: Color(0xFF8A92A6), fontSize: 10, fontFamily: 'Inter'),
+          dateFormat: DateFormat('MMM dd'), // Spec: MMM DD format
         ),
-        // Dataset 1: Gross Sales (Area Spline with gradient)
-        charts.SplineAreaSeries<SalesPoint, DateTime>(
-          dataSource: data,
-          xValueMapper: (SalesPoint s, _) => s.date,
-          yValueMapper: (SalesPoint s, _) => s.revenue,
-          name: 'Gross Sales',
-          gradient: LinearGradient(
-            colors: [
-              const Color(0xFF3366FF).withValues(alpha: 0.25),
-              const Color(0xFF3366FF).withValues(alpha: 0.0)
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
+        primaryYAxis: charts.NumericAxis(
+          majorGridLines: const charts.MajorGridLines(
+              color: Color(0xFFE2E8F0), dashArray: [5, 5]),
+          axisLine: const charts.AxisLine(width: 0),
+          labelStyle: const TextStyle(
+              color: Color(0xFF64748B), fontSize: 10, fontFamily: 'Inter'),
+          numberFormat: NumberFormat.compactSimpleCurrency(
+              decimalDigits: 0), // Spec: $300K format
+        ),
+        tooltipBehavior: charts.TooltipBehavior(
+          enable: true,
+          header: "",
+          canShowMarker: true,
+          color: const Color(0xFF1E293B),
+          textStyle: const TextStyle(color: Colors.white),
+          animationDuration: 0,
+        ),
+        series: <charts.CartesianSeries>[
+          // Dataset 3: Order Volume (Baseline vertical bars)
+          charts.ColumnSeries<SalesPoint, DateTime>(
+            dataSource: data,
+            xValueMapper: (SalesPoint s, _) => s.date,
+            yValueMapper: (SalesPoint s, _) =>
+                s.revenue * 0.4, // Mock scaling for volume
+            name: 'Order Volume',
+            color: const Color(0xFF64748B).withValues(alpha: 0.1),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(2)),
+            animationDuration: 0,
           ),
-          borderColor: const Color(0xFF3366FF),
-          borderWidth: 3,
-          animationDuration: 1500,
-        ),
-        // INJECTED Dataset: Total Expenses (Coral Red Spline Area)
-        charts.SplineAreaSeries<SalesPoint, DateTime>(
-          dataSource: data,
-          xValueMapper: (SalesPoint s, _) => s.date,
-          yValueMapper: (SalesPoint s, _) => s.expenses,
-          name: 'Total Expenses',
-          gradient: LinearGradient(
-            colors: [
-              const Color(0xFFFF1744).withValues(alpha: 0.15),
-              const Color(0xFFFF1744).withValues(alpha: 0.0)
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
+          // Dataset 1: Gross Sales (Area Spline with gradient)
+          charts.SplineAreaSeries<SalesPoint, DateTime>(
+            dataSource: data,
+            xValueMapper: (SalesPoint s, _) => s.date,
+            yValueMapper: (SalesPoint s, _) => s.revenue,
+            name: 'Gross Sales',
+            gradient: LinearGradient(
+              colors: [
+                const Color(0xFF3366FF).withValues(alpha: 0.25),
+                const Color(0xFF3366FF).withValues(alpha: 0.0)
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+            borderColor: const Color(0xFF3366FF),
+            borderWidth: 3,
+            animationDuration: 0,
           ),
-          borderColor: const Color(0xFFFF1744),
-          borderWidth: 1.5,
-          dashArray: const [4, 4],
-          animationDuration: 1800,
-        ),
-        // Dataset 2: Net Profit (Emerald Green line)
-        charts.SplineSeries<SalesPoint, DateTime>(
-          dataSource: data,
-          xValueMapper: (SalesPoint s, _) => s.date,
-          yValueMapper: (SalesPoint s, _) => s.profit,
-          name: 'Net Profit',
-          color: const Color(0xFF00C853),
-          width: 2.5,
-          markerSettings: const charts.MarkerSettings(
-            isVisible: true,
-            height: 4,
-            width: 4,
-            shape: charts.DataMarkerType.circle,
-            color: Color(0xFF00C853),
+          // INJECTED Dataset: Total Expenses (Coral Red Spline Area)
+          charts.SplineAreaSeries<SalesPoint, DateTime>(
+            dataSource: data,
+            xValueMapper: (SalesPoint s, _) => s.date,
+            yValueMapper: (SalesPoint s, _) => s.expenses,
+            name: 'Total Expenses',
+            gradient: LinearGradient(
+              colors: [
+                const Color(0xFFFF1744).withValues(alpha: 0.15),
+                const Color(0xFFFF1744).withValues(alpha: 0.0)
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+            borderColor: const Color(0xFFFF1744),
+            borderWidth: 1.5,
+            dashArray: const [4, 4],
+            animationDuration: 0,
           ),
-          animationDuration: 2000,
+          // Dataset 2: Net Profit (Emerald Green line)
+          charts.SplineSeries<SalesPoint, DateTime>(
+            dataSource: data,
+            xValueMapper: (SalesPoint s, _) => s.date,
+            yValueMapper: (SalesPoint s, _) => s.profit,
+            name: 'Net Profit',
+            color: const Color(0xFF00C853),
+            width: 2.5,
+            markerSettings: const charts.MarkerSettings(
+              isVisible: true,
+              height: 4,
+              width: 4,
+              shape: charts.DataMarkerType.circle,
+              color: Color(0xFF00C853),
+            ),
+            animationDuration: 0,
+          ),
+        ],
+        legend: const charts.Legend(
+          isVisible: false, // Custom legend in footer
         ),
-      ],
-      legend: const charts.Legend(
-        isVisible: false, // Custom legend in footer
+      ),
       ),
     );
   }
 
   // --- ROW 2: DONUT CHART FOR CATEGORY PERFORMANCE ---
   static Widget buildDonutChart(List<ProductMetric> data) {
-    return charts.SfCircularChart(
-      margin: const EdgeInsets.all(0),
-      series: <charts.CircularSeries>[
-        charts.DoughnutSeries<ProductMetric, String>(
-          dataSource: data,
-          xValueMapper: (ProductMetric d, _) => d.name,
-          yValueMapper: (ProductMetric d, _) => d.revenue,
-          pointColorMapper: (ProductMetric d, _) => d.color,
-          dataLabelSettings: const charts.DataLabelSettings(
-            isVisible: true,
-            labelPosition: charts.ChartDataLabelPosition.outside,
-            textStyle: TextStyle(
-                fontSize: 9,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF1E293B)),
-          ),
-          innerRadius: '65%',
-          animationDuration: 1200,
-        )
-      ],
-      legend: const charts.Legend(
-        isVisible: true,
-        position: charts.LegendPosition.right,
-        textStyle: TextStyle(color: Color(0xFF64748B), fontSize: 9),
+    return SelectionContainer.disabled(
+      child: RepaintBoundary(
+        key: const ValueKey('bi_donut_repaint_boundary'),
+        child: charts.SfCircularChart(
+        key: const ValueKey('bi_donut_circular_chart'),
+        margin: const EdgeInsets.all(0),
+        series: <charts.CircularSeries>[
+          charts.DoughnutSeries<ProductMetric, String>(
+            dataSource: data,
+            xValueMapper: (ProductMetric d, _) => d.name,
+            yValueMapper: (ProductMetric d, _) => d.revenue,
+            pointColorMapper: (ProductMetric d, _) => d.color,
+            dataLabelSettings: const charts.DataLabelSettings(
+              isVisible: true,
+              labelPosition: charts.ChartDataLabelPosition.outside,
+              textStyle: TextStyle(
+                  fontSize: 9,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF1E293B)),
+            ),
+            innerRadius: '65%',
+            animationDuration: 0,
+          )
+        ],
+        legend: const charts.Legend(
+          isVisible: true,
+          position: charts.LegendPosition.right,
+          textStyle: TextStyle(color: Color(0xFF64748B), fontSize: 9),
+        ),
+      ),
       ),
     );
   }

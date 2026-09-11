@@ -9,11 +9,19 @@ import '../../../controllers/product_studio_controller.dart';
 import '../../../controllers/registries/fashion_config.dart';
 import '../variant_matrix.dart';
 
-class FashionVariantsTab extends StatelessWidget {
+class FashionVariantsTab extends StatefulWidget {
   final ProductStudioController controller;
   final ZenoSemanticColors colors;
   final FashionCategoryConfig config;
   const FashionVariantsTab({super.key, required this.controller, required this.colors, required this.config});
+
+  @override
+  State<FashionVariantsTab> createState() => _FashionVariantsTabState();
+}
+
+class _FashionVariantsTabState extends State<FashionVariantsTab> {
+  ProductStudioController get controller => widget.controller;
+  ZenoSemanticColors get colors => widget.colors;
 
   @override
   Widget build(BuildContext context) {
@@ -26,256 +34,363 @@ class FashionVariantsTab extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildSelectionHeader(context),
-              const SizedBox(height: 8),
+              _buildVariantAttributesCard(context),
+              const SizedBox(height: 16),
               Expanded(
                 child: VariantMatrix(controller: controller, colors: colors),
               ),
             ],
           ),
         ),
-        const SizedBox(width: 12),
-        // Right Column: Media Upload Sidebar
-        Container(
-          width: 260,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: colors.borderSubtle.withOpacity(0.5)),
-          ),
-          child: _buildMediaSidebar(),
+        const SizedBox(width: 16),
+        // Right Column: Colour Media Library Inspector Card
+        Expanded(
+          flex: 3,
+          child: _buildColourMediaLibraryCard(),
         ),
       ],
     );
   }
 
-  Widget _buildSelectionHeader(BuildContext context) {
+  Widget _buildVariantAttributesCard(BuildContext context) {
+    final availableSizes = controller.getSizesForType(controller.sizeType);
+    
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: colors.borderSubtle.withOpacity(0.5)),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.01), blurRadius: 4, offset: const Offset(0, 2))],
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFFE2E8F0)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // SIZES ROW
-          Row(
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("SIZES", style: TextStyle(fontSize: 9, fontWeight: FontWeight.w900, color: colors.textPrimary, letterSpacing: 0.5)),
-                  const SizedBox(height: 6),
-                  Wrap(
-                    spacing: 4,
-                    runSpacing: 4,
-                    children: [
-                      ...controller.getSizesForType(controller.sizeType).map((s) => _sizeChip(s, controller.selectedSizes.contains(s), () => controller.toggleSize(s))),
-                    ],
-                  ),
-                ],
-              ),
-              const Spacer(),
-              SizedBox(
-                width: 110,
-                child: ZenoDropdown<VariantSizeType>(
-                  label: "SIZE SYSTEM",
-                  value: controller.sizeType,
-                  items: VariantSizeType.values.map((e) => DropdownMenuItem(value: e, child: Text(e.toString().split('.').last.toUpperCase(), style: const TextStyle(fontSize: 8, fontWeight: FontWeight.bold)))).toList(),
-                  onChanged: (v) => controller.setSizeType(v ?? VariantSizeType.alpha),
-                ),
-              ),
-            ],
+          const Text(
+            'Variant Attributes',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Color(0xFF1E293B)),
           ),
-          const SizedBox(height: 12),
-          // COLOURS ROW
-          Text("COLOURS", style: TextStyle(fontSize: 9, fontWeight: FontWeight.w900, color: colors.textPrimary, letterSpacing: 0.5)),
-          const SizedBox(height: 6),
-          Wrap(
-            spacing: 12,
-            runSpacing: 12,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            children: [
-              ...controller.availableColors.map((c) => _colorCircle(c)),
-              const SizedBox(width: 8),
-              _addBtn("+ Add Colour", () => _showAddDialog(context, "Colour", (v, c) => controller.addCustomColor(v, c))),
-              _manageBtn(controller.isColorManageMode ? "Done" : "Delete", controller.toggleColorManageMode),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _sizeChip(String label, bool isSelected, VoidCallback onTap) => InkWell(
-    onTap: onTap,
-    borderRadius: BorderRadius.circular(4),
-    child: Container(
-      width: 54,
-      height: 40,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: isSelected ? Colors.white : colors.bgTier3.withOpacity(0.3),
-        borderRadius: BorderRadius.circular(4),
-        border: Border.all(color: isSelected ? colors.accentPrimary : colors.borderSubtle, width: isSelected ? 1.5 : 1),
-      ),
-      child: Stack(
-        children: [
-          Center(child: Text(label, style: TextStyle(fontSize: 11, fontWeight: FontWeight.w900, color: isSelected ? colors.accentPrimary : colors.textSecondary))),
-          if (isSelected)
-            Positioned(
-              top: 2, right: 2,
-              child: Icon(Icons.check_circle_rounded, size: 12, color: colors.accentPrimary),
-            ),
-        ],
-      ),
-    ),
-  );
-
-  Widget _colorCircle(String colorName) {
-    final isSelected = controller.selectedColors.contains(colorName);
-    final colorValue = controller.getColorValue(colorName);
-    final bool canDelete = controller.isColorManageMode;
-
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Stack(
-          clipBehavior: Clip.none,
-          children: [
-            InkWell(
-              onTap: () => controller.toggleColor(colorName),
-              borderRadius: BorderRadius.circular(20),
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                width: 32,
-                height: 32,
-                decoration: BoxDecoration(
-                  color: colorValue,
-                  shape: BoxShape.circle,
-                  border: Border.all(color: isSelected ? colors.accentPrimary : Colors.grey.shade200, width: isSelected ? 2 : 1),
-                  boxShadow: isSelected ? [BoxShadow(color: colors.accentPrimary.withOpacity(0.2), blurRadius: 4, spreadRadius: 1)] : null,
-                ),
-                child: isSelected ? const Icon(Icons.check, size: 18, color: Colors.white) : (colorName.toLowerCase() == 'white' ? Container(decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.grey.shade300))) : null),
-              ),
-            ),
-            if (canDelete)
-              Positioned(
-                top: -10,
-                right: -10,
-                child: TweenAnimationBuilder<double>(
-                  tween: ConstantTween<double>(1.0),
-                  duration: const Duration(milliseconds: 200),
-                  builder: (context, scale, child) => Transform.scale(scale: scale, child: child),
-                  child: InkWell(
-                    onTap: () => controller.removeCustomColor(colorName),
-                    child: Container(
-                      padding: const EdgeInsets.all(2),
-                      decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle, boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 2)]),
-                      child: Icon(Icons.cancel, size: 16, color: colors.statusDanger),
-                    ),
-                  ),
-                ),
-              ),
-          ],
-        ),
-        const SizedBox(height: 4),
-        Text(colorName, style: TextStyle(fontSize: 9, fontWeight: isSelected ? FontWeight.w900 : FontWeight.w600, color: colors.textSecondary)),
-      ],
-    );
-  }
-
-  Widget _buildMediaSidebar() {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            children: [
-              Text("VARIANT IMAGE UPLOAD", style: TextStyle(fontSize: 9, fontWeight: FontWeight.w900, color: colors.textPrimary)),
-              const SizedBox(width: 4),
-              Icon(Icons.help_outline_rounded, size: 10, color: colors.textDisabled),
-            ],
-          ),
-          const SizedBox(height: 10),
-          Text("SELECT COLOUR", style: TextStyle(fontSize: 8, fontWeight: FontWeight.w900, color: colors.textSecondary, letterSpacing: 0.5)),
-          const SizedBox(height: 6),
-          Wrap(
-            spacing: 4,
-            runSpacing: 4,
-            children: controller.availableColors.map((c) => _smallColorDot(c)).toList(),
-          ),
-          const SizedBox(height: 12),
-          Text("SELECT SIZE", style: TextStyle(fontSize: 8, fontWeight: FontWeight.w900, color: colors.textSecondary, letterSpacing: 0.5)),
-          const SizedBox(height: 6),
-          Wrap(
-            spacing: 4,
-            runSpacing: 4,
-            children: ["S", "M", "L", "XL", "XXL", "XXXL"].map((s) => _smallSizeChip(s)).toList(),
+          const SizedBox(height: 4),
+          const Text(
+            'Define sizes and colours to automatically create product variants',
+            style: TextStyle(fontSize: 12, color: Color(0xFF64748B)),
           ),
           const SizedBox(height: 16),
-          Text("PREVIEW", style: TextStyle(fontSize: 8, fontWeight: FontWeight.w900, color: colors.textSecondary)),
-          const SizedBox(height: 6),
+
+          // SIZES ROW
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("Black - S", style: TextStyle(fontSize: 10, fontWeight: FontWeight.w900, color: colors.textPrimary)),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
-                decoration: BoxDecoration(color: colors.accentPrimary.withOpacity(0.1), borderRadius: BorderRadius.circular(4)),
-                child: Text("Primary", style: TextStyle(fontSize: 7, fontWeight: FontWeight.bold, color: colors.accentPrimary)),
+              const Text('SIZES', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: Color(0xFF1E293B))),
+              Row(
+                children: [
+                  const Text('SIZE SYSTEM', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: Color(0xFF64748B))),
+                  const SizedBox(width: 4),
+                  const Icon(Icons.info_outline, size: 14, color: Color(0xFF64748B)),
+                  const SizedBox(width: 8),
+                  Container(
+                    height: 32,
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(6),
+                      border: Border.all(color: const Color(0xFFE2E8F0)),
+                    ),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton<VariantSizeType>(
+                        value: controller.sizeType,
+                        items: VariantSizeType.values.map((e) => DropdownMenuItem(
+                          value: e,
+                          child: Text(e.toString().split('.').last.toUpperCase(), style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                        )).toList(),
+                        onChanged: (v) => setState(() => controller.setSizeType(v ?? VariantSizeType.alpha)),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
-          const SizedBox(height: 8),
-          Container(
-            height: 90,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: colors.bgTier3.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(6),
-            ),
-            child: _dashedBorder(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.cloud_upload_outlined, size: 24, color: colors.textDisabled.withOpacity(0.5)),
-                  const SizedBox(height: 4),
-                  Text("Upload Image", style: TextStyle(fontSize: 9, fontWeight: FontWeight.w900, color: colors.textPrimary)),
-                  const SizedBox(height: 2),
-                  Text("JPG, PNG up to 5MB", style: TextStyle(fontSize: 7, color: colors.textDisabled)),
-                ],
+          const SizedBox(height: 10),
+
+          // Size Chips row
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              ...availableSizes.map((size) {
+                final isSelected = controller.selectedSizes.contains(size);
+                return InkWell(
+                  onTap: () => setState(() => controller.toggleSize(size)),
+                  borderRadius: BorderRadius.circular(8),
+                  child: Container(
+                    width: 50,
+                    height: 38,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: isSelected ? const Color(0xFFEEF2FF) : Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: isSelected ? const Color(0xFF3B66F5) : const Color(0xFFE2E8F0),
+                        width: isSelected ? 1.5 : 1,
+                      ),
+                    ),
+                    child: Stack(
+                      children: [
+                        Center(
+                          child: Text(
+                            size,
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                              color: isSelected ? const Color(0xFF3B66F5) : const Color(0xFF1E293B),
+                            ),
+                          ),
+                        ),
+                        if (isSelected)
+                          const Positioned(
+                            top: 2,
+                            right: 2,
+                            child: Icon(Icons.check_circle, size: 12, color: Color(0xFF3B66F5)),
+                          ),
+                      ],
+                    ),
+                  ),
+                );
+              }),
+              // + Add Size Button
+              OutlinedButton.icon(
+                onPressed: () => _showAddDialog(context, "Size", (v, _) => controller.addCustomSize(v)),
+                icon: const Icon(Icons.add, size: 14, color: Color(0xFF3B66F5)),
+                label: const Text('Add Size', style: TextStyle(color: Color(0xFF3B66F5), fontSize: 12)),
+                style: OutlinedButton.styleFrom(
+                  side: const BorderSide(color: Color(0xFFCBD5E1), style: BorderStyle.solid),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                ),
               ),
+            ],
+          ),
+
+          const SizedBox(height: 20),
+          const Text('COLOURS', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: Color(0xFF1E293B))),
+          const SizedBox(height: 10),
+
+          // Color swatches row
+          Row(
+            children: [
+              Expanded(
+                child: Wrap(
+                  spacing: 14,
+                  runSpacing: 10,
+                  children: controller.availableColors.map((cName) {
+                    final isSelected = controller.selectedColors.contains(cName);
+                    final colorVal = controller.getColorValue(cName);
+                    return InkWell(
+                      onTap: () => setState(() => controller.toggleColor(cName)),
+                      child: Column(
+                        children: [
+                          Container(
+                            width: 38,
+                            height: 38,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: colorVal,
+                              border: Border.all(
+                                color: isSelected ? const Color(0xFF3B66F5) : const Color(0xFFCBD5E1),
+                                width: isSelected ? 2.5 : 1,
+                              ),
+                            ),
+                            child: isSelected
+                                ? const Center(
+                                    child: Icon(Icons.check, size: 18, color: Colors.white),
+                                  )
+                                : (cName.toLowerCase() == 'white' ? Container(decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.grey.shade300))) : null),
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            cName,
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: isSelected ? const Color(0xFF1E293B) : const Color(0xFF64748B),
+                              fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+              const SizedBox(width: 14),
+              // + Add Colour Button
+              OutlinedButton.icon(
+                onPressed: () => _showAddDialog(context, "Colour", (v, col) => controller.addCustomColor(v, col)),
+                icon: const Icon(Icons.add, size: 14, color: Color(0xFF3B66F5)),
+                label: const Text('Add Colour', style: TextStyle(color: Color(0xFF3B66F5), fontSize: 12)),
+                style: OutlinedButton.styleFrom(
+                  side: const BorderSide(color: Color(0xFFCBD5E1)),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                ),
+              ),
+              const SizedBox(width: 8),
+              OutlinedButton.icon(
+                onPressed: () => setState(() => controller.toggleColorManageMode()),
+                icon: Icon(controller.isColorManageMode ? Icons.check : Icons.delete_outline, size: 14, color: controller.isColorManageMode ? colors.statusDanger : const Color(0xFF64748B)),
+                label: Text(controller.isColorManageMode ? 'Done' : 'Delete', style: TextStyle(color: controller.isColorManageMode ? colors.statusDanger : const Color(0xFF64748B), fontSize: 12)),
+                style: OutlinedButton.styleFrom(
+                  side: BorderSide(color: controller.isColorManageMode ? colors.statusDanger : const Color(0xFFCBD5E1)),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ==========================================
+  // RIGHT PANEL: COLOUR MEDIA LIBRARY
+  // ==========================================
+  Widget _buildColourMediaLibraryCard() {
+    final activeColor = controller.activeMediaColor ?? (controller.selectedColors.isNotEmpty ? controller.selectedColors.first : "Blue");
+    
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFFE2E8F0)),
+      ),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+          const Text('Colour Media Library', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: Color(0xFF1E293B))),
+          const SizedBox(height: 2),
+          const Text('Upload and manage images for this colourway', style: TextStyle(fontSize: 12, color: Color(0xFF64748B))),
+          const SizedBox(height: 14),
+
+          // Horizontal colour switcher row
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: controller.availableColors.map((cName) {
+                final isCurrent = cName == activeColor;
+                final colorVal = controller.getColorValue(cName);
+                return Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: InkWell(
+                    onTap: () => setState(() => controller.setActiveMediaColor(cName)),
+                    borderRadius: BorderRadius.circular(8),
+                    child: Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: isCurrent ? const Color(0xFF3B66F5) : Colors.transparent, width: 1.5),
+                      ),
+                      child: Column(
+                        children: [
+                          Container(
+                            width: 28, height: 28,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: colorVal,
+                              border: Border.all(color: cName.toLowerCase() == 'white' ? Colors.grey.shade300 : Colors.black12),
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(cName, style: TextStyle(fontSize: 10, color: isCurrent ? const Color(0xFF1E293B) : const Color(0xFF64748B), fontWeight: isCurrent ? FontWeight.bold : FontWeight.normal)),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
             ),
           ),
-          const SizedBox(height: 12),
-          Text("ADDITIONAL IMAGES", style: TextStyle(fontSize: 8, fontWeight: FontWeight.w900, color: colors.textSecondary)),
-          const SizedBox(height: 6),
+          const SizedBox(height: 16),
+
+          // Active Colour header
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: 16, height: 16,
+                    decoration: BoxDecoration(shape: BoxShape.circle, color: controller.getColorValue(activeColor)),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(activeColor, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF1E293B))),
+                ],
+              ),
+              const Text('4 photos', style: TextStyle(fontSize: 12, color: Color(0xFF3B66F5), fontWeight: FontWeight.w600)),
+            ],
+          ),
+          const SizedBox(height: 4),
+          Text('These images apply automatically to all $activeColor sizes (${controller.selectedSizes.join(", ")}).', style: const TextStyle(fontSize: 11, color: Color(0xFF64748B))),
+          const SizedBox(height: 14),
+
+          // Angle Grid (4 preview tiles)
+          Row(
+            children: [
+              _buildImageThumb('Front View', true),
+              const SizedBox(width: 8),
+              _buildImageThumb('Back View', false),
+              const SizedBox(width: 8),
+              _buildImageThumb('Detail', false),
+              const SizedBox(width: 8),
+              _buildImageThumb('Side View', false),
+            ],
+          ),
+          const SizedBox(height: 16),
+
+          // Upload images dropzone
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 24),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF8FAFC),
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: const Color(0xFFCBD5E1), style: BorderStyle.solid),
+            ),
+            child: const Column(
+              children: [
+                Icon(Icons.cloud_upload_outlined, size: 30, color: Color(0xFF64748B)),
+                SizedBox(height: 6),
+                Text('Upload Images', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E293B))),
+                SizedBox(height: 2),
+                Text('JPG, PNG, WebP up to 5MB each', style: TextStyle(fontSize: 10, color: Color(0xFF64748B))),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+
+          // Additional Images Row
           Row(
             children: [
               ...List.generate(3, (i) => _emptyImageSlot()),
               const Spacer(),
-              Icon(Icons.chevron_right_rounded, color: colors.textPrimary, size: 16),
+              const Icon(Icons.chevron_right_rounded, color: Color(0xFF1E293B), size: 18),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 16),
+
+          // Bottom info pill
           Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(color: colors.accentPrimary.withOpacity(0.05), borderRadius: BorderRadius.circular(6)),
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF1F5F9),
+              borderRadius: BorderRadius.circular(8),
+            ),
             child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(Icons.info_outline_rounded, size: 12, color: colors.accentPrimary),
-                const SizedBox(width: 6),
+                const Icon(Icons.info_outline, size: 16, color: Color(0xFF3B66F5)),
+                const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    "Used in POS & eCommerce.",
-                    style: TextStyle(fontSize: 8, color: colors.textPrimary.withOpacity(0.8), height: 1.2, fontWeight: FontWeight.w600),
+                    '1 colour set will be shared across ${controller.selectedSizes.length} sizes: ${controller.selectedSizes.join(" • ")}',
+                    style: const TextStyle(fontSize: 11, color: Color(0xFF1E293B)),
                   ),
                 ),
               ],
@@ -283,108 +398,63 @@ class FashionVariantsTab extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 
-  Widget _smallColorDot(String colorName) {
-    final isSelected = controller.activeMediaColor == colorName;
-    final colorValue = controller.getColorValue(colorName);
-    return InkWell(
-      onTap: () => controller.setActiveMediaColor(colorName),
-      child: Container(
-        width: 24, height: 24,
-        padding: const EdgeInsets.all(1.5),
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          border: isSelected ? Border.all(color: colors.accentPrimary, width: 1.5) : null,
-        ),
-        child: Container(
-          decoration: BoxDecoration(
-            color: colorValue,
-            shape: BoxShape.circle,
-            border: Border.all(color: Colors.grey.shade300, width: 0.5),
+  Widget _buildImageThumb(String label, bool isPrimary) {
+    return Expanded(
+      child: Column(
+        children: [
+          Container(
+            height: 70,
+            decoration: BoxDecoration(
+              color: Colors.blue.shade900,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Stack(
+              children: [
+                if (isPrimary)
+                  Positioned(
+                    bottom: 4,
+                    left: 4,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF3B66F5),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: const Text('Primary', style: TextStyle(fontSize: 8, color: Colors.white, fontWeight: FontWeight.bold)),
+                    ),
+                  ),
+                const Positioned(
+                  top: 4,
+                  right: 4,
+                  child: Icon(Icons.more_vert, size: 14, color: Colors.white70),
+                ),
+              ],
+            ),
           ),
-        ),
+          const SizedBox(height: 4),
+          Text(label, style: const TextStyle(fontSize: 10, color: Color(0xFF1E293B)), overflow: TextOverflow.ellipsis),
+        ],
       ),
-    );
-  }
-
-  Widget _smallSizeChip(String label) {
-    bool isSelected = label == "S"; // Placeholder for active selection
-    return Container(
-      width: 34, height: 28,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: isSelected ? colors.accentPrimary : Colors.white,
-        borderRadius: BorderRadius.circular(4),
-        border: Border.all(color: isSelected ? colors.accentPrimary : colors.borderSubtle),
-      ),
-      child: Text(label, style: TextStyle(fontSize: 9, fontWeight: FontWeight.w900, color: isSelected ? Colors.white : colors.textSecondary)),
     );
   }
 
   Widget _emptyImageSlot() => Container(
-    width: 40, height: 40,
+    width: 44, height: 44,
     margin: const EdgeInsets.only(right: 8),
-    child: _dashedBorder(
-      color: colors.borderSubtle,
-      radius: 4,
-      child: Center(child: Icon(Icons.add, size: 14, color: colors.textDisabled)),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(6),
+      border: Border.all(color: const Color(0xFFCBD5E1)),
     ),
-  );
-
-  Widget _dashedBorder({required Widget child, Color? color, double radius = 8}) {
-    return CustomPaint(
-      painter: DashPainter(color: color ?? colors.accentPrimary.withOpacity(0.4), radius: radius),
-      child: child,
-    );
-  }
-
-  Widget _addBtn(String label, VoidCallback onTap) => InkWell(
-    onTap: onTap,
-    borderRadius: BorderRadius.circular(16),
-    child: Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: colors.bgTier3,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: colors.borderSubtle),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Icon(Icons.add, size: 12, color: Colors.blueGrey),
-          const SizedBox(width: 4),
-          Text(label, style: const TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: Colors.blueGrey)),
-        ],
-      ),
-    ),
-  );
-
-  Widget _manageBtn(String label, VoidCallback onTap) => InkWell(
-    onTap: onTap,
-    borderRadius: BorderRadius.circular(16),
-    child: Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: controller.isColorManageMode ? colors.statusDanger.withOpacity(0.1) : colors.bgTier3,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: controller.isColorManageMode ? colors.statusDanger : colors.borderSubtle),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(controller.isColorManageMode ? Icons.check : Icons.remove_circle_outline, size: 12, color: controller.isColorManageMode ? colors.statusDanger : Colors.blueGrey),
-          const SizedBox(width: 4),
-          Text(label, style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: controller.isColorManageMode ? colors.statusDanger : Colors.blueGrey)),
-        ],
-      ),
-    ),
+    child: const Center(child: Icon(Icons.add, size: 16, color: Color(0xFF64748B))),
   );
 
   void _showAddDialog(BuildContext context, String type, Function(String, Color?) onAdd) {
     final textController = TextEditingController();
-    Color? selectedPaletteColor = const Color(0xFF6495ED); // Default starting palette color
+    Color? selectedPaletteColor = const Color(0xFF6495ED);
     final List<Color> palette = [
       Colors.black, const Color(0xFF000080), Colors.white, Colors.red, Colors.blue, Colors.green,
       Colors.yellow, Colors.orange, Colors.purple, Colors.pink, Colors.brown, Colors.grey,
@@ -431,8 +501,8 @@ class FashionVariantsTab extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: c,
                             shape: BoxShape.circle,
-                            border: Border.all(color: isPicked ? colors.accentPrimary : Colors.grey.shade300, width: isPicked ? 3 : 1),
-                            boxShadow: isPicked ? [BoxShadow(color: colors.accentPrimary.withOpacity(0.3), blurRadius: 6)] : null,
+                            border: Border.all(color: isPicked ? const Color(0xFF3B66F5) : Colors.grey.shade300, width: isPicked ? 3 : 1),
+                            boxShadow: isPicked ? [BoxShadow(color: const Color(0xFF3B66F5).withOpacity(0.3), blurRadius: 6)] : null,
                           ),
                           child: isPicked ? const Icon(Icons.check, size: 16, color: Colors.white) : (c == Colors.white ? Container(decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.grey.shade300))) : null),
                         ),
@@ -446,7 +516,7 @@ class FashionVariantsTab extends StatelessWidget {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context), 
-              child: Text("CANCEL", style: TextStyle(color: colors.textSecondary, fontWeight: FontWeight.bold, fontSize: 12))
+              child: const Text("CANCEL", style: TextStyle(color: Color(0xFF64748B), fontWeight: FontWeight.bold, fontSize: 12))
             ),
             ElevatedButton(
               onPressed: () {
@@ -456,7 +526,7 @@ class FashionVariantsTab extends StatelessWidget {
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: colors.accentPrimary, 
+                backgroundColor: const Color(0xFF3B66F5), 
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),

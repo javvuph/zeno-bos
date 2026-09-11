@@ -18,7 +18,6 @@ class _StoreSetupModalState extends State<StoreSetupModal> {
   int _activeTab = 0;
   String _searchQuery = "";
 
-  bool _showConfigWarning = false;
   bool _isAdmin = true; // Placeholder: In real ZENO this would come from AuthProvider
   bool get _isConfigLocked => _editingStore.industry.isNotEmpty && _editingStore.subType.isNotEmpty;
 

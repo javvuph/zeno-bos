@@ -17,43 +17,50 @@ class ProductIntelligence extends StatelessWidget {
           children: [
             Expanded(
               flex: 6,
-              child: SfCircularChart(
-                margin: EdgeInsets.zero,
-                series: <CircularSeries>[
-                  DoughnutSeries<_ChartData, String>(
-                    dataSource: [
-                      _ChartData('Electronics', 45, ZenoTheme.neonCyan),
-                      _ChartData('Appliances', 25, ZenoTheme.neonGreen),
-                      _ChartData('Mobile', 20, Colors.orange),
-                      _ChartData('Laptops', 10, Colors.purple),
-                    ],
-                    xValueMapper: (_ChartData data, _) => data.x,
-                    yValueMapper: (_ChartData data, _) => data.y,
-                    pointColorMapper: (_ChartData data, _) => data.color,
-                    innerRadius: '70%',
-                    dataLabelSettings:
-                        const DataLabelSettings(isVisible: false),
-                  )
-                ],
-                annotations: <CircularChartAnnotation>[
-                  CircularChartAnnotation(
-                    widget: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Text("TOTAL",
-                            style: TextStyle(
-                                fontSize: 8,
-                                color: ZenoTheme.textSecondary,
-                                fontWeight: FontWeight.bold)),
-                        Text("\$1.2M",
-                            style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w900,
-                                color: ZenoTheme.neonCyan)),
+              child: SelectionContainer.disabled(
+                child: RepaintBoundary(
+                  key: const ValueKey('product_intelligence_repaint_boundary'),
+                  child: SfCircularChart(
+                  key: const ValueKey('product_intelligence_circular_chart'),
+                  margin: EdgeInsets.zero,
+                  series: <CircularSeries>[
+                    DoughnutSeries<_ChartData, String>(
+                      dataSource: [
+                        _ChartData('Electronics', 45, ZenoTheme.neonCyan),
+                        _ChartData('Appliances', 25, ZenoTheme.neonGreen),
+                        _ChartData('Mobile', 20, Colors.orange),
+                        _ChartData('Laptops', 10, Colors.purple),
                       ],
-                    ),
-                  )
-                ],
+                      xValueMapper: (_ChartData data, _) => data.x,
+                      yValueMapper: (_ChartData data, _) => data.y,
+                      pointColorMapper: (_ChartData data, _) => data.color,
+                      innerRadius: '70%',
+                      dataLabelSettings:
+                          const DataLabelSettings(isVisible: false),
+                      animationDuration: 0,
+                    )
+                  ],
+                  annotations: <CircularChartAnnotation>[
+                    CircularChartAnnotation(
+                      widget: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Text("TOTAL",
+                              style: TextStyle(
+                                  fontSize: 8,
+                                  color: ZenoTheme.textSecondary,
+                                  fontWeight: FontWeight.bold)),
+                          Text("\$1.2M",
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w900,
+                                  color: ZenoTheme.neonCyan)),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+                ),
               ),
             ),
             const SizedBox(height: 12),

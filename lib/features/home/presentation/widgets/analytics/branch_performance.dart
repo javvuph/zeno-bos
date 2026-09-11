@@ -13,48 +13,56 @@ class BranchPerformance extends StatelessWidget {
       accentColor: Colors.teal,
       child: Padding(
         padding: const EdgeInsets.all(12),
-        child: SfCartesianChart(
-          margin: EdgeInsets.zero,
-          plotAreaBorderWidth: 0,
-          primaryXAxis: CategoryAxis(
-            labelStyle:
-                const TextStyle(fontSize: 9, color: ZenoTheme.textSecondary),
-            majorGridLines: const MajorGridLines(width: 0),
-          ),
-          primaryYAxis: NumericAxis(
-            isVisible: false,
-          ),
-          legend: Legend(
-            isVisible: true,
-            position: LegendPosition.bottom,
-            textStyle: TextStyle(fontSize: 9, color: ZenoTheme.textSecondary),
-          ),
-          series: <CartesianSeries>[
-            StackedColumnSeries<_BranchData, String>(
-              name: 'Revenue',
-              dataSource: [
-                _BranchData('North', 450, 120),
-                _BranchData('South', 380, 95),
-                _BranchData('East', 310, 80),
-                _BranchData('West', 290, 75),
+        child: SelectionContainer.disabled(
+          child: RepaintBoundary(
+            key: const ValueKey('branch_performance_repaint_boundary'),
+            child: SfCartesianChart(
+              key: const ValueKey('branch_performance_cartesian_chart'),
+              margin: EdgeInsets.zero,
+              plotAreaBorderWidth: 0,
+              primaryXAxis: const CategoryAxis(
+                labelStyle:
+                    TextStyle(fontSize: 9, color: ZenoTheme.textSecondary),
+                majorGridLines: MajorGridLines(width: 0),
+              ),
+              primaryYAxis: const NumericAxis(
+                isVisible: false,
+              ),
+              legend: const Legend(
+                isVisible: true,
+                position: LegendPosition.bottom,
+                textStyle: TextStyle(fontSize: 9, color: ZenoTheme.textSecondary),
+              ),
+              series: <CartesianSeries>[
+                StackedColumnSeries<_BranchData, String>(
+                  name: 'Revenue',
+                  dataSource: [
+                    _BranchData('North', 450, 120),
+                    _BranchData('South', 380, 95),
+                    _BranchData('East', 310, 80),
+                    _BranchData('West', 290, 75),
+                  ],
+                  xValueMapper: (_BranchData data, _) => data.branch,
+                  yValueMapper: (_BranchData data, _) => data.revenue,
+                  color: ZenoTheme.neonCyan,
+                  animationDuration: 0,
+                ),
+                StackedColumnSeries<_BranchData, String>(
+                  name: 'Profit',
+                  dataSource: [
+                    _BranchData('North', 450, 120),
+                    _BranchData('South', 380, 95),
+                    _BranchData('East', 310, 80),
+                    _BranchData('West', 290, 75),
+                  ],
+                  xValueMapper: (_BranchData data, _) => data.branch,
+                  yValueMapper: (_BranchData data, _) => data.profit,
+                  color: ZenoTheme.neonGreen,
+                  animationDuration: 0,
+                ),
               ],
-              xValueMapper: (_BranchData data, _) => data.branch,
-              yValueMapper: (_BranchData data, _) => data.revenue,
-              color: ZenoTheme.neonCyan,
             ),
-            StackedColumnSeries<_BranchData, String>(
-              name: 'Profit',
-              dataSource: [
-                _BranchData('North', 450, 120),
-                _BranchData('South', 380, 95),
-                _BranchData('East', 310, 80),
-                _BranchData('West', 290, 75),
-              ],
-              xValueMapper: (_BranchData data, _) => data.branch,
-              yValueMapper: (_BranchData data, _) => data.profit,
-              color: ZenoTheme.neonGreen,
-            ),
-          ],
+          ),
         ),
       ),
     );

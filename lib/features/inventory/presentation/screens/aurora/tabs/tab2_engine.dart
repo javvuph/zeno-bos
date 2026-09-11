@@ -19,8 +19,8 @@ class Tab2Engine extends StatelessWidget {
     final colors = Theme.of(context).extension<ZenoSemanticColors>()!;
     final p = controller.product;
     final scale = p.businessScale;
-    final profile = controller.activeProfile;
-    final isClothingSmall = profile == "Clothing" && scale == BusinessScale.small;
+    final profile = controller.activeProfile.toLowerCase();
+    final isClothingSmall = profile == "clothing" && scale == BusinessScale.small;
     final bType = p.businessType.toUpperCase();
 
     Widget engine;
@@ -35,12 +35,17 @@ class Tab2Engine extends StatelessWidget {
       engine = FashionVariantsTab(controller: controller, colors: colors, config: config);
       
       if (isClothingSmall) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: engine,
-        );
+        return engine;
       }
-    } else if (bType == "Food & Beverage") {
+      
+      return AuroraCard(
+        title: title,
+        subtitle: subtitle,
+        icon: Icons.auto_awesome_motion_outlined,
+        accentColor: colors.accentPurple,
+        child: SizedBox(height: 500, child: engine),
+      );
+    } else if (bType == "Food & Beverage" || bType == "F&B" || bType == "FNB") {
       title = "Kitchen & Recipe";
       subtitle = "Raw materials and production orchestration";
       engine = KitchenRecipeSpecsTab(controller: controller, colors: colors);

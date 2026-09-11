@@ -17,33 +17,40 @@ class InventoryIntelligence extends StatelessWidget {
           children: [
             Expanded(
               flex: 5,
-              child: SfCartesianChart(
-                margin: EdgeInsets.zero,
-                plotAreaBorderWidth: 0,
-                primaryXAxis: CategoryAxis(
-                  majorGridLines: const MajorGridLines(width: 0),
-                  labelStyle: const TextStyle(
-                      fontSize: 8, color: ZenoTheme.textSecondary),
+              child: SelectionContainer.disabled(
+                child: RepaintBoundary(
+                  key: const ValueKey('inventory_intelligence_repaint_boundary'),
+                  child: SfCartesianChart(
+                  key: const ValueKey('inventory_intelligence_cartesian_chart'),
+                  margin: EdgeInsets.zero,
+                  plotAreaBorderWidth: 0,
+                  primaryXAxis: const CategoryAxis(
+                    majorGridLines: MajorGridLines(width: 0),
+                    labelStyle: TextStyle(
+                        fontSize: 8, color: ZenoTheme.textSecondary),
+                  ),
+                  primaryYAxis: const NumericAxis(
+                    isVisible: false,
+                    majorGridLines: MajorGridLines(width: 0),
+                  ),
+                  series: <CartesianSeries>[
+                    ColumnSeries<_InventoryData, String>(
+                      dataSource: [
+                        _InventoryData('0-30d', 450, ZenoTheme.neonGreen),
+                        _InventoryData('31-60d', 280, Colors.orange),
+                        _InventoryData('61-90d', 150, Colors.red),
+                        _InventoryData('90d+', 80, Colors.red.shade900),
+                      ],
+                      xValueMapper: (_InventoryData data, _) => data.x,
+                      yValueMapper: (_InventoryData data, _) => data.y,
+                      pointColorMapper: (_InventoryData data, _) => data.color,
+                      borderRadius:
+                          const BorderRadius.vertical(top: Radius.circular(4)),
+                      animationDuration: 0,
+                    )
+                  ],
                 ),
-                primaryYAxis: NumericAxis(
-                  isVisible: false,
-                  majorGridLines: const MajorGridLines(width: 0),
                 ),
-                series: <CartesianSeries>[
-                  ColumnSeries<_InventoryData, String>(
-                    dataSource: [
-                      _InventoryData('0-30d', 450, ZenoTheme.neonGreen),
-                      _InventoryData('31-60d', 280, Colors.orange),
-                      _InventoryData('61-90d', 150, Colors.red),
-                      _InventoryData('90d+', 80, Colors.red.shade900),
-                    ],
-                    xValueMapper: (_InventoryData data, _) => data.x,
-                    yValueMapper: (_InventoryData data, _) => data.y,
-                    pointColorMapper: (_InventoryData data, _) => data.color,
-                    borderRadius:
-                        const BorderRadius.vertical(top: Radius.circular(4)),
-                  )
-                ],
               ),
             ),
             const SizedBox(height: 12),
@@ -51,19 +58,19 @@ class InventoryIntelligence extends StatelessWidget {
               flex: 5,
               child: SingleChildScrollView(
                 child: Column(
-                  children: [
+                  children: const [
                     _InventoryMetric(
                         label: "Inventory Turnover",
                         value: "8.4x",
                         trend: "+0.5",
                         color: ZenoTheme.neonCyan),
-                    const Divider(color: ZenoTheme.border, height: 16),
+                    Divider(color: ZenoTheme.border, height: 16),
                     _InventoryMetric(
                         label: "Stock Accuracy",
                         value: "98.2%",
                         trend: "+1.2%",
                         color: ZenoTheme.neonGreen),
-                    const Divider(color: ZenoTheme.border, height: 16),
+                    Divider(color: ZenoTheme.border, height: 16),
                     _InventoryMetric(
                         label: "Out of Stock Rate",
                         value: "2.4%",
