@@ -4,10 +4,35 @@ import 'package:zeno/app/theme.dart';
 import '../../controllers/product_studio_controller.dart';
 import 'widgets/variant_matrix_row.dart';
 
-class VariantMatrix extends StatelessWidget {
+class VariantMatrix extends StatefulWidget {
   final ProductStudioController controller;
   final ZenoSemanticColors colors;
   const VariantMatrix({super.key, required this.controller, required this.colors});
+
+  @override
+  State<VariantMatrix> createState() => _VariantMatrixState();
+}
+
+class _VariantMatrixState extends State<VariantMatrix> {
+  late final TextEditingController _bulkPriceController;
+  late final TextEditingController _bulkStockController;
+
+  ProductStudioController get controller => widget.controller;
+  ZenoSemanticColors get colors => widget.colors;
+
+  @override
+  void initState() {
+    super.initState();
+    _bulkPriceController = TextEditingController(text: '0');
+    _bulkStockController = TextEditingController(text: '0');
+  }
+
+  @override
+  void dispose() {
+    _bulkPriceController.dispose();
+    _bulkStockController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,9 +107,9 @@ class VariantMatrix extends StatelessWidget {
       scrollDirection: Axis.horizontal,
       child: Row(
         children: [
-          _bulkActionPill("Bulk Price: ₹", "1299", 55, (v) {}),
+          _bulkActionPill("Bulk Price: ₹", "0", 55, _bulkPriceController, _applyBulkPrice),
           const SizedBox(width: 8),
-          _bulkActionPill("Bulk Stock:", "50", 45, (v) {}),
+          _bulkActionPill("Bulk Stock:", "0", 45, _bulkStockController, _applyBulkStock),
           const SizedBox(width: 8),
           _toolbarBtn("Sync 1st", Icons.sync_rounded, const Color(0xFF1E293B), controller.syncAllFromFirstRow),
           const SizedBox(width: 6),
@@ -98,7 +123,7 @@ class VariantMatrix extends StatelessWidget {
     );
   }
 
-  Widget _bulkActionPill(String label, String hint, double width, Function(String) onApply) => Container(
+  Widget _bulkActionPill(String label, String hint, double width, TextEditingController textController, VoidCallback onApply) => Container(
     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
     decoration: BoxDecoration(
       color: const Color(0xFFF8FAFC),
@@ -115,12 +140,13 @@ class VariantMatrix extends StatelessWidget {
         SizedBox(
           width: width,
           child: TextField(
+            controller: textController,
             decoration: InputDecoration(hintText: hint, border: InputBorder.none, isDense: true, contentPadding: EdgeInsets.zero),
             style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: Color(0xFF1E293B)),
             keyboardType: TextInputType.number,
           ),
         ),
-        InkWell(onTap: () {}, child: const Text("Apply", style: TextStyle(fontSize: 11, fontWeight: FontWeight.w900, color: Color(0xFF3B66F5)))),
+        InkWell(onTap: onApply, child: const Text("Apply", style: TextStyle(fontSize: 11, fontWeight: FontWeight.w900, color: Color(0xFF3B66F5)))),
       ],
     ),
   );
@@ -268,5 +294,17 @@ class VariantMatrix extends StatelessWidget {
     if (shouldClear == true) {
       controller.clearAllVariants();
     }
+  }
+
+  void _applyBulkPrice() {
+    final value = double.tryParse(_bulkPriceController.text.trim());
+    if (value == null) return;
+    controller.applyBulkPrice(value);
+  }
+
+  void _applyBulkStock() {
+    final value = int.tryParse(_bulkStockController.text.trim());
+    if (value == null) return;
+    controller.applyBulkStock(value);
   }
 }

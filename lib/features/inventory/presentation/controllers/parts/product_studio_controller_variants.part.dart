@@ -65,12 +65,34 @@ extension ProductStudioControllerVariants on ProductStudioController {
   }
 
   void generateMatrix() {
+    final existingVariants = <String, VariantMatrixItem>{};
+    for (final variant in _product.variants) {
+      existingVariants[_variantKey(variant.color, variant.size)] = variant;
+    }
+
     _product.variants.clear();
     for (var color in selectedColors) {
       for (var size in selectedSizes) {
         final baseSku = _product.sku.trim();
-        final skuStr = baseSku.isNotEmpty ? "$baseSku-$color-$size" : "$color-$size";
-        _product.variants.add(VariantMatrixItem(color: color, size: size, price: _product.sellingPrice, purchasePrice: _product.costPrice, mrp: _product.mrp, wholesalePrice: _product.wholesalePrice, stock: 0, safetyStock: _product.safetyStock.toInt(), reorderLevel: _product.reorderLevel, sku: skuStr, barcode: ""));
+        final normalizedSku = _buildVariantSku(baseSku, color, size);
+        final key = _variantKey(color, size);
+        final existing = existingVariants[key];
+        _product.variants.add(
+          VariantMatrixItem(
+            color: color,
+            size: size,
+            isSelected: existing?.isSelected ?? false,
+            price: existing?.price ?? _product.sellingPrice,
+            purchasePrice: existing?.purchasePrice ?? _product.costPrice,
+            mrp: existing?.mrp ?? _product.mrp,
+            wholesalePrice: existing?.wholesalePrice ?? _product.wholesalePrice,
+            stock: existing?.stock ?? 0,
+            safetyStock: existing?.safetyStock ?? _product.safetyStock.toInt(),
+            reorderLevel: existing?.reorderLevel ?? _product.reorderLevel,
+            sku: _normalizeVariantSku(existing?.sku, normalizedSku),
+            barcode: _normalizeVariantBarcode(existing?.barcode),
+          ),
+        );
       }
     }
     notify();
@@ -83,7 +105,8 @@ extension ProductStudioControllerVariants on ProductStudioController {
       if (mrp != null) v.mrp = mrp; if (wholesalePrice != null) v.wholesalePrice = wholesalePrice;
       if (stock != null) v.stock = stock; if (safetyStock != null) v.safetyStock = safetyStock;
       if (reorderLevel != null) v.reorderLevel = reorderLevel; if (warehouseLocation != null) v.warehouseLocation = warehouseLocation;
-      if (sku != null) v.sku = sku; if (barcode != null) v.barcode = barcode;
+      if (sku != null) v.sku = _normalizeVariantSku(sku, _buildVariantSku(_product.sku.trim(), v.color, v.size));
+      if (barcode != null) v.barcode = _normalizeVariantBarcode(barcode);
       notify();
     }
   }
@@ -132,7 +155,7 @@ extension ProductStudioControllerVariants on ProductStudioController {
 
   void generateAllVariantBarcodes() {
     for (var v in _product.variants) {
-      if (v.barcode.isEmpty) v.barcode = (100000000000 + (DateTime.now().microsecondsSinceEpoch % 899999999999)).toString();
+      if (v.barcode.isEmpty) v.barcode = _generateVariantBarcode();
     }
     notify();
   }
@@ -169,6 +192,54 @@ extension ProductStudioControllerVariants on ProductStudioController {
       }
       notify();
     }
+  }
+
+  void applyBulkPrice(double value) {
+    _applyBulkVariantUpdate(
+      update: (variant) => variant.price = value,
+    );
+  }
+
+  void applyBulkStock(int value) {
+    _applyBulkVariantUpdate(
+      update: (variant) => variant.stock = value,
+    );
+  }
+
+  void _applyBulkVariantUpdate({
+    required void Function(VariantMatrixItem variant) update,
+  }) {
+    final targets = hasSelectedVariants
+        ? _product.variants.where((variant) => variant.isSelected)
+        : _product.variants;
+    for (final variant in targets) {
+      update(variant);
+    }
+    notify();
+  }
+
+  String _variantKey(String color, String size) => '${color.toLowerCase()}|${size.toLowerCase()}';
+
+  String _buildVariantSku(String baseSku, String color, String size) {
+    final colorPart = color.trim().replaceAll(RegExp(r'\s+'), '-');
+    final sizePart = size.trim().replaceAll(RegExp(r'\s+'), '-');
+    if (baseSku.isEmpty) {
+      return '$colorPart-$sizePart';
+    }
+    return '$baseSku-$colorPart-$sizePart';
+  }
+
+  String _normalizeVariantSku(String? value, String fallback) {
+    final normalized = (value ?? '').trim().replaceAll(RegExp(r'\s+'), '-');
+    return normalized.isEmpty ? fallback : normalized;
+  }
+
+  String _normalizeVariantBarcode(String? value) {
+    return (value ?? '').trim();
+  }
+
+  String _generateVariantBarcode() {
+    return (100000000000 + (DateTime.now().microsecondsSinceEpoch % 899999999999)).toString();
   }
   
   bool aiSynthesizeAnglesForColor(String color, String promptDescription, BuildContext context) {
