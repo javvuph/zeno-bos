@@ -9,6 +9,14 @@ class FashionBasicTab extends StatelessWidget {
   final ZenoSemanticColors colors;
   const FashionBasicTab({super.key, required this.controller, required this.colors});
 
+  static const List<String> _brandOptions = ["ZENO", "Urban Thread", "Classic Loom", "Street Core", "Heritage Wear"];
+  static const List<String> _genderOptions = ["Men", "Women", "Unisex", "Boys", "Girls", "Infant"];
+  static const List<String> _ageGroupOptions = ["Adult", "Teens", "Kids", "Toddler", "Baby"];
+  static const List<String> _countryOptions = ["India", "Sri Lanka", "Bangladesh", "China", "Vietnam", "Turkey"];
+  static const List<String> _seasonOptions = ["Spring", "Summer", "Autumn", "Winter", "All-Season", "Festive"];
+  static const List<String> _collectionOptions = ["Core", "Summer Drop", "Festive Edit", "Premium Capsule", "Limited Edition"];
+  static const List<String> _statusOptions = ["Active", "Phase-Out", "Discontinued"];
+
   @override
   Widget build(BuildContext context) {
     final p = controller.product;
@@ -37,17 +45,13 @@ class FashionBasicTab extends StatelessWidget {
         accentColor: colors.accentPurple,
         child: Wrap(spacing: 20, runSpacing: 20, children: [
           if (controller.isFieldVisible('brand'))
-          ZenoTextField(key: const ValueKey('brand'), label: "Principal Brand / Label", initialValue: p.brand, onChanged: (v) => controller.updateField(brand: v), width: ZenoFieldWidth.medium, isRequired: true),
+          ZenoDropdown<String>(key: const ValueKey('brand'), label: "Brand / Label", value: p.brand.isEmpty ? null : p.brand, items: _withCurrent(_brandOptions, p.brand).map((e)=>DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => controller.updateField(brand: v), width: ZenoFieldWidth.medium, isRequired: true, onQuickAdd: () => _showQuickAddDialog(context, "Brand / Label", (val) => controller.updateField(brand: val))),
           if (controller.isFieldVisible('gender'))
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            const Text("Target Gender", style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFF475569))),
-            const SizedBox(height: 8),
-            _buildGenderChips(),
-          ]),
+          ZenoDropdown<String>(label: "Gender", value: p.gender.isEmpty ? null : p.gender, items: _withCurrent(_genderOptions, p.gender).map((e)=>DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => controller.updateField(gender: v), width: ZenoFieldWidth.medium, onQuickAdd: () => _showQuickAddDialog(context, "Gender", (val) => controller.updateField(gender: val))),
           if (controller.isFieldVisible('targetAgeGroup'))
-          ZenoDropdown<String>(key: const ValueKey('targetAgeGroup'), label: "Age Group", value: p.targetAgeGroup.isEmpty ? null : p.targetAgeGroup, items: ["Adult", "Teens", "Kids", "Toddler", "Baby"].map((e)=>DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => controller.updateField(targetAgeGroup: v), width: ZenoFieldWidth.medium),
+          ZenoDropdown<String>(key: const ValueKey('targetAgeGroup'), label: "Age Group", value: p.targetAgeGroup.isEmpty ? null : p.targetAgeGroup, items: _withCurrent(_ageGroupOptions, p.targetAgeGroup).map((e)=>DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => controller.updateField(targetAgeGroup: v), width: ZenoFieldWidth.medium, onQuickAdd: () => _showQuickAddDialog(context, "Age Group", (val) => controller.updateField(targetAgeGroup: val))),
           if (controller.isFieldVisible('countryOfOrigin'))
-          ZenoTextField(key: const ValueKey('countryOfOrigin'), label: "Country of Origin", initialValue: p.countryOfOrigin, onChanged: (v) => controller.updateField(countryOfOrigin: v), width: ZenoFieldWidth.medium),
+          ZenoDropdown<String>(key: const ValueKey('countryOfOrigin'), label: "Country of Origin", value: p.countryOfOrigin.isEmpty ? null : p.countryOfOrigin, items: _withCurrent(_countryOptions, p.countryOfOrigin).map((e)=>DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => controller.updateField(countryOfOrigin: v), width: ZenoFieldWidth.medium, onQuickAdd: () => _showQuickAddDialog(context, "Country of Origin", (val) => controller.updateField(countryOfOrigin: val))),
         ]),
       ),
       StudioSectionCard(
@@ -57,27 +61,60 @@ class FashionBasicTab extends StatelessWidget {
         accentColor: colors.statusInfo,
         child: Wrap(spacing: 20, runSpacing: 20, children: [
           if (controller.isFieldVisible('season'))
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            const Text("Fashion Season", style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFF475569))),
-            const SizedBox(height: 8),
-            _buildSeasonChips(),
-          ]),
+          ZenoDropdown<String>(label: "Season", value: p.season.isEmpty ? null : p.season, items: _withCurrent(_seasonOptions, p.season).map((e)=>DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => controller.updateField(season: v), width: ZenoFieldWidth.medium, onQuickAdd: () => _showQuickAddDialog(context, "Season", (val) => controller.updateField(season: val))),
           if (controller.isFieldVisible('collectionEdition'))
-          ZenoTextField(key: const ValueKey('collectionEdition'), label: "Collection / Edition Name", initialValue: p.collectionEdition, onChanged: (v) => controller.updateField(collectionEdition: v), width: ZenoFieldWidth.standard, hint: "e.g., Summer Oasis 2026"),
+          ZenoDropdown<String>(key: const ValueKey('collectionEdition'), label: "Collection / Edition", value: p.collectionEdition.isEmpty ? null : p.collectionEdition, items: _withCurrent(_collectionOptions, p.collectionEdition).map((e)=>DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => controller.updateField(collectionEdition: v), width: ZenoFieldWidth.standard, onQuickAdd: () => _showQuickAddDialog(context, "Collection / Edition", (val) => controller.updateField(collectionEdition: val))),
           if (controller.isFieldVisible('status'))
-          ZenoDropdown<String>(key: const ValueKey('status'), label: "Lifecycle Status", value: p.status, items: ["Active", "Phase-Out", "Discontinued"].map((e)=>DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => controller.updateField(status: v), width: ZenoFieldWidth.medium),
+          ZenoDropdown<String>(key: const ValueKey('status'), label: "Status", value: p.status, items: _withCurrent(_statusOptions, p.status).map((e)=>DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => controller.updateField(status: v), width: ZenoFieldWidth.medium, onQuickAdd: () => _showQuickAddDialog(context, "Status", (val) => controller.updateField(status: val))),
         ]),
       ),
     ]);
   }
 
-  Widget _buildGenderChips() {
-    final list = ["Men", "Women", "Unisex", "Boys", "Girls", "Infant"];
-    return Wrap(spacing: 6, children: list.map((g) => Padding(padding: const EdgeInsets.only(bottom: 4), child: ChoiceChip(label: Text(g, style: const TextStyle(fontSize: 12)), selected: controller.product.gender == g, onSelected: (s) => controller.updateField(gender: s ? g : ""), selectedColor: colors.accentPrimary.withValues(alpha: 0.2), checkmarkColor: colors.accentPrimary))).toList());
+  List<String> _withCurrent(List<String> options, String current) {
+    if (current.isEmpty || options.contains(current)) return options;
+    return [...options, current];
   }
 
-  Widget _buildSeasonChips() {
-    final list = ["Spring", "Summer", "Autumn", "Winter", "All-Season", "Festive"];
-    return Wrap(spacing: 6, children: list.map((s) => Padding(padding: const EdgeInsets.only(bottom: 4), child: ChoiceChip(label: Text(s, style: const TextStyle(fontSize: 12)), selected: controller.product.season == s, onSelected: (v) => controller.updateField(season: v ? s : ""), selectedColor: colors.accentPrimary.withValues(alpha: 0.2), checkmarkColor: colors.accentPrimary))).toList());
+  void _showQuickAddDialog(BuildContext context, String type, Function(String) onAdd) {
+    final textController = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        title: Text("Add Custom $type", style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+        content: TextField(
+          controller: textController,
+          style: const TextStyle(fontSize: 13),
+          decoration: InputDecoration(
+            labelText: "$type Name",
+            hintText: "Enter $type name",
+            isDense: true,
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+          ),
+          autofocus: true,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("CANCEL", style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold, fontSize: 11)),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              if (textController.text.trim().isNotEmpty) {
+                onAdd(textController.text.trim());
+                Navigator.pop(context);
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF6366F1),
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+            ),
+            child: const Text("ADD", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11)),
+          ),
+        ],
+      ),
+    );
   }
 }

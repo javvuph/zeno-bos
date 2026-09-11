@@ -17,6 +17,16 @@ class Tab2Specs extends StatefulWidget {
 
 class _Tab2SpecsState extends State<Tab2Specs> {
   final TextEditingController _tagController = TextEditingController();
+  static const List<String> _apparelCategories = ["T-Shirt", "Shirt", "Dress", "Trousers", "Saree", "Suit"];
+  static const List<String> _genderOptions = ["Men", "Women", "Unisex", "Boys", "Girls", "Infant"];
+  static const List<String> _ageGroupOptions = ["Adult", "Teen", "Kids", "Toddler", "Baby"];
+  static const List<String> _seasonOptions = ["Summer", "Winter", "Spring", "Autumn", "All-Season"];
+  static const List<String> _collectionOptions = ["Core", "Summer Drop", "Festive Edit", "Premium Capsule", "Limited Edition"];
+  static const List<String> _materialOptions = ["Cotton", "Polyester", "Linen", "Denim", "Silk", "Wool"];
+  static const List<String> _patternOptions = ["Solid", "Striped", "Checked", "Printed", "Floral"];
+  static const List<String> _fitOptions = ["Regular", "Slim", "Relaxed", "Oversized"];
+  static const List<String> _sleeveOptions = ["Sleeveless", "Short Sleeve", "Full Sleeve", "3/4 Sleeve"];
+  static const List<String> _neckOptions = ["Round Neck", "V-Neck", "Polo", "Collar"];
 
   @override
   void dispose() {
@@ -43,13 +53,13 @@ class _Tab2SpecsState extends State<Tab2Specs> {
                   child: Column(
                     children: [
                       _compactSection("CLASSIFICATION", colors, [
-                        ZenoDropdown<String>(label: "Apparel Category", value: p.apparelCategory.isEmpty ? null : p.apparelCategory, items: ["T-Shirt", "Shirt", "Dress", "Trousers", "Saree", "Suit"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => widget.controller.updateField(apparelCategory: v)),
+                        ZenoDropdown<String>(label: "Apparel Category", value: p.apparelCategory.isEmpty ? null : p.apparelCategory, items: _withCurrent(_apparelCategories, p.apparelCategory).map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => widget.controller.updateField(apparelCategory: v), onQuickAdd: () => _showQuickAddDialog(context, "Apparel Category", (val) => widget.controller.updateField(apparelCategory: val))),
                         const SizedBox(height: 12),
                         Row(
                           children: [
-                            Expanded(child: ZenoDropdown<String>(label: "Gender", value: p.gender.isEmpty ? null : p.gender, items: ["Men", "Women", "Unisex", "Boys", "Girls", "Infant"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => widget.controller.updateField(gender: v))),
+                            Expanded(child: ZenoDropdown<String>(label: "Gender", value: p.gender.isEmpty ? null : p.gender, items: _withCurrent(_genderOptions, p.gender).map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => widget.controller.updateField(gender: v), onQuickAdd: () => _showQuickAddDialog(context, "Gender", (val) => widget.controller.updateField(gender: val)))),
                             const SizedBox(width: 8),
-                            Expanded(child: ZenoDropdown<String>(label: "Age Group", value: p.targetAgeGroup.isEmpty ? null : p.targetAgeGroup, items: ["Adult", "Teen", "Kids", "Toddler", "Baby"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => widget.controller.updateField(targetAgeGroup: v))),
+                            Expanded(child: ZenoDropdown<String>(label: "Age Group", value: p.targetAgeGroup.isEmpty ? null : p.targetAgeGroup, items: _withCurrent(_ageGroupOptions, p.targetAgeGroup).map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => widget.controller.updateField(targetAgeGroup: v), onQuickAdd: () => _showQuickAddDialog(context, "Age Group", (val) => widget.controller.updateField(targetAgeGroup: val)))),
                           ],
                         ),
                       ]),
@@ -57,9 +67,9 @@ class _Tab2SpecsState extends State<Tab2Specs> {
                       _compactSection("COLLECTION & SEASON", colors, [
                         Row(
                           children: [
-                            Expanded(child: ZenoDropdown<String>(label: "Season", value: p.season.isEmpty ? null : p.season, items: ["Summer", "Winter", "Spring", "Autumn", "All-Season"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => widget.controller.updateField(season: v))),
+                            Expanded(child: ZenoDropdown<String>(label: "Season", value: p.season.isEmpty ? null : p.season, items: _withCurrent(_seasonOptions, p.season).map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => widget.controller.updateField(season: v), onQuickAdd: () => _showQuickAddDialog(context, "Season", (val) => widget.controller.updateField(season: val)))),
                             const SizedBox(width: 8),
-                            Expanded(child: ZenoTextField(label: "Collection / Edition", initialValue: p.collectionEdition, onChanged: (v) => widget.controller.updateField(collectionEdition: v))),
+                            Expanded(child: ZenoDropdown<String>(label: "Collection / Edition", value: p.collectionEdition.isEmpty ? null : p.collectionEdition, items: _withCurrent(_collectionOptions, p.collectionEdition).map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => widget.controller.updateField(collectionEdition: v), onQuickAdd: () => _showQuickAddDialog(context, "Collection / Edition", (val) => widget.controller.updateField(collectionEdition: val)))),
                           ],
                         ),
                       ]),
@@ -74,7 +84,7 @@ class _Tab2SpecsState extends State<Tab2Specs> {
                       _compactSection("FABRIC & MATERIAL", colors, [
                         Row(
                           children: [
-                            Expanded(child: ZenoTextField(label: "Material", initialValue: p.material, onChanged: (v) => widget.controller.updateField(material: v))),
+                            Expanded(child: ZenoDropdown<String>(label: "Material", value: p.material.isEmpty ? null : p.material, items: _withCurrent(_materialOptions, p.material).map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => widget.controller.updateField(material: v), onQuickAdd: () => _showQuickAddDialog(context, "Material", (val) => widget.controller.updateField(material: val)))),
                             const SizedBox(width: 8),
                             Expanded(child: ZenoTextField(label: "Fabric Composition", initialValue: p.ingredients, onChanged: (v) => widget.controller.updateField(ingredients: v))),
                           ],
@@ -84,17 +94,17 @@ class _Tab2SpecsState extends State<Tab2Specs> {
                       _compactSection("DESIGN", colors, [
                         Row(
                           children: [
-                            Expanded(child: ZenoDropdown<String>(label: "Pattern / Design", value: p.patternDesign.isEmpty ? null : p.patternDesign, items: ["Solid", "Striped", "Checked", "Printed", "Floral"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => widget.controller.updateField(patternDesign: v))),
+                            Expanded(child: ZenoDropdown<String>(label: "Pattern / Design", value: p.patternDesign.isEmpty ? null : p.patternDesign, items: _withCurrent(_patternOptions, p.patternDesign).map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => widget.controller.updateField(patternDesign: v), onQuickAdd: () => _showQuickAddDialog(context, "Pattern / Design", (val) => widget.controller.updateField(patternDesign: val)))),
                             const SizedBox(width: 8),
-                            Expanded(child: ZenoDropdown<String>(label: "Fit Type", value: p.fitType.isEmpty ? null : p.fitType, items: ["Regular", "Slim", "Relaxed", "Oversized"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => widget.controller.updateField(fitType: v))),
+                            Expanded(child: ZenoDropdown<String>(label: "Fit Type", value: p.fitType.isEmpty ? null : p.fitType, items: _withCurrent(_fitOptions, p.fitType).map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => widget.controller.updateField(fitType: v), onQuickAdd: () => _showQuickAddDialog(context, "Fit Type", (val) => widget.controller.updateField(fitType: val)))),
                           ],
                         ),
                         const SizedBox(height: 12),
                         Row(
                           children: [
-                            Expanded(child: ZenoDropdown<String>(label: "Sleeve Type", value: p.styleCategory.isEmpty ? null : p.styleCategory, items: ["Sleeveless", "Short Sleeve", "Full Sleeve", "3/4 Sleeve"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => widget.controller.updateField(styleCategory: v))),
+                            Expanded(child: ZenoDropdown<String>(label: "Sleeve Type", value: p.styleCategory.isEmpty ? null : p.styleCategory, items: _withCurrent(_sleeveOptions, p.styleCategory).map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => widget.controller.updateField(styleCategory: v), onQuickAdd: () => _showQuickAddDialog(context, "Sleeve Type", (val) => widget.controller.updateField(styleCategory: val)))),
                             const SizedBox(width: 8),
-                            Expanded(child: ZenoDropdown<String>(label: "Neck Type", value: p.sleeveNeckType.isEmpty ? null : p.sleeveNeckType, items: ["Round Neck", "V-Neck", "Polo", "Collar"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => widget.controller.updateField(sleeveNeckType: v))),
+                            Expanded(child: ZenoDropdown<String>(label: "Neck Type", value: p.sleeveNeckType.isEmpty ? null : p.sleeveNeckType, items: _withCurrent(_neckOptions, p.sleeveNeckType).map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => widget.controller.updateField(sleeveNeckType: v), onQuickAdd: () => _showQuickAddDialog(context, "Neck Type", (val) => widget.controller.updateField(sleeveNeckType: val)))),
                           ],
                         ),
                       ]),
@@ -130,6 +140,7 @@ class _Tab2SpecsState extends State<Tab2Specs> {
                                 items: widget.controller.departmentsList.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
                                 onChanged: (v) => widget.controller.updateField(departmentId: v),
                                 isRequired: true,
+                                onQuickAdd: () => _showQuickAddDialog(context, "Department", (val) => widget.controller.addDepartment(val)),
                               ),
                             ),
                             const SizedBox(width: 8),
@@ -140,6 +151,7 @@ class _Tab2SpecsState extends State<Tab2Specs> {
                                 items: widget.controller.categoriesList.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
                                 onChanged: (v) => widget.controller.updateField(category: v),
                                 isRequired: true,
+                                onQuickAdd: () => _showQuickAddDialog(context, "Category", (val) => widget.controller.addCategory(val)),
                               ),
                             ),
                             const SizedBox(width: 8),
@@ -150,6 +162,7 @@ class _Tab2SpecsState extends State<Tab2Specs> {
                                 items: widget.controller.categoriesList.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
                                 onChanged: (v) => widget.controller.updateField(subcategory: v),
                                 isRequired: true,
+                                onQuickAdd: () => _showQuickAddDialog(context, "Subcategory", (val) => widget.controller.addSubcategory(val)),
                               ),
                             ),
                             const SizedBox(width: 8),
@@ -436,6 +449,11 @@ class _Tab2SpecsState extends State<Tab2Specs> {
     );
   }
 
+  List<String> _withCurrent(List<String> options, String current) {
+    if (current.isEmpty || options.contains(current)) return options;
+    return [...options, current];
+  }
+
   Widget _compactSection(String title, ZenoSemanticColors colors, List<Widget> children) {
     return ZenoCard(
       title: title,
@@ -444,6 +462,48 @@ class _Tab2SpecsState extends State<Tab2Specs> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: children,
+      ),
+    );
+  }
+
+  void _showQuickAddDialog(BuildContext context, String type, Function(String) onAdd) {
+    final textController = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        title: Text("Add Custom $type", style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+        content: TextField(
+          controller: textController,
+          style: const TextStyle(fontSize: 13),
+          decoration: InputDecoration(
+            labelText: "$type Name",
+            hintText: "Enter $type name",
+            isDense: true,
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+          ),
+          autofocus: true,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("CANCEL", style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold, fontSize: 11)),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              if (textController.text.trim().isNotEmpty) {
+                onAdd(textController.text.trim());
+                Navigator.pop(context);
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF6366F1),
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+            ),
+            child: const Text("ADD", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11)),
+          ),
+        ],
       ),
     );
   }

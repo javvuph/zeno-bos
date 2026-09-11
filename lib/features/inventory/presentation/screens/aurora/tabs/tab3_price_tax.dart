@@ -11,6 +11,9 @@ class Tab3PriceTax extends StatelessWidget {
   final ProductStudioController controller;
   const Tab3PriceTax({super.key, required this.controller});
 
+  static const List<String> _taxStatusOptions = ["Taxable", "Exempt"];
+  static const List<String> _discountTypeOptions = ["Percentage", "Amount"];
+
   @override
   Widget build(BuildContext context) {
     final p = controller.product;
@@ -40,7 +43,7 @@ class Tab3PriceTax extends StatelessWidget {
                   ]),
                   const SizedBox(height: 8), 
                   _compactSection("SUPPLIER", colors, [
-                    ZenoDropdown<String>(label: "Primary Supplier", value: p.supplier.isEmpty ? null : p.supplier, items: controller.suppliersList.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => controller.updateField(supplier: v)),
+                    ZenoDropdown<String>(label: "Primary Supplier", value: p.supplier.isEmpty ? null : p.supplier, items: controller.suppliersList.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => controller.updateField(supplier: v), onQuickAdd: () => _showQuickAddDialog(context, "Supplier", (val) => controller.addSupplier(val))),
                   ]),
                   const SizedBox(height: 8), 
                   _compactSection("TAX", colors, [
@@ -48,7 +51,7 @@ class Tab3PriceTax extends StatelessWidget {
                       children: [
                         Expanded(flex: 2, child: ZenoTextField(label: "HSN / Tax Code", initialValue: p.hsnCode, onChanged: (v) => controller.updateField(hsnCode: v))),
                         const SizedBox(width: 8),
-                        Expanded(flex: 3, child: ZenoDropdown<String>(label: "Tax Status", value: p.taxStatus, items: ["Taxable", "Exempt"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => controller.updateField(taxStatus: v))),
+                        Expanded(flex: 3, child: ZenoDropdown<String>(label: "Tax Status", value: p.taxStatus, items: _withCurrent(_taxStatusOptions, p.taxStatus).map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => controller.updateField(taxStatus: v), onQuickAdd: () => _showQuickAddDialog(context, "Tax Status", (val) => controller.updateField(taxStatus: val)))),
                       ],
                     ),
                     const SizedBox(height: 8), 
@@ -77,7 +80,7 @@ class Tab3PriceTax extends StatelessWidget {
                   _compactSection("DISCOUNT & PROMOTION", colors, [
                     Row(
                       children: [
-                        Expanded(child: ZenoDropdown<String>(label: "Disc Type", value: p.discountType, items: ["Percentage", "Amount"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => controller.updateField(discountType: v))),
+                        Expanded(child: ZenoDropdown<String>(label: "Disc Type", value: p.discountType, items: _withCurrent(_discountTypeOptions, p.discountType).map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => controller.updateField(discountType: v), onQuickAdd: () => _showQuickAddDialog(context, "Disc Type", (val) => controller.updateField(discountType: val)))),
                         const SizedBox(width: 8),
                         Expanded(child: ZenoTextField(label: "Disc Value", initialValue: p.discountValue.toString(), onChanged: (v) => controller.updateField(discountValue: double.tryParse(v)), keyboardType: TextInputType.number)),
                       ],
@@ -127,7 +130,7 @@ class Tab3PriceTax extends StatelessWidget {
                         Row(
                           children: [
                             if (controller.isFieldVisible('discountType'))
-                              Expanded(child: ZenoDropdown<String>(label: "Disc Type", value: p.discountType, items: ["Percentage", "Amount"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => controller.updateField(discountType: v))),
+                              Expanded(child: ZenoDropdown<String>(label: "Disc Type", value: p.discountType, items: _withCurrent(_discountTypeOptions, p.discountType).map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => controller.updateField(discountType: v), onQuickAdd: () => _showQuickAddDialog(context, "Disc Type", (val) => controller.updateField(discountType: val)))),
                             if (controller.isFieldVisible('discountType') && controller.isFieldVisible('discountValue'))
                               const SizedBox(width: 8),
                             if (controller.isFieldVisible('discountValue'))
@@ -166,7 +169,7 @@ class Tab3PriceTax extends StatelessWidget {
                         const SizedBox(height: 6),
                         Row(
                           children: [
-                            Expanded(child: ZenoDropdown<String>(label: "Tax Status", value: p.taxStatus, items: ["Taxable", "Exempt"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => controller.updateField(taxStatus: v))),
+                            Expanded(child: ZenoDropdown<String>(label: "Tax Status", value: p.taxStatus, items: _withCurrent(_taxStatusOptions, p.taxStatus).map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => controller.updateField(taxStatus: v), onQuickAdd: () => _showQuickAddDialog(context, "Tax Status", (val) => controller.updateField(taxStatus: val)))),
                             const SizedBox(width: 8),
                             Expanded(child: ZenoDropdown<String>(label: "Tax Category", value: p.taxCategory, items: ["Standard", "Luxury"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => controller.updateField(taxCategory: v))),
                           ],
@@ -218,6 +221,53 @@ class Tab3PriceTax extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: children,
+      ),
+    );
+  }
+
+  List<String> _withCurrent(List<String> options, String current) {
+    if (current.isEmpty || options.contains(current)) return options;
+    return [...options, current];
+  }
+
+  void _showQuickAddDialog(BuildContext context, String type, Function(String) onAdd) {
+    final textController = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        title: Text("Add Custom $type", style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+        content: TextField(
+          controller: textController,
+          style: const TextStyle(fontSize: 13),
+          decoration: InputDecoration(
+            labelText: "$type Name",
+            hintText: "Enter $type name",
+            isDense: true,
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+          ),
+          autofocus: true,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("CANCEL", style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold, fontSize: 11)),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              if (textController.text.trim().isNotEmpty) {
+                onAdd(textController.text.trim());
+                Navigator.pop(context);
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF6366F1),
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+            ),
+            child: const Text("ADD", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11)),
+          ),
+        ],
       ),
     );
   }
