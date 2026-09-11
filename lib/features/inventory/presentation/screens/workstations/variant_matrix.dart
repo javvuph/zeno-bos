@@ -12,85 +12,86 @@ class VariantMatrix extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: colors.borderSubtle.withOpacity(0.5)),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFFE2E8F0)),
       ),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-          // Header Actions
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "GENERATED VARIANTS (${controller.generatedVariants.length})",
-                style: TextStyle(fontSize: 10, fontWeight: FontWeight.w900, color: colors.textPrimary),
-              ),
-              InkWell(
-                onTap: () => controller.product.variants.clear(),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(Icons.delete_outline_rounded, size: 14, color: colors.statusDanger),
-                    const SizedBox(width: 4),
-                    Text("Clear All", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: colors.statusDanger)),
-                  ],
+            // Header Actions
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "GENERATED VARIANTS (${controller.generatedVariants.length})",
+                  style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: Color(0xFF1E293B)),
+                ),
+                InkWell(
+                  onTap: controller.generatedVariants.isEmpty ? null : () => _confirmClearAll(context),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.delete_outline_rounded, size: 15, color: colors.statusDanger),
+                      const SizedBox(width: 4),
+                      Text("Clear All", style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: colors.statusDanger)),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            _buildActionToolbar(),
+            const SizedBox(height: 12),
+            _buildTableHeader(),
+            const Divider(height: 1, color: Color(0xFFE2E8F0)),
+            
+            // Data Rows
+            if (controller.generatedVariants.isEmpty)
+              _buildEmptyState()
+            else
+              ListView.builder(
+                shrinkWrap: true,
+                primary: false,
+                physics: const NeverScrollableScrollPhysics(),
+                padding: const EdgeInsets.only(bottom: 8),
+                itemCount: controller.generatedVariants.length,
+                itemBuilder: (context, i) => VariantMatrixRow(
+                  index: i,
+                  variant: controller.generatedVariants[i],
+                  controller: controller,
+                  colors: colors,
+                  isActive: controller.activeVariantIndex == i,
                 ),
               ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          _buildActionToolbar(),
-          const SizedBox(height: 10),
-          _buildTableHeader(),
-          const Divider(height: 1),
-          
-          // Data Rows (Removed Expanded to prevent layout crashes in scroll views)
-          if (controller.generatedVariants.isEmpty)
-            _buildEmptyState()
-          else
-            ListView.builder(
-              shrinkWrap: true,
-              primary: false,
-              physics: const NeverScrollableScrollPhysics(),
-              padding: const EdgeInsets.only(bottom: 8),
-              itemCount: controller.generatedVariants.length,
-              itemBuilder: (context, i) => VariantMatrixRow(
-                index: i,
-                variant: controller.generatedVariants[i],
-                controller: controller,
-                colors: colors,
-                isActive: controller.activeVariantIndex == i,
-              ),
-            ),
-          
-          _buildFooter(),
-        ],
+            
+            const SizedBox(height: 10),
+            _buildFooter(),
+          ],
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   Widget _buildActionToolbar() {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
         children: [
-          _bulkActionPill("Bulk Price: ₹", "1299", 50, (v) {}),
+          _bulkActionPill("Bulk Price: ₹", "1299", 55, (v) {}),
           const SizedBox(width: 8),
-          _bulkActionPill("Bulk Stock:", "50", 40, (v) {}),
+          _bulkActionPill("Bulk Stock:", "50", 45, (v) {}),
           const SizedBox(width: 8),
-          _toolbarBtn("Sync 1st", Icons.sync_rounded, colors.textPrimary, controller.syncAllFromFirstRow),
+          _toolbarBtn("Sync 1st", Icons.sync_rounded, const Color(0xFF1E293B), controller.syncAllFromFirstRow),
           const SizedBox(width: 6),
-          _toolbarBtn("Barcodes", Icons.qr_code_rounded, colors.textPrimary, controller.generateAllVariantBarcodes),
-          const SizedBox(width: 12),
+          _toolbarBtn("Barcodes", Icons.qr_code_rounded, const Color(0xFF1E293B), controller.generateAllVariantBarcodes),
+          const SizedBox(width: 10),
           Container(width: 1, height: 16, color: const Color(0xFFE2E8F0)),
-          const SizedBox(width: 12),
+          const SizedBox(width: 10),
           _searchBox(),
         ],
       ),
@@ -98,58 +99,58 @@ class VariantMatrix extends StatelessWidget {
   }
 
   Widget _bulkActionPill(String label, String hint, double width, Function(String) onApply) => Container(
-    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
     decoration: BoxDecoration(
-      color: Colors.white,
+      color: const Color(0xFFF8FAFC),
       borderRadius: BorderRadius.circular(6),
       border: Border.all(color: const Color(0xFFE2E8F0)),
-      boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 2)],
     ),
     child: Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const Icon(Icons.bolt_rounded, size: 12, color: Color(0xFF6366F1)),
-        const SizedBox(width: 6),
-        Text(label, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w600, color: Color(0xFF64748B))),
+        const Icon(Icons.bolt_rounded, size: 14, color: Color(0xFF3B66F5)),
+        const SizedBox(width: 5),
+        Text(label, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Color(0xFF64748B))),
         const SizedBox(width: 4),
         SizedBox(
           width: width,
           child: TextField(
             decoration: InputDecoration(hintText: hint, border: InputBorder.none, isDense: true, contentPadding: EdgeInsets.zero),
-            style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: Color(0xFF1E293B)),
+            style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: Color(0xFF1E293B)),
             keyboardType: TextInputType.number,
           ),
         ),
-        InkWell(onTap: () {}, child: const Text("Apply", style: TextStyle(fontSize: 10, fontWeight: FontWeight.w900, color: Color(0xFF4F46E5)))),
+        InkWell(onTap: () {}, child: const Text("Apply", style: TextStyle(fontSize: 11, fontWeight: FontWeight.w900, color: Color(0xFF3B66F5)))),
       ],
     ),
   );
 
   Widget _searchBox() => Container(
-    width: 140,
-    height: 28,
+    width: 180,
+    height: 30,
     padding: const EdgeInsets.symmetric(horizontal: 10),
     decoration: BoxDecoration(
       color: const Color(0xFFF1F5F9),
       borderRadius: BorderRadius.circular(6),
+      border: Border.all(color: const Color(0xFFE2E8F0)),
     ),
     child: const Row(
       children: [
         Icon(Icons.search_rounded, size: 14, color: Color(0xFF94A3B8)),
-        SizedBox(width: 8),
-        Expanded(child: TextField(decoration: InputDecoration(hintText: "Search SKU", hintStyle: TextStyle(fontSize: 10, color: Color(0xFF94A3B8)), border: InputBorder.none, isDense: true))),
+        SizedBox(width: 6),
+        Expanded(child: TextField(decoration: InputDecoration(hintText: "Search SKU, barcode...", hintStyle: TextStyle(fontSize: 10.5, color: Color(0xFF94A3B8)), border: InputBorder.none, isDense: true))),
       ],
     ),
   );
 
   Widget _toolbarBtn(String l, IconData i, Color c, VoidCallback onPressed) => OutlinedButton.icon(
     onPressed: onPressed,
-    icon: Icon(i, size: 12, color: c.withOpacity(0.7)),
-    label: Text(l, style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: c)),
+    icon: Icon(i, size: 13, color: c.withOpacity(0.8)),
+    label: Text(l, style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.bold, color: c)),
     style: OutlinedButton.styleFrom(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-      side: BorderSide(color: colors.borderSubtle),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      side: const BorderSide(color: Color(0xFFCBD5E1)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
       minimumSize: Size.zero,
       visualDensity: VisualDensity.compact,
     ),
@@ -162,21 +163,28 @@ class VariantMatrix extends StatelessWidget {
       child: Row(
         children: [
           const SizedBox(width: 8),
-          const SizedBox(width: 20, child: Icon(Icons.check_box_outline_blank_rounded, size: 14, color: Color(0xFFCBD5E1))),
+          SizedBox(
+            width: 20,
+            child: Checkbox(
+              value: controller.areAllVariantsSelected,
+              onChanged: controller.generatedVariants.isEmpty ? null : (value) => controller.toggleAllVariantsSelection(value ?? false),
+              visualDensity: VisualDensity.compact,
+            ),
+          ),
           const SizedBox(width: 8),
-          _headerCell("COLOUR", width: 100),
-          _headerCell("SIZE", width: 50),
+          _headerCell("COLOUR", width: 92),
+          _headerCell("SIZE", width: 48),
           Expanded(flex: 2, child: _headerCell("VARIANT SKU")),
           const SizedBox(width: 6),
           Expanded(flex: 2, child: _headerCell("BARCODE")),
           const SizedBox(width: 6),
           _headerCell("STOCK", width: 60),
           const SizedBox(width: 6),
-          _headerCell("PRICE (₹)", width: 80),
+          _headerCell("PRICE (₹)", width: 75),
           const SizedBox(width: 6),
           _headerCell("MEDIA", width: 60, alignment: Alignment.center),
           const SizedBox(width: 6),
-          _headerCell("ACTIONS", width: 50, alignment: Alignment.centerRight),
+          _headerCell("ACTIONS", width: 48, alignment: Alignment.centerRight),
         ],
       ),
     );
@@ -188,22 +196,21 @@ class VariantMatrix extends StatelessWidget {
       alignment: alignment,
       child: Text(
         label,
-        style: TextStyle(fontSize: 8, fontWeight: FontWeight.w900, color: colors.textSecondary.withOpacity(0.8), letterSpacing: 0.5),
+        style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: Color(0xFF64748B), letterSpacing: 0.5),
       ),
     );
   }
 
   Widget _buildEmptyState() {
     return SizedBox(
-      height: 160,
+      height: 120,
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.layers_outlined, size: 40, color: colors.textDisabled.withOpacity(0.5)),
+            Icon(Icons.layers_outlined, size: 36, color: colors.textDisabled.withOpacity(0.5)),
             const SizedBox(height: 8),
-            Text("NO VARIANTS GENERATED - Select sizes & colours above", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: colors.textDisabled)),
-            const SizedBox(height: 8),
+            Text("NO VARIANTS GENERATED - Select sizes & colours above", style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: colors.textDisabled)),
           ],
         ),
       ),
@@ -212,30 +219,54 @@ class VariantMatrix extends StatelessWidget {
 
   Widget _buildFooter() {
     return Padding(
-      padding: const EdgeInsets.only(top: 12),
+      padding: const EdgeInsets.only(top: 4),
       child: Row(
         children: [
           Text(
             "Showing 1 to ${controller.generatedVariants.length} of ${controller.generatedVariants.length}",
-            style: TextStyle(fontSize: 9, fontWeight: FontWeight.w600, color: colors.textSecondary),
+            style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Color(0xFF64748B)),
           ),
           const Spacer(),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
             decoration: BoxDecoration(
-              border: Border.all(color: colors.borderSubtle),
-              borderRadius: BorderRadius.circular(4),
+              border: Border.all(color: const Color(0xFFE2E8F0)),
+              borderRadius: BorderRadius.circular(6),
             ),
-            child: Row(
+            child: const Row(
               children: [
-                Text("View All", style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: colors.textPrimary)),
-                const SizedBox(width: 6),
-                Icon(Icons.keyboard_arrow_down_rounded, size: 14, color: colors.textPrimary),
+                Text("View All", style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.bold, color: Color(0xFF1E293B))),
+                SizedBox(width: 6),
+                Icon(Icons.keyboard_arrow_down_rounded, size: 14, color: Color(0xFF1E293B)),
               ],
             ),
           ),
         ],
       ),
     );
+  }
+
+  Future<void> _confirmClearAll(BuildContext context) async {
+    final shouldClear = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Clear all variants?'),
+        content: const Text('This will remove all generated variants from the table.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('Clear All'),
+          ),
+        ],
+      ),
+    );
+
+    if (shouldClear == true) {
+      controller.clearAllVariants();
+    }
   }
 }

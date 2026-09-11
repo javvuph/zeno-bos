@@ -4,6 +4,7 @@ import 'product_studio_enums.dart';
 class VariantMatrixItem {
   final String size;
   final String color;
+  bool isSelected;
   String sku;
   String barcode;
   double price; // Represents Selling Price
@@ -42,6 +43,7 @@ class VariantMatrixItem {
   VariantMatrixItem({
     required this.size,
     required this.color,
+    this.isSelected = false,
     required this.sku,
     this.barcode = "",
     required this.price,

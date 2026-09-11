@@ -139,7 +139,37 @@ extension ProductStudioControllerVariants on ProductStudioController {
 
   void syncBasePriceToAllVariants() { for (var v in _product.variants) { v.price = _product.sellingPrice; } notify(); }
   void syncBaseStockToAllVariants() { for (var v in _product.variants) { v.safetyStock = _product.safetyStock.toInt(); } notify(); }
-  void removeVariantItem(int i) { if (i >= 0 && i < _product.variants.length) { _product.variants.removeAt(i); notify(); } }
+  bool get areAllVariantsSelected => _product.variants.isNotEmpty && _product.variants.every((v) => v.isSelected);
+  bool get hasSelectedVariants => _product.variants.any((v) => v.isSelected);
+  void toggleVariantSelection(int index, bool value) {
+    if (index >= 0 && index < _product.variants.length) {
+      _product.variants[index].isSelected = value;
+      notify();
+    }
+  }
+  void toggleAllVariantsSelection(bool value) {
+    for (final variant in _product.variants) {
+      variant.isSelected = value;
+    }
+    notify();
+  }
+  void clearAllVariants() {
+    if (_product.variants.isEmpty) return;
+    _product.variants.clear();
+    activeVariantIndex = null;
+    notify();
+  }
+  void removeVariantItem(int i) {
+    if (i >= 0 && i < _product.variants.length) {
+      _product.variants.removeAt(i);
+      if (_product.variants.isEmpty) {
+        activeVariantIndex = null;
+      } else if (activeVariantIndex != null && activeVariantIndex! >= _product.variants.length) {
+        activeVariantIndex = _product.variants.length - 1;
+      }
+      notify();
+    }
+  }
   
   bool aiSynthesizeAnglesForColor(String color, String promptDescription, BuildContext context) {
     if (color.isEmpty) return false;
