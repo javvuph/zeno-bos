@@ -20,6 +20,7 @@ class StoreBranch {
   String qrUrl;
   bool autoPrintPos;
   List<String> assignedUsers;
+  String timezone;
 
   // ZENO BOS ADVANCED PARAMS
   String businessSize;
@@ -54,6 +55,7 @@ class StoreBranch {
     required this.qrUrl,
     this.autoPrintPos = false,
     this.assignedUsers = const [],
+    this.timezone = "Asia/Kolkata",
     this.businessSize = "SMALL",
     this.operationMode = "Counter-Service",
     this.barcodeTemplate = "EAN-13 Standard",
@@ -92,6 +94,7 @@ class StoreBranch {
     String? qrUrl,
     bool? autoPrintPos,
     List<String>? assignedUsers,
+    String? timezone,
     String? businessSize,
     String? operationMode,
     String? barcodeTemplate,
@@ -124,6 +127,7 @@ class StoreBranch {
       qrUrl: qrUrl ?? this.qrUrl,
       autoPrintPos: autoPrintPos ?? this.autoPrintPos,
       assignedUsers: assignedUsers ?? List.from(this.assignedUsers),
+      timezone: timezone ?? this.timezone,
       businessSize: businessSize ?? this.businessSize,
       operationMode: operationMode ?? this.operationMode,
       barcodeTemplate: barcodeTemplate ?? this.barcodeTemplate,
@@ -158,6 +162,7 @@ class StoreBranch {
         'qrUrl': qrUrl,
         'autoPrintPos': autoPrintPos,
         'assignedUsers': assignedUsers,
+        'timezone': timezone,
         'businessSize': businessSize,
         'operationMode': operationMode,
         'barcodeTemplate': barcodeTemplate,
@@ -173,7 +178,6 @@ class StoreBranch {
     final subType = json['subType'] as String? ?? "";
     final enabledSubTypesJson = json['enabledSubTypes'] as List<dynamic>?;
     
-    // Migration: If enabledSubTypes is missing but subType exists, use subType
     final enabledSubTypes = (enabledSubTypesJson != null)
         ? List<String>.from(enabledSubTypesJson)
         : (subType.isNotEmpty ? [subType] : <String>[]);
@@ -200,7 +204,8 @@ class StoreBranch {
         qrUrl: json['qrUrl'],
         autoPrintPos: json['autoPrintPos'] ?? false,
         assignedUsers: List<String>.from(json['assignedUsers'] ?? []),
-        businessSize: json['businessSize'] ?? "Small (SMB)",
+        timezone: json['timezone'] ?? "Asia/Kolkata",
+        businessSize: json['businessSize'] ?? "SMALL",
         operationMode: json['operationMode'] ?? "Counter-Service",
         barcodeTemplate: json['barcodeTemplate'] ?? "EAN-13 Standard",
         receiptTemplate: json['receiptTemplate'] ?? "Thermal 80mm Standard",

@@ -46,9 +46,14 @@ class _StoreSetupModalState extends State<StoreSetupModal> {
       _editingStore.businessSize.toUpperCase() == 'ENTERPRISE';
 
   int get _maxVisibleTabIndex {
-    if (_isSmallScale) return 3;
-    if (_isGrowingScale) return 4;
-    return 5;
+    if (_isEnterpriseScale) return 5;
+    return 4;
+  }
+
+  int get _maxStaffLimit {
+    if (_isSmallScale) return 2;
+    if (_isGrowingScale) return 10;
+    return 999;
   }
 
   int get _totalSteps => _maxVisibleTabIndex + 1;
@@ -145,6 +150,8 @@ class _StoreSetupModalState extends State<StoreSetupModal> {
   final _phoneController = TextEditingController();
   final _emailController = TextEditingController();
   final _assignedUsersController = TextEditingController();
+  final _staffPinController = TextEditingController();
+  String _selectedStaffRole = "Cashier";
 
   // PREFIX CONTROLLERS
   final _invoicePrefixController = TextEditingController();
@@ -205,6 +212,7 @@ class _StoreSetupModalState extends State<StoreSetupModal> {
     _addressController.removeListener(_onReceiptHeaderChanged);
     _cityController.removeListener(_onReceiptHeaderChanged);
     _zipCodeController.removeListener(_onReceiptHeaderChanged);
+    _staffPinController.dispose();
     controller.removeListener(_onControllerUpdate);
     _nameController.dispose();
     _legalNameController.dispose();
@@ -314,6 +322,7 @@ class _StoreSetupModalState extends State<StoreSetupModal> {
       _editingStore.country = countryProfile.name;
       _editingStore.currency = "${countryProfile.currency.code} (${countryProfile.currency.symbol})";
       _editingStore.taxEngine = countryProfile.tax.label;
+      _editingStore.timezone = countryProfile.defaultTimezone;
 
       final availableStates = GlobalSubdivisions.getForCountry(countryProfile.code);
 
@@ -1559,12 +1568,12 @@ class _StoreSetupModalState extends State<StoreSetupModal> {
                 ),
                 const SizedBox(height: 12),
 
-                // Field 4: Currency & Tax Badges (Locked Row)
+                // Field 4: Currency, Tax & Timezone Row
                 Row(
                   children: [
                     Expanded(
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                         decoration: BoxDecoration(
                           color: colors.bgTier1,
                           borderRadius: BorderRadius.circular(6),
@@ -1575,7 +1584,7 @@ class _StoreSetupModalState extends State<StoreSetupModal> {
                             Text("Currency: ", style: TextStyle(fontSize: 10, color: colors.textSecondary)),
                             Expanded(
                               child: Text(
-                                "🔒 ${countryProfile.currency.code} (${countryProfile.currency.symbol})",
+                                "🔒 ${countryProfile.currency.code}",
                                 style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: colors.textPrimary),
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -1584,10 +1593,10 @@ class _StoreSetupModalState extends State<StoreSetupModal> {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: 6),
                     Expanded(
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                         decoration: BoxDecoration(
                           color: colors.bgTier1,
                           borderRadius: BorderRadius.circular(6),
@@ -1595,10 +1604,10 @@ class _StoreSetupModalState extends State<StoreSetupModal> {
                         ),
                         child: Row(
                           children: [
-                            Text("Tax System: ", style: TextStyle(fontSize: 10, color: colors.textSecondary)),
+                            Text("Tax: ", style: TextStyle(fontSize: 10, color: colors.textSecondary)),
                             Expanded(
                               child: Text(
-                                "🔒 ${countryProfile.tax.label}",
+                                "🔒 ${countryProfile.tax.taxIdName}",
                                 style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: colors.textPrimary),
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -1606,6 +1615,44 @@ class _StoreSetupModalState extends State<StoreSetupModal> {
                           ],
                         ),
                       ),
+                    ),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: countryProfile.hasMultipleTimezones
+                          ? ZenoDropdown<String>(
+                              label: "Timezone",
+                              value: countryProfile.timezones.contains(_editingStore.timezone)
+                                  ? _editingStore.timezone
+                                  : countryProfile.defaultTimezone,
+                              items: countryProfile.timezones
+                                  .map((tz) => DropdownMenuItem(
+                                        value: tz,
+                                        child: Text(tz, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 10)),
+                                      ))
+                                  .toList(),
+                              onChanged: (v) => setState(() => _editingStore.timezone = v!),
+                            )
+                          : Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                              decoration: BoxDecoration(
+                                color: colors.bgTier1,
+                                borderRadius: BorderRadius.circular(6),
+                                border: Border.all(color: colors.borderSubtle),
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.access_time_rounded, size: 12, color: colors.textSecondary),
+                                  const SizedBox(width: 4),
+                                  Expanded(
+                                    child: Text(
+                                      "🔒 ${_editingStore.timezone}",
+                                      style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: colors.textPrimary),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                     ),
                   ],
                 ),
@@ -1899,59 +1946,213 @@ class _StoreSetupModalState extends State<StoreSetupModal> {
   }
 
   Widget _buildAccessControlTab(ZenoSemanticColors colors) {
+    final isLimitReached = !_isEnterpriseScale && _editingStore.assignedUsers.length >= _maxStaffLimit;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _sectionHeader("BRANCH PERSONNEL & ACCESS", colors),
+        _sectionHeader("BRANCH PERSONNEL & ACCESS CONTROL", colors),
+
+        // STAFF QUOTA CHIP
         Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          margin: const EdgeInsets.only(bottom: 12),
+          decoration: BoxDecoration(
+            color: colors.bgTier2,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: colors.borderSubtle),
+          ),
+          child: Row(
+            children: [
+              Icon(Icons.people_outline_rounded, size: 16, color: colors.accentPrimary),
+              const SizedBox(width: 8),
+              Text(
+                "Staff Accounts: ${_editingStore.assignedUsers.length} of ${_isEnterpriseScale ? 'Unlimited' : _maxStaffLimit} Used (${_editingStore.businessSize.toUpperCase()} Scale)",
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold,
+                  color: colors.textPrimary,
+                ),
+              ),
+              const Spacer(),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                decoration: BoxDecoration(
+                  color: isLimitReached ? Colors.orange.shade50 : Colors.green.shade50,
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(color: isLimitReached ? Colors.orange.shade300 : Colors.green.shade300),
+                ),
+                child: Text(
+                  isLimitReached ? "QUOTA FULL" : "QUOTA AVAILABLE",
+                  style: TextStyle(
+                    fontSize: 9,
+                    fontWeight: FontWeight.bold,
+                    color: isLimitReached ? Colors.orange.shade800 : Colors.green.shade800,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        // UPGRADE BANNER IF LIMIT REACHED
+        if (isLimitReached)
+          Container(
+            padding: const EdgeInsets.all(10),
+            margin: const EdgeInsets.only(bottom: 12),
+            decoration: BoxDecoration(
+              color: Colors.amber.shade50,
+              borderRadius: BorderRadius.circular(6),
+              border: Border.all(color: Colors.amber.shade300),
+            ),
+            child: Row(
+              children: [
+                Icon(Icons.info_outline_rounded, size: 16, color: Colors.amber.shade800),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    "Maximum of $_maxStaffLimit staff accounts reached for ${_editingStore.businessSize.toUpperCase()} Scale. Switch scale in Tab 1 to add up to ${_isSmallScale ? 10 : 'unlimited'} staff members.",
+                    style: TextStyle(fontSize: 11, color: Colors.amber.shade900, fontWeight: FontWeight.w600),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+        // ASSIGNED USERS LIST & INPUT FORM
+        Container(
+          padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
             color: colors.bgTier2,
             borderRadius: BorderRadius.circular(8),
             border: Border.all(color: colors.borderSubtle),
           ),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ..._editingStore.assignedUsers.map((email) => ListTile(
-                    dense: true,
-                    leading: const Icon(Icons.person_outline, size: 16),
-                    title: Text(email, style: const TextStyle(fontSize: 12)),
-                    trailing: IconButton(
-                        icon: const Icon(Icons.remove_circle_outline,
-                            size: 16, color: Colors.redAccent),
-                        onPressed: () {
-                          setState(
-                              () => _editingStore.assignedUsers.remove(email));
-                        }),
-                  )),
-              Padding(
-                padding: const EdgeInsets.all(12),
-                child: Row(
-                  children: [
-                    Expanded(
-                        child: ZenoTextField(
-                            label: "Add User By Email",
-                            controller: _assignedUsersController,
-                            hint: "user@zeno.store")),
-                    const SizedBox(width: 12),
-                    ElevatedButton(
-                      onPressed: () {
-                        if (_assignedUsersController.text.isNotEmpty) {
-                          setState(() {
-                            _editingStore.assignedUsers
-                                .add(_assignedUsersController.text);
-                            _assignedUsersController.clear();
-                          });
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: colors.accentPrimary,
-                          foregroundColor: Colors.black),
-                      child: const Text("ASSIGN",
-                          style: TextStyle(
-                              fontSize: 10, fontWeight: FontWeight.bold)),
-                    ),
-                  ],
+              Text(
+                "Active Staff Members",
+                style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: colors.textSecondary),
+              ),
+              const SizedBox(height: 8),
+              if (_editingStore.assignedUsers.isEmpty)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: Text(
+                    "No staff members assigned yet. Add your first cashier below.",
+                    style: TextStyle(fontSize: 11, color: colors.textDisabled, fontStyle: FontStyle.italic),
+                  ),
+                )
+              else
+                Column(
+                  children: _editingStore.assignedUsers.map((user) {
+                    return Container(
+                      margin: const EdgeInsets.only(bottom: 6),
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: colors.bgTier1,
+                        borderRadius: BorderRadius.circular(6),
+                        border: Border.all(color: colors.borderSubtle),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(Icons.person_rounded, size: 16, color: colors.accentPrimary),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              user,
+                              style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: colors.textPrimary),
+                            ),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.remove_circle_outline, size: 16, color: Colors.redAccent),
+                            padding: EdgeInsets.zero,
+                            constraints: const BoxConstraints(),
+                            onPressed: () {
+                              setState(() {
+                                _editingStore.assignedUsers.remove(user);
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
                 ),
+
+              const Divider(height: 20),
+
+              Text(
+                "Assign New Staff Member",
+                style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: colors.textSecondary),
+              ),
+              const SizedBox(height: 10),
+
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    flex: 3,
+                    child: ZenoTextField(
+                      label: "Staff Email / Username *",
+                      controller: _assignedUsersController,
+                      hint: "cashier@zeno.store",
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    flex: 2,
+                    child: ZenoDropdown<String>(
+                      label: "Role",
+                      value: _selectedStaffRole,
+                      items: const [
+                        DropdownMenuItem(value: "Cashier", child: Text("Cashier (Billing Only)", style: TextStyle(fontSize: 11))),
+                        DropdownMenuItem(value: "Manager", child: Text("Manager (Edit Stock)", style: TextStyle(fontSize: 11))),
+                        DropdownMenuItem(value: "Admin", child: Text("Admin (Full Access)", style: TextStyle(fontSize: 11))),
+                      ],
+                      onChanged: (v) => setState(() => _selectedStaffRole = v!),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  SizedBox(
+                    width: 100,
+                    child: ZenoTextField(
+                      label: "4-Digit PIN",
+                      controller: _staffPinController,
+                      hint: "1234",
+                      keyboardType: TextInputType.number,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 22),
+                    child: ElevatedButton.icon(
+                      onPressed: isLimitReached
+                          ? null
+                          : () {
+                              final text = _assignedUsersController.text.trim();
+                              if (text.isNotEmpty) {
+                                final pin = _staffPinController.text.trim();
+                                final pinStr = pin.isNotEmpty ? " • PIN: $pin" : "";
+                                final entry = "$text ($_selectedStaffRole$pinStr)";
+                                setState(() {
+                                  _editingStore.assignedUsers.add(entry);
+                                  _assignedUsersController.clear();
+                                  _staffPinController.clear();
+                                });
+                              }
+                            },
+                      icon: const Icon(Icons.person_add_alt_1_rounded, size: 14),
+                      label: const Text("ASSIGN STAFF", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: colors.accentPrimary,
+                        foregroundColor: colors.bgTier1,
+                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

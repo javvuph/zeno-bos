@@ -44,6 +44,8 @@ class CountryProfile {
   final String phoneCode;
   final CurrencyProfile currency;
   final TaxProfile tax;
+  final String defaultTimezone;
+  final List<String> timezones;
 
   const CountryProfile({
     required this.code,
@@ -52,7 +54,11 @@ class CountryProfile {
     required this.phoneCode,
     required this.currency,
     required this.tax,
+    this.defaultTimezone = 'UTC',
+    this.timezones = const [],
   });
+
+  bool get hasMultipleTimezones => timezones.length > 1;
 }
 
 class GlobalSubdivisions {
@@ -192,6 +198,8 @@ class CountryRegistry {
       name: 'India',
       flagEmoji: '🇮🇳',
       phoneCode: '+91',
+      defaultTimezone: 'Asia/Kolkata',
+      timezones: ['Asia/Kolkata'],
       currency: CurrencyProfile(
         code: 'INR',
         symbol: '₹',
@@ -212,6 +220,8 @@ class CountryRegistry {
       name: 'United Arab Emirates',
       flagEmoji: '🇦🇪',
       phoneCode: '+971',
+      defaultTimezone: 'Asia/Dubai',
+      timezones: ['Asia/Dubai'],
       currency: CurrencyProfile(
         code: 'AED',
         symbol: 'AED',
@@ -231,6 +241,8 @@ class CountryRegistry {
       name: 'Saudi Arabia',
       flagEmoji: '🇸🇦',
       phoneCode: '+966',
+      defaultTimezone: 'Asia/Riyadh',
+      timezones: ['Asia/Riyadh'],
       currency: CurrencyProfile(
         code: 'SAR',
         symbol: 'SAR',
@@ -250,6 +262,8 @@ class CountryRegistry {
       name: 'Kuwait',
       flagEmoji: '🇰🇼',
       phoneCode: '+965',
+      defaultTimezone: 'Asia/Kuwait',
+      timezones: ['Asia/Kuwait'],
       currency: CurrencyProfile(
         code: 'KWD',
         symbol: 'KWD',
@@ -269,6 +283,8 @@ class CountryRegistry {
       name: 'Oman',
       flagEmoji: '🇴🇲',
       phoneCode: '+968',
+      defaultTimezone: 'Asia/Muscat',
+      timezones: ['Asia/Muscat'],
       currency: CurrencyProfile(
         code: 'OMR',
         symbol: 'OMR',
@@ -288,6 +304,8 @@ class CountryRegistry {
       name: 'Bahrain',
       flagEmoji: '🇧🇭',
       phoneCode: '+973',
+      defaultTimezone: 'Asia/Bahrain',
+      timezones: ['Asia/Bahrain'],
       currency: CurrencyProfile(
         code: 'BHD',
         symbol: 'BHD',
@@ -307,6 +325,8 @@ class CountryRegistry {
       name: 'Qatar',
       flagEmoji: '🇶🇦',
       phoneCode: '+974',
+      defaultTimezone: 'Asia/Qatar',
+      timezones: ['Asia/Qatar'],
       currency: CurrencyProfile(
         code: 'QAR',
         symbol: 'QAR',
@@ -326,6 +346,15 @@ class CountryRegistry {
       name: 'United States',
       flagEmoji: '🇺🇸',
       phoneCode: '+1',
+      defaultTimezone: 'America/New_York',
+      timezones: [
+        'America/New_York',
+        'America/Chicago',
+        'America/Denver',
+        'America/Los_Angeles',
+        'America/Anchorage',
+        'Pacific/Honolulu'
+      ],
       currency: CurrencyProfile(
         code: 'USD',
         symbol: '\$',
@@ -345,6 +374,8 @@ class CountryRegistry {
       name: 'United Kingdom',
       flagEmoji: '🇬🇧',
       phoneCode: '+44',
+      defaultTimezone: 'Europe/London',
+      timezones: ['Europe/London'],
       currency: CurrencyProfile(
         code: 'GBP',
         symbol: '£',
@@ -364,6 +395,8 @@ class CountryRegistry {
       name: 'Singapore',
       flagEmoji: '🇸🇬',
       phoneCode: '+65',
+      defaultTimezone: 'Asia/Singapore',
+      timezones: ['Asia/Singapore'],
       currency: CurrencyProfile(
         code: 'SGD',
         symbol: 'S\$',
@@ -383,6 +416,14 @@ class CountryRegistry {
       name: 'Canada',
       flagEmoji: '🇨🇦',
       phoneCode: '+1',
+      defaultTimezone: 'America/Toronto',
+      timezones: [
+        'America/Toronto',
+        'America/Vancouver',
+        'America/Edmonton',
+        'America/Winnipeg',
+        'America/Halifax'
+      ],
       currency: CurrencyProfile(
         code: 'CAD',
         symbol: '\$',
@@ -402,6 +443,14 @@ class CountryRegistry {
       name: 'Australia',
       flagEmoji: '🇦🇺',
       phoneCode: '+61',
+      defaultTimezone: 'Australia/Sydney',
+      timezones: [
+        'Australia/Sydney',
+        'Australia/Melbourne',
+        'Australia/Brisbane',
+        'Australia/Perth',
+        'Australia/Adelaide'
+      ],
       currency: CurrencyProfile(
         code: 'AUD',
         symbol: 'A\$',
@@ -421,6 +470,8 @@ class CountryRegistry {
       name: 'Germany',
       flagEmoji: '🇩🇪',
       phoneCode: '+49',
+      defaultTimezone: 'Europe/Berlin',
+      timezones: ['Europe/Berlin'],
       currency: CurrencyProfile(
         code: 'EUR',
         symbol: '€',
@@ -440,6 +491,8 @@ class CountryRegistry {
       name: 'France',
       flagEmoji: '🇫🇷',
       phoneCode: '+33',
+      defaultTimezone: 'Europe/Paris',
+      timezones: ['Europe/Paris'],
       currency: CurrencyProfile(
         code: 'EUR',
         symbol: '€',
@@ -459,6 +512,8 @@ class CountryRegistry {
       name: 'Japan',
       flagEmoji: '🇯🇵',
       phoneCode: '+81',
+      defaultTimezone: 'Asia/Tokyo',
+      timezones: ['Asia/Tokyo'],
       currency: CurrencyProfile(
         code: 'JPY',
         symbol: '¥',
@@ -478,6 +533,8 @@ class CountryRegistry {
       name: 'Vietnam',
       flagEmoji: '🇻🇳',
       phoneCode: '+84',
+      defaultTimezone: 'Asia/Ho_Chi_Minh',
+      timezones: ['Asia/Ho_Chi_Minh'],
       currency: CurrencyProfile(
         code: 'VND',
         symbol: '₫',
@@ -497,6 +554,8 @@ class CountryRegistry {
       name: 'Indonesia',
       flagEmoji: '🇮🇩',
       phoneCode: '+62',
+      defaultTimezone: 'Asia/Jakarta',
+      timezones: ['Asia/Jakarta', 'Asia/Makassar', 'Asia/Jayapura'],
       currency: CurrencyProfile(
         code: 'IDR',
         symbol: 'Rp',
@@ -516,6 +575,8 @@ class CountryRegistry {
       name: 'Malaysia',
       flagEmoji: '🇲🇾',
       phoneCode: '+60',
+      defaultTimezone: 'Asia/Kuala_Lumpur',
+      timezones: ['Asia/Kuala_Lumpur'],
       currency: CurrencyProfile(
         code: 'MYR',
         symbol: 'RM',
@@ -535,6 +596,8 @@ class CountryRegistry {
       name: 'Thailand',
       flagEmoji: '🇹🇭',
       phoneCode: '+66',
+      defaultTimezone: 'Asia/Bangkok',
+      timezones: ['Asia/Bangkok'],
       currency: CurrencyProfile(
         code: 'THB',
         symbol: '฿',
@@ -554,6 +617,8 @@ class CountryRegistry {
       name: 'Philippines',
       flagEmoji: '🇵🇭',
       phoneCode: '+63',
+      defaultTimezone: 'Asia/Manila',
+      timezones: ['Asia/Manila'],
       currency: CurrencyProfile(
         code: 'PHP',
         symbol: '₱',
@@ -573,6 +638,8 @@ class CountryRegistry {
       name: 'South Africa',
       flagEmoji: '🇿🇦',
       phoneCode: '+27',
+      defaultTimezone: 'Africa/Johannesburg',
+      timezones: ['Africa/Johannesburg'],
       currency: CurrencyProfile(
         code: 'ZAR',
         symbol: 'R',
@@ -592,6 +659,8 @@ class CountryRegistry {
       name: 'Nigeria',
       flagEmoji: '🇳🇬',
       phoneCode: '+234',
+      defaultTimezone: 'Africa/Lagos',
+      timezones: ['Africa/Lagos'],
       currency: CurrencyProfile(
         code: 'NGN',
         symbol: '₦',
@@ -611,6 +680,8 @@ class CountryRegistry {
       name: 'Kenya',
       flagEmoji: '🇰🇪',
       phoneCode: '+254',
+      defaultTimezone: 'Africa/Nairobi',
+      timezones: ['Africa/Nairobi'],
       currency: CurrencyProfile(
         code: 'KES',
         symbol: 'KSh',
@@ -630,6 +701,8 @@ class CountryRegistry {
       name: 'Egypt',
       flagEmoji: '🇪🇬',
       phoneCode: '+20',
+      defaultTimezone: 'Africa/Cairo',
+      timezones: ['Africa/Cairo'],
       currency: CurrencyProfile(
         code: 'EGP',
         symbol: 'E£',
@@ -649,6 +722,8 @@ class CountryRegistry {
       name: 'Brazil',
       flagEmoji: '🇧🇷',
       phoneCode: '+55',
+      defaultTimezone: 'America/Sao_Paulo',
+      timezones: ['America/Sao_Paulo', 'America/Manaus', 'America/Recife'],
       currency: CurrencyProfile(
         code: 'BRL',
         symbol: 'R\$',
@@ -668,6 +743,8 @@ class CountryRegistry {
       name: 'Mexico',
       flagEmoji: '🇲🇽',
       phoneCode: '+52',
+      defaultTimezone: 'America/Mexico_City',
+      timezones: ['America/Mexico_City', 'America/Cancun', 'America/Tijuana'],
       currency: CurrencyProfile(
         code: 'MXN',
         symbol: '\$',
@@ -687,6 +764,8 @@ class CountryRegistry {
       name: 'Sri Lanka',
       flagEmoji: '🇱🇰',
       phoneCode: '+94',
+      defaultTimezone: 'Asia/Colombo',
+      timezones: ['Asia/Colombo'],
       currency: CurrencyProfile(
         code: 'LKR',
         symbol: 'Rs',
