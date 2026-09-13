@@ -73,6 +73,26 @@ class _BusinessSetupSelectorState extends State<BusinessSetupSelector> {
     ];
   }
 
+  // Soft-launch gate: only these workstations have dynamic fields coded.
+  // Everything else shows a "Coming Soon" badge and is not selectable yet.
+  bool _isComingSoon(String mainBusiness) {
+    final name = mainBusiness.toUpperCase();
+    const supportedKeywords = ['FASHION', 'RETAIL', 'FOOD', 'BEVERAGE', 'HEALTH'];
+    return !supportedKeywords.any((k) => name.contains(k));
+  }
+
+  void _showComingSoonToast(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(
+          "This workstation is launching in the next update. "
+          "Please select Fashion, Retail, or F&B for the current release.",
+        ),
+        duration: Duration(seconds: 3),
+      ),
+    );
+  }
+
   bool _isSubSelected(String subItem) {
     if (widget.enabledSubs.contains(subItem)) return true;
     if (subItem.startsWith("Clothing") &&
@@ -227,9 +247,14 @@ class _BusinessSetupSelectorState extends State<BusinessSetupSelector> {
               itemBuilder: (context, index) {
                 final item = items[index];
                 final isSelected = widget.selectedMain.toUpperCase() == item.toUpperCase();
+                final isComingSoon = _isComingSoon(item);
 
                 return InkWell(
-                  onTap: widget.isLocked ? null : () => widget.onMainChanged(item),
+                  onTap: widget.isLocked
+                      ? null
+                      : (isComingSoon
+                          ? () => _showComingSoonToast(context)
+                          : () => widget.onMainChanged(item)),
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 14),
                     color: isSelected ? Colors.blue.shade50 : Colors.transparent,
@@ -242,7 +267,9 @@ class _BusinessSetupSelectorState extends State<BusinessSetupSelector> {
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             border: Border.all(
-                              color: isSelected ? Colors.blue.shade600 : Colors.grey.shade400,
+                              color: isComingSoon
+                                  ? Colors.grey.shade300
+                                  : (isSelected ? Colors.blue.shade600 : Colors.grey.shade400),
                               width: 2,
                             ),
                           ),
@@ -268,10 +295,30 @@ class _BusinessSetupSelectorState extends State<BusinessSetupSelector> {
                             style: TextStyle(
                               fontSize: 11,
                               fontWeight: isSelected ? FontWeight.w700 : FontWeight.w400,
-                              color: isSelected ? Colors.blue.shade800 : Colors.black87,
+                              color: isComingSoon
+                                  ? Colors.grey.shade600
+                                  : (isSelected ? Colors.blue.shade800 : Colors.black87),
                             ),
                           ),
                         ),
+                        if (isComingSoon) ...[
+                          const SizedBox(width: 6),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade200,
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: Text(
+                              'Coming Soon',
+                              style: TextStyle(
+                                fontSize: 10,
+                                color: Colors.grey.shade700,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ],
                       ],
                     ),
                   ),
