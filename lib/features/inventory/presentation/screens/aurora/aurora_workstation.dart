@@ -24,17 +24,22 @@ class AuroraWorkstation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: colors.bgTier1, 
-      child: Column(
-        children: [
-          _buildModernNavigation(),
-          Expanded(
-            child: _buildActiveTab(),
+    return ListenableBuilder(
+      listenable: controller,
+      builder: (context, _) {
+        return Container(
+          color: colors.bgTier1, 
+          child: Column(
+            children: [
+              _buildModernNavigation(),
+              Expanded(
+                child: _buildActiveTab(),
+              ),
+              buildStickyFooter(controller, colors),
+            ],
           ),
-          buildStickyFooter(controller, colors),
-        ],
-      ),
+        );
+      },
     );
   }
 

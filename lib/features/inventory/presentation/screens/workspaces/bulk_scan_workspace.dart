@@ -41,97 +41,181 @@ class _BulkScanWorkspaceState extends State<BulkScanWorkspace> {
     _ingestionService = IngestionService(aiService: sl<AIProductService>());
   }
 
-  List<String> _fieldsForTab(List<String> allFields) {
-    final fieldOrder = {
-      BulkWorkspaceTab.basicInfo: [
-        'title',
-        'sku',
-        'barcode',
-        'brand',
-        'category',
-        'subcategory',
-        'department',
-        'subDepartment',
-        'supplier',
-        'status',
-        'description',
-        'arabicTitle',
-        'countryOfOrigin',
-        'returnPolicy',
-        'taxCode'
-      ],
-      BulkWorkspaceTab.specs: [
-        'material',
-        'color',
-        'sizeScale',
-        'gender',
-        'season',
-        'countryOfOrigin',
-        'returnPolicy',
-        'taxCode'
-      ],
-      BulkWorkspaceTab.variants: [
-        'title',
-        'sku',
-        'barcode',
-        'color',
-        'sizeScale',
-        'material',
-        'gender',
-        'season',
-        'status'
-      ],
-      BulkWorkspaceTab.stock: [
-        'openingStock',
-        'safetyStock',
-        'reorderLevel',
-        'warehouseLocation',
-        'unit',
-        'stockUnit',
-        'purchaseUnit',
-        'supplier'
-      ],
-      BulkWorkspaceTab.price: [
-        'costPrice',
-        'sellingPrice',
-        'mrp',
-        'wholesalePrice',
-        'discountType',
-        'discountValue',
-        'taxCode'
-      ],
-      BulkWorkspaceTab.media: [
-        'marketingTitle',
-        'urlSlug',
-        'metaDescription',
-        'primaryImageUrl',
-        'galleryUrls',
-        'isQuickPOSSale'
-      ],
-    };
+  String getBulkFieldLabel(String fieldId) {
+    switch (fieldId) {
+      case 'title':
+        return 'Product Name / Style Title *';
+      case 'category':
+        return 'Category *';
+      case 'brand':
+        return 'Brand / Label';
+      case 'sku':
+        return 'SKU / Style Code *';
+      case 'barcode':
+        return 'Barcode / GTIN';
+      case 'costPrice':
+        return 'Purchase / Cost Price (₹) *';
+      case 'sellingPrice':
+        return 'Selling Price / MRP (₹) *';
+      case 'discountValue':
+        return 'Discount Value (%)';
+      case 'reorderLevel':
+        return 'Low Stock Alert Threshold';
+      case 'openingStock':
+        return 'Flat Opening Stock Quantity';
+      case 'primaryImageUrl':
+        return 'Primary Photo';
+      case 'description':
+        return 'Online Store Description';
+      case 'mrp':
+        return 'MRP (₹)';
+      case 'discountType':
+        return 'Discount Type';
+      case 'hsnCode':
+        return 'HSN / Tax Code';
+      case 'taxRate':
+        return 'Tax Rate (%)';
+      case 'supplier':
+        return 'Supplier';
+      case 'countryOfOrigin':
+        return 'Country of Origin';
+      case 'status':
+        return 'Status';
+      case 'fabric':
+        return 'Fabric';
+      case 'neckType':
+        return 'Neck Type';
+      case 'sleeveType':
+        return 'Sleeve Type';
+      case 'fitType':
+        return 'Fit Type';
+      case 'pattern':
+        return 'Pattern';
+      case 'gender':
+        return 'Gender';
+      case 'ageGroup':
+        return 'Age Group';
+      case 'season':
+        return 'Season';
+      case 'shade':
+        return 'Shade / Color';
+      case 'sizeStandard':
+        return 'Size Standard';
+      case 'urlSlug':
+        return 'URL Slug';
+      case 'searchKeywords':
+        return 'Search Keywords';
+      case 'metaDescription':
+        return 'Meta Description';
+      case 'marketingTitle':
+        return 'Marketing Title';
+      default:
+        return widget.controller.getFieldLabel(fieldId);
+    }
+  }
 
-    const required = [
-      'title',
-      'brand',
-      'category',
-      'supplier',
-      'costPrice',
-      'sellingPrice',
-      'openingStock'
-    ];
-    final ordered = <String>[];
-    for (final field in required) {
-      if (allFields.contains(field) && !ordered.contains(field))
-        ordered.add(field);
+  List<String> _fieldsForTab(List<String> allFields) {
+    final isAdvanced = widget.controller.isAdvancedMode;
+
+    if (!isAdvanced) {
+      // BASIC MODE (2 views)
+      switch (_activeTab) {
+        case BulkWorkspaceTab.basicInfo:
+          return const [
+            'primaryImageUrl',
+            'title',
+            'category',
+            'brand',
+            'sku',
+            'barcode',
+            'costPrice',
+            'sellingPrice',
+            'discountValue',
+            'reorderLevel',
+            'openingStock',
+            'description',
+          ];
+        case BulkWorkspaceTab.variants:
+        case BulkWorkspaceTab.stock:
+        default:
+          return const [
+            'title',
+            'sku',
+            'barcode',
+            'shade',
+            'sizeStandard',
+            'openingStock',
+            'reorderLevel',
+          ];
+      }
     }
-    for (final field in fieldOrder[_activeTab] ?? const <String>[]) {
-      if (allFields.contains(field) && !ordered.contains(field))
-        ordered.add(field);
+
+    // ADVANCED MODE (5 views)
+    switch (_activeTab) {
+      case BulkWorkspaceTab.basicInfo:
+        return const [
+          'primaryImageUrl',
+          'title',
+          'category',
+          'brand',
+          'sku',
+          'barcode',
+          'countryOfOrigin',
+          'status',
+          'description',
+        ];
+      case BulkWorkspaceTab.specs:
+        return const [
+          'fabric',
+          'neckType',
+          'sleeveType',
+          'fitType',
+          'pattern',
+          'gender',
+          'ageGroup',
+          'season',
+        ];
+      case BulkWorkspaceTab.variants:
+        return const [
+          'sizeStandard',
+          'shade',
+          'sku',
+          'barcode',
+          'openingStock',
+          'sellingPrice',
+        ];
+      case BulkWorkspaceTab.stock:
+      case BulkWorkspaceTab.price:
+        return const [
+          'costPrice',
+          'sellingPrice',
+          'mrp',
+          'discountType',
+          'discountValue',
+          'openingStock',
+          'reorderLevel',
+          'supplier',
+          'hsnCode',
+          'taxRate',
+        ];
+      case BulkWorkspaceTab.media:
+        return const [
+          'urlSlug',
+          'searchKeywords',
+          'metaDescription',
+          'marketingTitle',
+        ];
+      default:
+        return const [
+          'primaryImageUrl',
+          'title',
+          'category',
+          'brand',
+          'sku',
+          'barcode',
+          'description',
+        ];
     }
-    for (final field in allFields) {
-      if (!ordered.contains(field)) ordered.add(field);
-    }
-    return ordered;
   }
 
   void _openVariantDrawer() {
@@ -262,22 +346,16 @@ class _BulkScanWorkspaceState extends State<BulkScanWorkspace> {
     }
 
     try {
-      final extractedRows = <Map<String, dynamic>>[];
       for (final file in result.files) {
-        final product = await _ingestionService.processAIBill(file);
-        extractedRows.add(_productToBillJson(product));
-      }
-
-      final mapped = await _ingestionService.processAIBillJson(extractedRows);
-      for (final row in mapped.rows) {
-        widget.controller.bulkScanItems.add(
-          BulkScanItem(
-            product: row.product,
-            status: row.status == IngestionRowStatus.valid
-                ? BulkScanStatus.ready
-                : BulkScanStatus.review,
-          ),
-        );
+        final products = await _ingestionService.processAIBillMultiple(file);
+        for (final product in products) {
+          widget.controller.bulkScanItems.add(
+            BulkScanItem(
+              product: product,
+              status: BulkScanStatus.ready,
+            ),
+          );
+        }
       }
       widget.controller.notify();
 
@@ -375,14 +453,19 @@ class _BulkScanWorkspaceState extends State<BulkScanWorkspace> {
   }
 
   Widget _buildBulkTabBar() {
-    final tabs = [
-      _BulkTabConfig(label: 'Basic Info', tab: BulkWorkspaceTab.basicInfo),
-      _BulkTabConfig(label: 'Specs', tab: BulkWorkspaceTab.specs),
-      _BulkTabConfig(label: 'Variants', tab: BulkWorkspaceTab.variants),
-      _BulkTabConfig(label: 'Stock', tab: BulkWorkspaceTab.stock),
-      _BulkTabConfig(label: 'Price', tab: BulkWorkspaceTab.price),
-      _BulkTabConfig(label: 'Media & SEO', tab: BulkWorkspaceTab.media),
-    ];
+    final isAdvanced = widget.controller.isAdvancedMode;
+    final List<_BulkTabConfig> tabs = isAdvanced
+        ? [
+            _BulkTabConfig(label: 'BASIC INFO', tab: BulkWorkspaceTab.basicInfo),
+            _BulkTabConfig(label: 'SPECS', tab: BulkWorkspaceTab.specs),
+            _BulkTabConfig(label: 'VARIANTS', tab: BulkWorkspaceTab.variants),
+            _BulkTabConfig(label: 'STOCK & PRICE', tab: BulkWorkspaceTab.stock),
+            _BulkTabConfig(label: 'MEDIA & SEO', tab: BulkWorkspaceTab.media),
+          ]
+        : [
+            _BulkTabConfig(label: 'Basic Info', tab: BulkWorkspaceTab.basicInfo),
+            _BulkTabConfig(label: 'Variants & Stock', tab: BulkWorkspaceTab.variants),
+          ];
 
     return Container(
       height: 46,
@@ -458,22 +541,33 @@ class _BulkScanWorkspaceState extends State<BulkScanWorkspace> {
           const ColHeader(width: 36, label: "#"),
           const ColHeader(width: 56, label: "IMG"),
           ...fields.map((f) {
-            double width = 120;
-            if (f == 'title') {
-              width = 200;
-            } else if (f == 'description') {
-              width = 150;
-            } else if (f.contains('Price') || f == 'mrp' || f == 'costPrice') {
-              width = 90;
-            } else if (f.contains('Stock') || f == 'openingStock') {
-              width = 80;
-            }
+            double width = getBulkColumnWidth(f);
             return ColHeader(
-                width: width, label: widget.controller.getFieldLabel(f));
+                width: width, label: getBulkFieldLabel(f));
           }),
         ],
       ),
     );
+  }
+
+  double getBulkColumnWidth(dynamic field) {
+    final String key = field?.toString().toLowerCase() ?? '';
+    if (key == 'primaryimageurl') {
+      return 80.0;
+    } else if (key.contains('name') || key.contains('title') || key.contains('description')) {
+      return 220.0;
+    } else if (key.contains('sku') || key.contains('barcode') || key.contains('code') || key.contains('gtin')) {
+      return 150.0;
+    } else if (key.contains('price') || key.contains('cost') || key.contains('mrp') || key.contains('purchase')) {
+      return 150.0;
+    } else if (key.contains('discount') || key.contains('stock') || key.contains('quantity') || key.contains('alert') || key.contains('threshold') || key.contains('reorder')) {
+      return 150.0;
+    } else if (key.contains('category') || key.contains('brand') || key.contains('label') || key.contains('supplier')) {
+      return 140.0;
+    } else if (key.contains('action') || key.contains('status')) {
+      return 100.0;
+    }
+    return 130.0;
   }
 
   Widget _buildBottomActionBar() {
@@ -605,6 +699,11 @@ class _BulkScanWorkspaceState extends State<BulkScanWorkspace> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.controller.isAdvancedMode &&
+        (_activeTab == BulkWorkspaceTab.stock || _activeTab == BulkWorkspaceTab.price)) {
+      _activeTab = BulkWorkspaceTab.basicInfo;
+    }
+
     final allFields = widget.controller.getBulkEntryFields();
     final fields = _fieldsForTab(allFields);
     double totalWidth = 100 + 56 + 48;

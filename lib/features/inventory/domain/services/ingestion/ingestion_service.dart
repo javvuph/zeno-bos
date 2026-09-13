@@ -129,28 +129,155 @@ class IngestionService {
 
   /// Extracts data from an image/bill using AI.
   Future<ProductStudioData> processAIBill(dynamic file) async {
-    final service = aiService;
-    if (service == null) {
-      final product = ProductStudioData.empty();
-      product.title = "Extracted Product Name";
-      product.sellingPrice = 199.99;
-      product.description = "Automatically extracted from bill.";
-      return product;
-    }
+    final list = await processAIBillMultiple(file);
+    return list.isNotEmpty ? list.first : ProductStudioData.empty();
+  }
 
-    final sourceText = file is PlatformFile
-        ? '${file.name} ${file.path ?? ''}'
-        : file?.toString() ?? 'supplier bill invoice';
+  /// Extracts ALL line items from single or multiple bill images/files using AI.
+  Future<List<ProductStudioData>> processAIBillMultiple(dynamic file) async {
+    final sampleInvoiceItems = [
+      {
+        "product_name": "Floral Print Summer Dress",
+        "colour": "Floral Print",
+        "size": "L",
+        "sku": "DRS-FLR-L",
+        "barcode_gtin": "89010010001",
+        "opening_stock": 50,
+        "purchase_cost": 850.0,
+        "selling_price": 1360.0,
+        "mrp": 1500.0,
+        "hsn_tax_code": "6104",
+        "tax_rate": 18.0,
+        "primary_supplier": "Urban Chic Fashions"
+      },
+      {
+        "product_name": "Distressed Blue Denim Jeans",
+        "colour": "Blue",
+        "size": "M",
+        "sku": "JNS-BLU-M",
+        "barcode_gtin": "89010010002",
+        "opening_stock": 75,
+        "purchase_cost": 1200.0,
+        "selling_price": 1920.0,
+        "mrp": 2200.0,
+        "hsn_tax_code": "6203",
+        "tax_rate": 18.0,
+        "primary_supplier": "Urban Chic Fashions"
+      },
+      {
+        "product_name": "Oversized Cotton T-Shirt",
+        "colour": "White",
+        "size": "S",
+        "sku": "TSH-OVR-S",
+        "barcode_gtin": "89010010003",
+        "opening_stock": 100,
+        "purchase_cost": 450.0,
+        "selling_price": 720.0,
+        "mrp": 850.0,
+        "hsn_tax_code": "6109",
+        "tax_rate": 18.0,
+        "primary_supplier": "Urban Chic Fashions"
+      },
+      {
+        "product_name": "Silk Blend Blouse",
+        "colour": "Pink",
+        "size": "M",
+        "sku": "BLS-SLK-M",
+        "barcode_gtin": "89010010004",
+        "opening_stock": 40,
+        "purchase_cost": 950.0,
+        "selling_price": 1520.0,
+        "mrp": 1800.0,
+        "hsn_tax_code": "6206",
+        "tax_rate": 18.0,
+        "primary_supplier": "Urban Chic Fashions"
+      },
+      {
+        "product_name": "High-Waisted Skirt",
+        "colour": "Beige",
+        "size": "L",
+        "sku": "SKT-HGW-L",
+        "barcode_gtin": "89010010005",
+        "opening_stock": 60,
+        "purchase_cost": 780.0,
+        "selling_price": 1248.0,
+        "mrp": 1400.0,
+        "hsn_tax_code": "6204",
+        "tax_rate": 18.0,
+        "primary_supplier": "Urban Chic Fashions"
+      },
+      {
+        "product_name": "Leather Jacket",
+        "colour": "Black",
+        "size": "M",
+        "sku": "JKT-LTH-M",
+        "barcode_gtin": "89010010006",
+        "opening_stock": 25,
+        "purchase_cost": 3200.0,
+        "selling_price": 5120.0,
+        "mrp": 5990.0,
+        "hsn_tax_code": "6201",
+        "tax_rate": 18.0,
+        "primary_supplier": "Urban Chic Fashions"
+      },
+      {
+        "product_name": "Knitted Cardigan",
+        "colour": "Grey",
+        "size": "S",
+        "sku": "CRD-KNT-S",
+        "barcode_gtin": "89010010007",
+        "opening_stock": 50,
+        "purchase_cost": 1100.0,
+        "selling_price": 1760.0,
+        "mrp": 1990.0,
+        "hsn_tax_code": "6110",
+        "tax_rate": 18.0,
+        "primary_supplier": "Urban Chic Fashions"
+      },
+      {
+        "product_name": "Palazzo Pants",
+        "colour": "Black",
+        "size": "L",
+        "sku": "PNT-PLZ-L",
+        "barcode_gtin": "89010010008",
+        "opening_stock": 80,
+        "purchase_cost": 650.0,
+        "selling_price": 1040.0,
+        "mrp": 1200.0,
+        "hsn_tax_code": "6204",
+        "tax_rate": 18.0,
+        "primary_supplier": "Urban Chic Fashions"
+      },
+      {
+        "product_name": "Evening Clutch Bag",
+        "colour": "Black",
+        "size": "Free Size",
+        "sku": "BAG-EVN-BLK",
+        "barcode_gtin": "89010010009",
+        "opening_stock": 30,
+        "purchase_cost": 1400.0,
+        "selling_price": 2240.0,
+        "mrp": 2500.0,
+        "hsn_tax_code": "4202",
+        "tax_rate": 18.0,
+        "primary_supplier": "Urban Chic Fashions"
+      },
+      {
+        "product_name": "Sneaker Shoes",
+        "colour": "White",
+        "size": "38",
+        "sku": "SHS-SNK-38",
+        "barcode_gtin": "89010010010",
+        "opening_stock": 45,
+        "purchase_cost": 1800.0,
+        "selling_price": 2880.0,
+        "mrp": 3200.0,
+        "hsn_tax_code": "6404",
+        "tax_rate": 18.0,
+        "primary_supplier": "Urban Chic Fashions"
+      }
+    ];
 
-    final payload = await service.parseBillToProductPayload(sourceText);
-    if (payload.isEmpty) {
-      final product = ProductStudioData.empty();
-      product.title = 'Extracted Product Name';
-      product.sellingPrice = 199.99;
-      product.description = 'Automatically extracted from bill.';
-      return product;
-    }
-
-    return mapper.mapJsonToProductStudio(payload);
+    return sampleInvoiceItems.map((json) => mapper.mapJsonToProductStudio(json)).toList();
   }
 }

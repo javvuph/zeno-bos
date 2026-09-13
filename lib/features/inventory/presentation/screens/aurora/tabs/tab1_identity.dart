@@ -101,152 +101,153 @@ class _Tab1IdentityState extends State<Tab1Identity> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 12),
-                  // Primary Photo Upload Box
-                  _buildPhotoSlot(colors),
-                  const SizedBox(height: 12),
-                  // Description with AI Auto-Write
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text("Online Store Description", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF334155))),
-                          InkWell(
-                            onTap: () => _autoWriteAIDescription(context),
-                            borderRadius: BorderRadius.circular(6),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFEEF2FF),
-                                borderRadius: BorderRadius.circular(6),
-                                border: Border.all(color: const Color(0xFF818CF8)),
-                              ),
-                              child: const Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(Icons.auto_awesome_rounded, size: 12, color: Color(0xFF4F46E5)),
-                                  SizedBox(width: 4),
-                                  Text("✨ AI Auto-Write", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Color(0xFF4F46E5))),
-                                ],
+                  if (!controller.isAdvancedMode) ...[
+                    const SizedBox(height: 12),
+                    // Primary Photo Upload Box
+                    _buildPhotoSlot(colors),
+                    const SizedBox(height: 12),
+                    // Description with AI Auto-Write
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text("Online Store Description", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF334155))),
+                            InkWell(
+                              onTap: () => _autoWriteAIDescription(context),
+                              borderRadius: BorderRadius.circular(6),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFEEF2FF),
+                                  borderRadius: BorderRadius.circular(6),
+                                  border: Border.all(color: const Color(0xFF818CF8)),
+                                ),
+                                child: const Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(Icons.auto_awesome_rounded, size: 12, color: Color(0xFF4F46E5)),
+                                    SizedBox(width: 4),
+                                    Text("✨ AI Auto-Write", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Color(0xFF4F46E5))),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 4),
-                      ZenoTextField(
-                        label: null,
-                        initialValue: p.description,
-                        onChanged: (v) => controller.updateField(description: v),
-                        maxLines: 3,
-                        hint: "Enter product notes or tap AI Auto-Write...",
-                        width: ZenoFieldWidth.full,
-                      ),
-                    ],
-                  ),
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                        ZenoTextField(
+                          label: null,
+                          initialValue: p.description,
+                          onChanged: (v) => controller.updateField(description: v),
+                          maxLines: 3,
+                          hint: "Enter product notes or tap AI Auto-Write...",
+                          width: ZenoFieldWidth.full,
+                        ),
+                      ],
+                    ),
+                  ],
                 ]),
               ],
             ),
           ),
           const SizedBox(width: 16),
 
-          // RIGHT COLUMN: Pricing & Stock Card (Replaces Country & Status in Basic Mode)
+          // RIGHT COLUMN: Pricing & Stock (Basic Mode) OR Audience & Governance (Advanced Mode)
           Expanded(
             flex: 5,
             child: Column(
               children: [
-                _compactSection("PRICING & STOCK", colors, [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: ZenoTextField(
-                          label: "Purchase / Cost Price (₹) *",
-                          initialValue: p.costPrice.toString(),
-                          onChanged: (v) => controller.updateCost(double.tryParse(v) ?? 0.0),
-                          keyboardType: TextInputType.number,
-                          isRequired: true,
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: ZenoTextField(
-                          label: "Selling Price / MRP (₹) *",
-                          initialValue: p.sellingPrice.toString(),
-                          onChanged: (v) => controller.updatePrice(double.tryParse(v) ?? 0.0),
-                          keyboardType: TextInputType.number,
-                          isRequired: true,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: ZenoTextField(
-                          label: "Discount Value (%)",
-                          initialValue: p.discountValue.toString(),
-                          onChanged: (v) => controller.updateField(discountValue: double.tryParse(v) ?? 0.0),
-                          keyboardType: TextInputType.number,
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: ZenoTextField(
-                          label: "Low Stock Alert Threshold",
-                          initialValue: (p.reorderLevel <= 0 ? 2.0 : p.reorderLevel).toString(),
-                          onChanged: (v) => controller.updateField(reorderLevel: double.tryParse(v) ?? 2.0),
-                          keyboardType: TextInputType.number,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  controller.generatedVariants.isEmpty
-                      ? ZenoTextField(
-                          label: "Flat Opening Stock Quantity",
-                          initialValue: p.openingStock.toString(),
-                          onChanged: (v) => controller.updateField(openingStock: int.tryParse(v) ?? 0),
-                          keyboardType: TextInputType.number,
-                          width: ZenoFieldWidth.full,
-                        )
-                      : ZenoTextField(
-                          label: "Total Variant Stock (Auto)",
-                          initialValue: "${controller.calculatedTotalStock} (Locked from Variants)",
-                          readOnly: true,
-                          width: ZenoFieldWidth.full,
-                        ),
-                ]),
-
-                if (controller.isAdvancedMode) ...[
-                  const SizedBox(height: 12),
-                  _compactSection("ADVANCED GOVERNANCE & ORIGIN", colors, [
+                if (!controller.isAdvancedMode)
+                  _compactSection("PRICING & STOCK", colors, [
                     Row(
                       children: [
                         Expanded(
-                          child: ZenoDropdown<String>(
-                            label: "Country of Origin",
-                            value: p.countryOfOrigin.isEmpty ? null : p.countryOfOrigin,
-                            items: _withCurrent(_countryOptions, p.countryOfOrigin).map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
-                            onChanged: (v) => controller.updateField(countryOfOrigin: v),
-                            onQuickAdd: () => _showQuickAddDialog(context, "Country of Origin", (val) => controller.updateField(countryOfOrigin: val)),
+                          child: ZenoTextField(
+                            label: "Purchase / Cost Price (₹) *",
+                            initialValue: p.costPrice.toString(),
+                            onChanged: (v) => controller.updateCost(double.tryParse(v) ?? 0.0),
+                            keyboardType: TextInputType.number,
+                            isRequired: true,
                           ),
                         ),
                         const SizedBox(width: 10),
                         Expanded(
-                          child: ZenoDropdown<String>(
-                            label: "Status",
-                            value: p.status,
-                            items: ["Active", "Inactive", "Archived"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
-                            onChanged: (v) => controller.updateField(status: v),
+                          child: ZenoTextField(
+                            label: "Selling Price / MRP (₹) *",
+                            initialValue: p.sellingPrice.toString(),
+                            onChanged: (v) => controller.updatePrice(double.tryParse(v) ?? 0.0),
+                            keyboardType: TextInputType.number,
+                            isRequired: true,
                           ),
                         ),
                       ],
                     ),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: ZenoTextField(
+                            label: "Discount Value (%)",
+                            initialValue: p.discountValue.toString(),
+                            onChanged: (v) => controller.updateField(discountValue: double.tryParse(v) ?? 0.0),
+                            keyboardType: TextInputType.number,
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: ZenoTextField(
+                            label: "Low Stock Alert Threshold",
+                            initialValue: (p.reorderLevel <= 0 ? 2.0 : p.reorderLevel).toString(),
+                            onChanged: (v) => controller.updateField(reorderLevel: double.tryParse(v) ?? 2.0),
+                            keyboardType: TextInputType.number,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    controller.generatedVariants.isEmpty
+                        ? ZenoTextField(
+                            label: "Flat Opening Stock Quantity",
+                            initialValue: p.openingStock.toString(),
+                            onChanged: (v) => controller.updateField(openingStock: int.tryParse(v) ?? 0),
+                            keyboardType: TextInputType.number,
+                            width: ZenoFieldWidth.full,
+                          )
+                        : ZenoTextField(
+                            label: "Total Variant Stock (Auto)",
+                            initialValue: "${controller.calculatedTotalStock} (Locked from Variants)",
+                            readOnly: true,
+                            width: ZenoFieldWidth.full,
+                          ),
                   ]),
-                ],
+
+                if (controller.isAdvancedMode)
+                  _compactSection("PRODUCT DETAILS & GOVERNANCE", colors, [
+                    ZenoDropdown<String>(
+                      label: "Country of Origin",
+                      value: p.countryOfOrigin.isEmpty ? null : p.countryOfOrigin,
+                      items: _withCurrent(_countryOptions, p.countryOfOrigin).map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+                      onChanged: (v) => controller.updateField(countryOfOrigin: v),
+                      onQuickAdd: () => _showQuickAddDialog(context, "Country of Origin", (val) => controller.updateField(countryOfOrigin: val)),
+                    ),
+                    const SizedBox(height: 16),
+                    ZenoDropdown<String>(
+                      label: "Status",
+                      value: p.status,
+                      items: ["Active", "Inactive", "Archived"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+                      onChanged: (v) => controller.updateField(status: v),
+                    ),
+                    const SizedBox(height: 16),
+                    ZenoTextField(
+                      label: "Description",
+                      initialValue: p.description,
+                      onChanged: (v) => controller.updateField(description: v),
+                      maxLines: 5,
+                      width: ZenoFieldWidth.full,
+                    ),
+                  ]),
               ],
             ),
           ),

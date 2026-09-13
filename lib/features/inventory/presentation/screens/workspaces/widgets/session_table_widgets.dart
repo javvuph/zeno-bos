@@ -2,7 +2,6 @@ import 'package:flutter/material.dart' hide TableCell;
 import 'package:zeno/app/theme.dart';
 import '../../../controllers/product_studio_controller.dart';
 import '../../../../domain/models/product_studio_models.dart';
-import '../../../../domain/models/product_studio_enums.dart';
 import 'dynamic_table_cells.dart';
 
 class TableCell extends StatelessWidget {
@@ -100,18 +99,27 @@ class SessionRow extends StatelessWidget {
     // Calculate width dynamically
     double totalWidth = 36 + 56 + 48; // Static cols
     for (var f in fields) {
-       if (f == 'title') totalWidth += 200;
-       else if (f == 'description') totalWidth += 150;
-       else if (f.contains('Price') || f == 'mrp' || f == 'costPrice') totalWidth += 90;
-       else if (f.contains('Stock') || f == 'openingStock') totalWidth += 80;
-       else totalWidth += 120;
+      if (f == 'title') {
+        totalWidth += 200;
+      } else if (f == 'description') {
+        totalWidth += 150;
+      } else if (f.contains('Price') || f == 'mrp' || f == 'costPrice') {
+        totalWidth += 90;
+      } else if (f.contains('Stock') || f == 'openingStock') {
+        totalWidth += 80;
+      } else {
+        totalWidth += 120;
+      }
     }
 
+    final isDuplicate = item.status == BulkScanStatus.duplicate;
     return Container(
       width: totalWidth, height: 44, padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
-        border: Border(bottom: BorderSide(color: colors.borderSubtle), left: BorderSide(color: colors.borderSubtle), right: BorderSide(color: colors.borderSubtle)),
-        color: item.isSelected ? colors.accentPrimary.withValues(alpha: 0.05) : null,
+        border: Border(bottom: BorderSide(color: isDuplicate ? colors.statusWarning : colors.borderSubtle), left: BorderSide(color: isDuplicate ? colors.statusWarning : colors.borderSubtle), right: BorderSide(color: isDuplicate ? colors.statusWarning : colors.borderSubtle)),
+        color: isDuplicate
+            ? colors.statusWarning.withValues(alpha: 0.08)
+            : (item.isSelected ? colors.accentPrimary.withValues(alpha: 0.05) : null),
       ),
       child: Row(
         children: [

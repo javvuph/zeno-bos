@@ -73,10 +73,8 @@ extension ProductStudioControllerLogic on ProductStudioController {
     final categoryFields = field.categoryFieldRegistry[_product.businessCategory] ?? [];
     if (categoryFields.contains(f)) return true;
     
-    if (_product.businessType.toUpperCase() == "FASHION") {
-      final scaleFields = field.scaleFieldRegistry[_product.businessScale] ?? [];
-      if (scaleFields.contains(f)) return true;
-    }
+    final scaleFields = field.scaleFieldRegistry[_product.businessScale] ?? [];
+    if (scaleFields.contains(f)) return true;
     
     return false;
   }
@@ -335,7 +333,23 @@ extension ProductStudioControllerLogic on ProductStudioController {
   Map<String, List<String>> get businessCategoryMap => sub.businessCategoryMap;
 
   List<String> getOrderedFields() {
-    final categoryFields = field.categoryFieldRegistry[_product.businessCategory] ?? [];
+    var categoryFields = field.categoryFieldRegistry[_product.businessCategory];
+    if (categoryFields == null || categoryFields.isEmpty) {
+      final canonical = field.resolveCanonicalProfile(_product.businessCategory);
+      categoryFields = field.categoryFieldRegistry[canonical];
+    }
+    if (categoryFields == null || categoryFields.isEmpty) {
+      final bType = _product.businessType.toUpperCase();
+      if (bType == "FASHION" || bType == "CLOTHING") {
+        categoryFields = field.categoryFieldRegistry["Clothing"] ?? field.fashionStandard;
+      } else if (bType == "FOOD & BEVERAGE" || bType == "FOOD" || bType == "F&B") {
+        categoryFields = field.fnbStandard;
+      } else if (bType == "HEALTHCARE" || bType == "PHARMACY") {
+        categoryFields = field.healthcareStandard;
+      } else {
+        categoryFields = field.retailStandard;
+      }
+    }
     final scaleFields = field.scaleFieldRegistry[_product.businessScale] ?? [];
     final allFields = <String>[];
 
@@ -408,32 +422,46 @@ extension ProductStudioControllerLogic on ProductStudioController {
   }
 
   List<String> getBulkEntryFields() {
-    final visibleFields = <String>[];
-    final categoryFields = field.categoryFieldRegistry[_product.businessCategory] ?? [];
-    final scaleFields = field.scaleFieldRegistry[_product.businessScale] ?? [];
-
-    for (final fieldId in getOrderedFields()) {
-      final candidate = fieldId;
-      if (categoryFields.contains(candidate) || scaleFields.contains(candidate) || candidate == 'costPrice' || candidate == 'sellingPrice' || candidate == 'mrp' || candidate == 'wholesalePrice' || candidate == 'openingStock') {
-        if (!visibleFields.contains(candidate)) visibleFields.add(candidate);
-      }
-    }
-
-    if (visibleFields.isEmpty) {
-      final composedTabs = AuroraTabComposer.compose(this).map((tab) => tab.id).toList();
-      for (final tab in composedTabs) {
-        for (final fieldId in getFieldsForTab(tab)) {
-          if (!visibleFields.contains(fieldId)) visibleFields.add(fieldId);
-        }
-      }
-    }
-
-    return visibleFields;
+    return const [
+      'title',
+      'category',
+      'brand',
+      'color',
+      'sizeScale',
+      'sku',
+      'barcode',
+      'costPrice',
+      'sellingPrice',
+      'mrp',
+      'openingStock',
+      'discountValue',
+      'hsnCode',
+      'supplier',
+      'description',
+    ];
   }
 
   String getFieldLabel(String fieldId) {
-    return field.fieldLabels[fieldId] ?? 
-           fieldId.replaceAllMapped(RegExp(r'([A-Z])'), (m) => ' ${m.group(1)}').toUpperCase();
+    switch (fieldId) {
+      case 'title': return 'PRODUCT NAME';
+      case 'category': return 'CATEGORY';
+      case 'brand': return 'BRAND';
+      case 'color': return 'COLOUR';
+      case 'sizeScale': return 'SIZE';
+      case 'sku': return 'SKU / STYLE CODE';
+      case 'barcode': return 'BARCODE / GTIN';
+      case 'costPrice': return 'COST PRICE (₹)';
+      case 'sellingPrice': return 'SALE PRICE (₹)';
+      case 'mrp': return 'MRP (₹)';
+      case 'openingStock': return 'QUANTITY / STOCK';
+      case 'discountValue': return 'DISCOUNT (%)';
+      case 'hsnCode': return 'HSN TAX CODE';
+      case 'supplier': return 'SUPPLIER';
+      case 'description': return 'DESCRIPTION';
+      default:
+        return field.fieldLabels[fieldId] ?? 
+               fieldId.replaceAllMapped(RegExp(r'([A-Z])'), (m) => ' ${m.group(1)}').toUpperCase();
+    }
   }
 
   double calculateCompletionPercentage() {

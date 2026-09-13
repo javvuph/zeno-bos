@@ -98,10 +98,30 @@ String resolveCanonicalProfile(String profile, {String? fallback}) {
 
 final Map<BusinessScale, List<String>> scaleFieldRegistry = {
   BusinessScale.small: [],
-  BusinessScale.growing: ["warehouseLocation", "reorderLevel", "safetyStock"],
+  BusinessScale.growing: [
+    "warehouseLocation",
+    "reorderLevel",
+    "safetyStock",
+    "min_reorder_level",
+    "preferred_supplier",
+    "branch_transfer_flag",
+  ],
   BusinessScale.enterprise: [
-    "warehouseLocation", "reorderLevel", "safetyStock", "floorZone", "planogramId",
-    "palletStacking", "unitDimensions", "grossWeight",
+    "warehouseLocation",
+    "reorderLevel",
+    "safetyStock",
+    "floorZone",
+    "planogramId",
+    "palletStacking",
+    "unitDimensions",
+    "grossWeight",
+    "min_reorder_level",
+    "preferred_supplier",
+    "branch_transfer_flag",
+    "bin_location",
+    "rack_number",
+    "secondary_barcode",
+    "approval_tier",
   ],
 };
 

@@ -70,6 +70,45 @@ extension ProductStudioControllerSession on ProductStudioController {
   }
   void deleteSelectedImportItems() { importItems.removeWhere((item) => item.isSelected); notify(); }
 
+  String _bulkDuplicateKey(ProductStudioData product) {
+    final normalizedBarcode = product.barcode.trim();
+    final normalizedSku = product.sku.trim();
+    final normalizedTitle = product.title.trim();
+    final normalizedBrand = product.brand.trim();
+    final normalizedCategory = product.category.trim();
+
+    if (normalizedBarcode.isNotEmpty) return normalizedBarcode.toLowerCase();
+    if (normalizedSku.isNotEmpty) return normalizedSku.toLowerCase();
+    if (normalizedTitle.isNotEmpty && normalizedBrand.isNotEmpty && normalizedCategory.isNotEmpty) {
+      return '${normalizedTitle.toLowerCase()}|${normalizedBrand.toLowerCase()}|${normalizedCategory.toLowerCase()}';
+    }
+    if (normalizedTitle.isNotEmpty) return normalizedTitle.toLowerCase();
+    return '';
+  }
+
+  void _reconcileBulkDuplicateStatus() {
+    final seen = <String, int>{};
+
+    for (int i = 0; i < bulkScanItems.length; i++) {
+      final key = _bulkDuplicateKey(bulkScanItems[i].product);
+      if (key.isEmpty) continue;
+
+      final previousIndex = seen[key];
+      if (previousIndex != null) {
+        bulkScanItems[previousIndex].status = BulkScanStatus.duplicate;
+        bulkScanItems[previousIndex].errorMessage = 'Duplicate item detected';
+        bulkScanItems[i].status = BulkScanStatus.duplicate;
+        bulkScanItems[i].errorMessage = 'Duplicate item detected';
+      } else {
+        seen[key] = i;
+        if (bulkScanItems[i].status == BulkScanStatus.duplicate) {
+          bulkScanItems[i].status = BulkScanStatus.ready;
+          bulkScanItems[i].errorMessage = null;
+        }
+      }
+    }
+  }
+
   void handleBulkBarcodeScanned(String b) async {
     final existing = await repository.getProductByBarcode(b);
     if (existing != null) {
@@ -77,6 +116,7 @@ extension ProductStudioControllerSession on ProductStudioController {
     } else {
       bulkScanItems.add(BulkScanItem(product: ProductStudioData.empty()..barcode = b, status: BulkScanStatus.ready));
     }
+    _reconcileBulkDuplicateStatus();
     notify();
   }
   bool isBulkRowComplete(ProductStudioData product) {
@@ -151,6 +191,7 @@ extension ProductStudioControllerSession on ProductStudioController {
   void updateBulkItemField(int i, Function(ProductStudioData) f) {
     if (i < bulkScanItems.length) {
       f(bulkScanItems[i].product);
+      _reconcileBulkDuplicateStatus();
       notify();
     }
   }

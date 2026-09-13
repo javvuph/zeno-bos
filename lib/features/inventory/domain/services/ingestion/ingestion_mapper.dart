@@ -1,6 +1,50 @@
 import '../../models/product_studio_data.dart';
 
 class IngestionMapper {
+  static final Map<String, String> headerAliases = {
+    // Titles
+    'product name / style title *': 'title',
+    'product name / style title': 'title',
+    'product name': 'title',
+    'style title': 'title',
+    'product title': 'title',
+    // Category & Brand
+    'category *': 'category',
+    'category': 'category',
+    'brand / label': 'brand',
+    'brand': 'brand',
+    // SKU & Barcode
+    'sku / style code *': 'sku',
+    'sku / style code': 'sku',
+    'style code': 'sku',
+    'sku': 'sku',
+    'barcode / gtin': 'barcode',
+    'barcode': 'barcode',
+    'gtin': 'barcode',
+    // Pricing
+    'purchase / cost price (₹) *': 'costPrice',
+    'purchase / cost price (₹)': 'costPrice',
+    'purchase / cost price': 'costPrice',
+    'cost price': 'costPrice',
+    'purchase cost': 'costPrice',
+    'selling price / mrp (₹) *': 'sellingPrice',
+    'selling price / mrp (₹)': 'sellingPrice',
+    'selling price / mrp': 'sellingPrice',
+    'selling price': 'sellingPrice',
+    'mrp': 'mrp',
+    // Discount & Stock
+    'discount value (%)': 'discountValue',
+    'discount value': 'discountValue',
+    'low stock alert threshold': 'reorderLevel',
+    'reorder level': 'reorderLevel',
+    'flat opening stock quantity': 'openingStock',
+    'opening stock': 'openingStock',
+    'online store description': 'description',
+    'description': 'description',
+    'primary photo': 'primaryImageUrl',
+    'primary image': 'primaryImageUrl',
+  };
+
   /// Maps a raw row of data to ProductStudioData.
   /// headerMapping: Map of Header Name -> Internal Field ID
   ProductStudioData mapToProductStudio(Map<String, String> rawRow, Map<String, String> headerMapping) {
@@ -62,6 +106,7 @@ class IngestionMapper {
       case 'unit': product.unit = value; break;
       case 'size': product.sizeStandard = value; break;
       case 'openingStock': product.openingStock = double.tryParse(value) ?? 0.0; break;
+      case 'reorderLevel': product.reorderLevel = double.tryParse(value) ?? 0.0; break;
       case 'warehouseLocation': product.warehouseLocation = value; break;
       case 'fabric': product.fabricComposition = value; break;
       default:
@@ -85,14 +130,21 @@ class IngestionMapper {
     }
   }
 
-  /// Auto-detect mapping based on header similarity
+  /// Auto-detect mapping based on header similarity and aliases
   Map<String, String> autoDetectMapping(List<String> headers, List<String> availableFieldIds) {
     final Map<String, String> mapping = {};
     for (final header in headers) {
-      final normalizedHeader = header.toLowerCase().replaceAll(' ', '');
+      final normalizedHeader = header.trim().toLowerCase();
+
+      if (headerAliases.containsKey(normalizedHeader)) {
+        mapping[header] = headerAliases[normalizedHeader]!;
+        continue;
+      }
+
+      final cleanHeader = normalizedHeader.replaceAll(RegExp(r'[*()₹%]'), '').replaceAll(' ', '');
       for (final fieldId in availableFieldIds) {
         final normalizedField = fieldId.toLowerCase();
-        if (normalizedHeader == normalizedField || normalizedHeader.contains(normalizedField) || normalizedField.contains(normalizedHeader)) {
+        if (cleanHeader == normalizedField || cleanHeader.contains(normalizedField) || normalizedField.contains(cleanHeader)) {
           mapping[header] = fieldId;
           break;
         }

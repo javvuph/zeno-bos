@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:zeno/app/theme.dart';
 import 'package:zeno/core/widgets/zeno_inputs.dart';
+import 'package:zeno/core/localization/country_registry.dart';
 import 'package:zeno/features/administration/presentation/controllers/store_setup_controller.dart';
 import 'business_setup_selector.dart';
 
@@ -37,6 +38,40 @@ class _StoreSetupModalState extends State<StoreSetupModal> {
     }
   }
 
+  bool get _isSmallScale =>
+      _editingStore.businessSize.toUpperCase() == 'SMALL';
+  bool get _isGrowingScale =>
+      _editingStore.businessSize.toUpperCase() == 'GROWING';
+  bool get _isEnterpriseScale =>
+      _editingStore.businessSize.toUpperCase() == 'ENTERPRISE';
+
+  int get _maxVisibleTabIndex {
+    if (_isSmallScale) return 3;
+    if (_isGrowingScale) return 4;
+    return 5;
+  }
+
+  int get _totalSteps => _maxVisibleTabIndex + 1;
+
+  String _getStepTitle(int index) {
+    switch (index) {
+      case 0:
+        return "Store & Business";
+      case 1:
+        return "Regional & Tax";
+      case 2:
+        return "Operations & POS";
+      case 3:
+        return "Online Store & QR";
+      case 4:
+        return "Team & Access";
+      case 5:
+        return "Enterprise Workflows";
+      default:
+        return "Store & Business";
+    }
+  }
+
   void _applyConfigChange(String? main, String? sub, String? scale, {bool isToggle = false}) {
     setState(() {
       if (main != null) {
@@ -64,6 +99,9 @@ class _StoreSetupModalState extends State<StoreSetupModal> {
       }
       if (scale != null) {
         _editingStore.businessSize = scale;
+        if (_activeTab > _maxVisibleTabIndex) {
+          _activeTab = _maxVisibleTabIndex;
+        }
       }
     });
   }
@@ -117,9 +155,16 @@ class _StoreSetupModalState extends State<StoreSetupModal> {
   final _sidebarScrollController = ScrollController();
   final _formScrollController = ScrollController();
 
+  bool _isShelfPriceTaxInclusive = true;
+
   @override
   void initState() {
     super.initState();
+    _taxIdController.addListener(_onTaxIdChanged);
+    _nameController.addListener(_onReceiptHeaderChanged);
+    _addressController.addListener(_onReceiptHeaderChanged);
+    _cityController.addListener(_onReceiptHeaderChanged);
+    _zipCodeController.addListener(_onReceiptHeaderChanged);
     if (controller.stores.isNotEmpty) {
       _loadStore(controller.stores.first);
     } else {
@@ -128,12 +173,38 @@ class _StoreSetupModalState extends State<StoreSetupModal> {
     controller.addListener(_onControllerUpdate);
   }
 
+  void _onReceiptHeaderChanged() {
+    if (mounted) setState(() {});
+  }
+
+  void _onTaxIdChanged() {
+    final countryProfile = CountryRegistry.countries.firstWhere(
+      (c) => c.name.toLowerCase() == _editingStore.country.toLowerCase(),
+      orElse: () => CountryRegistry.defaultCountry,
+    );
+
+    if (countryProfile.code == 'IN') {
+      final text = _taxIdController.text.trim();
+      final detectedState = CountryRegistry.getStateFromGSTIN(text);
+      if (detectedState != null && detectedState != _editingStore.state) {
+        setState(() {
+          _editingStore.state = detectedState;
+        });
+      }
+    }
+  }
+
   void _onControllerUpdate() {
     if (mounted) setState(() {});
   }
 
   @override
   void dispose() {
+    _taxIdController.removeListener(_onTaxIdChanged);
+    _nameController.removeListener(_onReceiptHeaderChanged);
+    _addressController.removeListener(_onReceiptHeaderChanged);
+    _cityController.removeListener(_onReceiptHeaderChanged);
+    _zipCodeController.removeListener(_onReceiptHeaderChanged);
     controller.removeListener(_onControllerUpdate);
     _nameController.dispose();
     _legalNameController.dispose();
@@ -234,18 +305,32 @@ class _StoreSetupModalState extends State<StoreSetupModal> {
 
   void _handleCountryChange(String? country) {
     if (country == null) return;
-    final defaults = controller.getDefaultsForCountry(country);
-    final states = controller.getStates(country);
+    final countryProfile = CountryRegistry.countries.firstWhere(
+      (c) => c.name.toLowerCase() == country.toLowerCase() || c.code.toLowerCase() == country.toLowerCase(),
+      orElse: () => CountryRegistry.defaultCountry,
+    );
 
     setState(() {
-      _editingStore.country = country;
-      _editingStore.currency = defaults['currency']!;
-      _editingStore.taxEngine = defaults['taxEngine']!;
-      _editingStore.state = states.isNotEmpty ? states.first : "N/A";
+      _editingStore.country = countryProfile.name;
+      _editingStore.currency = "${countryProfile.currency.code} (${countryProfile.currency.symbol})";
+      _editingStore.taxEngine = countryProfile.tax.label;
+
+      final availableStates = GlobalSubdivisions.getForCountry(countryProfile.code);
+
+      if (availableStates.isNotEmpty && !availableStates.contains(_editingStore.state)) {
+        _editingStore.state = availableStates.first;
+      }
+
+      final code = countryProfile.code.toUpperCase();
+      if (['IN', 'AE', 'SA', 'KW', 'OM', 'BH', 'QA', 'GB', 'SG', 'AU', 'DE', 'FR', 'ZA'].contains(code)) {
+        _isShelfPriceTaxInclusive = true;
+      } else if (['US', 'CA', 'JP'].contains(code)) {
+        _isShelfPriceTaxInclusive = false;
+      }
 
       // AUTO-GENERATE ID FOR NEW STORES ON COUNTRY CHANGE
       if (_isNew) {
-        final newId = controller.generateStoreId(country);
+        final newId = controller.generateStoreId(countryProfile.name);
         _editingStore = _editingStore.copy(
           id: newId,
           qrUrl: "https://zeno.store/${newId.toLowerCase()}",
@@ -264,24 +349,62 @@ class _StoreSetupModalState extends State<StoreSetupModal> {
   }
 
   Future<void> _save() async {
-    if (_nameController.text.isEmpty || _legalNameController.text.isEmpty) {
+    final nameText = _nameController.text.trim();
+    final phoneText = _phoneController.text.trim();
+
+    if (nameText.isEmpty) {
+      setState(() => _activeTab = 0);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text("Please fill all required fields"),
-            backgroundColor: Colors.red),
+        SnackBar(
+          content: Row(
+            children: const [
+              Icon(Icons.warning_amber_rounded, color: Colors.white, size: 18),
+              SizedBox(width: 8),
+              Text(
+                "Store / Business Name is required",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          backgroundColor: Colors.red.shade700,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        ),
+      );
+      return;
+    }
+
+    if (phoneText.isEmpty) {
+      setState(() => _activeTab = 0);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: const [
+              Icon(Icons.warning_amber_rounded, color: Colors.white, size: 18),
+              SizedBox(width: 8),
+              Text(
+                "Phone number is required for digital receipts",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          backgroundColor: Colors.orange.shade800,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        ),
       );
       return;
     }
 
     final storeToSave = _editingStore.copy()
-      ..name = _nameController.text
-      ..legalName = _legalNameController.text
-      ..taxId = _taxIdController.text
-      ..address = _addressController.text
-      ..city = _cityController.text
-      ..zipCode = _zipCodeController.text
-      ..phone = _phoneController.text
-      ..email = _emailController.text;
+      ..name = nameText
+      ..legalName = _legalNameController.text.trim().isEmpty ? nameText : _legalNameController.text.trim()
+      ..taxId = _taxIdController.text.trim()
+      ..address = _addressController.text.trim()
+      ..city = _cityController.text.trim()
+      ..zipCode = _zipCodeController.text.trim()
+      ..phone = phoneText
+      ..email = _emailController.text.trim();
 
     String finalId = storeToSave.id;
     if (_isNew && (finalId == "PENDING" || finalId.isEmpty)) {
@@ -298,10 +421,26 @@ class _StoreSetupModalState extends State<StoreSetupModal> {
     _loadStore(savedStore);
 
     if (mounted) {
+      final modelName = savedStore.industry.isNotEmpty ? savedStore.industry : "Retail";
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Business Configuration Profile Successfully Synced."),
-          backgroundColor: Color(0xFF00FF88),
+        SnackBar(
+          content: Row(
+            children: [
+              const Icon(Icons.check_circle, color: Colors.white, size: 20),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  "🎉 ${savedStore.name} successfully configured! Launching $modelName POS...",
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                ),
+              ),
+            ],
+          ),
+          backgroundColor: Colors.green.shade700,
+          behavior: SnackBarBehavior.floating,
+          margin: const EdgeInsets.all(16),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          duration: const Duration(seconds: 4),
         ),
       );
     }
@@ -311,16 +450,20 @@ class _StoreSetupModalState extends State<StoreSetupModal> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<ZenoSemanticColors>()!;
 
+    if (_activeTab > _maxVisibleTabIndex) {
+      _activeTab = _maxVisibleTabIndex;
+    }
+
     return Padding(
       padding:
           const EdgeInsets.all(1.5), // Tiny gap for the glowing window border
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // LEFT SIDEBAR: STORE DIRECTORY
-          _buildSidebar(colors),
+          // LEFT SIDEBAR: STORE DIRECTORY (Hidden for SMALL scale)
+          if (!_isSmallScale) _buildSidebar(colors),
 
-          // RIGHT PANEL: CONFIGURATION
+          // RIGHT PANEL: CONFIGURATION (100% width when sidebar is hidden)
           Expanded(
             child: _buildConfigPanel(colors),
           ),
@@ -514,10 +657,74 @@ class _StoreSetupModalState extends State<StoreSetupModal> {
   }
 
   Widget _buildConfigPanel(ZenoSemanticColors colors) {
+    final storeTitle = _editingStore.name.isNotEmpty
+        ? _editingStore.name.toUpperCase()
+        : "MAIN STORE IDENTITY";
+
     return Container(
       color: colors.bgTier1,
       child: Column(
         children: [
+          // STORE / BRANCH HEADER BAR
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            decoration: BoxDecoration(
+                color: colors.bgTier2,
+                border: Border(bottom: BorderSide(color: colors.borderSubtle))),
+            child: Row(
+              children: [
+                Icon(Icons.storefront_rounded,
+                    size: 16, color: colors.accentPrimary),
+                const SizedBox(width: 8),
+                if (_isSmallScale)
+                  Text(
+                    storeTitle,
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w900,
+                      color: colors.textPrimary,
+                      letterSpacing: 0.8,
+                    ),
+                  )
+                else
+                  Row(
+                    children: [
+                      Text(
+                        "$storeTitle (Main HQ)",
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w900,
+                          color: colors.textPrimary,
+                          letterSpacing: 0.8,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      Icon(Icons.arrow_drop_down,
+                          size: 18, color: colors.textSecondary),
+                    ],
+                  ),
+                const Spacer(),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  decoration: BoxDecoration(
+                      color: colors.accentPrimary.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(4),
+                      border: Border.all(
+                          color: colors.accentPrimary.withValues(alpha: 0.3))),
+                  child: Text(
+                    _editingStore.businessSize.toUpperCase(),
+                    style: TextStyle(
+                        fontSize: 9,
+                        fontWeight: FontWeight.w900,
+                        color: colors.accentPrimary,
+                        letterSpacing: 0.5),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
           // TAB HEADERS (DEPARTMENTS)
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -529,40 +736,42 @@ class _StoreSetupModalState extends State<StoreSetupModal> {
               children: [
                 _TabItem(
                     index: 0,
-                    label: "1. General",
+                    label: "1. Store & Business",
                     activeIndex: _activeTab,
                     onTap: (i) => setState(() => _activeTab = i),
                     colors: colors),
                 _TabItem(
                     index: 1,
-                    label: "2. Operations",
+                    label: "2. Regional & Tax",
                     activeIndex: _activeTab,
                     onTap: (i) => setState(() => _activeTab = i),
                     colors: colors),
                 _TabItem(
                     index: 2,
-                    label: "3. Intelligence",
+                    label: "3. Operations & POS",
                     activeIndex: _activeTab,
                     onTap: (i) => setState(() => _activeTab = i),
                     colors: colors),
                 _TabItem(
                     index: 3,
-                    label: "4. Regional",
+                    label: "4. Online Store & QR",
                     activeIndex: _activeTab,
                     onTap: (i) => setState(() => _activeTab = i),
                     colors: colors),
-                _TabItem(
-                    index: 4,
-                    label: "5. QR Sync",
-                    activeIndex: _activeTab,
-                    onTap: (i) => setState(() => _activeTab = i),
-                    colors: colors),
-                _TabItem(
-                    index: 5,
-                    label: "6. Access Control",
-                    activeIndex: _activeTab,
-                    onTap: (i) => setState(() => _activeTab = i),
-                    colors: colors),
+                if (!_isSmallScale)
+                  _TabItem(
+                      index: 4,
+                      label: "5. Team & Access",
+                      activeIndex: _activeTab,
+                      onTap: (i) => setState(() => _activeTab = i),
+                      colors: colors),
+                if (_isEnterpriseScale)
+                  _TabItem(
+                      index: 5,
+                      label: "6. Enterprise Workflows",
+                      activeIndex: _activeTab,
+                      onTap: (i) => setState(() => _activeTab = i),
+                      colors: colors),
                 const Spacer(),
                 if (_isNew)
                   Container(
@@ -580,6 +789,52 @@ class _StoreSetupModalState extends State<StoreSetupModal> {
                             fontWeight: FontWeight.w900,
                             color: colors.statusWarning)),
                   ),
+              ],
+            ),
+          ),
+
+          // STEPPER / PROGRESS HEADER BAR
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+            decoration: BoxDecoration(
+                color: colors.bgTier2,
+                border: Border(bottom: BorderSide(color: colors.borderSubtle))),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Step ${_activeTab + 1} of $_totalSteps • ${_getStepTitle(_activeTab)} (${(((_activeTab + 1) / _totalSteps) * 100).round()}%)",
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                        color: colors.accentPrimary,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                    Text(
+                      "${_editingStore.industry} • ${_editingStore.subType}",
+                      style: TextStyle(
+                        fontSize: 9,
+                        color: colors.textSecondary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(2),
+                  child: SizedBox(
+                    height: 3,
+                    child: LinearProgressIndicator(
+                      value: (_activeTab + 1) / _totalSteps,
+                      backgroundColor: colors.borderSubtle,
+                      valueColor: AlwaysStoppedAnimation<Color>(colors.accentPrimary),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -651,179 +906,345 @@ class _StoreSetupModalState extends State<StoreSetupModal> {
       case 0:
         return _buildGeneralTab(colors);
       case 1:
-        return _buildOperationsTab(colors);
-      case 2:
-        return _buildIntelligenceTab(colors);
-      case 3:
         return _buildRegionalTab(colors);
-      case 4:
+      case 2:
+        return _buildOperationsTab(colors);
+      case 3:
         return _buildSyncTab(colors);
-      case 5:
+      case 4:
         return _buildAccessControlTab(colors);
+      case 5:
+        return _buildIntelligenceTab(colors);
       default:
-        return const SizedBox.shrink();
+        return _buildGeneralTab(colors);
     }
   }
 
   Widget _buildGeneralTab(ZenoSemanticColors colors) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _sectionHeader("BUSINESS PROFILE & CLASSIFICATION", colors),
-        ZenoTextField(
-            label: "Business / Store Name",
+    final dialCode = CountryRegistry.countries
+        .firstWhere(
+          (c) => c.name.toLowerCase() == _editingStore.country.toLowerCase(),
+          orElse: () => CountryRegistry.defaultCountry,
+        )
+        .phoneCode;
+
+    final storeIdentityCard = Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: colors.bgTier2,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: colors.borderSubtle),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _sectionHeader("🏪 Store Identity", colors),
+          ZenoTextField(
+            label: "Store / Business Name *",
             controller: _nameController,
             hint: "Enter store display name",
-            isRequired: true),
-        const SizedBox(height: 16),
-        ZenoTextField(
-            label: "Legal / Company Name",
+            isRequired: true,
+          ),
+          const SizedBox(height: 12),
+          ZenoTextField(
+            label: "Legal / Company Name *",
             controller: _legalNameController,
             hint: "Enter registered legal name",
-            isRequired: true),
-        const SizedBox(height: 16),
-        Row(
+            isRequired: true,
+          ),
+          const SizedBox(height: 12),
+          ZenoTextField(
+            label: "Store WhatsApp / Phone *",
+            controller: _phoneController,
+            hint: "Enter contact phone number",
+            isRequired: true,
+            prefix: Padding(
+              padding: const EdgeInsets.only(left: 10, right: 6),
+              child: Text(
+                dialCode,
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: colors.textSecondary,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+          ZenoTextField(
+            label: "Store Email (Optional)",
+            controller: _emailController,
+            hint: "branch@zeno.store",
+            isRequired: false,
+          ),
+        ],
+      ),
+    );
+
+    final classificationSelector = BusinessSetupSelector(
+      mainBusinesses: controller.industries,
+      subBusinesses: controller.getSubTypes(_editingStore.industry),
+      scales: controller.businessSizes,
+      selectedMain: _editingStore.industry,
+      enabledSubs: _editingStore.enabledSubTypes,
+      selectedScale: _editingStore.businessSize,
+      onMainChanged: (v) => _handleConfigChange(v, null, null),
+      onSubToggled: (v) => _handleConfigChange(null, v, null, isToggle: true),
+      onScaleChanged: (v) => _handleConfigChange(null, null, v),
+      isLocked: _isConfigLocked && !_isAdmin,
+    );
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isMobile = constraints.maxWidth < 850;
+
+        if (isMobile) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              storeIdentityCard,
+              const SizedBox(height: 12),
+              classificationSelector,
+            ],
+          );
+        }
+
+        return Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-                child: ZenoTextField(
-                    label: "Branch Email",
-                    controller: _emailController,
-                    hint: "branch@zeno.store")),
+            SizedBox(
+              width: 350,
+              child: storeIdentityCard,
+            ),
             const SizedBox(width: 16),
             Expanded(
-                child: ZenoTextField(
-                    label: "Contact Number",
-                    controller: _phoneController,
-                    hint: "+91 XXXX XXX XXX")),
+              child: classificationSelector,
+            ),
           ],
-        ),
-        const SizedBox(height: 16),
-        BusinessSetupSelector(
-          mainBusinesses: controller.industries,
-          subBusinesses: controller.getSubTypes(_editingStore.industry),
-          scales: controller.businessSizes,
-          selectedMain: _editingStore.industry,
-          enabledSubs: _editingStore.enabledSubTypes,
-          selectedScale: _editingStore.businessSize,
-          onMainChanged: (v) => _handleConfigChange(v, null, null),
-          onSubToggled: (v) => _handleConfigChange(null, v, null, isToggle: true),
-          onScaleChanged: (v) => _handleConfigChange(null, null, v),
-          isLocked: _isConfigLocked && !_isAdmin,
-        ),
-      ],
+        );
+      },
     );
   }
 
   Widget _buildOperationsTab(ZenoSemanticColors colors) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _sectionHeader("ZENO BOS OPERATIONS CONFIGURATION", colors),
-        Row(
-          children: [
-            Expanded(
-              child: ZenoDropdown<String>(
-                label: "Operation Mode",
-                value: _editingStore.operationMode,
-                items: controller.operationModes
-                    .map((i) => DropdownMenuItem(value: i, child: Text(i)))
-                    .toList(),
-                onChanged: (v) =>
-                    setState(() => _editingStore.operationMode = v!),
-              ),
-            ),
-            const SizedBox(width: 16),
-            const Spacer(),
-          ],
-        ),
-        const SizedBox(height: 24),
-        _buildChipSelector(
-            "Inventory Management Methods",
-            controller.inventoryMethods,
-            _editingStore.inventoryMethods, (selected) {
-          setState(() => _editingStore.inventoryMethods = selected);
-        }, colors),
-        const SizedBox(height: 24),
-        _buildChipSelector(
+    final card1Hardware = Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: colors.bgTier2,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: colors.borderSubtle),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _sectionHeader("🖥️ Terminal & Hardware", colors),
+          ZenoDropdown<String>(
+            label: "Operation Mode",
+            value: _editingStore.operationMode,
+            items: controller.operationModes
+                .map((i) => DropdownMenuItem(value: i, child: Text(i, style: const TextStyle(fontSize: 12))))
+                .toList(),
+            onChanged: (v) => setState(() => _editingStore.operationMode = v!),
+          ),
+          const SizedBox(height: 14),
+          ZenoDropdown<String>(
+            label: "Receipt Template",
+            value: _editingStore.receiptTemplate,
+            items: controller.receiptTemplates
+                .map((i) => DropdownMenuItem(value: i, child: Text(i, style: const TextStyle(fontSize: 12))))
+                .toList(),
+            onChanged: (v) => setState(() => _editingStore.receiptTemplate = v!),
+          ),
+          const SizedBox(height: 14),
+          ZenoDropdown<String>(
+            label: "Barcode Template",
+            value: _editingStore.barcodeTemplate,
+            items: controller.barcodeTemplates
+                .map((i) => DropdownMenuItem(value: i, child: Text(i, style: const TextStyle(fontSize: 12))))
+                .toList(),
+            onChanged: (v) => setState(() => _editingStore.barcodeTemplate = v!),
+          ),
+        ],
+      ),
+    );
+
+    final card2Inventory = Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: colors.bgTier2,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: colors.borderSubtle),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _sectionHeader("⚙️ Accounting & Sequences", colors),
+          
+          Text(
+            "Inventory Costing Method",
+            style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: colors.textSecondary),
+          ),
+          const SizedBox(height: 6),
+          Wrap(
+            spacing: 8,
+            runSpacing: 6,
+            children: controller.inventoryMethods.map((method) {
+              final isSelected = _editingStore.inventoryMethods.contains(method);
+              return InkWell(
+                onTap: () {
+                  setState(() {
+                    _editingStore.inventoryMethods = [method];
+                  });
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: isSelected ? colors.accentPrimary.withValues(alpha: 0.15) : colors.bgTier1,
+                    borderRadius: BorderRadius.circular(6),
+                    border: Border.all(
+                      color: isSelected ? colors.accentPrimary : colors.borderSubtle,
+                      width: isSelected ? 1.5 : 1.0,
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (isSelected) ...[
+                        Icon(Icons.check, size: 12, color: colors.accentPrimary),
+                        const SizedBox(width: 4),
+                      ],
+                      Text(
+                        method,
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                          color: isSelected ? colors.accentPrimary : colors.textPrimary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+
+          const SizedBox(height: 14),
+
+          Text(
             "Supported Payment Methods",
-            controller.paymentMethods,
-            _editingStore.paymentMethods, (selected) {
-          setState(() => _editingStore.paymentMethods = selected);
-        }, colors),
-        const SizedBox(height: 24),
-        Row(
-          children: [
-            Expanded(
-              child: ZenoDropdown<String>(
-                label: "Barcode Template",
-                value: _editingStore.barcodeTemplate,
-                items: controller.barcodeTemplates
-                    .map((i) => DropdownMenuItem(value: i, child: Text(i)))
-                    .toList(),
-                onChanged: (v) =>
-                    setState(() => _editingStore.barcodeTemplate = v!),
+            style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: colors.textSecondary),
+          ),
+          const SizedBox(height: 6),
+          Wrap(
+            spacing: 6,
+            runSpacing: 6,
+            children: controller.paymentMethods.map((pm) {
+              final isSelected = _editingStore.paymentMethods.contains(pm);
+              return FilterChip(
+                label: Text(pm, style: TextStyle(fontSize: 10, fontWeight: isSelected ? FontWeight.bold : FontWeight.normal)),
+                selected: isSelected,
+                onSelected: (selected) {
+                  setState(() {
+                    if (selected) {
+                      if (!_editingStore.paymentMethods.contains(pm)) {
+                        _editingStore.paymentMethods.add(pm);
+                      }
+                    } else {
+                      if (_editingStore.paymentMethods.length > 1) {
+                        _editingStore.paymentMethods.remove(pm);
+                      }
+                    }
+                  });
+                },
+                selectedColor: colors.accentPrimary.withValues(alpha: 0.15),
+                checkmarkColor: colors.accentPrimary,
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                visualDensity: VisualDensity.compact,
+              );
+            }).toList(),
+          ),
+
+          const SizedBox(height: 14),
+
+          Text(
+            "Document Numbering Prefixes",
+            style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: colors.textSecondary),
+          ),
+          const SizedBox(height: 6),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              SizedBox(
+                width: 85,
+                child: ZenoTextField(
+                  label: "Invoice",
+                  hint: "INV",
+                  controller: _invoicePrefixController,
+                  onChanged: (v) => setState(() => _editingStore.numberingPrefixes['invoice'] = v),
+                ),
               ),
-            ),
+              SizedBox(
+                width: 85,
+                child: ZenoTextField(
+                  label: "Order",
+                  hint: "ORD",
+                  controller: _orderPrefixController,
+                  onChanged: (v) => setState(() => _editingStore.numberingPrefixes['order'] = v),
+                ),
+              ),
+              SizedBox(
+                width: 85,
+                child: ZenoTextField(
+                  label: "Receipt",
+                  hint: "REC",
+                  controller: _receiptPrefixController,
+                  onChanged: (v) => setState(() => _editingStore.numberingPrefixes['receipt'] = v),
+                ),
+              ),
+              SizedBox(
+                width: 85,
+                child: ZenoTextField(
+                  label: "Purchase",
+                  hint: "PUR",
+                  controller: _purchasePrefixController,
+                  onChanged: (v) => setState(() => _editingStore.numberingPrefixes['purchase'] = v),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isMobile = constraints.maxWidth < 850;
+
+        if (isMobile) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              card1Hardware,
+              const SizedBox(height: 12),
+              card2Inventory,
+            ],
+          );
+        }
+
+        return Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(flex: 1, child: card1Hardware),
             const SizedBox(width: 16),
-            Expanded(
-              child: ZenoDropdown<String>(
-                label: "Receipt Template",
-                value: _editingStore.receiptTemplate,
-                items: controller.receiptTemplates
-                    .map((i) => DropdownMenuItem(value: i, child: Text(i)))
-                    .toList(),
-                onChanged: (v) =>
-                    setState(() => _editingStore.receiptTemplate = v!),
-              ),
-            ),
+            Expanded(flex: 1, child: card2Inventory),
           ],
-        ),
-        const SizedBox(height: 24),
-        _sectionHeader("DOCUMENT NUMBERING PREFIXES", colors),
-        Row(
-          children: [
-            Expanded(
-              child: ZenoTextField(
-                label: "Invoice",
-                hint: "INV",
-                controller: _invoicePrefixController,
-                onChanged: (v) => setState(
-                    () => _editingStore.numberingPrefixes['invoice'] = v),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: ZenoTextField(
-                label: "Order",
-                hint: "ORD",
-                controller: _orderPrefixController,
-                onChanged: (v) => setState(
-                    () => _editingStore.numberingPrefixes['order'] = v),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: ZenoTextField(
-                label: "Receipt",
-                hint: "REC",
-                controller: _receiptPrefixController,
-                onChanged: (v) => setState(
-                    () => _editingStore.numberingPrefixes['receipt'] = v),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: ZenoTextField(
-                label: "Purchase",
-                hint: "PUR",
-                controller: _purchasePrefixController,
-                onChanged: (v) => setState(
-                    () => _editingStore.numberingPrefixes['purchase'] = v),
-              ),
-            ),
-          ],
-        ),
-      ],
+        );
+      },
     );
   }
 
@@ -976,90 +1397,400 @@ class _StoreSetupModalState extends State<StoreSetupModal> {
     );
   }
 
+  String _getTaxIdLabel(CountryProfile profile) {
+    switch (profile.code.toUpperCase()) {
+      case 'IN':
+        return "GSTIN Number *";
+      case 'AE':
+      case 'SA':
+      case 'OM':
+      case 'BH':
+      case 'QA':
+      case 'KW':
+        return "TRN / VAT Registration No. *";
+      case 'US':
+        return "EIN / Sales Tax Permit *";
+      default:
+        return "${profile.tax.taxIdName} Number";
+    }
+  }
+
+  String _getTaxIdHint(CountryProfile profile) {
+    switch (profile.code.toUpperCase()) {
+      case 'IN':
+        return "32AAAAA0000A1Z5";
+      case 'AE':
+      case 'SA':
+      case 'OM':
+      case 'BH':
+      case 'QA':
+      case 'KW':
+        return "100123456700003";
+      case 'US':
+        return "12-3456789";
+      default:
+        return "Enter ${profile.tax.taxIdName}";
+    }
+  }
+
   Widget _buildRegionalTab(ZenoSemanticColors colors) {
-    return Column(
+    final countryProfile = CountryRegistry.countries.firstWhere(
+      (c) => c.name.toLowerCase() == _editingStore.country.toLowerCase() ||
+             c.code.toLowerCase() == _editingStore.country.toLowerCase(),
+      orElse: () => CountryRegistry.defaultCountry,
+    );
+
+    final availableStates = GlobalSubdivisions.getForCountry(countryProfile.code);
+
+    final selectedState = availableStates.contains(_editingStore.state)
+        ? _editingStore.state
+        : (availableStates.isNotEmpty ? availableStates.first : "N/A");
+
+    final stateLabel = GlobalSubdivisions.getLabelForCountry(countryProfile.code);
+
+    final detectedStateFromGstin = countryProfile.code == 'IN'
+        ? CountryRegistry.getStateFromGSTIN(_taxIdController.text)
+        : null;
+
+    final storeNameDisplay = _nameController.text.trim().isNotEmpty
+        ? _nameController.text.trim().toUpperCase()
+        : (_editingStore.name.isNotEmpty ? _editingStore.name.toUpperCase() : "TAGSOLE MAIN");
+
+    final streetDisplay = _addressController.text.trim().isNotEmpty
+        ? _addressController.text.trim()
+        : "12/450, Commercial Street";
+
+    final cityDisplay = _cityController.text.trim().isNotEmpty
+        ? _cityController.text.trim()
+        : "Calicut";
+
+    final zipDisplay = _zipCodeController.text.trim().isNotEmpty
+        ? _zipCodeController.text.trim()
+        : "673001";
+
+    final taxIdDisplay = _taxIdController.text.trim().isNotEmpty
+        ? _taxIdController.text.trim()
+        : (countryProfile.code == 'IN' ? "32AAAAA0000A1Z5" : "100123456700003");
+
+    return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _sectionHeader("REGIONAL LOCALIZATION & ADDRESS", colors),
-        Row(
-          children: [
-            Expanded(
-                child: ZenoDropdown<String>(
-                    label: "Country",
-                    value: _editingStore.country,
-                    items: controller.countries
-                        .map((i) => DropdownMenuItem(value: i, child: Text(i)))
-                        .toList(),
-                    onChanged: _handleCountryChange)),
-            const SizedBox(width: 16),
-            Expanded(
-                child: ZenoDropdown<String>(
-                    label: "State / Region",
-                    value: _editingStore.state,
-                    items: controller
-                        .getStates(_editingStore.country)
-                        .map((i) => DropdownMenuItem(value: i, child: Text(i)))
-                        .toList(),
-                    onChanged: (v) =>
-                        setState(() => _editingStore.state = v!))),
-          ],
+        // 1. LEFT CARD — "⚖️ TAX & JURISDICTION COMPLIANCE" (Flex 11)
+        Expanded(
+          flex: 11,
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: colors.bgTier2,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: colors.borderSubtle),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _sectionHeader("⚖️ Tax & Jurisdiction Compliance", colors),
+                
+                // Field 1: Country Dropdown
+                ZenoDropdown<String>(
+                  label: "Country",
+                  value: countryProfile.name,
+                  items: CountryRegistry.countries
+                      .map((c) => DropdownMenuItem(
+                            value: c.name,
+                            child: Row(
+                              children: [
+                                Text(c.flagEmoji, style: const TextStyle(fontSize: 14)),
+                                const SizedBox(width: 8),
+                                Text("${c.name} (${c.phoneCode})", style: const TextStyle(fontSize: 12)),
+                              ],
+                            ),
+                          ))
+                      .toList(),
+                  onChanged: _handleCountryChange,
+                ),
+                const SizedBox(height: 12),
+
+                // Field 2: State / Place of Supply Dropdown
+                ZenoDropdown<String>(
+                  label: stateLabel,
+                  value: selectedState,
+                  items: availableStates
+                      .map((i) => DropdownMenuItem(
+                            value: i,
+                            child: Text(i, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 12)),
+                          ))
+                      .toList(),
+                  onChanged: (v) => setState(() => _editingStore.state = v!),
+                ),
+                const SizedBox(height: 12),
+
+                // Field 3: Tax Registration ID with detection pill
+                ZenoTextField(
+                  label: _getTaxIdLabel(countryProfile),
+                  controller: _taxIdController,
+                  hint: _getTaxIdHint(countryProfile),
+                  isRequired: countryProfile.tax.taxType != TaxType.none,
+                  suffix: detectedStateFromGstin != null
+                      ? Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                          margin: const EdgeInsets.only(right: 6),
+                          decoration: BoxDecoration(
+                            color: Colors.green.shade50,
+                            borderRadius: BorderRadius.circular(4),
+                            border: Border.all(color: Colors.green.shade300),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(Icons.check_circle, size: 11, color: Colors.green),
+                              const SizedBox(width: 3),
+                              Text(
+                                "✓ State: $detectedStateFromGstin",
+                                style: const TextStyle(
+                                    fontSize: 9,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.green),
+                              ),
+                            ],
+                          ),
+                        )
+                      : null,
+                ),
+                const SizedBox(height: 12),
+
+                // Field 4: Currency & Tax Badges (Locked Row)
+                Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: colors.bgTier1,
+                          borderRadius: BorderRadius.circular(6),
+                          border: Border.all(color: colors.borderSubtle),
+                        ),
+                        child: Row(
+                          children: [
+                            Text("Currency: ", style: TextStyle(fontSize: 10, color: colors.textSecondary)),
+                            Expanded(
+                              child: Text(
+                                "🔒 ${countryProfile.currency.code} (${countryProfile.currency.symbol})",
+                                style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: colors.textPrimary),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: colors.bgTier1,
+                          borderRadius: BorderRadius.circular(6),
+                          border: Border.all(color: colors.borderSubtle),
+                        ),
+                        child: Row(
+                          children: [
+                            Text("Tax System: ", style: TextStyle(fontSize: 10, color: colors.textSecondary)),
+                            Expanded(
+                              child: Text(
+                                "🔒 ${countryProfile.tax.label}",
+                                style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: colors.textPrimary),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+
+                // Field 5: Price Inclusivity Radio Row
+                Text(
+                  "Price Inclusivity",
+                  style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: colors.textSecondary),
+                ),
+                const SizedBox(height: 4),
+                Container(
+                  height: 40,
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  decoration: BoxDecoration(
+                    color: colors.bgTier1,
+                    borderRadius: BorderRadius.circular(6),
+                    border: Border.all(color: colors.borderSubtle),
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: InkWell(
+                          onTap: () => setState(() => _isShelfPriceTaxInclusive = true),
+                          child: Row(
+                            children: [
+                              Radio<bool>(
+                                value: true,
+                                groupValue: _isShelfPriceTaxInclusive,
+                                onChanged: (v) => setState(() => _isShelfPriceTaxInclusive = v!),
+                                activeColor: colors.accentPrimary,
+                                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              ),
+                              Text(
+                                "MRP (Inclusive)",
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: _isShelfPriceTaxInclusive ? FontWeight.bold : FontWeight.normal,
+                                  color: colors.textPrimary,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: InkWell(
+                          onTap: () => setState(() => _isShelfPriceTaxInclusive = false),
+                          child: Row(
+                            children: [
+                              Radio<bool>(
+                                value: false,
+                                groupValue: _isShelfPriceTaxInclusive,
+                                onChanged: (v) => setState(() => _isShelfPriceTaxInclusive = v!),
+                                activeColor: colors.accentPrimary,
+                                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              ),
+                              Text(
+                                "+Tax Checkout",
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: !_isShelfPriceTaxInclusive ? FontWeight.bold : FontWeight.normal,
+                                  color: colors.textPrimary,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
-        const SizedBox(height: 16),
-        ZenoTextField(
-            label: "Street Address",
-            controller: _addressController,
-            hint: "Building name, Street, Area"),
-        const SizedBox(height: 16),
-        Row(
-          children: [
-            Expanded(
-                child: ZenoTextField(
-                    label: "City",
-                    controller: _cityController,
-                    hint: "Enter city")),
-            const SizedBox(width: 16),
-            Expanded(
-                child: ZenoTextField(
-                    label: "Zip / Postal Code",
-                    controller: _zipCodeController,
-                    hint: "XXXXXX")),
-          ],
+        const SizedBox(width: 16),
+        
+        // 2. RIGHT CARD — "📍 STORE PHYSICAL ADDRESS & RECEIPT HEADER" (Flex 10)
+        Expanded(
+          flex: 10,
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: colors.bgTier2,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: colors.borderSubtle),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _sectionHeader("📍 Store Address & Receipt Header", colors),
+                
+                // Field 1: Street Address / Building
+                ZenoTextField(
+                  label: "Street Address / Building",
+                  controller: _addressController,
+                  hint: "Building name, Street, Area",
+                ),
+                const SizedBox(height: 12),
+
+                // Field 2: Compact Row for City & Zip
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: ZenoTextField(
+                        label: "City",
+                        controller: _cityController,
+                        hint: "Enter city",
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    SizedBox(
+                      width: 130,
+                      child: ZenoTextField(
+                        label: "Postal Code",
+                        controller: _zipCodeController,
+                        hint: "673001",
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+
+                // Field 3: Live Mini Receipt Header Box
+                Text(
+                  "🧾 Live Thermal Receipt Header Preview",
+                  style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: colors.textSecondary),
+                ),
+                const SizedBox(height: 6),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  decoration: BoxDecoration(
+                    color: colors.bgTier1,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: colors.borderSubtle, style: BorderStyle.solid),
+                  ),
+                  child: Column(
+                    children: [
+                      Text(
+                        storeNameDisplay,
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: 1.0,
+                          color: colors.textPrimary,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        "$streetDisplay, $cityDisplay - $zipDisplay",
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: colors.textSecondary,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        "${countryProfile.tax.taxIdName}: $taxIdDisplay",
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                          color: colors.accentPrimary,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        "--------------------------------------------------",
+                        style: TextStyle(fontSize: 8, color: colors.borderSubtle, letterSpacing: 1),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
-        const SizedBox(height: 24),
-        _sectionHeader("TAX COMPLIANCE", colors),
-        Row(
-          children: [
-            Expanded(
-                child: ZenoDropdown<String>(
-                    label: "Base Currency",
-                    value: _editingStore.currency,
-                    items: ['INR (₹)', 'USD (\$)', 'AED (د.إ)', 'GBP (£)']
-                        .map((i) => DropdownMenuItem(value: i, child: Text(i)))
-                        .toList(),
-                    onChanged: (v) =>
-                        setState(() => _editingStore.currency = v!))),
-            const SizedBox(width: 16),
-            Expanded(
-                child: ZenoDropdown<String>(
-                    label: "Tax Engine Type",
-                    value: _editingStore.taxEngine,
-                    items: [
-                      'GST',
-                      'VAT',
-                      'State Sales Tax',
-                      'Flat / Custom Tax'
-                    ]
-                        .map((i) => DropdownMenuItem(value: i, child: Text(i)))
-                        .toList(),
-                    onChanged: (v) =>
-                        setState(() => _editingStore.taxEngine = v!))),
-          ],
-        ),
-        const SizedBox(height: 16),
-        ZenoTextField(
-            label: "GSTIN / Tax Registration ID",
-            controller: _taxIdController,
-            hint: "Enter official tax identification number"),
       ],
     );
   }

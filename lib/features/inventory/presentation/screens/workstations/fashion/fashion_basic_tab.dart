@@ -149,73 +149,143 @@ class _FashionBasicTabState extends State<FashionBasicTab> {
         ),
         const SizedBox(width: 16),
 
-        // RIGHT COLUMN: Pricing & Stock Card
+        // RIGHT COLUMN: Pricing & Stock (Basic Mode) OR Audience & Governance (Advanced Mode)
         Expanded(
           flex: 5,
           child: Column(
             children: [
-              _compactSection("PRICING & STOCK", widget.colors, [
-                Row(
-                  children: [
-                    Expanded(
-                      child: ZenoTextField(
-                        label: "Purchase / Cost Price (₹) *",
-                        initialValue: p.costPrice.toString(),
-                        onChanged: (v) => controller.updateCost(double.tryParse(v) ?? 0.0),
-                        keyboardType: TextInputType.number,
-                        isRequired: true,
+              if (!controller.isAdvancedMode)
+                _compactSection("PRICING & STOCK", widget.colors, [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ZenoTextField(
+                          label: "Purchase / Cost Price (₹) *",
+                          initialValue: p.costPrice.toString(),
+                          onChanged: (v) => controller.updateCost(double.tryParse(v) ?? 0.0),
+                          keyboardType: TextInputType.number,
+                          isRequired: true,
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: ZenoTextField(
-                        label: "Selling Price / MRP (₹) *",
-                        initialValue: p.sellingPrice.toString(),
-                        onChanged: (v) => controller.updatePrice(double.tryParse(v) ?? 0.0),
-                        keyboardType: TextInputType.number,
-                        isRequired: true,
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: ZenoTextField(
+                          label: "Selling Price / MRP (₹) *",
+                          initialValue: p.sellingPrice.toString(),
+                          onChanged: (v) => controller.updatePrice(double.tryParse(v) ?? 0.0),
+                          keyboardType: TextInputType.number,
+                          isRequired: true,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  children: [
-                    Expanded(
-                      child: ZenoTextField(
-                        label: "Discount Value (%)",
-                        initialValue: p.discountValue.toString(),
-                        onChanged: (v) => controller.updateField(discountValue: double.tryParse(v) ?? 0.0),
-                        keyboardType: TextInputType.number,
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ZenoTextField(
+                          label: "Discount Value (%)",
+                          initialValue: p.discountValue.toString(),
+                          onChanged: (v) => controller.updateField(discountValue: double.tryParse(v) ?? 0.0),
+                          keyboardType: TextInputType.number,
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: ZenoTextField(
-                        label: "Low Stock Alert Threshold",
-                        initialValue: (p.reorderLevel <= 0 ? 2.0 : p.reorderLevel).toString(),
-                        onChanged: (v) => controller.updateField(reorderLevel: double.tryParse(v) ?? 2.0),
-                        keyboardType: TextInputType.number,
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: ZenoTextField(
+                          label: "Low Stock Alert Threshold",
+                          initialValue: (p.reorderLevel <= 0 ? 2.0 : p.reorderLevel).toString(),
+                          onChanged: (v) => controller.updateField(reorderLevel: double.tryParse(v) ?? 2.0),
+                          keyboardType: TextInputType.number,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                controller.generatedVariants.isEmpty
-                    ? ZenoTextField(
-                        label: "Flat Opening Stock Quantity",
-                        initialValue: p.openingStock.toString(),
-                        onChanged: (v) => controller.updateField(openingStock: int.tryParse(v) ?? 0),
-                        keyboardType: TextInputType.number,
-                        width: ZenoFieldWidth.full,
-                      )
-                    : ZenoTextField(
-                        label: "Total Variant Stock (Auto)",
-                        initialValue: "${controller.calculatedTotalStock} (Locked from Variants)",
-                        readOnly: true,
-                        width: ZenoFieldWidth.full,
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  controller.generatedVariants.isEmpty
+                      ? ZenoTextField(
+                          label: "Flat Opening Stock Quantity",
+                          initialValue: p.openingStock.toString(),
+                          onChanged: (v) => controller.updateField(openingStock: int.tryParse(v) ?? 0),
+                          keyboardType: TextInputType.number,
+                          width: ZenoFieldWidth.full,
+                        )
+                      : ZenoTextField(
+                          label: "Total Variant Stock (Auto)",
+                          initialValue: "${controller.calculatedTotalStock} (Locked from Variants)",
+                          readOnly: true,
+                          width: ZenoFieldWidth.full,
+                        ),
+                ]),
+
+              if (controller.isAdvancedMode)
+                _compactSection("TARGET AUDIENCE & GOVERNANCE", widget.colors, [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ZenoDropdown<String>(
+                          label: "Gender",
+                          value: p.gender.isEmpty ? null : p.gender,
+                          items: ["Men", "Women", "Unisex", "Kids"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+                          onChanged: (v) => controller.updateField(gender: v),
+                        ),
                       ),
-              ]),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: ZenoDropdown<String>(
+                          label: "Target Age Group",
+                          value: p.targetAgeGroup.isEmpty ? null : p.targetAgeGroup,
+                          items: ["Adult", "Teens", "Kids", "Toddler"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+                          onChanged: (v) => controller.updateField(targetAgeGroup: v),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ZenoDropdown<String>(
+                          label: "Season",
+                          value: p.season.isEmpty ? null : p.season,
+                          items: ["Spring", "Summer", "Autumn", "Winter", "All-Season"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+                          onChanged: (v) => controller.updateField(season: v),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: ZenoDropdown<String>(
+                          label: "Collection / Drop",
+                          value: p.collectionEdition.isEmpty ? null : p.collectionEdition,
+                          items: ["Core", "Summer Drop", "Festive Edit", "Limited Edition"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+                          onChanged: (v) => controller.updateField(collectionEdition: v),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ZenoDropdown<String>(
+                          label: "Country of Origin",
+                          value: p.countryOfOrigin.isEmpty ? null : p.countryOfOrigin,
+                          items: ["India", "USA", "UK", "China", "UAE"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+                          onChanged: (v) => controller.updateField(countryOfOrigin: v),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: ZenoDropdown<String>(
+                          label: "Status",
+                          value: p.status,
+                          items: ["Active", "Inactive", "Archived"].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+                          onChanged: (v) => controller.updateField(status: v),
+                        ),
+                      ),
+                    ],
+                  ),
+                ]),
             ],
           ),
         ),

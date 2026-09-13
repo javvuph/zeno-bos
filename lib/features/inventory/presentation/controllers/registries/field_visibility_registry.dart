@@ -70,9 +70,15 @@ String resolveCanonicalProfile(String profile, {String? fallback}) {
 }
 
 final Map<String, List<String>> categoryFieldRegistry = {
-  "Retail": retailCanonicalProfiles,
-  "Food & Beverage": fnbCanonicalProfiles,
-  "Fashion": fashionCanonicalProfiles,
+  // Umbrella Parent Categories
+  "Retail": retailStandard,
+  "Food & Beverage": fnbStandard,
+  "F&B": fnbStandard,
+  "Fashion": [...fashionStandard, "apparelCategory", "patternDesign", "fitType", "sleeveNeckType", "careGuide", "fabric", "sizeScale", "color", "hex", "childSku", "barcodeRegistry"],
+  "Fashion & Apparel": [...fashionStandard, "apparelCategory", "patternDesign", "fitType", "sleeveNeckType", "careGuide", "fabric", "sizeScale", "color", "hex", "childSku", "barcodeRegistry"],
+  "Healthcare": healthcareStandard,
+  "Services": ["title", "arabicTitle", "description", "category", "serviceProcedureType", "diagnosticCharge", "labRouting", "costPrice", "sellingPrice", "taxCode"],
+  "Wholesale": [...retailStandard, "minimumFloorPrice", "wholesalePrice", "tierDiscount"],
   "Supermarket": [...retailStandard, "department", "planogramId", "warehouseLocation", "reorderLevel", "safetyStock", "caseMultiplier"],
   "Hypermarket": [...retailStandard, "department", "floorZone", "planogramId", "warehouseLocation", "reorderLevel", "safetyStock", "caseMultiplier", "palletStacking", "unitDimensions", "grossWeight", "storageClass"],
   "Grocery / Kirana": [...retailStandard, "allowLooseBilling", "purchaseUnit", "weight", "stockUnit", "inHouseRepack", "conversionFactor", "ingredients", "storageClass", "bakeryShelfLife", "countryOfOrigin"],
@@ -132,8 +138,31 @@ final Map<String, List<String>> categoryFieldRegistry = {
 
 final Map<BusinessScale, List<String>> scaleFieldRegistry = {
   BusinessScale.small: [],
-  BusinessScale.growing: ["warehouseLocation", "reorderLevel", "safetyStock"],
-  BusinessScale.enterprise: ["warehouseLocation", "reorderLevel", "safetyStock", "floorZone", "planogramId", "palletStacking", "unitDimensions", "grossWeight"],
+  BusinessScale.growing: [
+    "warehouseLocation",
+    "reorderLevel",
+    "safetyStock",
+    "min_reorder_level",
+    "preferred_supplier",
+    "branch_transfer_flag",
+  ],
+  BusinessScale.enterprise: [
+    "warehouseLocation",
+    "reorderLevel",
+    "safetyStock",
+    "floorZone",
+    "planogramId",
+    "palletStacking",
+    "unitDimensions",
+    "grossWeight",
+    "min_reorder_level",
+    "preferred_supplier",
+    "branch_transfer_flag",
+    "bin_location",
+    "rack_number",
+    "secondary_barcode",
+    "approval_tier",
+  ],
 };
 
 final Map<String, String> fieldLabels = {

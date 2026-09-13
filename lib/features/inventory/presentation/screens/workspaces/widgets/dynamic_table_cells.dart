@@ -3,6 +3,28 @@ import '../../../controllers/product_studio_controller.dart';
 import '../../../../domain/models/product_studio_models.dart';
 import 'session_table_widgets.dart' as sw;
 
+double getBulkColumnWidth(String fieldId) {
+  switch (fieldId) {
+    case 'title': return 220;
+    case 'category': return 140;
+    case 'brand': return 140;
+    case 'sku': return 140;
+    case 'barcode': return 140;
+    case 'costPrice': return 140;
+    case 'sellingPrice': return 140;
+    case 'mrp': return 110;
+    case 'openingStock': return 130;
+    case 'reorderLevel': return 130;
+    case 'discountValue': return 120;
+    case 'primaryImageUrl': return 80;
+    case 'description': return 220;
+    case 'hsnCode': return 120;
+    case 'supplier': return 140;
+    case 'countryOfOrigin': return 130;
+    default: return 120;
+  }
+}
+
 class DynamicTableCell extends StatelessWidget {
   final String fieldId;
   final int index;
@@ -61,35 +83,45 @@ class DynamicTableCell extends StatelessWidget {
   Widget build(BuildContext context) {
     final p = item.product;
     final hasError = _isRequiredField(fieldId) && _hasMissingRequiredValue(p);
+    final isDuplicateValue = item.status == BulkScanStatus.duplicate &&
+        ['barcode', 'sku', 'title', 'brand', 'category', 'supplier'].contains(fieldId);
     final dropdownItems = _dropdownItemsForField(p);
+    final width = getBulkColumnWidth(fieldId);
+    final value = controller.getFieldValueById(p, fieldId);
+    final strValue = value == null ? "" : value.toString();
 
-    if (dropdownItems.isNotEmpty) {
-      final currentValue = controller.getFieldValueById(p, fieldId)?.toString() ?? '';
-      final value = currentValue.isEmpty ? null : currentValue;
+    // If dropdown items exist and contain the value, show dropdown. Otherwise, show text field so extracted text is never hidden.
+    if (dropdownItems.isNotEmpty && dropdownItems.contains(strValue)) {
       return sw.TableCell(
-        width: fieldId == 'warehouseLocation' ? 140 : fieldId == 'unit' || fieldId == 'salesUnit' || fieldId == 'purchaseUnit' || fieldId == 'stockUnit' ? 90 : 120,
-        decoration: hasError ? BoxDecoration(border: Border(right: BorderSide(color: Colors.red.shade400, width: 1.2)), color: Colors.red.shade50) : null,
+        width: width,
+        decoration: hasError
+            ? BoxDecoration(border: Border(right: BorderSide(color: Colors.red.shade400, width: 1.2)), color: Colors.red.shade50)
+            : (isDuplicateValue
+                ? BoxDecoration(
+                    border: Border(right: BorderSide(color: Colors.orange.shade600, width: 1.2)),
+                    color: Colors.orange.shade50,
+                  )
+                : null),
         child: sw.TableCellDropdown<String>(
-          value: value,
+          value: strValue.isEmpty ? null : strValue,
           items: dropdownItems,
           onChanged: (v) => updateField(index, (p) => controller.updateFieldById(p, fieldId, v)),
         ),
       );
     }
 
-    double width = 120;
-    if (fieldId == 'title') width = 200;
-    if (fieldId == 'description') width = 150;
-    if (fieldId.contains('Price') || fieldId == 'mrp' || fieldId == 'costPrice' || fieldId == 'discountValue') width = 90;
-    if (fieldId.contains('Stock') || fieldId == 'openingStock' || fieldId == 'safetyStock' || fieldId == 'reorderLevel') width = 80;
-
-    final value = controller.getFieldValueById(p, fieldId);
-
     return sw.TableCell(
       width: width,
-      decoration: hasError ? BoxDecoration(border: Border(right: BorderSide(color: Colors.red.shade400, width: 1.2)), color: Colors.red.shade50) : null,
+      decoration: hasError
+          ? BoxDecoration(border: Border(right: BorderSide(color: Colors.red.shade400, width: 1.2)), color: Colors.red.shade50)
+          : (isDuplicateValue
+              ? BoxDecoration(
+                  border: Border(right: BorderSide(color: Colors.orange.shade600, width: 1.2)),
+                  color: Colors.orange.shade50,
+                )
+              : null),
       child: sw.TableCellField(
-        value: value == null ? "" : value.toString(),
+        value: strValue,
         onChanged: (v) => updateField(index, (p) => controller.updateFieldById(p, fieldId, v)),
         textAlign: width < 100 ? TextAlign.center : TextAlign.start,
       ),

@@ -104,6 +104,11 @@ class _ProductStudioScreenState extends State<ProductStudioScreen> {
   }
 
   Widget _buildSubHeader(ZenoSemanticColors colors) {
+    final activeSubCategories = controller.enabledProductTypes;
+    final currentSubCategory = controller.activeProfile.isNotEmpty
+        ? controller.activeProfile
+        : (activeSubCategories.isNotEmpty ? activeSubCategories.first : "Clothing");
+
     return Container(
       height: 36,
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -136,7 +141,7 @@ class _ProductStudioScreenState extends State<ProductStudioScreen> {
               const SizedBox(width: 10),
               _tagCompact(controller.activeBusiness.toUpperCase(), const Color(0xFF6366F1)),
               const SizedBox(width: 4),
-              _tagCompact(controller.activeProfile.toUpperCase(), const Color(0xFF6366F1)),
+              _buildSubCategorySelector(activeSubCategories, currentSubCategory),
               const SizedBox(width: 4),
               _tagCompact(controller.product.businessScale.toString().split('.').last.toUpperCase(), const Color(0xFF10B981)),
             ],
@@ -156,6 +161,59 @@ class _ProductStudioScreenState extends State<ProductStudioScreen> {
             ],
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildSubCategorySelector(List<String> activeSubCategories, String currentSubCategory) {
+    if (activeSubCategories.length <= 1) {
+      return _tagCompact(currentSubCategory.toUpperCase(), const Color(0xFF6366F1));
+    }
+
+    String selectedValue = activeSubCategories.firstWhere(
+      (s) => s.toLowerCase() == currentSubCategory.toLowerCase(),
+      orElse: () => activeSubCategories.first,
+    );
+
+    return Container(
+      height: 22,
+      padding: const EdgeInsets.symmetric(horizontal: 6),
+      decoration: BoxDecoration(
+        color: const Color(0xFF6366F1).withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(5),
+        border: Border.all(color: const Color(0xFF6366F1).withValues(alpha: 0.25), width: 1),
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          value: selectedValue,
+          isDense: true,
+          icon: const Icon(Icons.arrow_drop_down_rounded, color: Color(0xFF6366F1), size: 14),
+          style: const TextStyle(
+            color: Color(0xFF6366F1),
+            fontWeight: FontWeight.w900,
+            fontSize: 8,
+            letterSpacing: 0.3,
+          ),
+          items: activeSubCategories.map((type) {
+            return DropdownMenuItem<String>(
+              value: type,
+              child: Text(
+                type.toUpperCase(),
+                style: const TextStyle(
+                  color: Color(0xFF6366F1),
+                  fontWeight: FontWeight.w900,
+                  fontSize: 8,
+                  letterSpacing: 0.3,
+                ),
+              ),
+            );
+          }).toList(),
+          onChanged: (newType) {
+            if (newType != null) {
+              controller.setProfile(controller.activeBusiness, newType);
+            }
+          },
+        ),
       ),
     );
   }

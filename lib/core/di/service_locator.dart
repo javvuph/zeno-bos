@@ -43,8 +43,12 @@ import 'package:zeno/features/governance/domain/repositories/i_governance_reposi
 import 'package:zeno/features/governance/domain/repositories/governance_repository_impl.dart';
 
 import 'package:zeno/core/services/settings_service.dart';
+import 'package:zeno/core/localization/country_registry.dart';
+import 'package:zeno/core/localization/currency_service.dart';
+import 'package:zeno/core/localization/tax_service.dart';
 import 'package:zeno/features/inventory/data/services/ai_product_service.dart';
 import 'package:zeno/features/purchase/domain/services/inventory_update_service.dart';
+import 'package:zeno/features/purchase/domain/services/finance_journal_service.dart';
 import 'package:zeno/features/purchase/domain/services/finance_journal_service.dart';
 import 'package:zeno/features/billing/domain/services/billing_finance_service.dart';
 import 'package:zeno/features/billing/domain/services/billing_sync_service.dart';
@@ -152,6 +156,8 @@ void _registerRepositories() {
 }
 
 void _registerServices() {
+  sl.registerLazySingleton(() => CurrencyService());
+  sl.registerLazySingleton(() => TaxService());
   sl.registerLazySingleton(() => AIProductService(sl<AIGateway>()));
   sl.registerLazySingleton(() => InventoryUpdateService(sl()));
   sl.registerLazySingleton(() => FinanceJournalService(sl()));
