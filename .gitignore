@@ -1,0 +1,19 @@
+# Flutter & Dart build output
+.dart_tool/
+.artifacts/
+build/
+scratch/
+*.dill
+*.txt
+*.zip
+repomix-output.txt
+
+# IDE & OS
+*.iml
+.gradle
+/local.properties
+/.idea/
+.DS_Store
+.externalNativeBuild
+.cxx
+local.properties

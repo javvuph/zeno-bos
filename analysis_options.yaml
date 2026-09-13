@@ -1,0 +1,20 @@
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  exclude:
+    - "**/*.g.dart"
+  errors:
+    experimental_member_use: ignore
+    unused_import: error
+    unused_field: error
+    unused_local_variable: error
+    deprecated_member_use: warning
+
+linter:
+  rules:
+    prefer_const_constructors: true
+    prefer_const_literals_to_create_immutables: true
+    curly_braces_in_flow_control_structures: true
+    unnecessary_this: true
+    constant_identifier_names: true
+    use_build_context_synchronously: true

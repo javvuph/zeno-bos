@@ -1,0 +1,16 @@
+final List<String> electronicsConditions = ["Brand New", "Factory Refurbished", "Open Box", "Pre-Owned / Used"];
+final List<String> laptopProcessors = ["Intel Core i3", "Intel Core i5", "Intel Core i7", "Intel Core i9", "AMD Ryzen 3", "AMD Ryzen 5", "AMD Ryzen 7", "Apple M1", "Apple M2", "Apple M3"];
+final List<String> storageTypes = ["SSD", "HDD", "NVMe", "eMMC"];
+final List<String> audioTypesList = ["TWS Earbuds", "Over-Ear Headphones", "Bluetooth Speaker", "Soundbar", "Home Theater"];
+final List<String> panelTechnologies = ["LCD", "LED", "QLED", "OLED", "AMOLED", "Mini-LED"];
+final List<String> applianceTypesLarge = ["Refrigerator", "Washing Machine", "Air Conditioner", "Dishwasher", "Microwave Oven"];
+final List<String> applianceTypesSmall = ["Mixer Grinder", "Air Fryer", "Toaster", "Electric Kettle", "Coffee Maker"];
+final List<String> gamingPlatforms = ["PS5", "PS4", "Xbox Series X", "Xbox Series S", "Nintendo Switch", "PC Gaming"];
+final List<String> cameraSensorTypes = ["Full Frame", "APS-C", "Micro Four Thirds", "1-inch", "Medium Format"];
+final List<String> networkingDeviceTypes = ["Router", "Switch", "Access Point", "Range Extender", "Modem", "Firewall"];
+final List<String> cosmeticGrades = ["Grade A (Mint)", "Grade B (Very Good)", "Grade C (Good)", "Grade D (Fair)"];
+final List<String> batteryChemistries = ["Lithium-Ion (Li-ion)", "Lithium Polymer (Li-Po)", "LiFePO4", "Lead Acid"];
+final List<String> smartTvOSList = ["Android TV", "Google TV", "Tizen (Samsung)", "webOS (LG)", "Fire TV", "Roku"];
+final List<String> iotProtocols = ["Zigbee", "Z-Wave", "Matter", "Wi-Fi", "Bluetooth", "Thread"];
+final List<String> lensIndexList = ["1.50 Standard", "1.56 Mid-Index", "1.61 Hi-Index", "1.67 Ultra-Thin", "1.74 High-Index"];
+final List<String> lensCoatingsList = ["Anti-Reflective (ARC)", "Blue-Light Cut", "Polarized", "Photochromic (Transition)", "Hydrophobic"];

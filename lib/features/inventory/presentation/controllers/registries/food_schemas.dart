@@ -1,0 +1,9 @@
+final List<String> dietaryIndicators = ["🟢 Pure Veg", "🔴 Non-Veg", "🟡 Contains Egg", "🌿 Vegan"];
+final List<String> spiceLevels = ["None", "Mild 🫑", "Medium 🌶️", "Spicy 🌶️🌶️", "Extra Hot 🔥"];
+final List<String> allergensList = ["Gluten", "Peanuts", "Tree Nuts", "Dairy", "Soy", "Shellfish", "Eggs", "Sesame"];
+final List<String> menuBadges = ["⭐ Chef Special", "🔥 Best Seller", "🌱 Healthy", "🆕 New"];
+final List<String> kotStations = ["Main Kitchen", "Tandoor/Grill", "Bar", "Pastry", "Pantry"];
+final List<String> courses = ["Starter", "Main Course", "Dessert", "Beverage", "Side"];
+final List<String> coffeeCupSizes = ["Small / regular", "Medium / Tall", "Large / Grande", "Extra Large"];
+final List<String> milkOptions = ["Whole Milk", "Skimmed", "Oat Milk", "Almond Milk", "Soy Milk"];
+final List<String> bakeryStorageTemp = ["Ambient", "Chilled", "Frozen"];

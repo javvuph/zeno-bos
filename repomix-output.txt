@@ -1,0 +1,4019 @@
+This file is a merged representation of a subset of the codebase, containing specifically included files and files not matching ignore patterns, combined into a single document by Repomix.
+
+================================================================
+File Summary
+================================================================
+
+Purpose:
+--------
+This file contains a packed representation of a subset of the repository's contents that is considered the most important context.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+
+File Format:
+------------
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  a. A separator line (================)
+  b. The file path (File: path/to/file)
+  c. Another separator line
+  d. The full contents of the file
+  e. A blank line
+
+Usage Guidelines:
+-----------------
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+
+Notes:
+------
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Only files matching these patterns are included: lib/features/inventory/domain/**, lib/core/database/entities/**, pubspec.yaml
+- Files matching these patterns are excluded: **/*.g.dart
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+
+
+================================================================
+Directory Structure
+================================================================
+lib/
+  core/
+    database/
+      entities/
+        product_entity.dart
+  features/
+    inventory/
+      domain/
+        models/
+          extensions/
+            product_extensions.dart
+          mappers/
+            product_studio_from_domain.dart
+            product_studio_mapper_industry.dart
+            product_studio_mapper.dart
+            product_studio_to_domain.dart
+          barcode.dart
+          batch.dart
+          brand.dart
+          bulk_scan_item.dart
+          category.dart
+          combo_item.dart
+          department.dart
+          inventory_ledger_entry.dart
+          inventory_rule.dart
+          inventory_transaction.dart
+          label_template.dart
+          market_pricing.dart
+          media_asset.dart
+          product_enums.dart
+          product_industry_fields.dart
+          product_studio_data.dart
+          product_studio_enums.dart
+          product_studio_models.dart
+          product_variant.dart
+          product.dart
+          recipe_ingredient.dart
+          reorder_rule.dart
+          scan_session_item.dart
+          serial_number.dart
+          sku.dart
+          stock_item.dart
+          stock_level.dart
+          stock_reservation.dart
+          stock_transaction.dart
+          stock_transfer.dart
+          storage_location.dart
+          supplier_relationship.dart
+          tax_profile.dart
+          unit.dart
+          variant_matrix_item.dart
+          warehouse_stock.dart
+          warehouse.dart
+        repositories/
+          i_inventory_repository.dart
+          i_product_repository.dart
+        services/
+          ingestion/
+            ingestion_mapper.dart
+            ingestion_models.dart
+            ingestion_parser.dart
+            ingestion_service.dart
+          omnichannel/
+            marketplace_mapper.dart
+          pricing/
+            esl_sync_service.dart
+          fashion_analytics_service.dart
+          food_cost_calculator.dart
+          inventory_business_logic.dart
+          inventory_ledger_service.dart
+          inventory_master_data_service.dart
+          inventory_transaction_engine.dart
+          inventory_valuation_service.dart
+          markdown_approval_service.dart
+          master_data_service.dart
+          product_business_logic.dart
+          recipe_deduction_service.dart
+          replenishment_service.dart
+          valuation_service.dart
+pubspec.yaml
+
+================================================================
+Files
+================================================================
+
+================
+File: lib/core/database/entities/product_entity.dart
+================
+import 'package:isar/isar.dart';
+
+part 'product_entity.g.dart';
+
+@collection
+class ProductEntity {
+  Id id = Isar.autoIncrement;
+
+  @Index(unique: true)
+  late String sku;
+
+  late String name;
+
+  late double basePrice;
+
+  /// Schema-driven attributes.
+  /// Example: {'category': 'Electronics', 'brand': 'Sony'}
+  @ignore
+  late Map<String, String> attributes;
+
+  /// The industry module this product belongs to (optional, for filtering)
+  late String industryId;
+
+  late DateTime lastModified;
+
+  /// Whether this product is synced to the cloud
+  @Index()
+  late bool isSynced;
+}
+
+================
+File: lib/features/inventory/domain/models/extensions/product_extensions.dart
+================
+import '../product.dart';
+import '../sku.dart';
+import '../barcode.dart';
+import '../category.dart';
+import '../brand.dart';
+import '../unit.dart';
+import '../tax_profile.dart';
+import '../product_variant.dart';
+import '../product_enums.dart';
+import '../batch.dart';
+import '../supplier_relationship.dart';
+import '../product_industry_fields.dart';
+
+extension ProductCopyWith on Product {
+  Product copyWith({
+    String? name, String? description, SKU? sku, Barcode? barcode, Category? category,
+    Brand? brand, Unit? unit, TaxProfile? taxProfile, List<ProductVariant>? variants,
+    List<Batch>? batches, List<SupplierRelationship>? supplierRelationships,
+    double? basePrice, double? baseCost, double? mrp, double? wholesalePrice,
+    double? discountPct, double? discountAmount, double? openingStock,
+    String? warehouseLocation, DateTime? updatedAt, ItemType? itemType,
+    ProductStatus? status, String? manufacturer, List<String>? tags,
+    double? minStock, double? maxStock, double? reorderLevel, bool? batchTracking,
+    bool? serialTracking, List<String>? supplierIds, String? supplierProductName,
+    String? supplierProductCode, double? supplierPurchaseCost, int? supplierMOQ,
+    int? supplierLeadTime, String? secondarySupplier, String? supplierPaymentTerms,
+    String? supplierContact, String? supplierNotes, String? businessType,
+    String? businessCategory, String? gstTaxMode, String? packageType,
+    int? unitsPerPackage, double? packageQuantity, String? stockUnit,
+    double? conversionFactor, Map<String, dynamic>? customFields,
+    ProductIndustryFields? industry,
+  }) {
+    return Product(
+      id: id, name: name ?? this.name, description: description ?? this.description,
+      sku: sku ?? this.sku, barcode: barcode ?? this.barcode,
+      category: category ?? this.category, brand: brand ?? this.brand,
+      unit: unit ?? this.unit, taxProfile: taxProfile ?? this.taxProfile,
+      variants: variants ?? this.variants, batches: batches ?? this.batches,
+      supplierRelationships: supplierRelationships ?? this.supplierRelationships,
+      basePrice: basePrice ?? this.basePrice, baseCost: baseCost ?? this.baseCost,
+      mrp: mrp ?? this.mrp, wholesalePrice: wholesalePrice ?? this.wholesalePrice,
+      discountPct: discountPct ?? this.discountPct, discountAmount: discountAmount ?? this.discountAmount,
+      openingStock: openingStock ?? this.openingStock, warehouseLocation: warehouseLocation ?? this.warehouseLocation,
+      createdAt: createdAt, updatedAt: updatedAt ?? this.updatedAt,
+      itemType: itemType ?? this.itemType, status: status ?? this.status,
+      manufacturer: manufacturer ?? this.manufacturer, tags: tags ?? this.tags,
+      minStock: minStock ?? this.minStock, maxStock: maxStock ?? this.maxStock,
+      reorderLevel: reorderLevel ?? this.reorderLevel, batchTracking: batchTracking ?? this.batchTracking,
+      serialTracking: serialTracking ?? this.serialTracking, supplierIds: supplierIds ?? this.supplierIds,
+      supplierProductName: supplierProductName ?? this.supplierProductName,
+      supplierProductCode: supplierProductCode ?? this.supplierProductCode,
+      supplierPurchaseCost: supplierPurchaseCost ?? this.supplierPurchaseCost,
+      supplierMOQ: supplierMOQ ?? this.supplierMOQ, supplierLeadTime: supplierLeadTime ?? this.supplierLeadTime,
+      secondarySupplier: secondarySupplier ?? this.secondarySupplier,
+      supplierPaymentTerms: supplierPaymentTerms ?? this.supplierPaymentTerms,
+      supplierContact: supplierContact ?? this.supplierContact, supplierNotes: supplierNotes ?? this.supplierNotes,
+      businessType: businessType ?? this.businessType, businessCategory: businessCategory ?? this.businessCategory,
+      gstTaxMode: gstTaxMode ?? this.gstTaxMode, packageType: packageType ?? this.packageType,
+      unitsPerPackage: unitsPerPackage ?? this.unitsPerPackage, packageQuantity: packageQuantity ?? this.packageQuantity,
+      stockUnit: stockUnit ?? this.stockUnit, conversionFactor: conversionFactor ?? this.conversionFactor,
+      customFields: customFields ?? this.customFields,
+      industry: industry ?? this.industry,
+    );
+  }
+}
+
+================
+File: lib/features/inventory/domain/models/mappers/product_studio_mapper_industry.dart
+================
+import '../product_studio_data.dart';
+import '../product.dart';
+
+extension ProductStudioMapperIndustry on ProductStudioData {
+  void mapIndustryToDomain(Product p) {
+    // This is a helper for industry specific fields
+    // Actually, I'll just put the industry mapping code here.
+  }
+}
+
+================
+File: lib/features/inventory/domain/models/mappers/product_studio_mapper.dart
+================
+export 'product_studio_to_domain.dart';
+export 'product_studio_from_domain.dart';
+
+================
+File: lib/features/inventory/domain/models/barcode.dart
+================
+class Barcode {
+  final String value;
+  final String type; // EAN13, UPC, QR, etc.
+
+  const Barcode(this.value, {this.type = 'EAN13'});
+
+  bool get isValid => value.isNotEmpty;
+
+  @override
+  String toString() => value;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Barcode &&
+          runtimeType == other.runtimeType &&
+          value == other.value;
+
+  @override
+  int get hashCode => value.hashCode;
+}
+
+================
+File: lib/features/inventory/domain/models/batch.dart
+================
+class Batch {
+  final String id;
+  final String batchNumber;
+  final DateTime manufacturingDate;
+  final DateTime? expiryDate;
+  final double quantity;
+  final double purchaseCost;
+  final double sellingPrice;
+  final double mrp;
+  final String? supplier;
+  final String? warehouse;
+  final String? notes;
+  final Map<String, dynamic> attributes;
+
+  const Batch({
+    required this.id,
+    required this.batchNumber,
+    required this.manufacturingDate,
+    this.expiryDate,
+    this.quantity = 0.0,
+    this.purchaseCost = 0.0,
+    this.sellingPrice = 0.0,
+    this.mrp = 0.0,
+    this.supplier,
+    this.warehouse,
+    this.notes,
+    this.attributes = const {},
+  });
+
+  Batch copyWith({
+    String? id,
+    String? batchNumber,
+    DateTime? manufacturingDate,
+    DateTime? expiryDate,
+    double? quantity,
+    double? purchaseCost,
+    double? sellingPrice,
+    double? mrp,
+    String? supplier,
+    String? warehouse,
+    String? notes,
+    Map<String, dynamic>? attributes,
+  }) {
+    return Batch(
+      id: id ?? this.id,
+      batchNumber: batchNumber ?? this.batchNumber,
+      manufacturingDate: manufacturingDate ?? this.manufacturingDate,
+      expiryDate: expiryDate ?? this.expiryDate,
+      quantity: quantity ?? this.quantity,
+      purchaseCost: purchaseCost ?? this.purchaseCost,
+      sellingPrice: sellingPrice ?? this.sellingPrice,
+      mrp: mrp ?? this.mrp,
+      supplier: supplier ?? this.supplier,
+      warehouse: warehouse ?? this.warehouse,
+      notes: notes ?? this.notes,
+      attributes: attributes ?? this.attributes,
+    );
+  }
+}
+
+================
+File: lib/features/inventory/domain/models/brand.dart
+================
+class Brand {
+  final String id;
+  final String name;
+  final String? description;
+  final String? logoUrl;
+
+  const Brand({
+    required this.id,
+    required this.name,
+    this.description,
+    this.logoUrl,
+  });
+}
+
+================
+File: lib/features/inventory/domain/models/bulk_scan_item.dart
+================
+import 'product_studio_data.dart';
+import 'product_studio_enums.dart';
+
+class BulkScanItem {
+  final ProductStudioData product;
+  BulkScanStatus status;
+  bool isSelected;
+  String? errorMessage;
+
+  BulkScanItem({
+    required this.product,
+    this.status = BulkScanStatus.review,
+    this.isSelected = false,
+    this.errorMessage,
+  });
+}
+
+================
+File: lib/features/inventory/domain/models/category.dart
+================
+class Category {
+  final String id;
+  final String name;
+  final String? parentId;
+  final String? description;
+
+  const Category({
+    required this.id,
+    required this.name,
+    this.parentId,
+    this.description,
+  });
+}
+
+================
+File: lib/features/inventory/domain/models/combo_item.dart
+================
+class ComboItem {
+  final String sku;
+  final int quantity;
+
+  ComboItem({
+    required this.sku,
+    this.quantity = 1,
+  });
+
+  ComboItem copyWith({
+    String? sku,
+    int? quantity,
+  }) {
+    return ComboItem(
+      sku: sku ?? this.sku,
+      quantity: quantity ?? this.quantity,
+    );
+  }
+}
+
+================
+File: lib/features/inventory/domain/models/department.dart
+================
+class Department {
+  final String id;
+  final String name;
+
+  const Department({
+    required this.id,
+    required this.name,
+  });
+
+  @override
+  String toString() => name;
+}
+
+================
+File: lib/features/inventory/domain/models/inventory_ledger_entry.dart
+================
+class InventoryLedgerEntry {
+  final String id;
+  final String productId;
+  final String? variantId;
+  final String warehouseId;
+  final String? binId;
+  final String? batchNumber;
+  final String? serialNumber;
+
+  // QUANTITIES
+  final double quantityOnHand;
+  final double quantityReserved;
+  final double quantityInTransit;
+  final double quantityDamaged;
+  final double quantityExpired;
+
+  // VALUATION
+  final double lastCost;
+  final double averageCost;
+
+  // TELEMETRY
+  final DateTime lastMovementDate;
+  final String lastTransactionId;
+
+  const InventoryLedgerEntry({
+    required this.id,
+    required this.productId,
+    this.variantId,
+    required this.warehouseId,
+    this.binId,
+    this.batchNumber,
+    this.serialNumber,
+    this.quantityOnHand = 0.0,
+    this.quantityReserved = 0.0,
+    this.quantityInTransit = 0.0,
+    this.quantityDamaged = 0.0,
+    this.quantityExpired = 0.0,
+    this.lastCost = 0.0,
+    this.averageCost = 0.0,
+    required this.lastMovementDate,
+    required this.lastTransactionId,
+  });
+
+  double get availableQuantity => quantityOnHand - quantityReserved;
+
+  InventoryLedgerEntry copyWith({
+    double? quantityOnHand,
+    double? quantityReserved,
+    double? quantityInTransit,
+    double? quantityDamaged,
+    double? quantityExpired,
+    double? lastCost,
+    double? averageCost,
+    DateTime? lastMovementDate,
+    String? lastTransactionId,
+  }) {
+    return InventoryLedgerEntry(
+      id: id,
+      productId: productId,
+      variantId: variantId,
+      warehouseId: warehouseId,
+      binId: binId,
+      batchNumber: batchNumber,
+      serialNumber: serialNumber,
+      quantityOnHand: quantityOnHand ?? this.quantityOnHand,
+      quantityReserved: quantityReserved ?? this.quantityReserved,
+      quantityInTransit: quantityInTransit ?? this.quantityInTransit,
+      quantityDamaged: quantityDamaged ?? this.quantityDamaged,
+      quantityExpired: quantityExpired ?? this.quantityExpired,
+      lastCost: lastCost ?? this.lastCost,
+      averageCost: averageCost ?? this.averageCost,
+      lastMovementDate: lastMovementDate ?? this.lastMovementDate,
+      lastTransactionId: lastTransactionId ?? this.lastTransactionId,
+    );
+  }
+}
+
+================
+File: lib/features/inventory/domain/models/inventory_rule.dart
+================
+enum InventoryRuleType { tracking, reorder, safety, logic }
+
+enum StockPolicy { fifo, lifo, fefo }
+
+class InventoryRule {
+  final String id;
+  final String name;
+  final InventoryRuleType type;
+  final String description;
+  final bool isGlobal;
+  final List<String>
+      targetCategories; // Apply to these categories if not global
+
+  // POLICY FLAGS
+  final bool requiresBatch;
+  final bool requiresExpiry;
+  final bool requiresSerial;
+  final bool requiresWarranty;
+  final bool allowNegativeStock;
+  final bool autoReservation;
+  final StockPolicy stockPolicy;
+
+  // THRESHOLDS (Optional, can be overridden per product)
+  final double? defaultMinStock;
+  final double? defaultMaxStock;
+  final double? safetyStockDays;
+
+  const InventoryRule({
+    required this.id,
+    required this.name,
+    required this.type,
+    this.description = "",
+    this.isGlobal = false,
+    this.targetCategories = const [],
+    this.requiresBatch = false,
+    this.requiresExpiry = false,
+    this.requiresSerial = false,
+    this.requiresWarranty = false,
+    this.allowNegativeStock = false,
+    this.autoReservation = false,
+    this.stockPolicy = StockPolicy.fifo,
+    this.defaultMinStock,
+    this.defaultMaxStock,
+    this.safetyStockDays,
+  });
+
+  String get typeLabel => type.name.toUpperCase();
+}
+
+================
+File: lib/features/inventory/domain/models/inventory_transaction.dart
+================
+enum InventoryTransactionType {
+  openingStock,
+  purchaseReceipt, // GRN
+  salesIssue,
+  stockTransfer,
+  stockAdjustment,
+  stockReservation,
+  stockRelease,
+  customerReturn,
+  supplierReturn,
+  damagedStock,
+  lostStock,
+  expiredStock,
+  productionConsumption,
+  productionOutput,
+  physicalCountAdjustment
+}
+
+enum TransactionStatus { pending, completed, cancelled, approved }
+
+class InventoryTransaction {
+  final String id;
+  final InventoryTransactionType type;
+  final DateTime timestamp;
+
+  // PRIMARY LINKS
+  final String productId;
+  final String? variantId;
+  final String warehouseId;
+  final String? binId;
+
+  // QUANTITY & VALUE
+  final double quantity;
+  final String unitId;
+  final double? unitCost;
+  final double? sellingPrice;
+
+  // TRACKING DATA
+  final String? batchNumber;
+  final String? serialNumber;
+  final DateTime? expiryDate;
+
+  // GOVERNANCE
+  final String? referenceDocument; // e.g., PO-9921, INV-8821
+  final String userId;
+  final String branchId;
+  final TransactionStatus status;
+  final TransactionStatus approvalStatus;
+
+  // INTELLIGENCE & AUDIT
+  final List<String> aiFlags; // e.g., ["abnormal_qty", "price_deviation"]
+  final List<String> auditTrail;
+
+  const InventoryTransaction({
+    required this.id,
+    required this.type,
+    required this.timestamp,
+    required this.productId,
+    this.variantId,
+    required this.warehouseId,
+    this.binId,
+    required this.quantity,
+    required this.unitId,
+    this.unitCost,
+    this.sellingPrice,
+    this.batchNumber,
+    this.serialNumber,
+    this.expiryDate,
+    this.referenceDocument,
+    required this.userId,
+    required this.branchId,
+    this.status = TransactionStatus.completed,
+    this.approvalStatus = TransactionStatus.approved,
+    this.aiFlags = const [],
+    this.auditTrail = const [],
+  });
+
+  String get typeLabel =>
+      type.name.replaceAll(RegExp(r'(?=[A-Z])'), ' ').toUpperCase();
+}
+
+================
+File: lib/features/inventory/domain/models/label_template.dart
+================
+enum LabelType { product, shelf, price, batch, carton, pallet, bin }
+
+class LabelTemplate {
+  final String id;
+  final String name;
+  final LabelType type;
+  final double width; // in mm
+  final double height; // in mm
+  final List<String> fields; // e.g., ["name", "price", "sku", "barcode"]
+  final bool hasLogo;
+  final String barcodeFormat; // EAN13, QR, CODE128
+
+  const LabelTemplate({
+    required this.id,
+    required this.name,
+    required this.type,
+    this.width = 50.0,
+    this.height = 30.0,
+    this.fields = const ["name", "barcode"],
+    this.hasLogo = false,
+    this.barcodeFormat = "CODE128",
+  });
+
+  String get dimensions => "${width}x${height}mm";
+}
+
+================
+File: lib/features/inventory/domain/models/market_pricing.dart
+================
+class MarketPricing {
+  final String market;
+  final String currency;
+  double costPrice;
+  double sellingPrice;
+  double taxPct;
+  String status;
+  String trend;
+
+  MarketPricing({
+    required this.market,
+    required this.currency,
+    required this.costPrice,
+    required this.sellingPrice,
+    required this.taxPct,
+    this.status = "ACTIVE",
+    this.trend = "STABLE",
+  });
+
+  double get marginPct {
+    if (sellingPrice == 0) return 0;
+    final taxAmount = sellingPrice * (taxPct / (100 + taxPct));
+    return ((sellingPrice - taxAmount - costPrice) /
+            (sellingPrice - taxAmount)) *
+        100;
+  }
+}
+
+================
+File: lib/features/inventory/domain/models/media_asset.dart
+================
+class MediaAsset {
+  final String id;
+  final String url;
+  final String thumbnailUrl;
+  final int sortOrder;
+  final String altText;
+  final bool isPrimary;
+
+  MediaAsset({
+    required this.id,
+    required this.url,
+    required this.thumbnailUrl,
+    required this.sortOrder,
+    this.altText = "",
+    this.isPrimary = false,
+  });
+}
+
+================
+File: lib/features/inventory/domain/models/product_enums.dart
+================
+enum ItemType {
+  stockProduct,
+  service,
+  digitalProduct,
+  bundleKit,
+  compositeProduct,
+  recipeMenuItem,
+  rawMaterial,
+  finishedGood,
+  consumable,
+  nonStockItem
+}
+
+enum ProductStatus {
+  active,
+  draft,
+  inactive,
+  archived,
+  discontinued,
+  blocked
+}
+
+================
+File: lib/features/inventory/domain/models/product_studio_enums.dart
+================
+enum ProductCreationMode { manual, scan, bulkScan, import }
+
+enum BusinessScale { small, growing, enterprise }
+
+enum AuroraStudioTab { 
+  identity,    // 🏷️ Identity
+  planogram,   // 📍 Planogram
+  logistics,   // 📦 Logistics
+  pricing,     // 💰 Pricing
+  stock,       // 📊 Stock
+  vendors,     // 🚚 Vendors
+  tax,         // 🧾 Tax
+  media        // 🌐 Media
+}
+
+enum ProductStudioSection {
+  basic,
+  fashionBasic,
+  fashionSpecs,
+  fnbDish,
+  fnbKitchen,
+  fashionSizeCurve,
+  fashionMarkdown,
+  fashionReturns,
+  fashionMerchandising,
+  electronicsBasic,
+  electronicsSpecs,
+  electronicsSerial,
+  healthcareBasic,
+  healthcareClinical,
+  serviceBasic,
+  serviceExecution,
+  wholesaleBasic,
+  wholesaleB2B,
+  retailPackaging,
+  retailWms,
+  retailPromotions,
+  retailProcurement,
+  retailReplenishment,
+  retailOmnichannel,
+  retailMerchandising,
+  retailColdChain,
+  retailTraceability,
+  retailPricingEnterprise,
+  retailStoreOverrides,
+  inventoryPrice,
+  media,
+  variants,
+  tax,
+  suppliers,
+  industry,
+  marketing,
+  inventoryAdmin,
+  packaging,
+  unitsConversion,
+  batch,
+  expiry,
+  advanced
+}
+
+enum VariantSizeType { alpha, alphabetic, numeric, numericUK, numericEU, waist, kids, custom }
+
+enum ProductLifecycleState {
+  draft,
+  aiReviewed,
+  pendingApproval,
+  approved,
+  published,
+  availablePOS,
+  availableOnline,
+  discontinued,
+  archived
+}
+
+enum MediaMode { inherited, overridden }
+
+enum BulkScanStatus { ready, review, duplicate, notFound, completed }
+
+enum ScanItemStatus {
+  exists,
+  foundExternal,
+  notFound,
+  added
+}
+
+================
+File: lib/features/inventory/domain/models/product_studio_models.dart
+================
+export 'package:zeno/features/inventory/domain/models/product_studio_enums.dart';
+export 'package:zeno/features/inventory/domain/models/media_asset.dart';
+export 'package:zeno/features/inventory/domain/models/variant_matrix_item.dart';
+export 'package:zeno/features/inventory/domain/models/market_pricing.dart';
+export 'package:zeno/features/inventory/domain/models/warehouse_stock.dart';
+export 'package:zeno/features/inventory/domain/models/product_studio_data.dart';
+export 'package:zeno/features/inventory/domain/models/bulk_scan_item.dart';
+export 'package:zeno/features/inventory/domain/models/scan_session_item.dart';
+
+================
+File: lib/features/inventory/domain/models/product_variant.dart
+================
+import 'sku.dart';
+import 'barcode.dart';
+
+class ProductVariant {
+  final String id;
+  final String productId;
+  final SKU sku;
+  final Barcode? barcode;
+  final Map<String, String> attributes; // e.g. {"Size": "XL", "Color": "Blue"}
+  final double priceAdjustment; // Difference from base price
+  final double stockLevel;
+
+  const ProductVariant({
+    required this.id,
+    required this.productId,
+    required this.sku,
+    this.barcode,
+    required this.attributes,
+    this.priceAdjustment = 0.0,
+    this.stockLevel = 0.0,
+  });
+
+  String get displayName => attributes.values.join(' / ');
+}
+
+================
+File: lib/features/inventory/domain/models/recipe_ingredient.dart
+================
+class RecipeIngredient {
+  final String id;
+  final String ingredientName;
+  final double quantity;
+  final String unit;
+  final double yieldPercentage;
+  final double cost;
+
+  const RecipeIngredient({
+    required this.id,
+    required this.ingredientName,
+    this.quantity = 0.0,
+    this.unit = "Piece (Pc)",
+    this.yieldPercentage = 100.0,
+    this.cost = 0.0,
+  });
+
+  RecipeIngredient copyWith({
+    String? id,
+    String? ingredientName,
+    double? quantity,
+    String? unit,
+    double? yieldPercentage,
+    double? cost,
+  }) {
+    return RecipeIngredient(
+      id: id ?? this.id,
+      ingredientName: ingredientName ?? this.ingredientName,
+      quantity: quantity ?? this.quantity,
+      unit: unit ?? this.unit,
+      yieldPercentage: yieldPercentage ?? this.yieldPercentage,
+      cost: cost ?? this.cost,
+    );
+  }
+}
+
+================
+File: lib/features/inventory/domain/models/reorder_rule.dart
+================
+class ReorderRule {
+  final String id;
+  final String productId;
+  final String variantId;
+  final String warehouseId;
+  final double minStock;
+  final double reorderPoint;
+  final double preferredQuantity;
+
+  const ReorderRule({
+    required this.id,
+    required this.productId,
+    required this.variantId,
+    required this.warehouseId,
+    required this.minStock,
+    required this.reorderPoint,
+    required this.preferredQuantity,
+  });
+}
+
+================
+File: lib/features/inventory/domain/models/scan_session_item.dart
+================
+import 'product_studio_data.dart';
+import 'product_studio_enums.dart';
+
+class ScanSessionItem {
+  final ProductStudioData product;
+  ScanItemStatus status;
+
+  ScanSessionItem({required this.product, required this.status});
+}
+
+================
+File: lib/features/inventory/domain/models/serial_number.dart
+================
+class SerialNumber {
+  final String id;
+  final String productId;
+  final String variantId;
+  final String serial;
+  final String? batchId;
+  final String status; // 'available', 'sold', 'damaged', etc.
+
+  const SerialNumber({
+    required this.id,
+    required this.productId,
+    required this.variantId,
+    required this.serial,
+    this.batchId,
+    this.status = 'available',
+  });
+}
+
+================
+File: lib/features/inventory/domain/models/sku.dart
+================
+class SKU {
+  final String value;
+
+  const SKU(this.value);
+
+  bool get isValid => value.isNotEmpty && value.length >= 3;
+
+  @override
+  String toString() => value;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is SKU && runtimeType == other.runtimeType && value == other.value;
+
+  @override
+  int get hashCode => value.hashCode;
+}
+
+================
+File: lib/features/inventory/domain/models/stock_item.dart
+================
+class StockItem {
+  final String id;
+  final String productId;
+  final String variantId;
+  final String warehouseId;
+  final String? locationId; // The specific Bin ID
+  final String? batchId;
+  final String? serialNumberId;
+
+  const StockItem({
+    required this.id,
+    required this.productId,
+    required this.variantId,
+    required this.warehouseId,
+    this.locationId,
+    this.batchId,
+    this.serialNumberId,
+  });
+}
+
+================
+File: lib/features/inventory/domain/models/stock_level.dart
+================
+class StockLevel {
+  final String productId;
+  final String variantId;
+  final String warehouseId;
+  final double physical;
+  final double reserved;
+
+  const StockLevel({
+    required this.productId,
+    required this.variantId,
+    required this.warehouseId,
+    this.physical = 0.0,
+    this.reserved = 0.0,
+  });
+
+  double get available => physical - reserved;
+}
+
+================
+File: lib/features/inventory/domain/models/stock_reservation.dart
+================
+class StockReservation {
+  final String id;
+  final String productId;
+  final String variantId;
+  final String? warehouseId;
+  final double quantity;
+  final String referenceId; // Sales Order ID
+  final DateTime expiryDate;
+  final bool isFulfilled;
+
+  const StockReservation({
+    required this.id,
+    required this.productId,
+    required this.variantId,
+    this.warehouseId,
+    required this.quantity,
+    required this.referenceId,
+    required this.expiryDate,
+    this.isFulfilled = false,
+  });
+}
+
+================
+File: lib/features/inventory/domain/models/stock_transaction.dart
+================
+enum TransactionType {
+  inPurchase,
+  inReturn,
+  outSale,
+  outDamaged,
+  transferIn,
+  transferOut,
+  adjustment
+}
+
+class StockTransaction {
+  final String id;
+  final String stockItemId;
+  final double quantityDelta;
+  final TransactionType type;
+  final String? referenceId; // PO ID, Sales Order ID, etc.
+  final DateTime timestamp;
+  final String userId;
+  final String? notes;
+
+  const StockTransaction({
+    required this.id,
+    required this.stockItemId,
+    required this.quantityDelta,
+    required this.type,
+    this.referenceId,
+    required this.timestamp,
+    required this.userId,
+    this.notes,
+  });
+}
+
+================
+File: lib/features/inventory/domain/models/stock_transfer.dart
+================
+import 'package:equatable/equatable.dart';
+
+enum TransferStatus { requested, approved, dispatched, inTransit, received, variance, cancelled }
+
+class StockTransfer extends Equatable {
+  final String id;
+  final String fromStoreId;
+  final String toStoreId;
+  final String productId;
+  final double requestedQty;
+  final double approvedQty;
+  final double dispatchedQty;
+  final double receivedQty;
+  final TransferStatus status;
+  final String? remarks;
+  final DateTime createdAt;
+
+  const StockTransfer({
+    required this.id,
+    required this.fromStoreId,
+    required this.toStoreId,
+    required this.productId,
+    required this.requestedQty,
+    this.approvedQty = 0,
+    this.dispatchedQty = 0,
+    this.receivedQty = 0,
+    this.status = TransferStatus.requested,
+    this.remarks,
+    required this.createdAt,
+  });
+
+  @override
+  List<Object?> get props => [id, status, requestedQty, receivedQty];
+}
+
+================
+File: lib/features/inventory/domain/models/storage_location.dart
+================
+enum LocationType { zone, aisle, rack, shelf, bin }
+
+class StorageLocation {
+  final String id;
+  final String warehouseId;
+  final String name;
+  final String? parentId;
+  final LocationType type;
+  final int sequence;
+
+  const StorageLocation({
+    required this.id,
+    required this.warehouseId,
+    required this.name,
+    this.parentId,
+    required this.type,
+    this.sequence = 0,
+  });
+}
+
+================
+File: lib/features/inventory/domain/models/supplier_relationship.dart
+================
+class SupplierRelationship {
+  final String id;
+  final String supplierName;
+  final String? supplierSku;
+  final String? supplierProductName;
+  final double purchaseCost;
+  final int moq;
+  final int leadTime;
+  final String? paymentTerms;
+  final String? notes;
+  final bool isPrimary;
+
+  const SupplierRelationship({
+    required this.id,
+    required this.supplierName,
+    this.supplierSku,
+    this.supplierProductName,
+    this.purchaseCost = 0.0,
+    this.moq = 0,
+    this.leadTime = 0,
+    this.paymentTerms,
+    this.notes,
+    this.isPrimary = false,
+  });
+
+  SupplierRelationship copyWith({
+    String? id,
+    String? supplierName,
+    String? supplierSku,
+    String? supplierProductName,
+    double? purchaseCost,
+    int? moq,
+    int? leadTime,
+    String? paymentTerms,
+    String? notes,
+    bool? isPrimary,
+  }) {
+    return SupplierRelationship(
+      id: id ?? this.id,
+      supplierName: supplierName ?? this.supplierName,
+      supplierSku: supplierSku ?? this.supplierSku,
+      supplierProductName: supplierProductName ?? this.supplierProductName,
+      purchaseCost: purchaseCost ?? this.purchaseCost,
+      moq: moq ?? this.moq,
+      leadTime: leadTime ?? this.leadTime,
+      paymentTerms: paymentTerms ?? this.paymentTerms,
+      notes: notes ?? this.notes,
+      isPrimary: isPrimary ?? this.isPrimary,
+    );
+  }
+}
+
+================
+File: lib/features/inventory/domain/models/tax_profile.dart
+================
+class TaxProfile {
+  final String id;
+  final String name;
+  final double rate;
+
+  const TaxProfile({
+    required this.id,
+    required this.name,
+    required this.rate,
+  });
+}
+
+================
+File: lib/features/inventory/domain/models/unit.dart
+================
+class Unit {
+  final String id;
+  final String name;
+  final String symbol;
+
+  const Unit({
+    required this.id,
+    required this.name,
+    required this.symbol,
+  });
+}
+
+================
+File: lib/features/inventory/domain/models/warehouse_stock.dart
+================
+class WarehouseStock {
+  final String warehouse;
+  int onHand;
+  int available;
+  int reserved;
+
+  WarehouseStock({
+    required this.warehouse,
+    required this.onHand,
+    required this.available,
+    required this.reserved,
+  });
+}
+
+================
+File: lib/features/inventory/domain/models/warehouse.dart
+================
+class WarehouseZone {
+  final String id;
+  final String name;
+  final String description;
+  final bool hasTemperatureControl;
+
+  const WarehouseZone({
+    required this.id,
+    required this.name,
+    this.description = "",
+    this.hasTemperatureControl = false,
+  });
+}
+
+class StorageNode {
+  final String id;
+  final String zoneId;
+  final String aisle;
+  final String shelf;
+  final String bin;
+  final double capacity; // In cubic meters or units
+  final double currentLoad;
+
+  const StorageNode({
+    required this.id,
+    required this.zoneId,
+    required this.aisle,
+    required this.shelf,
+    required this.bin,
+    this.capacity = 0.0,
+    this.currentLoad = 0.0,
+  });
+
+  String get locationCode => "$aisle-$shelf-$bin";
+}
+
+class Warehouse {
+  final String id;
+  final String name;
+  final String? address;
+  final String? contactNumber;
+  final bool isActive;
+  final String branchId;
+  final List<WarehouseZone> zones;
+  final List<StorageNode> nodes;
+
+  const Warehouse({
+    required this.id,
+    required this.name,
+    this.address,
+    this.contactNumber,
+    this.isActive = true,
+    this.branchId = "MAIN-001",
+    this.zones = const [],
+    this.nodes = const [],
+  });
+}
+
+================
+File: lib/features/inventory/domain/repositories/i_inventory_repository.dart
+================
+import '../models/warehouse.dart';
+import '../models/storage_location.dart';
+import '../models/stock_transaction.dart';
+import '../models/stock_level.dart';
+import '../models/stock_reservation.dart';
+
+abstract class IInventoryRepository {
+  Future<List<Warehouse>> getWarehouses();
+  Future<List<StorageLocation>> getLocations(String warehouseId);
+  Future<StockLevel> getStockLevel(String variantId, String warehouseId);
+  Future<List<StockLevel>> getAllStockLevels();
+  Future<void> recordTransaction(StockTransaction transaction);
+  Future<void> recordTransactions(List<StockTransaction> transactions);
+  Future<void> createReservation(StockReservation reservation);
+  Future<void> cancelReservation(String reservationId);
+}
+
+================
+File: lib/features/inventory/domain/repositories/i_product_repository.dart
+================
+import '../models/product.dart';
+
+abstract class IProductRepository {
+  Future<Product?> getProductById(String id);
+  Future<Product?> getProductByBarcode(String barcode);
+  Future<List<Product>> getAllProducts();
+  Future<void> saveProduct(Product product);
+  Future<void> deleteProduct(String id);
+  Future<void> restoreProduct(String id);
+  Future<List<Product>> searchProducts(String query);
+}
+
+================
+File: lib/features/inventory/domain/services/ingestion/ingestion_mapper.dart
+================
+import '../../models/product_studio_data.dart';
+
+class IngestionMapper {
+  /// Maps a raw row of data to ProductStudioData.
+  /// headerMapping: Map of Header Name -> Internal Field ID
+  ProductStudioData mapToProductStudio(Map<String, String> rawRow, Map<String, String> headerMapping) {
+    final product = ProductStudioData.empty();
+    
+    for (final entry in headerMapping.entries) {
+      final header = entry.key;
+      final fieldId = entry.value;
+      final value = rawRow[header];
+      
+      if (value != null) {
+        _setProductField(product, fieldId, value);
+      }
+    }
+    
+    return product;
+  }
+
+  /// Maps a ZENO BOS JSON extraction object directly to ProductStudioData.
+  ProductStudioData mapJsonToProductStudio(Map<String, dynamic> json) {
+    final product = ProductStudioData.empty();
+    product.title = (json['product_name'] ?? json['productName'] ?? "").toString().trim();
+    product.arabicTitle = (json['arabic_name'] ?? json['arabicName'] ?? "").toString().trim();
+    product.description = (json['description'] ?? "").toString().trim();
+    product.subBrand = (json['sub_brand'] ?? json['subBrand'] ?? "").toString().trim();
+    product.manufacturer = (json['manufacturer'] ?? "").toString().trim();
+    product.shade = (json['colour'] ?? json['color'] ?? "").toString().trim();
+    product.sizeStandard = (json['size'] ?? "").toString().trim();
+    product.sku = (json['sku'] ?? "").toString().trim();
+    product.barcode = (json['barcode_gtin'] ?? json['barcodeGtin'] ?? "").toString().trim();
+    product.internalBarcode = (json['internal_barcode'] ?? json['internalBarcode'] ?? "").toString().trim();
+    product.openingStock = double.tryParse(json['opening_stock']?.toString() ?? "0") ?? 0.0;
+    product.reorderLevel = double.tryParse(json['reorder_level']?.toString() ?? "0") ?? 0.0;
+    product.costPrice = double.tryParse(json['purchase_cost']?.toString() ?? "0") ?? 0.0;
+    product.sellingPrice = double.tryParse(json['selling_price']?.toString() ?? "0") ?? 0.0;
+    product.mrp = double.tryParse(json['mrp']?.toString() ?? "0") ?? 0.0;
+    product.promotionalPrice = double.tryParse(json['promo_price']?.toString() ?? "0") ?? 0.0;
+    product.hsnCode = (json['hsn_tax_code'] ?? json['hsnTaxCode'] ?? "").toString().trim();
+    product.taxRate = double.tryParse(json['tax_rate']?.toString() ?? "0") ?? 0.0;
+    product.fabricComposition = (json['fabric'] ?? json['material'] ?? "").toString().trim();
+    product.supplier = (json['primary_supplier'] ?? json['primarySupplier'] ?? "").toString().trim();
+    return product;
+  }
+
+  void _setProductField(ProductStudioData product, String fieldId, String value) {
+    // Basic mapping for common fields
+    switch (fieldId) {
+      case 'title': product.title = value; break;
+      case 'sku': product.sku = value; break;
+      case 'barcode': product.barcode = value; break;
+      case 'description': product.description = value; break;
+      case 'color': product.shade = value; break;
+      case 'sellingPrice': product.sellingPrice = double.tryParse(value) ?? 0.0; break;
+      case 'costPrice': product.costPrice = double.tryParse(value) ?? 0.0; break;
+      case 'mrp': product.mrp = double.tryParse(value) ?? 0.0; break;
+      case 'promoPrice': product.promotionalPrice = double.tryParse(value) ?? 0.0; break;
+      case 'category': product.category = value; break;
+      case 'brand': product.brand = value; break;
+      case 'unit': product.unit = value; break;
+      case 'size': product.sizeStandard = value; break;
+      case 'openingStock': product.openingStock = double.tryParse(value) ?? 0.0; break;
+      case 'warehouseLocation': product.warehouseLocation = value; break;
+      case 'fabric': product.fabricComposition = value; break;
+      default:
+        _setDynamicField(product, fieldId, value);
+    }
+  }
+
+  void _setDynamicField(ProductStudioData product, String fieldId, String value) {
+    if (fieldId == 'fabric') {
+      product.fabricComposition = value;
+    } else if (fieldId == 'material') {
+      product.material = value;
+    } else if (fieldId == 'color') {
+      product.shade = value;
+    } else if (fieldId == 'size') {
+      product.sizeStandard = value;
+    } else if (fieldId == 'promoPrice') {
+      product.promotionalPrice = double.tryParse(value) ?? 0.0;
+    } else if (fieldId == 'pluCode') {
+      product.pluCode = value;
+    }
+  }
+
+  /// Auto-detect mapping based on header similarity
+  Map<String, String> autoDetectMapping(List<String> headers, List<String> availableFieldIds) {
+    final Map<String, String> mapping = {};
+    for (final header in headers) {
+      final normalizedHeader = header.toLowerCase().replaceAll(' ', '');
+      for (final fieldId in availableFieldIds) {
+        final normalizedField = fieldId.toLowerCase();
+        if (normalizedHeader == normalizedField || normalizedHeader.contains(normalizedField) || normalizedField.contains(normalizedHeader)) {
+          mapping[header] = fieldId;
+          break;
+        }
+      }
+    }
+    return mapping;
+  }
+}
+
+================
+File: lib/features/inventory/domain/services/ingestion/ingestion_models.dart
+================
+import '../../models/product_studio_data.dart';
+import '../../models/product_studio_enums.dart';
+
+enum IngestionSource { aiBill, csv, excel, bulk, api, barcode }
+
+enum IngestionRowStatus { valid, warning, error, duplicate }
+
+class IngestionRow {
+  final ProductStudioData product;
+  IngestionRowStatus status;
+  final List<String> messages;
+  final Map<String, dynamic> rawData;
+  bool isSelected;
+
+  IngestionRow({
+    required this.product,
+    this.status = IngestionRowStatus.valid,
+    this.messages = const [],
+    this.rawData = const {},
+    this.isSelected = false,
+  });
+}
+
+class IngestionSummary {
+  final int total;
+  final int valid;
+  final int warnings;
+  final int errors;
+  final int duplicates;
+
+  const IngestionSummary({
+    this.total = 0,
+    this.valid = 0,
+    this.warnings = 0,
+    this.errors = 0,
+    this.duplicates = 0,
+  });
+}
+
+class IngestionMappingResult {
+  final List<IngestionRow> rows;
+  final IngestionSummary summary;
+
+  const IngestionMappingResult({
+    required this.rows,
+    required this.summary,
+  });
+}
+
+================
+File: lib/features/inventory/domain/services/ingestion/ingestion_parser.dart
+================
+import 'dart:convert';
+import 'ingestion_models.dart';
+
+class IngestionParser {
+  /// Parses CSV string into a list of maps.
+  /// Handles basic quoted values and different line endings.
+  List<Map<String, String>> parseCSV(String csvContent) {
+    final List<Map<String, String>> results = [];
+    final lines = const LineSplitter().convert(csvContent);
+    if (lines.isEmpty) return results;
+
+    final headers = _parseCSVLine(lines[0]);
+    for (int i = 1; i < lines.length; i++) {
+      if (lines[i].trim().isEmpty) continue;
+      final values = _parseCSVLine(lines[i]);
+      final Map<String, String> row = {};
+      for (int j = 0; j < headers.length; j++) {
+        if (j < values.length) {
+          row[headers[j].trim()] = values[j].trim();
+        }
+      }
+      results.add(row);
+    }
+    return results;
+  }
+
+  List<String> _parseCSVLine(String line) {
+    final List<String> result = [];
+    bool inQuotes = false;
+    StringBuffer currentField = StringBuffer();
+
+    for (int i = 0; i < line.length; i++) {
+      String char = line[i];
+      if (char == '"') {
+        inQuotes = !inQuotes;
+      } else if (char == ',' && !inQuotes) {
+        result.add(currentField.toString());
+        currentField.clear();
+      } else {
+        currentField.write(char);
+      }
+    }
+    result.add(currentField.toString());
+    return result;
+  }
+}
+
+================
+File: lib/features/inventory/domain/services/ingestion/ingestion_service.dart
+================
+import 'ingestion_models.dart';
+import 'ingestion_parser.dart';
+import 'ingestion_mapper.dart';
+import '../../models/product_studio_data.dart';
+import '../../models/product_studio_enums.dart';
+import '../../../data/services/ai_product_service.dart';
+
+class IngestionService {
+  final IngestionParser parser = IngestionParser();
+  final IngestionMapper mapper = IngestionMapper();
+  final AIProductService? aiService;
+
+  IngestionService({this.aiService});
+
+  /// Processes CSV content and returns mapped IngestionRows.
+  Future<IngestionMappingResult> processCSV(String csvContent, Map<String, String>? manualMapping) async {
+    final rawRows = parser.parseCSV(csvContent);
+    if (rawRows.isEmpty) return const IngestionMappingResult(rows: [], summary: IngestionSummary());
+
+    final headers = rawRows.first.keys.toList();
+    // In a real app, we'd get all available field IDs from the registry
+    final mapping = manualMapping ?? mapper.autoDetectMapping(headers, ['title', 'sku', 'barcode', 'sellingPrice', 'costPrice', 'mrp', 'category', 'brand', 'unit', 'description']);
+
+    final List<IngestionRow> rows = [];
+    int valid = 0, warnings = 0, errors = 0;
+
+    for (final rawRow in rawRows) {
+      final product = mapper.mapToProductStudio(rawRow, mapping);
+      final validationMessages = _validateProduct(product);
+      
+      final status = validationMessages.any((m) => m.startsWith('ERR:')) 
+          ? IngestionRowStatus.error 
+          : validationMessages.isNotEmpty 
+              ? IngestionRowStatus.warning 
+              : IngestionRowStatus.valid;
+
+      if (status == IngestionRowStatus.valid) valid++;
+      else if (status == IngestionRowStatus.warning) warnings++;
+      else errors++;
+
+      rows.add(IngestionRow(
+        product: product,
+        status: status,
+        messages: validationMessages,
+        rawData: rawRow,
+      ));
+    }
+
+    return IngestionMappingResult(
+      rows: rows,
+      summary: IngestionSummary(
+        total: rows.length,
+        valid: valid,
+        warnings: warnings,
+        errors: errors,
+      ),
+    );
+  }
+
+  /// Processes extracted ZENO BOS AI bill JSON objects into mapped IngestionRows.
+  Future<IngestionMappingResult> processAIBillJson(List<Map<String, dynamic>> jsonRows) async {
+    final List<IngestionRow> rows = [];
+    int valid = 0, warnings = 0, errors = 0;
+
+    for (final jsonRow in jsonRows) {
+      final product = mapper.mapJsonToProductStudio(jsonRow);
+      final validationMessages = _validateProduct(product);
+      
+      final status = validationMessages.any((m) => m.startsWith('ERR:')) 
+          ? IngestionRowStatus.error 
+          : validationMessages.isNotEmpty 
+              ? IngestionRowStatus.warning 
+              : IngestionRowStatus.valid;
+
+      if (status == IngestionRowStatus.valid) valid++;
+      else if (status == IngestionRowStatus.warning) warnings++;
+      else errors++;
+
+      rows.add(IngestionRow(
+        product: product,
+        status: status,
+        messages: validationMessages,
+        rawData: jsonRow,
+      ));
+    }
+
+    return IngestionMappingResult(
+      rows: rows,
+      summary: IngestionSummary(
+        total: rows.length,
+        valid: valid,
+        warnings: warnings,
+        errors: errors,
+      ),
+    );
+  }
+
+  List<String> _validateProduct(ProductStudioData p) {
+    final messages = <String>[];
+    if (p.title.isEmpty) messages.add("ERR: Product name is required.");
+    if (p.sku.isEmpty) messages.add("ERR: SKU is required.");
+    if (p.sellingPrice <= 0) messages.add("WARN: Selling price is zero.");
+    if (p.barcode.isEmpty) messages.add("WARN: Missing barcode.");
+    return messages;
+  }
+
+  /// Extracts data from an image/bill using AI.
+  Future<ProductStudioData> processAIBill(dynamic file) async {
+    if (aiService == null) throw Exception("AI Service not available");
+    
+    // Simulate AI extraction
+    // In a real implementation, we'd pass the file to aiService
+    await Future.delayed(const Duration(seconds: 2));
+    
+    final product = ProductStudioData.empty();
+    product.title = "Extracted Product Name";
+    product.sellingPrice = 199.99;
+    product.description = "Automatically extracted from bill.";
+    
+    return product;
+  }
+}
+
+================
+File: lib/features/inventory/domain/services/omnichannel/marketplace_mapper.dart
+================
+import '../../models/product.dart';
+
+abstract class MarketplaceMapper {
+  Map<String, dynamic> mapToExternal(Product product);
+  Product mapFromExternal(Map<String, dynamic> externalData);
+}
+
+class AmazonMapper implements MarketplaceMapper {
+  @override
+  Map<String, dynamic> mapToExternal(Product product) {
+    return {
+      'sku': product.sku.value,
+      'title': product.industry.marketingTitle ?? product.name,
+      'standard_price': product.basePrice,
+      'quantity': product.openingStock,
+      'external_product_id': product.barcode?.value,
+      'external_product_id_type': 'EAN',
+    };
+  }
+
+  @override
+  Product mapFromExternal(Map<String, dynamic> externalData) {
+    // Logic to create Product from Amazon feed
+    throw UnimplementedError();
+  }
+}
+
+class MyntraMapper implements MarketplaceMapper {
+  @override
+  Map<String, dynamic> mapToExternal(Product product) {
+    return {
+      'vendor_sku': product.sku.value,
+      'product_name': product.name,
+      'mrp': product.mrp,
+      'selling_price': product.basePrice,
+      'inventory': product.openingStock,
+    };
+  }
+
+  @override
+  Product mapFromExternal(Map<String, dynamic> externalData) => throw UnimplementedError();
+}
+
+class AjioMapper implements MarketplaceMapper {
+  @override
+  Map<String, dynamic> mapToExternal(Product product) {
+    return {
+      'ajio_sku': product.sku.value,
+      'display_name': product.name,
+      'price': product.basePrice,
+      'stock_qty': product.openingStock,
+    };
+  }
+
+  @override
+  Product mapFromExternal(Map<String, dynamic> externalData) => throw UnimplementedError();
+}
+
+================
+File: lib/features/inventory/domain/services/pricing/esl_sync_service.dart
+================
+import '../../models/product.dart';
+
+enum EslSyncStatus { pending, pushing, synced, failed }
+
+class EslSyncService {
+  Future<void> pushPriceUpdate(Product product, String storeId) async {
+    // 1. Add to ESL Queue
+    // 2. Identify ESL Gateway for Store
+    // 3. POST price change
+    
+    await Future.delayed(const Duration(seconds: 1)); // Mock Network Call
+  }
+
+  Stream<EslSyncStatus> monitorSync(String eslId) {
+    return Stream.value(EslSyncStatus.synced);
+  }
+}
+
+================
+File: lib/features/inventory/domain/services/fashion_analytics_service.dart
+================
+import 'package:isar/isar.dart';
+import 'package:zeno/core/database/collections/transaction_collections.dart';
+
+class FashionAnalyticsService {
+  final Isar _isar;
+
+  FashionAnalyticsService(this._isar);
+
+  Future<Map<String, double>> calculateSizeCurve(String productId, {DateTime? startDate, DateTime? endDate}) async {
+    final query = _isar.collection<SalesOrderCollection>()
+        .filter()
+        .itemsElement((q) => q.productIdEqualTo(productId));
+    
+    // Applying date filters if provided
+    var filteredQuery = query;
+    if (startDate != null) filteredQuery = filteredQuery.and().dateGreaterThan(startDate);
+    if (endDate != null) filteredQuery = filteredQuery.and().dateLessThan(endDate);
+
+    final orders = await filteredQuery.findAll();
+    
+    Map<String, double> sizeCounts = {};
+    double totalQty = 0;
+
+    for (var order in orders) {
+      if (order.items == null) continue;
+      for (var item in order.items!) {
+        if (item.productId == productId && item.variantId != null) {
+          // Assuming variantId contains size info or we need to look up variant
+          // For this implementation, we extract from variantId if it follows pattern "$productId-$color-$size"
+          final parts = item.variantId!.split('-');
+          if (parts.length >= 3) {
+            final size = parts.last;
+            sizeCounts[size] = (sizeCounts[size] ?? 0) + item.quantity;
+            totalQty += item.quantity;
+          }
+        }
+      }
+    }
+
+    if (totalQty == 0) return {};
+    return sizeCounts.map((key, value) => MapEntry(key, (value / totalQty)));
+  }
+
+  Future<Map<String, double>> calculateColorCurve(String productId) async {
+     final orders = await _isar.collection<SalesOrderCollection>()
+        .filter()
+        .itemsElement((q) => q.productIdEqualTo(productId))
+        .findAll();
+    
+    Map<String, double> colorCounts = {};
+    double totalQty = 0;
+
+    for (var order in orders) {
+      if (order.items == null) continue;
+      for (var item in order.items!) {
+        if (item.productId == productId && item.variantId != null) {
+          final parts = item.variantId!.split('-');
+          if (parts.length >= 3) {
+            final color = parts[parts.length - 2];
+            colorCounts[color] = (colorCounts[color] ?? 0) + item.quantity;
+            totalQty += item.quantity;
+          }
+        }
+      }
+    }
+
+    if (totalQty == 0) return {};
+    return colorCounts.map((key, value) => MapEntry(key, (value / totalQty)));
+  }
+}
+
+================
+File: lib/features/inventory/domain/services/food_cost_calculator.dart
+================
+import '../models/recipe_ingredient.dart';
+
+class FoodCostCalculator {
+  static double calculateRecipeCost(List<RecipeIngredient> bom) {
+    return bom.fold(0.0, (sum, item) => sum + (item.quantity * item.cost));
+  }
+
+  static double calculateFoodCostPercentage(double recipeCost, double sellingPrice) {
+    if (sellingPrice <= 0) return 0;
+    return (recipeCost / sellingPrice) * 100;
+  }
+}
+
+================
+File: lib/features/inventory/domain/services/inventory_business_logic.dart
+================
+import '../models/stock_level.dart';
+import '../models/stock_transaction.dart';
+import '../models/batch.dart';
+import '../models/reorder_rule.dart';
+
+class InventoryBusinessLogic {
+  /// Calculates the current available stock for a specific level
+  double calculateAvailable(StockLevel level) {
+    return level.physical - level.reserved;
+  }
+
+  /// Validates if a stock outward transaction is possible
+  bool canProcessOutward(StockLevel level, double quantity) {
+    return calculateAvailable(level) >= quantity;
+  }
+
+  /// Generates a Stock Transaction for an inward movement
+  StockTransaction createStockIn({
+    required String stockItemId,
+    required double quantity,
+    required TransactionType type,
+    required String userId,
+    String? referenceId,
+  }) {
+    return StockTransaction(
+      id: 'trx-${DateTime.now().millisecondsSinceEpoch}',
+      stockItemId: stockItemId,
+      quantityDelta: quantity.abs(),
+      type: type,
+      referenceId: referenceId,
+      timestamp: DateTime.now(),
+      userId: userId,
+      notes: "Stock In via ${type.name}",
+    );
+  }
+
+  /// Generates a Stock Transaction for an outward movement
+  StockTransaction createStockOut({
+    required String stockItemId,
+    required double quantity,
+    required TransactionType type,
+    required String userId,
+    String? referenceId,
+  }) {
+    return StockTransaction(
+      id: 'trx-${DateTime.now().millisecondsSinceEpoch}',
+      stockItemId: stockItemId,
+      quantityDelta: -quantity.abs(),
+      type: type,
+      referenceId: referenceId,
+      timestamp: DateTime.now(),
+      userId: userId,
+      notes: "Stock Out via ${type.name}",
+    );
+  }
+
+  /// Evaluates reorder rules and returns true if reorder is needed
+  bool shouldReorder(StockLevel level, ReorderRule rule) {
+    return calculateAvailable(level) <= rule.reorderPoint;
+  }
+
+  /// FEFO (First Expired, First Out) Allocation Logic
+  List<Batch> sortByExpiry(List<Batch> batches) {
+    final sorted = List<Batch>.from(batches);
+    sorted.sort((a, b) {
+      if (a.expiryDate == null) return 1;
+      if (b.expiryDate == null) return -1;
+      return a.expiryDate!.compareTo(b.expiryDate!);
+    });
+    return sorted;
+  }
+
+  /// Generates an audit trail message for a transaction
+  String generateAuditLog(StockTransaction trx) {
+    final direction = trx.quantityDelta > 0 ? "ADD" : "REMOVE";
+    return "[AUDIT] ${trx.timestamp.toIso8601String()} | USER: ${trx.userId} | ACTION: ${trx.type.name} | DELTA: $direction ${trx.quantityDelta.abs()}";
+  }
+}
+
+================
+File: lib/features/inventory/domain/services/inventory_ledger_service.dart
+================
+import '../models/inventory_ledger_entry.dart';
+import '../models/inventory_transaction.dart';
+import 'package:flutter/foundation.dart';
+
+/// InventoryLedger (IL) v1.0
+/// The definitive record of stock balances.
+/// Consumes ITE events to maintain a consistent current truth of inventory.
+class InventoryLedgerService extends ChangeNotifier {
+  final Map<String, InventoryLedgerEntry> _ledger = {};
+
+  List<InventoryLedgerEntry> get allEntries => _ledger.values.toList();
+
+  /// Core logic to update the ledger based on an ITE transaction
+  void updateFromTransaction(InventoryTransaction tx) {
+    final String key = _generateLedgerKey(tx);
+    final existing = _ledger[key];
+
+    if (existing == null) {
+      _ledger[key] = InventoryLedgerEntry(
+        id: "LGR-$key",
+        productId: tx.productId,
+        variantId: tx.variantId,
+        warehouseId: tx.warehouseId,
+        binId: tx.binId,
+        batchNumber: tx.batchNumber,
+        serialNumber: tx.serialNumber,
+        quantityOnHand: tx.quantity,
+        lastCost: tx.unitCost ?? 0.0,
+        averageCost: tx.unitCost ?? 0.0,
+        lastMovementDate: tx.timestamp,
+        lastTransactionId: tx.id,
+      );
+    } else {
+      // Calculate delta based on transaction type
+      double newOnHand = existing.quantityOnHand;
+      if (tx.type == InventoryTransactionType.purchaseReceipt ||
+          tx.type == InventoryTransactionType.customerReturn) {
+        newOnHand += tx.quantity;
+      } else if (tx.type == InventoryTransactionType.salesIssue ||
+          tx.type == InventoryTransactionType.damagedStock) {
+        newOnHand -= tx.quantity;
+      }
+
+      _ledger[key] = existing.copyWith(
+        quantityOnHand: newOnHand,
+        lastCost: tx.unitCost ?? existing.lastCost,
+        lastMovementDate: tx.timestamp,
+        lastTransactionId: tx.id,
+      );
+    }
+    notifyListeners();
+  }
+
+  String _generateLedgerKey(InventoryTransaction tx) {
+    return "${tx.productId}_${tx.variantId ?? 'NA'}_${tx.warehouseId}_${tx.batchNumber ?? 'NA'}";
+  }
+
+  // ANALYTICS HELPERS
+  double getTotalValuation() {
+    return _ledger.values.fold(
+        0.0, (sum, entry) => sum + (entry.quantityOnHand * entry.averageCost));
+  }
+
+  int getLowStockCount(double threshold) {
+    return _ledger.values.where((e) => e.quantityOnHand < threshold).length;
+  }
+}
+
+================
+File: lib/features/inventory/domain/services/inventory_master_data_service.dart
+================
+import '../models/warehouse.dart';
+import '../models/stock_level.dart';
+import '../models/stock_transaction.dart';
+
+class InventoryMasterDataService {
+  List<Warehouse> getWarehouses() => [
+        const Warehouse(
+            id: 'wh_1', name: 'Main HQ Warehouse', address: 'London, UK'),
+        const Warehouse(
+            id: 'wh_2',
+            name: 'Dubai Distribution Center',
+            address: 'Dubai, UAE'),
+        const Warehouse(
+            id: 'wh_3', name: 'Singapore Hub', address: 'Singapore'),
+        const Warehouse(
+            id: 'wh_4', name: 'Colombo Transit', address: 'Colombo, Sri Lanka'),
+      ];
+
+  List<StockLevel> getMockStockLevels() => [
+        const StockLevel(
+            productId: 'p1',
+            variantId: 'v1',
+            warehouseId: 'wh_1',
+            physical: 1250,
+            reserved: 45),
+        const StockLevel(
+            productId: 'p2',
+            variantId: 'v2',
+            warehouseId: 'wh_1',
+            physical: 450,
+            reserved: 120),
+        const StockLevel(
+            productId: 'p3',
+            variantId: 'v3',
+            warehouseId: 'wh_2',
+            physical: 890,
+            reserved: 10),
+        const StockLevel(
+            productId: 'p4',
+            variantId: 'v4',
+            warehouseId: 'wh_3',
+            physical: 2300,
+            reserved: 500),
+      ];
+
+  List<StockTransaction> getRecentTransactions() => [
+        StockTransaction(
+            id: 'trx_1',
+            stockItemId: 'si_1',
+            quantityDelta: 500,
+            type: TransactionType.inPurchase,
+            timestamp: DateTime.now().subtract(const Duration(hours: 2)),
+            userId: 'user_1',
+            notes: 'Monthly restock'),
+        StockTransaction(
+            id: 'trx_2',
+            stockItemId: 'si_2',
+            quantityDelta: -12,
+            type: TransactionType.outSale,
+            timestamp: DateTime.now().subtract(const Duration(minutes: 45)),
+            userId: 'user_2',
+            notes: 'Order #SO-450'),
+      ];
+}
+
+================
+File: lib/features/inventory/domain/services/inventory_transaction_engine.dart
+================
+import '../models/inventory_transaction.dart';
+import 'package:uuid/uuid.dart';
+
+/// InventoryTransactionEngine (ITE) v1.0
+/// The standardized operational engine for every inventory movement in ZENO BOS.
+class InventoryTransactionEngine {
+  InventoryTransactionEngine();
+
+  /// Standardized entry point for recording any stock movement
+  Future<InventoryTransaction> processTransaction(
+      InventoryTransaction tx) async {
+    // 1. Logic Validation (ITE Rules)
+    _validateTransaction(tx);
+
+    // 2. Perform AI Analysis (Simulated for v1.0)
+    final enrichedTx = _applyAiIntelligence(tx);
+
+    // 3. Persist to Repository
+    // Note: In v1.1 we will map this model to the repository layer
+    // For now, we simulate the commit
+    await Future.delayed(const Duration(milliseconds: 150));
+
+    return enrichedTx;
+  }
+
+  void _validateTransaction(InventoryTransaction tx) {
+    if (tx.quantity == 0) {
+      throw Exception("Transaction quantity cannot be zero.");
+    }
+    if (tx.productId.isEmpty) {
+      throw Exception("Product ID is required for ITE transactions.");
+    }
+    if (tx.warehouseId.isEmpty) throw Exception("Warehouse ID is required.");
+  }
+
+  InventoryTransaction _applyAiIntelligence(InventoryTransaction tx) {
+    final List<String> flags = List.from(tx.aiFlags);
+
+    // Example AI Rule: Detect large adjustments
+    if (tx.type == InventoryTransactionType.stockAdjustment &&
+        tx.quantity.abs() > 100) {
+      flags.add("high_volume_adjustment");
+    }
+
+    return tx; // Return as is for now, in future will use copyWith to add flags
+  }
+
+  /// Helper to create a new transaction with standard defaults
+  InventoryTransaction createTx({
+    required InventoryTransactionType type,
+    required String productId,
+    required String warehouseId,
+    required double quantity,
+    required String unitId,
+    required String userId,
+    required String branchId,
+    String? variantId,
+    String? reference,
+  }) {
+    return InventoryTransaction(
+      id: "TXN-${const Uuid().v4().substring(0, 8).toUpperCase()}",
+      type: type,
+      timestamp: DateTime.now(),
+      productId: productId,
+      variantId: variantId,
+      warehouseId: warehouseId,
+      quantity: quantity,
+      unitId: unitId,
+      userId: userId,
+      branchId: branchId,
+      referenceDocument: reference,
+    );
+  }
+}
+
+================
+File: lib/features/inventory/domain/services/inventory_valuation_service.dart
+================
+import '../models/batch.dart';
+
+enum ValuationMethod { fifo, wac }
+
+class InventoryValuationService {
+  double calculateFIFO(List<Batch> batches, double currentStock) {
+    double totalValue = 0;
+    double remainingToValue = currentStock;
+
+    // Sort batches by manufacturing date (newest first for valuation of remaining stock)
+    final sortedBatches = List<Batch>.from(batches)..sort((a, b) => b.manufacturingDate.compareTo(a.manufacturingDate));
+
+    for (var batch in sortedBatches) {
+      if (remainingToValue <= 0) break;
+      double qtyToTake = remainingToValue < batch.quantity ? remainingToValue : batch.quantity;
+      // In a real app, we'd fetch the specific cost of this batch
+      // For now we assume a mock cost field exists on batch or is inherited
+      totalValue += qtyToTake * 10.0; // Mock cost
+      remainingToValue -= qtyToTake;
+    }
+    return totalValue;
+  }
+
+  double calculateWAC(double totalPurchaseCost, double totalQuantity) {
+    if (totalQuantity <= 0) return 0;
+    return totalPurchaseCost / totalQuantity;
+  }
+}
+
+================
+File: lib/features/inventory/domain/services/markdown_approval_service.dart
+================
+import 'dart:convert';
+import 'package:isar/isar.dart';
+import 'package:zeno/core/database/collections/admin_collections.dart';
+
+class MarkdownApprovalService {
+  final Isar _isar;
+
+  MarkdownApprovalService(this._isar);
+
+  Future<void> proposeMarkdown({
+    required String productId,
+    required double currentPrice,
+    required double proposedPrice,
+    required double discountPct,
+    required DateTime effectiveDate,
+    required String requestedBy,
+    String? reason,
+  }) async {
+    final payload = {
+      'type': 'MARKDOWN_PROPOSAL',
+      'productId': productId,
+      'currentPrice': currentPrice,
+      'proposedPrice': proposedPrice,
+      'discountPct': discountPct,
+      'effectiveDate': effectiveDate.toIso8601String(),
+      'status': 'PENDING_APPROVAL',
+      'reason': reason,
+    };
+
+    final auditEntry = AuditLogCollection()
+      ..uuid = 'AUD-${DateTime.now().millisecondsSinceEpoch}'
+      ..module = 'Fashion'
+      ..action = 'PROPOSE_MARKDOWN'
+      ..userId = requestedBy
+      ..timestamp = DateTime.now()
+      ..details = jsonEncode(payload);
+
+    await _isar.writeTxn(() async {
+      await _isar.collection<AuditLogCollection>().put(auditEntry);
+    });
+  }
+
+  Future<List<AuditLogCollection>> getPendingMarkdowns() async {
+    final logs = await _isar.collection<AuditLogCollection>()
+        .where()
+        .findAll();
+    
+    return logs.where((log) {
+      if (log.module != 'Fashion' || log.action != 'PROPOSE_MARKDOWN') return false;
+      try {
+        final data = jsonDecode(log.details);
+        return data['status'] == 'PENDING_APPROVAL';
+      } catch (_) {
+        return false;
+      }
+    }).toList();
+  }
+}
+
+================
+File: lib/features/inventory/domain/services/master_data_service.dart
+================
+import '../models/category.dart';
+import '../models/brand.dart';
+import '../models/unit.dart';
+import '../models/tax_profile.dart';
+import '../models/department.dart';
+
+class MasterDataService {
+  List<Department> getDepartments() => [
+        const Department(id: 'dept_1', name: 'Grocery'),
+        const Department(id: 'dept_2', name: 'Apparel'),
+        const Department(id: 'dept_3', name: 'Household'),
+        const Department(id: 'dept_4', name: 'Pharmacy'),
+      ];
+
+  List<Category> getCategories() => [
+        const Category(id: 'cat_1', name: 'Electronics'),
+        const Category(id: 'cat_2', name: 'Fashion & Apparel'),
+        const Category(id: 'cat_3', name: 'Home & Kitchen'),
+        const Category(id: 'cat_4', name: 'Health & Beauty'),
+        const Category(id: 'cat_5', name: 'Men > T-Shirts > Round Neck'),
+      ];
+
+  List<Brand> getBrands() => [
+        const Brand(id: 'br_1', name: 'ZENO Signature'),
+        const Brand(id: 'br_2', name: 'Apple'),
+        const Brand(id: 'br_3', name: 'Nike'),
+        const Brand(id: 'br_4', name: 'Samsung'),
+        const Brand(id: 'br_5', name: 'ZENO'),
+      ];
+
+  List<Unit> getUnits() => [
+        const Unit(id: 'u_1', name: 'Piece', symbol: 'Pc'),
+        const Unit(id: 'u_2', name: 'Kilogram', symbol: 'Kg'),
+        const Unit(id: 'u_3', name: 'Box', symbol: 'Bx'),
+        const Unit(id: 'u_4', name: 'Metre', symbol: 'M'),
+        const Unit(id: 'u_5', name: 'Piece (Pc)', symbol: 'Pc'),
+      ];
+
+  List<TaxProfile> getTaxProfiles() => [
+        const TaxProfile(id: 'tax_1', name: 'GST 5%', rate: 5.0),
+        const TaxProfile(id: 'tax_2', name: 'GST 12%', rate: 12.0),
+        const TaxProfile(id: 'tax_3', name: 'GST 18%', rate: 18.0),
+        const TaxProfile(id: 'tax_4', name: 'Zero Tax', rate: 0.0),
+      ];
+}
+
+================
+File: lib/features/inventory/domain/services/product_business_logic.dart
+================
+import 'dart:math';
+import '../models/product.dart';
+import '../models/sku.dart';
+import '../models/barcode.dart';
+import '../models/product_variant.dart';
+
+class ProductBusinessLogic {
+  /// Generates a unique SKU based on product attributes
+  SKU generateSKU(String categoryName, String brandName, String productName) {
+    final catCode = categoryName.length >= 3
+        ? categoryName.substring(0, 3).toUpperCase()
+        : 'GEN';
+    final brandCode =
+        brandName.length >= 2 ? brandName.substring(0, 2).toUpperCase() : 'ZN';
+    final timestamp =
+        DateTime.now().millisecondsSinceEpoch.toString().substring(8);
+    return SKU('$catCode-$brandCode-$timestamp');
+  }
+
+  /// Generates a mock EAN-13 barcode
+  Barcode generateBarcode() {
+    final random = Random();
+    String code = '890'; // Mock country code
+    for (var i = 0; i < 9; i++) {
+      code += random.nextInt(10).toString();
+    }
+    // Simple check digit calculation (mocked for simplicity)
+    code += random.nextInt(10).toString();
+    return Barcode(code, type: 'EAN13');
+  }
+
+  /// Calculates the readiness score (0.0 to 1.0) based on domain rules
+  double calculateReadiness(Product product) {
+    int totalPoints = 0;
+    int earnedPoints = 0;
+
+    // Weightage-based scoring
+    void check(bool condition, int weight) {
+      totalPoints += weight;
+      if (condition) earnedPoints += weight;
+    }
+
+    check(product.name.isNotEmpty, 20);
+    check(product.sku.isValid, 15);
+    check(product.description != null && product.description!.length > 20, 10);
+    check(product.category != null, 15);
+    check(product.brand != null, 10);
+    check(product.basePrice > 0, 15);
+    check(product.barcode != null && product.barcode!.isValid, 10);
+    check(product.variants.isNotEmpty, 5);
+
+    return earnedPoints / totalPoints;
+  }
+
+  /// Validates a product and returns a list of error messages
+  List<String> validateProduct(Product product) {
+    final errors = <String>[];
+    if (product.name.isEmpty) errors.add("Product name is required.");
+    if (!product.sku.isValid) errors.add("Valid SKU is required.");
+    if (product.basePrice <= 0) {
+      errors.add("Base price must be greater than zero.");
+    }
+    if (product.unit.id.isEmpty) errors.add("Unit of measure is required.");
+    return errors;
+  }
+
+  /// Creates a new variant with inherited attributes
+  ProductVariant createVariant(
+      Product product, Map<String, String> attributes) {
+    return ProductVariant(
+      id: 'v-${product.id}-${DateTime.now().millisecondsSinceEpoch}',
+      productId: product.id,
+      sku: SKU(
+          '${product.sku.value}-${attributes.values.join("-").toUpperCase()}'),
+      attributes: attributes,
+      priceAdjustment: 0.0,
+    );
+  }
+}
+
+================
+File: lib/features/inventory/domain/services/recipe_deduction_service.dart
+================
+import 'package:isar/isar.dart';
+import '../../../../core/database/collections/inventory_collections.dart';
+import '../models/stock_transaction.dart';
+import '../repositories/i_inventory_repository.dart';
+
+class RecipeDeductionService {
+  final IInventoryRepository _inventoryRepository;
+  final Isar _isar;
+
+  RecipeDeductionService(this._inventoryRepository, this._isar);
+
+  Future<void> deductIngredientsForSale(String productId, double quantitySold) async {
+    final all = await _isar.collection<ProductCollection>().where().findAll();
+    final product = all.firstWhere((p) => p.uuid == productId);
+    
+    if (product.recipeBOM == null || product.recipeBOM!.isEmpty) return;
+
+    final List<StockTransaction> transactions = [];
+    for (var ingredient in product.recipeBOM!) {
+      final totalDeduction = (ingredient.quantity ?? 0) * quantitySold;
+      
+      transactions.add(StockTransaction(
+        id: 'BOM-${DateTime.now().millisecondsSinceEpoch}-${ingredient.uuid}',
+        stockItemId: ingredient.ingredientName ?? '', 
+        quantityDelta: -totalDeduction,
+        type: TransactionType.outSale,
+        timestamp: DateTime.now(),
+        userId: 'system',
+        notes: 'Deducted via Recipe for $productId x $quantitySold',
+      ));
+    }
+    
+    await _inventoryRepository.recordTransactions(transactions);
+  }
+}
+
+================
+File: lib/features/inventory/domain/services/replenishment_service.dart
+================
+class ReplenishmentService {
+  double calculateSalesVelocity(List<double> historicalDailySales) {
+    if (historicalDailySales.isEmpty) return 0;
+    return historicalDailySales.reduce((a, b) => a + b) / historicalDailySales.length;
+  }
+
+  double recommendOrderQuantity({
+    required double currentStock,
+    required double avgDailySales,
+    required int leadTimeDays,
+    required double safetyStock,
+    double inTransit = 0,
+    double openPoQty = 0,
+    int moq = 1,
+    int orderMultiple = 1,
+  }) {
+    double reorderPoint = (avgDailySales * leadTimeDays) + safetyStock;
+    double netAvailable = currentStock + inTransit + openPoQty;
+
+    if (netAvailable > reorderPoint) return 0;
+
+    double needed = reorderPoint - netAvailable;
+    
+    // Apply MOQ
+    if (needed < moq) needed = moq.toDouble();
+    
+    // Apply Order Multiple (Round up to nearest multiple)
+    if (orderMultiple > 1) {
+      needed = ((needed / orderMultiple).ceil() * orderMultiple).toDouble();
+    }
+
+    return needed;
+  }
+
+  double recommendVariantOrderQuantity({
+    required double currentVariantStock,
+    required double variantSalesVelocity,
+    required int leadTimeDays,
+    required double safetyStock,
+    double inTransit = 0,
+  }) {
+    double reorderPoint = (variantSalesVelocity * leadTimeDays) + safetyStock;
+    if (currentVariantStock + inTransit > reorderPoint) return 0;
+    return reorderPoint - (currentVariantStock + inTransit);
+  }
+}
+
+================
+File: lib/features/inventory/domain/services/valuation_service.dart
+================
+enum ValuationMethod { fifo, lifo, weightedAverage }
+
+class ValuationService {
+  /// Framework for calculating inventory value based on method
+  double calculateValue({
+    required List<InventoryLayer> layers,
+    required ValuationMethod method,
+  }) {
+    if (layers.isEmpty) return 0.0;
+
+    switch (method) {
+      case ValuationMethod.fifo:
+        return layers.fold(
+            0.0, (sum, layer) => sum + (layer.quantity * layer.unitCost));
+      case ValuationMethod.lifo:
+        return layers.reversed
+            .fold(0.0, (sum, layer) => sum + (layer.quantity * layer.unitCost));
+      case ValuationMethod.weightedAverage:
+        double totalQty =
+            layers.fold(0.0, (sum, layer) => sum + layer.quantity);
+        if (totalQty == 0) return 0.0;
+        double totalCost = layers.fold(
+            0.0, (sum, layer) => sum + (layer.quantity * layer.unitCost));
+        return totalCost / totalQty;
+    }
+  }
+}
+
+class InventoryLayer {
+  final DateTime timestamp;
+  final double quantity;
+  final double unitCost;
+
+  const InventoryLayer({
+    required this.timestamp,
+    required this.quantity,
+    required this.unitCost,
+  });
+}
+
+================
+File: lib/features/inventory/domain/models/mappers/product_studio_to_domain.dart
+================
+import '../product_studio_data.dart';
+import '../product_studio_enums.dart';
+import '../product.dart';
+import '../sku.dart';
+import '../barcode.dart';
+import '../category.dart';
+import '../brand.dart';
+import '../unit.dart';
+import '../tax_profile.dart';
+import '../product_variant.dart';
+import '../product_enums.dart';
+import '../product_industry_fields.dart';
+
+extension ProductStudioToDomain on ProductStudioData {
+  Product toDomain() {
+    final now = DateTime.now();
+    return Product(
+      id: id, name: title, description: description, sku: SKU(sku),
+      barcode: barcode.isNotEmpty ? Barcode(barcode) : null,
+      unit: Unit(id: unit.isEmpty ? 'unit' : unit, name: unit, symbol: unit),
+      category: category.isNotEmpty ? Category(id: category, name: category) : null,
+      brand: brand.isNotEmpty ? Brand(id: brand, name: brand) : null,
+      taxProfile: taxCode.isNotEmpty ? TaxProfile(id: taxCode, name: taxCode, rate: taxRate) : null,
+      basePrice: sellingPrice, baseCost: costPrice, mrp: mrp, wholesalePrice: wholesalePrice,
+      discountPct: discountType == "Percentage" ? discountValue : 0,
+      discountAmount: discountType == "Amount" ? discountValue : 0,
+      openingStock: openingStock, warehouseLocation: warehouseLocation,
+      createdAt: now, updatedAt: now,
+      itemType: itemType, status: ProductStatus.values.firstWhere((e) => e.name.toLowerCase() == status.toLowerCase(), orElse: () => ProductStatus.active),
+      businessScale: businessScale ?? BusinessScale.small,
+      manufacturer: manufacturer, tags: tags.split(',').map((e) => e.trim()).toList(),
+      minStock: safetyStock, maxStock: maxStock, reorderLevel: reorderLevel,
+      batchTracking: enableBatchTracking, supplierProductName: supplierProductName,
+      supplierProductCode: supplierProductCode, supplierPurchaseCost: supplierPurchaseCost,
+      supplierMOQ: supplierMOQ, supplierLeadTime: supplierLeadTime, secondarySupplier: secondarySupplier,
+      supplierPaymentTerms: supplierPaymentTerms, supplierContact: supplierContact, supplierNotes: supplierNotes,
+      businessType: businessType, businessCategory: businessCategory, gstTaxMode: gstTaxMode,
+      packageType: packageType, unitsPerPackage: unitsPerPackage, packageQuantity: packageQuantity,
+      stockUnit: stockUnit, conversionFactor: conversionFactor,
+      customFields: {
+        'primaryImageUrl': primaryImageUrl,
+        'galleryUrls': galleryUrls,
+        'seoTitle': seoTitle,
+        'marketingTitle': marketingTitle,
+        'metaDescription': metaDescription,
+        'colorMediaLibrary': {
+          for (final entry in colorMediaLibrary.entries)
+            entry.key: entry.value
+                .map((asset) => {
+                      'id': asset.id,
+                      'url': asset.url,
+                      'thumbnailUrl': asset.thumbnailUrl,
+                      'sortOrder': asset.sortOrder,
+                      'altText': asset.altText,
+                      'isPrimary': asset.isPrimary,
+                    })
+                .toList(),
+        },
+      },
+      industry: ProductIndustryFields(
+        material: material, metalType: metalType, purity: purity, weight: weight,
+        stoneType: stoneType, stoneWeight: stoneWeight, jewelrySize: jewelrySize,
+        shade: shade, skinType: skinType, hairType: hairType, volume: volume,
+        ingredients: ingredients, usageInfo: usageInfo, fragranceFamily: fragranceFamily,
+        concentration: concentration, gender: gender, scentNotes: scentNotes,
+        serialNumber: serialNumber, imei: imei, modelNumber: modelNumber,
+        partNumber: partNumber, oemNumber: oemNumber, compatibility: compatibility,
+        vehicleMake: vehicleMake, vehicleModel: vehicleModel, styleCategory: styleCategory,
+        season: season, soleMaterial: soleMaterial, closureType: closureType,
+        widthFit: widthFit, sizeStandard: sizeStandard, apparelCategory: apparelCategory,
+        patternDesign: patternDesign, fitType: fitType, sleeveNeckType: sleeveNeckType,
+        careGuide: careGuide, artisanLabel: artisanLabel, collectionEdition: collectionEdition,
+        productionLeadTime: productionLeadTime, exclusiveSinglePiece: exclusiveSinglePiece,
+        madeToOrder: madeToOrder, measurementBust: measurementBust, measurementWaist: measurementWaist,
+        measurementHip: measurementHip, measurementFullLength: measurementFullLength,
+        gemstoneCount: gemstoneCount, hallmarkCert: hallmarkCert, makingChargeMode: makingChargeMode,
+        makingChargeRate: makingChargeRate, wastagePct: wastagePct, liveRateLink: liveRateLink,
+        brandRange: brandRange, shadeHexColor: shadeHexColor, safetyCertifications: safetyCertifications,
+        periodAfterOpening: periodAfterOpening, perfumeHouse: perfumeHouse, topNotes: topNotes,
+        middleNotes: middleNotes, baseNotes: baseNotes, aisleLocation: aisleLocation,
+        countryOfOrigin: countryOfOrigin, variableWeightPLU: variableWeightPLU,
+        pluCode: pluCode, tareWeight: tareWeight, onlinePrice: onlinePrice,
+        maxDiscountPct: maxDiscountPct, channelEligibility: channelEligibility,
+        expiryWarningThreshold: expiryWarningThreshold, searchKeywords: searchKeywords,
+        promotionalBadges: promotionalBadges, division: division, privateLabel: privateLabel,
+        seasonalProduct: seasonalProduct, masterCaseRatio: masterCaseRatio, grossWeight: grossWeight,
+        unitDimensions: unitDimensions, packagingDeposit: packagingDeposit,
+        importDutyClass: importDutyClass, memberLoyaltyPrice: memberLoyaltyPrice,
+        loyaltyPointsMultiplier: loyaltyPointsMultiplier, storageClass: storageClass,
+        floorZone: floorZone, organicCertified: organicCertified, foodCategory: foodCategory,
+        ingredientsSummary: ingredientsSummary, storageCondition: storageCondition,
+        dietaryBadges: dietaryBadges, fastMovingFlag: fastMovingFlag,
+        posHotkeyEnabled: posHotkeyEnabled, posHotkeyColor: posHotkeyColor, ageRestriction: ageRestriction,
+        readyToEatItem: readyToEatItem, coldStorageIndicator: coldStorageIndicator, multiBarcodes: multiBarcodes,
+        marketingTitle: marketingTitle, urlSlug: urlSlug, metaDescription: metaDescription,
+        featuredProduct: featuredProduct, productRelationship: productRelationship,
+        warrantyInfo: warrantyInfo, warrantyAvailable: warrantyAvailable,
+        warrantyDuration: warrantyDuration, warrantyUnit: warrantyUnit,
+        cuisineType: cuisineType, kotStation: kotStation, foodClass: foodClass,
+        spiceLevel: spiceLevel, allergens: allergens, calories: calories, recipeBOM: recipeBOM,
+        portionSize: portionSize, prepTime: prepTime, takeawaySurcharge: takeawaySurcharge,
+        serviceChargePct: serviceChargePct, cafeCategory: cafeCategory,
+        temperatureProfile: temperatureProfile, cupSizes: cupSizes, milkOptions: milkOptions,
+        sugarLevels: sugarLevels, bakeryType: bakeryType, flavorProfile: flavorProfile,
+        bakeTimestamp: bakeTimestamp, freshnessDuration: freshnessDuration,
+        freshnessUnit: freshnessUnit, juiceCategory: juiceCategory, fruitBases: fruitBases,
+        isCombo: isCombo, comboItems: comboItems, hotelDepartment: hotelDepartment,
+        allowRoomFolio: allowRoomFolio, roomDeliveryCharge: roomDeliveryCharge,
+        virtualBrand: virtualBrand, aggregatorMappings: aggregatorMappings,
+        containerType: containerType, packagingCost: packagingCost,
+        stallAssignment: stallAssignment, managementRoyaltyPct: managementRoyaltyPct,
+        digitalMenuDescription: digitalMenuDescription, preparationSlaWindow: preparationSlaWindow,
+        fineDiningCourse: fineDiningCourse, winePairing: winePairing, swiggySku: swiggySku,
+        zomatoSku: zomatoSku, uberEatsSku: uberEatsSku, talabatSku: talabatSku,
+        cakeSize: cakeSize, cakeShape: cakeShape, cakeFilling: cakeFilling, cakeFrosting: cakeFrosting,
+        bakeryShelfLife: bakeryShelfLife, coffeeServingTemp: coffeeServingTemp,
+        barLiquorClass: barLiquorClass, barPourMetric: barPourMetric,
+        mealPlanInclusions: mealPlanInclusions, eventType: eventType, setupInclusions: setupInclusions,
+        kdsCategory: kdsCategory, recipeVersion: recipeVersion, recipePrepNotes: recipePrepNotes,
+        cancellationPolicy: cancellationPolicy, repairCustomerImei: repairCustomerImei,
+        repairComplaintLog: repairComplaintLog, assignedSalesRepresentative: assignedSalesRepresentative,
+        territoryAllocation: territoryAllocation, customsPortOfEntry: customsPortOfEntry,
+        ssccBarcode: ssccBarcode, taxExemptionNo: taxExemptionNo, targetAgeGroup: targetAgeGroup,
+        therapeuticCategory: therapeuticCategory, indicationCategory: indicationCategory,
+        selfMedicationWarning: selfMedicationWarning, drugSchedule: drugSchedule,
+        controlledRegisterId: controlledRegisterId, dataLoggerSerialId: dataLoggerSerialId,
+        masterMoleculeCode: masterMoleculeCode, genericAlternative: genericAlternative,
+        classicalReference: classicalReference, homeopathyLatinName: homeopathyLatinName,
+        homeopathyPotencyScale: homeopathyPotencyScale, homeopathyDilution: homeopathyDilution,
+        homeopathyMotherTincture: homeopathyMotherTincture, implantType: implantType,
+        biocompatibilityGrade: biocompatibilityGrade, udiCode: udiCode,
+        weightCapacity: weightCapacity, rentalPeriod: rentalPeriod, optometrySph: optometrySph,
+        optometryCyl: optometryCyl, optometryAxis: optometryAxis, optometryBaseCurve: optometryBaseCurve,
+        optometryDiameter: optometryDiameter, optometryMoistureContent: optometryMoistureContent,
+        optometryReplacementSchedule: optometryReplacementSchedule, reagentType: reagentType,
+        reagentSensitivity: reagentSensitivity, curingTime: curingTime,
+        settingExpansion: settingExpansion, targetSpecies: targetSpecies,
+        animalWeightRange: animalWeightRange, meatWithdrawalPeriod: meatWithdrawalPeriod,
+        milkWithdrawalPeriod: milkWithdrawalPeriod, activeNutrient: activeNutrient,
+        minStorageTemp: minStorageTemp, maxStorageTemp: maxStorageTemp,
+        maxRoomTempExposure: maxRoomTempExposure, nutrientPercentage: nutrientPercentage,
+        coldChainRequired: coldChainRequired, substitutionAllowed: substitutionAllowed,
+        isFoldable: isFoldable, isMotorized: isMotorized, isRentalAvailable: isRentalAvailable,
+        sterilizationExpiry: sterilizationExpiry, harvestDate: harvestDate,
+        scheduledTrialDate: scheduledTrialDate, promisedDeliveryDate: promisedDeliveryDate,
+        contractPricingEffectiveFrom: contractPricingEffectiveFrom,
+        contractPricingEffectiveTo: contractPricingEffectiveTo,
+      ),
+      batches: batches, supplierRelationships: supplierRelationships,
+      variants: variants.map((v) => ProductVariant(
+        id: "$id-${v.color}-${v.size}", productId: id, sku: SKU(v.sku),
+        barcode: v.barcode.isNotEmpty ? Barcode(v.barcode) : null,
+        attributes: {"Color": v.color, "Size": v.size},
+        priceAdjustment: v.price - sellingPrice, stockLevel: v.stock.toDouble(),
+      )).toList(),
+    );
+  }
+}
+
+================
+File: lib/features/inventory/domain/models/product_industry_fields.dart
+================
+import 'recipe_ingredient.dart';
+import 'combo_item.dart';
+
+class ProductIndustryFields {
+  final String? material, metalType, purity, stoneType, jewelrySize, shade, skinType, hairType, volume, ingredients, usageInfo, fragranceFamily, concentration, gender, scentNotes, serialNumber, imei, modelNumber, partNumber, oemNumber, compatibility, vehicleMake, vehicleModel, styleCategory, season, soleMaterial, closureType, widthFit, sizeStandard, apparelCategory, patternDesign, fitType, sleeveNeckType, careGuide, artisanLabel, collectionEdition, measurementBust, measurementWaist, measurementHip, measurementFullLength, hallmarkCert, makingChargeMode, liveRateLink, brandRange, shadeHexColor, periodAfterOpening, perfumeHouse, topNotes, middleNotes, baseNotes, aisleLocation, countryOfOrigin, pluCode, promotionalBadges, division, unitDimensions, importDutyClass, storageClass, floorZone, foodCategory, ingredientsSummary, storageCondition, posHotkeyColor, cuisineType, kotStation, foodClass, spiceLevel, portionSize, cafeCategory, temperatureProfile, bakeryType, flavorProfile, freshnessUnit, juiceCategory, hotelDepartment, virtualBrand, containerType, stallAssignment, marketingTitle, urlSlug, metaDescription, productRelationship, warrantyInfo, warrantyUnit, digitalMenuDescription, preparationSlaWindow, fineDiningCourse, winePairing, swiggySku, zomatoSku, uberEatsSku, talabatSku, cakeSize, cakeShape, cakeFilling, cakeFrosting, bakeryShelfLife, coffeeServingTemp, barLiquorClass, barPourMetric, mealPlanInclusions, eventType, setupInclusions, kdsCategory, recipeVersion, recipePrepNotes, cancellationPolicy, repairCustomerImei, repairComplaintLog, assignedSalesRepresentative, territoryAllocation, customsPortOfEntry, ssccBarcode, rfidTagId, taxExemptionNo, targetAgeGroup, therapeuticCategory, indicationCategory, selfMedicationWarning, drugSchedule, controlledRegisterId, dataLoggerSerialId, masterMoleculeCode, genericAlternative, classicalReference, homeopathyLatinName, homeopathyPotencyScale, homeopathyDilution, homeopathyMotherTincture, implantType, biocompatibilityGrade, udiCode, weightCapacity, rentalPeriod, optometrySph, optometryCyl, optometryAxis, optometryBaseCurve, optometryDiameter, optometryMoistureContent, optometryReplacementSchedule, reagentType, reagentSensitivity, curingTime, settingExpansion, targetSpecies, animalWeightRange, meatWithdrawalPeriod, milkWithdrawalPeriod, activeNutrient, ramSize, internalStorage, chipset, screenSize, batteryCapacity, connectivity, simSlots, colorFinish, processor, ramGeneration, dedicatedGpu, osVersion, audioType, driverSize, bluetoothVersion, batteryLife, panelTechnology, resolution, refreshRate, smartTvOs, hdrFormat, hdmiPorts, energyRating, refrigerantType, motorWattage, jarCapacity, speedControls, heatingElements, gamingPlatform, gamingEdition, sensorType, megapixels, lensMount, maxVideoResolution, isoRange, imageStabilization, shutterRating, networkingDeviceType, portConfig, wirelessBandwidth, cosmeticGrade, batteryHealth, inspectionId, sellerWarranty, replacedParts, operatingVoltage, mountingType, packageForm, takeoffWeight, flightTime, transmissionRange, batteryChemistry, peakOutput, solarChargeController, nightVision, focalLength, iotProtocol, weatherproofRating, nutritionalBreakdown, template, includedGames;
+  final double annualEnergyConsumption;
+  final double? weight, stoneWeight, makingChargeRate, wastagePct;
+  final int? productionLeadTime, gemstoneCount, ageRestriction, warrantyDuration, controllerCount, pinCount;
+  final bool exclusiveSinglePiece, madeToOrder, variableWeightPLU, privateLabel, seasonalProduct, organicCertified, fastMovingFlag, posHotkeyEnabled, readyToEatItem, coldStorageIndicator, allowRoomFolio, isCombo, featuredProduct, warrantyAvailable, isLiveMarketPrice, isExpressPrep, customMessageAllowed, extraShotAllowed, isRoomServiceAvailable, isAppointmentRequired, coldChainRequired, substitutionAllowed, isFoldable, isMotorized, isRentalAvailable, fastChargingSupported, ancSupported, inverterTechnology, dishwasherSafe, poeSupported, rackMountable, originalBoxIncluded, pureSineWave, obstacleAvoidance, nightVisionEnabled, mandatorySerialScan;
+  final double tareWeight, onlinePrice, maxDiscountPct, masterCaseRatio, grossWeight, packagingDeposit, memberLoyaltyPrice, loyaltyPointsMultiplier, calories, takeawaySurcharge, serviceChargePct, roomDeliveryCharge, packagingCost, managementRoyaltyPct, nutritionalProtein, nutritionalCarbs, nutritionalTransFats, dineInPrice, takeawayPrice, aggregatorPrice, packagingSurcharge, roomServiceMarkupPct, paxPrice, targetFoodCostPct, advanceDepositPct, minOrderValue, buyerCreditLimit, minStorageTemp, maxStorageTemp, maxRoomTempExposure, nutrientPercentage;
+  final List<String> safetyCertifications, channelEligibility, searchKeywords, dietaryBadges, multiBarcodes, allergens, cupSizes, milkOptions, sugarLevels, fruitBases, assignedDoctors;
+  final List<ComboItem> comboItems;
+  final int expiryWarningThreshold, prepTime, freshnessDuration, advanceBookingHours, minPax, maxPax, courseFireDelay;
+  final List<RecipeIngredient> recipeBOM;
+  final DateTime? bakeTimestamp, harvestDate, contractPricingEffectiveFrom, contractPricingEffectiveTo, scheduledTrialDate, promisedDeliveryDate, sterilizationExpiry;
+  final Map<String, String> aggregatorMappings;
+
+  const ProductIndustryFields({
+    this.material, this.metalType, this.purity, this.stoneType, this.jewelrySize, this.shade, this.skinType, this.hairType, this.volume, this.ingredients, this.usageInfo, this.fragranceFamily, this.concentration, this.gender, this.scentNotes, this.serialNumber, this.imei, this.modelNumber, this.partNumber, this.oemNumber, this.compatibility, this.vehicleMake, this.vehicleModel, this.styleCategory, this.season, this.soleMaterial, this.closureType, this.widthFit, this.sizeStandard, this.apparelCategory, this.patternDesign, this.fitType, this.sleeveNeckType, this.careGuide, this.artisanLabel, this.collectionEdition, this.measurementBust, this.measurementWaist, this.measurementHip, this.measurementFullLength, this.hallmarkCert, this.makingChargeMode, this.liveRateLink, this.brandRange, this.shadeHexColor, this.periodAfterOpening, this.perfumeHouse, this.topNotes, this.middleNotes, this.baseNotes, this.aisleLocation, this.countryOfOrigin, this.pluCode, this.promotionalBadges, this.division, this.unitDimensions, this.importDutyClass, this.storageClass, this.floorZone, this.foodCategory, this.ingredientsSummary, this.storageCondition, this.posHotkeyColor, this.cuisineType, this.kotStation, this.foodClass, this.spiceLevel, this.portionSize, this.cafeCategory, this.temperatureProfile, this.bakeryType, this.flavorProfile, this.freshnessUnit, this.juiceCategory, this.hotelDepartment, this.virtualBrand, this.containerType, this.stallAssignment, this.marketingTitle, this.urlSlug, this.metaDescription, this.productRelationship, this.warrantyInfo, this.warrantyUnit, this.digitalMenuDescription, this.preparationSlaWindow, this.fineDiningCourse, this.winePairing, this.swiggySku, this.zomatoSku, this.uberEatsSku, this.talabatSku, this.cakeSize, this.cakeShape, this.cakeFilling, this.cakeFrosting, this.bakeryShelfLife, this.coffeeServingTemp, this.barLiquorClass, this.barPourMetric, this.mealPlanInclusions, this.eventType, this.setupInclusions, this.kdsCategory, this.recipeVersion, this.recipePrepNotes, this.cancellationPolicy, this.repairCustomerImei, this.repairComplaintLog, this.assignedSalesRepresentative, this.territoryAllocation, this.customsPortOfEntry, this.ssccBarcode, this.rfidTagId, this.taxExemptionNo, this.targetAgeGroup, this.therapeuticCategory, this.indicationCategory, this.selfMedicationWarning, this.drugSchedule, this.controlledRegisterId, this.dataLoggerSerialId, this.masterMoleculeCode, this.genericAlternative, this.classicalReference, this.homeopathyLatinName, this.homeopathyPotencyScale, this.homeopathyDilution, this.homeopathyMotherTincture, this.implantType, this.biocompatibilityGrade, this.udiCode, this.weightCapacity, this.rentalPeriod, this.optometrySph, this.optometryCyl, this.optometryAxis, this.optometryBaseCurve, this.optometryDiameter, this.optometryMoistureContent, this.optometryReplacementSchedule, this.reagentType, this.reagentSensitivity, this.curingTime, this.settingExpansion, this.targetSpecies, this.animalWeightRange, this.meatWithdrawalPeriod, this.milkWithdrawalPeriod, this.activeNutrient, this.ramSize, this.internalStorage, this.chipset, this.screenSize, this.batteryCapacity, this.connectivity, this.simSlots, this.colorFinish, this.processor, this.ramGeneration, this.dedicatedGpu, this.osVersion, this.audioType, this.driverSize, this.bluetoothVersion, this.batteryLife, this.panelTechnology, this.resolution, this.refreshRate, this.smartTvOs, this.hdrFormat, this.hdmiPorts, this.energyRating, this.refrigerantType, this.motorWattage, this.jarCapacity, this.speedControls, this.heatingElements, this.gamingPlatform, this.gamingEdition, this.sensorType, this.megapixels, this.lensMount, this.maxVideoResolution, this.isoRange, this.imageStabilization, this.shutterRating, this.networkingDeviceType, this.portConfig, this.wirelessBandwidth, this.cosmeticGrade, this.batteryHealth, this.inspectionId, this.sellerWarranty, this.replacedParts, this.operatingVoltage, this.mountingType, this.packageForm, this.takeoffWeight, this.flightTime, this.transmissionRange, this.batteryChemistry, this.peakOutput, this.solarChargeController, this.nightVision, this.focalLength, this.iotProtocol, this.weatherproofRating, this.nutritionalBreakdown, this.template, this.includedGames,
+    this.annualEnergyConsumption = 0,
+    this.weight, this.stoneWeight, this.makingChargeRate, this.wastagePct,
+    this.productionLeadTime, this.gemstoneCount, this.ageRestriction, this.warrantyDuration, this.controllerCount, this.pinCount,
+    this.exclusiveSinglePiece = false, this.madeToOrder = false, this.variableWeightPLU = false, this.privateLabel = false, this.seasonalProduct = false, this.organicCertified = false, this.fastMovingFlag = false, this.posHotkeyEnabled = false, this.readyToEatItem = false, this.coldStorageIndicator = false, this.allowRoomFolio = false, this.isCombo = false, this.featuredProduct = false, this.warrantyAvailable = false,
+    this.isLiveMarketPrice = false, this.isExpressPrep = false, this.customMessageAllowed = false, this.extraShotAllowed = false, this.isRoomServiceAvailable = false, this.isAppointmentRequired = false, this.coldChainRequired = false, this.substitutionAllowed = false, this.isFoldable = false, this.isMotorized = false, this.isRentalAvailable = false, this.fastChargingSupported = false, this.ancSupported = false, this.inverterTechnology = false, this.dishwasherSafe = false, this.poeSupported = false, this.rackMountable = false, this.originalBoxIncluded = false, this.pureSineWave = false, this.obstacleAvoidance = false, this.nightVisionEnabled = false, this.mandatorySerialScan = false,
+    this.tareWeight = 0, this.onlinePrice = 0, this.maxDiscountPct = 0, this.masterCaseRatio = 1, this.grossWeight = 0, this.packagingDeposit = 0, this.memberLoyaltyPrice = 0, this.loyaltyPointsMultiplier = 1, this.calories = 0, this.takeawaySurcharge = 0, this.serviceChargePct = 0, this.roomDeliveryCharge = 0, this.packagingCost = 0, this.managementRoyaltyPct = 0,
+    this.nutritionalProtein = 0, this.nutritionalCarbs = 0, this.nutritionalTransFats = 0, this.dineInPrice = 0, this.takeawayPrice = 0, this.aggregatorPrice = 0, this.packagingSurcharge = 0, this.roomServiceMarkupPct = 0, this.paxPrice = 0, this.targetFoodCostPct = 0, this.advanceDepositPct = 0, this.minOrderValue = 0, this.buyerCreditLimit = 0, this.minStorageTemp = 0, this.maxStorageTemp = 0, this.maxRoomTempExposure = 0, this.nutrientPercentage = 0,
+    this.safetyCertifications = const [], this.channelEligibility = const [], this.searchKeywords = const [], this.dietaryBadges = const [], this.multiBarcodes = const [], this.allergens = const [], this.cupSizes = const [], this.milkOptions = const [], this.sugarLevels = const [], this.fruitBases = const [], this.assignedDoctors = const [],
+    this.comboItems = const [],
+    this.expiryWarningThreshold = 0, this.prepTime = 0, this.freshnessDuration = 0, this.advanceBookingHours = 0, this.minPax = 0, this.maxPax = 0, this.courseFireDelay = 0,
+    this.recipeBOM = const [], this.bakeTimestamp, this.harvestDate, this.contractPricingEffectiveFrom, this.contractPricingEffectiveTo, this.scheduledTrialDate, this.promisedDeliveryDate, this.sterilizationExpiry, this.aggregatorMappings = const {},
+  });
+}
+
+================
+File: lib/features/inventory/domain/models/product_studio_data.dart
+================
+import 'product_studio_enums.dart';
+import 'product_enums.dart';
+import 'batch.dart';
+import 'recipe_ingredient.dart';
+import 'media_asset.dart';
+import 'market_pricing.dart';
+import 'variant_matrix_item.dart';
+import 'supplier_relationship.dart';
+import 'combo_item.dart';
+
+class ProductStudioData {
+  String id = "";
+  String title = "";
+  String arabicTitle = "";
+  String sku = "";
+  String barcode = "";
+  String barcodeType = "EAN-13";
+  List<String> multiBarcodes = [];
+  String category = "";
+  String subcategory = "";
+  String brand = "";
+  String subBrand = "";
+  String manufacturer = "";
+  String sectorId = "";
+  String departmentId = "";
+  String subDepartmentId = "";
+  String brandType = "";
+  String productType = "";
+  String segment = "";
+  String status = "Active";
+  String productLifecycleStatus = "Draft";
+  String visibility = "Public";
+  String countryOfOrigin = "";
+  String manufacturerPartNumber = "";
+  String vendorSku = "";
+  String internalBarcode = "";
+  DateTime? launchDate;
+  DateTime? discontinueDate;
+  String parentSku = "";
+  String description = "";
+  String shortDescription = "";
+  String marketingTitle = "";
+  String seoTitle = "";
+  String metaDescription = "";
+  String urlSlug = "";
+  String tags = "";
+  String targetAudience = "";
+  bool featuredProduct = false;
+  bool appVisibility = false;
+  bool b2bVisibility = false;
+  bool priceFloorLock = false;
+  double promotionalPrice = 0.0;
+  ProductLifecycleState lifecycleState = ProductLifecycleState.draft;
+  ItemType itemType = ItemType.stockProduct;
+  String gstTaxMode = "Intra-State";
+  String primaryImageUrl = "";
+  List<String> galleryUrls = [];
+  
+  // Capability Flags (TAB 02)
+  bool capWeighed = false;
+  bool capPluCode = false;
+  bool capBulk = false;
+  bool capRepack = false;
+  bool capTare = false;
+  bool capCatchWeight = false;
+  bool capVariant = false;
+  bool capDeposit = false;
+  bool capColdChain = false;
+  bool capAgeRestriction = false;
+
+  // Dynamic Detail Fields (TAB 02)
+  String scaleMode = "";
+  String pluType = "";
+  String bulkSourceProduct = "";
+  double availableBulkQuantity = 0.0;
+  String repackSourceProduct = "";
+  double repackConversionRatio = 0.0;
+  double minWeight = 0.0;
+  double maxWeight = 0.0;
+  String tareMode = "";
+  int minAge = 0;
+  String legalReference = "";
+  String depositType = "";
+  double depositAmount = 0.0;
+  String variantGroup = "";
+  String variantType = "";
+  
+  // Enterprise & Commercial
+  double costPrice = 0.0;
+  double purchaseCost = 0.0;
+  double landedCost = 0.0;
+  double sellingPrice = 0.0;
+  double mrp = 0.0;
+  double wholesalePrice = 0.0;
+  double onlinePrice = 0.0;
+  double memberLoyaltyPrice = 0.0;
+  double loyaltyPointsMultiplier = 1.0;
+  String discountType = "Percentage";
+  double discountValue = 0.0;
+  double maxDiscountPct = 0.0;
+  bool autoComputeLandedCost = false;
+  bool isLiveMarketPrice = false;
+  DateTime? priceEffectiveFrom;
+  String currency = "USD";
+  List<MarketPricing> pricingTiers = [];
+  double targetMarginPct = 0.0;
+  double targetMarkupPct = 0.0;
+  double branchSellingPrice = 0.0;
+
+  // Inventory & Logistics
+  bool trackInventory = true;
+  bool allowNegativeStock = false;
+  double openingStock = 0.0;
+  double minStock = 0.0;
+  double safetyStock = 0.0;
+  double maxStock = 0.0;
+  double reorderLevel = 0.0;
+  String warehouseLocation = "";
+  String stockUnit = "Unit";
+  String salesUnit = "Unit";
+  String purchaseUnit = "Unit";
+  double conversionFactor = 1.0;
+  double grossWeight = 0.0;
+  double netWeight = 0.0;
+  double tareWeight = 0.0;
+  String unitDimensions = "";
+  String packageType = "";
+  int unitsPerPackage = 1;
+  double packageQuantity = 0.0;
+  double packagingDeposit = 0.0;
+  double packagingCost = 0.0;
+  double containerDepositFee = 0.0;
+  String storageClass = "";
+  String storageCondition = "";
+  String floorZone = "";
+  bool coldStorageIndicator = false;
+  bool coldChainRequired = false;
+  String logisticsSlab = "";
+  String volumetricWeight = "";
+  String countryRestrictions = "";
+  String valuationMethod = "FIFO";
+  int leadTimeBuffer = 0;
+  bool autoReplenish = false;
+  bool cashierOverride = false;
+  double maxCashierDisc = 0.0;
+  String planogramAisle = "";
+  String planogramBay = "";
+  String planogramRack = "";
+  String planogramShelf = "";
+  String planogramBin = "";
+  String planogramEndcap = "";
+  String planogramId = "";
+  String masterOuterBarcode = "";
+  int innerPackQuantity = 0;
+  int caseMultiplier = 1;
+
+  // POS & Branch
+  String pluCode = "";
+  String unit = "Pc";
+  String posShortThermalName = "";
+  String posReceiptName = "";
+  bool isQuickPOSSale = false;
+  bool posHotkeyEnabled = false;
+  bool posAgeGate = false;
+  String posManualDiscount = "";
+  String posPriceOverride = "";
+  String eslId = "";
+  String rfidTagId = "";
+  String aisleLocation = "";
+  int minDisplayQty = 0;
+  int maxDisplayQty = 0;
+  bool isEasTagRequired = false;
+  bool mandatorySerialScan = false;
+
+  // Taxation & Compliance
+  String taxStatus = "Taxable";
+  String taxCategory = "Standard";
+  double taxRate = 0.0;
+  String taxJurisdiction = "Default";
+  String taxCode = "";
+  String taxTreatment = "";
+  String vatCategory = "";
+  String selectiveExciseTax = "";
+  String zatcaCode = "";
+  String sacCode = "";
+  String hsnCode = "";
+  String taxExemptionNo = "";
+  String importDutyClass = "";
+
+  // Suppliers
+  String supplier = "";
+  String secondarySupplier = "";
+  String supplierProductCode = "";
+  String supplierProductName = "";
+  double supplierPurchaseCost = 0.0;
+  int supplierMOQ = 1;
+  int supplierLeadTime = 0;
+  String supplierPaymentTerms = "";
+  String supplierContact = "";
+  String supplierNotes = "";
+  String primarySupplierId = "";
+  String supplierSku = "";
+  double vendorContractCost = 0.0;
+  double supplierMoq = 0.0;
+  List<SupplierRelationship> supplierRelationships = [];
+
+  // Industry Specific
+  String material = "";
+  String metalType = "";
+  String purity = "";
+  double weight = 0.0;
+  String stoneType = "";
+  double stoneWeight = 0.0;
+  String jewelrySize = "";
+  String shade = "";
+  String skinType = "";
+  String hairType = "";
+  String volume = "";
+  String ingredients = "";
+  String usageInfo = "";
+  String fragranceFamily = "";
+  String concentration = "";
+  String gender = "";
+  String scentNotes = "";
+  String serialNumber = "";
+  String imei = "";
+  String modelNumber = "";
+  String partNumber = "";
+  String oemNumber = "";
+  String compatibility = "";
+  String vehicleMake = "";
+  String vehicleModel = "";
+  String styleCategory = "";
+  String season = "";
+  String soleMaterial = "";
+  String closureType = "";
+  String widthFit = "";
+  String sizeStandard = "";
+  String apparelCategory = "";
+  String patternDesign = "";
+  String fitType = "";
+  String sleeveNeckType = "";
+  String careGuide = "";
+  String artisanLabel = "";
+  String collectionEdition = "";
+  int productionLeadTime = 0;
+  bool exclusiveSinglePiece = false;
+  bool madeToOrder = false;
+  String measurementBust = "";
+  String measurementWaist = "";
+  String measurementHip = "";
+  String measurementFullLength = "";
+  int gemstoneCount = 0;
+  String hallmarkCert = "";
+  String makingChargeMode = "";
+  double makingChargeRate = 0.0;
+  double wastagePct = 0.0;
+  String liveRateLink = "";
+  String brandRange = "";
+  String shadeHexColor = "";
+  List<String> safetyCertifications = [];
+  String perfumeHouse = "";
+  String topNotes = "";
+  String middleNotes = "";
+  String baseNotes = "";
+  bool variableWeightPLU = false;
+  List<String> channelEligibility = [];
+  List<String> searchKeywords = [];
+  String promotionalBadges = "";
+  String division = "";
+  bool privateLabel = false;
+  bool seasonalProduct = false;
+  double masterCaseRatio = 0.0;
+  bool organicCertified = false;
+  String foodCategory = "";
+  String ingredientsSummary = "";
+  List<String> dietaryBadges = [];
+  bool fastMovingFlag = false;
+  String posHotkeyColor = "";
+  int? ageRestriction;
+  bool readyToEatItem = false;
+  String productRelationship = "";
+  String warrantyInfo = "";
+  bool warrantyAvailable = false;
+  int warrantyDuration = 0;
+  String warrantyUnit = "Months";
+  String cuisineType = "";
+  String kotStation = "";
+  String foodClass = "Veg";
+  String spiceLevel = "Mild";
+  List<String> allergens = [];
+  double calories = 0.0;
+  List<RecipeIngredient> recipeBOM = [];
+  String portionSize = "";
+  int prepTime = 0;
+  double takeawaySurcharge = 0.0;
+  double serviceChargePct = 0.0;
+  String cafeCategory = "";
+  String temperatureProfile = "";
+  List<String> cupSizes = [];
+  List<String> milkOptions = [];
+  List<String> sugarLevels = [];
+  String bakeryType = "";
+  String flavorProfile = "";
+  DateTime? bakeTimestamp;
+  int freshnessDuration = 0;
+  String freshnessUnit = "Hours";
+  String juiceCategory = "";
+  List<String> fruitBases = [];
+  bool isCombo = false;
+  List<ComboItem> comboItems = [];
+  String hotelDepartment = "";
+  bool allowRoomFolio = false;
+  double roomDeliveryCharge = 0.0;
+  String virtualBrand = "";
+  Map<String, String> aggregatorMappings = {};
+  String containerType = "";
+  String stallAssignment = "";
+  double managementRoyaltyPct = 0.0;
+  String digitalMenuDescription = "";
+  String preparationSlaWindow = "";
+  String fineDiningCourse = "";
+  String winePairing = "";
+  String swiggySku = "";
+  String zomatoSku = "";
+  String uberEatsSku = "";
+  String talabatSku = "";
+  String cakeSize = "";
+  String cakeShape = "";
+  String cakeFilling = "";
+  String cakeFrosting = "";
+  String bakeryShelfLife = "";
+  String coffeeServingTemp = "";
+  String barLiquorClass = "";
+  String barPourMetric = "";
+  String mealPlanInclusions = "";
+  String eventType = "";
+  String setupInclusions = "";
+  String kdsCategory = "";
+  String recipeVersion = "";
+  String recipePrepNotes = "";
+  String cancellationPolicy = "";
+  String repairCustomerImei = "";
+  String repairComplaintLog = "";
+  String assignedSalesRepresentative = "";
+  String territoryAllocation = "";
+  String customsPortOfEntry = "";
+  String ssccBarcode = "";
+  String targetAgeGroup = "";
+  String therapeuticCategory = "";
+  String indicationCategory = "";
+  String selfMedicationWarning = "";
+  String drugSchedule = "";
+  String controlledRegisterId = "";
+  String dataLoggerSerialId = "";
+  String masterMoleculeCode = "";
+  String genericAlternative = "";
+  String classicalReference = "";
+  String homeopathyLatinName = "";
+  String homeopathyPotencyScale = "";
+  String homeopathyDilution = "";
+  String homeopathyMotherTincture = "";
+  String implantType = "";
+  String biocompatibilityGrade = "";
+  String udiCode = "";
+  String weightCapacity = "";
+  String rentalPeriod = "";
+  String optometrySph = "";
+  String optometryCyl = "";
+  String optometryAxis = "";
+  String optometryBaseCurve = "";
+  String optometryDiameter = "";
+  String optometryMoistureContent = "";
+  String optometryReplacementSchedule = "";
+  String reagentType = "";
+  String reagentSensitivity = "";
+  String curingTime = "";
+  String settingExpansion = "";
+  String targetSpecies = "";
+  String animalWeightRange = "";
+  String meatWithdrawalPeriod = "";
+  String milkWithdrawalPeriod = "";
+  String activeNutrient = "";
+  double nutritionalProtein = 0.0;
+  double nutritionalCarbs = 0.0;
+  double nutritionalTransFats = 0.0;
+  String nutritionalBreakdown = "";
+  double dineInPrice = 0.0;
+  double takeawayPrice = 0.0;
+  double aggregatorPrice = 0.0;
+  double packagingSurcharge = 0.0;
+  double roomServiceMarkupPct = 0.0;
+  double paxPrice = 0.0;
+  double targetFoodCostPct = 0.0;
+  double advanceDepositPct = 0.0;
+  double minOrderValue = 0.0;
+  double buyerCreditLimit = 0.0;
+  List<String> assignedDoctors = [];
+  int advanceBookingHours = 0;
+  int minPax = 0;
+  int maxPax = 0;
+  int courseFireDelay = 0;
+  bool isExpressPrep = false;
+  bool customMessageAllowed = false;
+  bool extraShotAllowed = false;
+  bool isRoomServiceAvailable = false;
+  bool isAppointmentRequired = false;
+  double minStorageTemp = 0.0;
+  double maxStorageTemp = 0.0;
+  double maxRoomTempExposure = 0.0;
+  double nutrientPercentage = 0.0;
+  bool substitutionAllowed = false;
+  bool isFoldable = false;
+  bool isMotorized = false;
+  bool isRentalAvailable = false;
+  DateTime? harvestDate;
+  DateTime? contractPricingEffectiveFrom;
+  DateTime? contractPricingEffectiveTo;
+  DateTime? scheduledTrialDate;
+  DateTime? promisedDeliveryDate;
+  DateTime? sterilizationExpiry;
+  List<VariantMatrixItem> variants = [];
+
+  // Traceability
+  bool enableBatchTracking = false;
+  bool enableExpiryTracking = false;
+  int expiryWarningThreshold = 0;
+  DateTime? manufacturingDate;
+  String periodAfterOpening = "";
+  bool isCatchWeight = false;
+  bool ageGate = false;
+  bool isNarcotic = false;
+  String healthLicense = "";
+  bool consentRequired = false;
+  String specimenType = "";
+  String fastingRequirement = "";
+  int tat = 0;
+  String labRouting = "";
+  String referenceRange = "";
+  String deviceTrackingType = "";
+  int calibrationFrequency = 0;
+  bool biomedicalTraining = false;
+  String hazardousGrade = "";
+  int unitsPerStrip = 0;
+  bool allowLooseBilling = false;
+  String fabricComposition = "";
+  String measurementProfile = "";
+  String colorFinish = "";
+  String genericSalt = "";
+  String dosageForm = "";
+  String prescriptionClass = "";
+  String dentalQuadrant = "";
+  String ramSize = "";
+  String internalStorage = "";
+  String chipset = "";
+  String screenSize = "";
+  String batteryCapacity = "";
+  String connectivity = "";
+  String simSlots = "";
+  String processor = "";
+  String ramGeneration = "";
+  String dedicatedGpu = "";
+  String osVersion = "";
+  String audioType = "";
+  String driverSize = "";
+  String bluetoothVersion = "";
+  String batteryLife = "";
+  String panelTechnology = "";
+  String resolution = "";
+  String refreshRate = "";
+  String smartTvOs = "";
+  String hdrFormat = "";
+  String hdmiPorts = "";
+  String energyRating = "";
+  String refrigerantType = "";
+  double annualEnergyConsumption = 0.0;
+  String motorWattage = "";
+  String jarCapacity = "";
+  String speedControls = "";
+  String heatingElements = "";
+  String gamingPlatform = "";
+  String gamingEdition = "";
+  int controllerCount = 0;
+  String includedGames = "";
+  String sensorType = "";
+  String megapixels = "";
+  String lensMount = "";
+  String maxVideoResolution = "";
+  String isoRange = "";
+  String imageStabilization = "";
+  String shutterRating = "";
+  bool fastChargingSupported = false;
+  bool ancSupported = false;
+  String primaryTradeUnit = "";
+  String tradeCreditTerms = "";
+  String temperatureStorage = "";
+  String prePackRatio = "";
+  String shrinkageGrade = "";
+  String materialGrade = "";
+  String freightClass = "";
+  String industrialUom = "";
+  String incoterms = "";
+  String freightSurcharge = "";
+  String gaugeThickness = "";
+  String rmaPolicy = "";
+  String tierUomMapping = "";
+  String returnPolicy = "";
+  int palletStacking = 1;
+  String organicCertification = "";
+  String organicCertNo = "";
+  String farmTraceabilityId = "";
+  String serviceCategory = "";
+  String serviceDeliveryMode = "";
+  int serviceDuration = 0;
+  String serviceDurationUnit = "";
+  String billingModel = "";
+  int bufferTime = 0;
+  String therapistRoom = "";
+  double staffCommissionRate = 0.0;
+  String pricingMetric = "";
+  List<String> careTreatments = [];
+  List<String> allocatedStaff = [];
+  double diagnosisCharge = 0.0;
+  String serviceWarranty = "";
+  String slaPriority = "";
+  String consultationFormat = "";
+  String meetingPlatform = "";
+  String batchTiming = "";
+  bool courseMaterialProvided = false;
+  int batchSeatCapacity = 0;
+  String membershipFrequency = "";
+  String trainerInclusion = "";
+  List<String> accessPrivileges = [];
+  double admissionFee = 0.0;
+  String pausePolicy = "";
+  String resourceAssignment = "";
+  String opticalProductType = "";
+  List<String> lensCoating = [];
+  String frameParameters = "";
+  String operatingVoltage = "";
+  String mountingType = "";
+  String packageForm = "";
+  int pinCount = 0;
+  String networkingDeviceType = "";
+  String portConfig = "";
+  String wirelessBandwidth = "";
+  String iotProtocol = "";
+  String weatherproofRating = "";
+  bool poeSupported = false;
+  bool rackMountable = false;
+  bool batchExpiryMandatory = false;
+  bool breakBulkAllowed = false;
+  bool caseSerialTracking = false;
+  bool mtcRequired = false;
+  bool bulkNarcoticLogging = false;
+  bool coldChainLogger = false;
+  int expiryAlertThreshold = 0;
+  bool isRecalledBatch = false;
+  String inspectionId = "";
+  String rfidId = "";
+  String warrantyContract = "";
+  bool sparePartsBreakdown = false;
+  double abv = 0.0;
+  double baleWeight = 0.0;
+  double rollLength = 0.0;
+  int scaleWeightPrecision = 2;
+  double variableWeightTolerance = 0.0;
+  double tareWeightDeduction = 0.0;
+  String unitPriceComparisonBase = "";
+  bool isCrossDockingAllowed = false;
+  bool isVmiEnabled = false;
+  bool inHouseRepack = false;
+  String nicotineContent = "";
+  bool passportVerificationRequired = false;
+  bool flightNumberRequired = false;
+  double multiBuyBundlePrice = 0.0;
+  int multiBuyQtyTrigger = 0;
+  int multiBuyMaxQtyPerBill = 0;
+  double compensationCess = 0.0;
+  String cosmeticGrade = "";
+  String batteryHealth = "";
+  String sellerWarranty = "";
+  String replacedParts = "";
+  double peakOutput = 0.0;
+  String solarChargeController = "";
+  String nightVision = "";
+  String focalLength = "";
+  bool inverterTechnology = false;
+  bool dishwasherSafe = false;
+  bool originalBoxIncluded = false;
+  bool pureSineWave = false;
+  bool obstacleAvoidance = false;
+  bool nightVisionEnabled = false;
+  String takeoffWeight = "";
+  String flightTime = "";
+  String transmissionRange = "";
+  String batteryChemistry = "";
+  String template = "General";
+  String masterTradeSku = "";
+  String lensIndex = "";
+
+  String businessType = "Retail";
+  String businessCategory = "Supermarket";
+  BusinessScale? businessScale;
+
+  List<Batch> batches = [];
+  List<String> modifierGroups = [];
+  Map<String, List<MediaAsset>> colorMediaLibrary = {};
+
+  // Legacy Aliases
+  String get productName => title;
+  set productName(String v) => title = v;
+  String get masterSku => sku;
+  set masterSku(String v) => sku = v;
+  String get primaryBarcode => barcode;
+  set primaryBarcode(String v) => barcode = v;
+  String get categoryId => category;
+  set categoryId(String v) => category = v;
+  String get subCategoryId => subcategory;
+  set subCategoryId(String v) => subcategory = v;
+  String get brandId => brand;
+  set brandId(String v) => brand = v;
+  String get department => departmentId;
+  set department(String v) => departmentId = v;
+  String get subDepartment => subDepartmentId;
+  set subDepartment(String v) => subDepartmentId = v;
+
+  ProductStudioData({required this.id});
+
+  factory ProductStudioData.empty() {
+    final now = DateTime.now();
+    return ProductStudioData(
+      id: "PRD-${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}-${now.microsecondsSinceEpoch}",
+    );
+  }
+  
+  ProductStudioData copyWith({String? id}) => ProductStudioData(id: id ?? this.id);
+}
+
+================
+File: lib/features/inventory/domain/models/product.dart
+================
+import 'sku.dart';
+import 'barcode.dart';
+import 'category.dart';
+import 'brand.dart';
+import 'unit.dart';
+import 'tax_profile.dart';
+import 'product_variant.dart';
+import 'product_enums.dart';
+import 'batch.dart';
+import 'supplier_relationship.dart';
+import 'recipe_ingredient.dart';
+import 'product_studio_enums.dart';
+import 'product_industry_fields.dart';
+import 'combo_item.dart';
+
+export 'extensions/product_extensions.dart';
+
+class Product {
+  final String id, name, warehouseLocation, businessType, businessCategory, gstTaxMode;
+  final String? description, manufacturer, supplierProductName, supplierProductCode, secondarySupplier, supplierPaymentTerms, supplierContact, supplierNotes, packageType, stockUnit;
+  final SKU sku; final Barcode? barcode; final Category? category; final Brand? brand; final Unit unit; final TaxProfile? taxProfile;
+  final List<ProductVariant> variants; final List<Batch> batches; final List<SupplierRelationship> supplierRelationships;
+  final double basePrice, baseCost, mrp, wholesalePrice, discountPct, discountAmount, openingStock, minStock, maxStock, reorderLevel, conversionFactor, packageQuantity, supplierPurchaseCost;
+  final DateTime createdAt, updatedAt;
+  final ItemType itemType; final ProductStatus status;
+  final BusinessScale businessScale;
+  final int unitsPerPackage, supplierMOQ, supplierLeadTime;
+  final List<String> tags, supplierIds;
+  final ProductIndustryFields industry; final Map<String, dynamic> customFields;
+  final bool batchTracking, serialTracking;
+
+  const Product({
+    required this.id, required this.name, this.description, required this.sku, this.barcode, this.category, this.brand, required this.unit, this.taxProfile,
+    this.variants = const [], this.batches = const [], this.supplierRelationships = const [],
+    this.basePrice = 0.0, this.baseCost = 0.0, this.mrp = 0.0, this.wholesalePrice = 0.0, this.discountPct = 0.0, this.discountAmount = 0.0, this.openingStock = 0.0,
+    this.warehouseLocation = "", required this.createdAt, required this.updatedAt, this.itemType = ItemType.stockProduct, this.status = ProductStatus.active,
+    this.businessScale = BusinessScale.small,
+    this.manufacturer, this.tags = const [], this.minStock = 0.0, this.maxStock = 0.0, this.reorderLevel = 0.0, this.batchTracking = false, this.serialTracking = false,
+    this.supplierIds = const [], this.supplierProductName, this.supplierProductCode, this.supplierPurchaseCost = 0.0, this.supplierMOQ = 0, this.supplierLeadTime = 0,
+    this.secondarySupplier, this.supplierPaymentTerms, this.supplierContact, this.supplierNotes, this.businessType = "Retail", this.businessCategory = "Supermarket",
+    this.gstTaxMode = "Intra-State", this.packageType, this.unitsPerPackage = 1, this.packageQuantity = 0.0, this.stockUnit, this.conversionFactor = 1.0,
+    this.industry = const ProductIndustryFields(), this.customFields = const {},
+  });
+
+  // Proxy getters for industry fields
+  String? get material => industry.material; String? get metalType => industry.metalType; String? get purity => industry.purity;
+  double? get weight => industry.weight; String? get stoneType => industry.stoneType; double? get stoneWeight => industry.stoneWeight;
+  String? get jewelrySize => industry.jewelrySize; String? get shade => industry.shade; String? get skinType => industry.skinType;
+  String? get hairType => industry.hairType; String? get volume => industry.volume; String? get ingredients => industry.ingredients;
+  String? get usageInfo => industry.usageInfo; String? get fragranceFamily => industry.fragranceFamily; String? get concentration => industry.concentration;
+  String? get gender => industry.gender; String? get scentNotes => industry.scentNotes; String? get serialNumber => industry.serialNumber;
+  String? get imei => industry.imei; String? get modelNumber => industry.modelNumber; String? get partNumber => industry.partNumber;
+  String? get oemNumber => industry.oemNumber; String? get compatibility => industry.compatibility; String? get vehicleMake => industry.vehicleMake;
+  String? get vehicleModel => industry.vehicleModel; String? get styleCategory => industry.styleCategory; String? get season => industry.season;
+  String? get soleMaterial => industry.soleMaterial; String? get closureType => industry.closureType; String? get widthFit => industry.widthFit;
+  String? get sizeStandard => industry.sizeStandard; String? get apparelCategory => industry.apparelCategory; String? get patternDesign => industry.patternDesign;
+  String? get fitType => industry.fitType; String? get sleeveNeckType => industry.sleeveNeckType; String? get careGuide => industry.careGuide;
+  String? get artisanLabel => industry.artisanLabel; String? get collectionEdition => industry.collectionEdition; int? get productionLeadTime => industry.productionLeadTime;
+  bool get exclusiveSinglePiece => industry.exclusiveSinglePiece; bool get madeToOrder => industry.madeToOrder;
+  String? get measurementBust => industry.measurementBust; String? get measurementWaist => industry.measurementWaist; String? get measurementHip => industry.measurementHip;
+  String? get measurementFullLength => industry.measurementFullLength; int? get gemstoneCount => industry.gemstoneCount; String? get hallmarkCert => industry.hallmarkCert;
+  String? get makingChargeMode => industry.makingChargeMode; double? get makingChargeRate => industry.makingChargeRate; double? get wastagePct => industry.wastagePct;
+  String? get liveRateLink => industry.liveRateLink; String? get brandRange => industry.brandRange; String? get shadeHexColor => industry.shadeHexColor;
+  List<String> get safetyCertifications => industry.safetyCertifications; String? get periodAfterOpening => industry.periodAfterOpening;
+  String? get perfumeHouse => industry.perfumeHouse; String? get topNotes => industry.topNotes; String? get middleNotes => industry.middleNotes;
+  String? get baseNotes => industry.baseNotes; String? get aisleLocation => industry.aisleLocation; String? get countryOfOrigin => industry.countryOfOrigin;
+  bool get variableWeightPLU => industry.variableWeightPLU; String? get pluCode => industry.pluCode; double get tareWeight => industry.tareWeight;
+  double get onlinePrice => industry.onlinePrice; double get maxDiscountPct => industry.maxDiscountPct; List<String> get channelEligibility => industry.channelEligibility;
+  int get expiryWarningThreshold => industry.expiryWarningThreshold; List<String> get searchKeywords => industry.searchKeywords;
+  String? get promotionalBadges => industry.promotionalBadges; String? get division => industry.division; bool get privateLabel => industry.privateLabel;
+  bool get seasonalProduct => industry.seasonalProduct; double get masterCaseRatio => industry.masterCaseRatio; double get grossWeight => industry.grossWeight;
+  String? get unitDimensions => industry.unitDimensions; double get packagingDeposit => industry.packagingDeposit; String? get importDutyClass => industry.importDutyClass;
+  double get memberLoyaltyPrice => industry.memberLoyaltyPrice; double get loyaltyPointsMultiplier => industry.loyaltyPointsMultiplier;
+  String? get storageClass => industry.storageClass; String? get floorZone => industry.floorZone; bool get organicCertified => industry.organicCertified;
+  String? get foodCategory => industry.foodCategory; String? get ingredientsSummary => industry.ingredientsSummary; String? get storageCondition => industry.storageCondition;
+  List<String> get dietaryBadges => industry.dietaryBadges; bool get fastMovingFlag => industry.fastMovingFlag; bool get posHotkeyEnabled => industry.posHotkeyEnabled;
+  String? get posHotkeyColor => industry.posHotkeyColor; int? get ageRestriction => industry.ageRestriction; bool get readyToEatItem => industry.readyToEatItem;
+  bool get coldStorageIndicator => industry.coldStorageIndicator; List<String> get multiBarcodes => industry.multiBarcodes;
+  String? get marketingTitle => industry.marketingTitle; String? get urlSlug => industry.urlSlug; String? get metaDescription => industry.metaDescription;
+  bool get featuredProduct => industry.featuredProduct; String? get productRelationship => industry.productRelationship; String? get warrantyInfo => industry.warrantyInfo;
+  bool get warrantyAvailable => industry.warrantyAvailable; int? get warrantyDuration => industry.warrantyDuration; String? get warrantyUnit => industry.warrantyUnit;
+  String? get cuisineType => industry.cuisineType; String? get kotStation => industry.kotStation; String? get foodClass => industry.foodClass;
+  String? get spiceLevel => industry.spiceLevel; List<String> get allergens => industry.allergens; double get calories => industry.calories;
+  List<RecipeIngredient> get recipeBOM => industry.recipeBOM; String? get portionSize => industry.portionSize; int get prepTime => industry.prepTime;
+  double get takeawaySurcharge => industry.takeawaySurcharge; double get serviceChargePct => industry.serviceChargePct; String? get cafeCategory => industry.cafeCategory;
+  String? get temperatureProfile => industry.temperatureProfile; List<String> get cupSizes => industry.cupSizes; List<String> get milkOptions => industry.milkOptions;
+  List<String> get sugarLevels => industry.sugarLevels; String? get bakeryType => industry.bakeryType; String? get flavorProfile => industry.flavorProfile;
+  DateTime? get bakeTimestamp => industry.bakeTimestamp; int get freshnessDuration => industry.freshnessDuration; String? get freshnessUnit => industry.freshnessUnit;
+  String? get juiceCategory => industry.juiceCategory; List<String> get fruitBases => industry.fruitBases; bool get isCombo => industry.isCombo;
+  List<ComboItem> get comboItems => industry.comboItems; String? get hotelDepartment => industry.hotelDepartment; bool get allowRoomFolio => industry.allowRoomFolio;
+  double get roomDeliveryCharge => industry.roomDeliveryCharge; String? get virtualBrand => industry.virtualBrand;
+  Map<String, String> get aggregatorMappings => industry.aggregatorMappings; String? get containerType => industry.containerType;
+  double get packagingCost => industry.packagingCost; String? get stallAssignment => industry.stallAssignment; double get managementRoyaltyPct => industry.managementRoyaltyPct;
+  String? get targetAgeGroup => industry.targetAgeGroup;
+  DateTime? get scheduledTrialDate => industry.scheduledTrialDate;
+  DateTime? get promisedDeliveryDate => industry.promisedDeliveryDate;
+  DateTime? get harvestDate => industry.harvestDate;
+  DateTime? get contractPricingEffectiveFrom => industry.contractPricingEffectiveFrom;
+  DateTime? get contractPricingEffectiveTo => industry.contractPricingEffectiveTo;
+  String? get therapeuticCategory => industry.therapeuticCategory;
+  String? get indicationCategory => industry.indicationCategory;
+  String? get selfMedicationWarning => industry.selfMedicationWarning;
+  String? get drugSchedule => industry.drugSchedule;
+  String? get controlledRegisterId => industry.controlledRegisterId;
+  String? get dataLoggerSerialId => industry.dataLoggerSerialId;
+  String? get masterMoleculeCode => industry.masterMoleculeCode;
+  String? get genericAlternative => industry.genericAlternative;
+  String? get classicalReference => industry.classicalReference;
+  String? get homeopathyLatinName => industry.homeopathyLatinName;
+  String? get homeopathyPotencyScale => industry.homeopathyPotencyScale;
+  String? get homeopathyDilution => industry.homeopathyDilution;
+  String? get homeopathyMotherTincture => industry.homeopathyMotherTincture;
+  String? get implantType => industry.implantType;
+  String? get biocompatibilityGrade => industry.biocompatibilityGrade;
+  String? get udiCode => industry.udiCode;
+  String? get weightCapacity => industry.weightCapacity;
+  String? get rentalPeriod => industry.rentalPeriod;
+  String? get optometrySph => industry.optometrySph;
+  String? get optometryCyl => industry.optometryCyl;
+  String? get optometryAxis => industry.optometryAxis;
+  String? get optometryBaseCurve => industry.optometryBaseCurve;
+  String? get optometryDiameter => industry.optometryDiameter;
+  String? get optometryMoistureContent => industry.optometryMoistureContent;
+  String? get optometryReplacementSchedule => industry.optometryReplacementSchedule;
+  String? get reagentType => industry.reagentType;
+  String? get reagentSensitivity => industry.reagentSensitivity;
+  String? get curingTime => industry.curingTime;
+  String? get settingExpansion => industry.settingExpansion;
+  String? get targetSpecies => industry.targetSpecies;
+  String? get animalWeightRange => industry.animalWeightRange;
+  String? get meatWithdrawalPeriod => industry.meatWithdrawalPeriod;
+  String? get milkWithdrawalPeriod => industry.milkWithdrawalPeriod;
+  String? get activeNutrient => industry.activeNutrient;
+  double get minStorageTemp => industry.minStorageTemp;
+  double get maxStorageTemp => industry.maxStorageTemp;
+  double get maxRoomTempExposure => industry.maxRoomTempExposure;
+  double get nutrientPercentage => industry.nutrientPercentage;
+  bool get coldChainRequired => industry.coldChainRequired;
+  bool get substitutionAllowed => industry.substitutionAllowed;
+  bool get isFoldable => industry.isFoldable;
+  bool get isMotorized => industry.isMotorized;
+  bool get isRentalAvailable => industry.isRentalAvailable;
+  DateTime? get sterilizationExpiry => industry.sterilizationExpiry;
+  String? get ramSize => industry.ramSize; String? get internalStorage => industry.internalStorage; String? get chipset => industry.chipset;
+  String? get screenSize => industry.screenSize; String? get batteryCapacity => industry.batteryCapacity; String? get connectivity => industry.connectivity;
+  String? get simSlots => industry.simSlots; String? get colorFinish => industry.colorFinish; String? get processor => industry.processor;
+  String? get ramGeneration => industry.ramGeneration; String? get dedicatedGpu => industry.dedicatedGpu; String? get osVersion => industry.osVersion;
+  String? get audioType => industry.audioType; String? get driverSize => industry.driverSize; String? get bluetoothVersion => industry.bluetoothVersion;
+  String? get batteryLife => industry.batteryLife; String? get panelTechnology => industry.panelTechnology; String? get resolution => industry.resolution;
+  String? get refreshRate => industry.refreshRate; String? get smartTvOs => industry.smartTvOs; String? get hdrFormat => industry.hdrFormat;
+  String? get hdmiPorts => industry.hdmiPorts; String? get energyRating => industry.energyRating; String? get refrigerantType => industry.refrigerantType;
+  double get annualEnergyConsumption => industry.annualEnergyConsumption; String? get motorWattage => industry.motorWattage; String? get jarCapacity => industry.jarCapacity;
+  String? get speedControls => industry.speedControls; String? get heatingElements => industry.heatingElements; String? get gamingPlatform => industry.gamingPlatform;
+  String? get gamingEdition => industry.gamingEdition; int? get controllerCount => industry.controllerCount; String? get includedGames => industry.includedGames;
+  String? get sensorType => industry.sensorType; String? get megapixels => industry.megapixels; String? get lensMount => industry.lensMount;
+  String? get maxVideoResolution => industry.maxVideoResolution; String? get isoRange => industry.isoRange; String? get imageStabilization => industry.imageStabilization;
+  String? get shutterRating => industry.shutterRating; String? get networkingDeviceType => industry.networkingDeviceType; String? get portConfig => industry.portConfig;
+  String? get wirelessBandwidth => industry.wirelessBandwidth; String? get cosmeticGrade => industry.cosmeticGrade; String? get batteryHealth => industry.batteryHealth;
+  String? get inspectionId => industry.inspectionId; String? get sellerWarranty => industry.sellerWarranty; String? get replacedParts => industry.replacedParts;
+  String? get operatingVoltage => industry.operatingVoltage; String? get mountingType => industry.mountingType; String? get packageForm => industry.packageForm;
+  int? get pinCount => industry.pinCount; String? get takeoffWeight => industry.takeoffWeight; String? get flightTime => industry.flightTime;
+  String? get transmissionRange => industry.transmissionRange; String? get batteryChemistry => industry.batteryChemistry; String? get peakOutput => industry.peakOutput;
+  String? get solarChargeController => industry.solarChargeController; String? get nightVision => industry.nightVision; String? get focalLength => industry.focalLength;
+  String? get iotProtocol => industry.iotProtocol; String? get weatherproofRating => industry.weatherproofRating;
+  bool get fastChargingSupported => industry.fastChargingSupported; bool get ancSupported => industry.ancSupported; bool get inverterTechnology => industry.inverterTechnology;
+  bool get dishwasherSafe => industry.dishwasherSafe; bool get poeSupported => industry.poeSupported; bool get rackMountable => industry.rackMountable;
+  bool get originalBoxIncluded => industry.originalBoxIncluded; bool get pureSineWave => industry.pureSineWave; bool get obstacleAvoidance => industry.obstacleAvoidance;
+  bool get nightVisionEnabled => industry.nightVisionEnabled; bool get mandatorySerialScan => industry.mandatorySerialScan;
+}
+
+================
+File: lib/features/inventory/domain/models/variant_matrix_item.dart
+================
+import 'media_asset.dart';
+import 'product_studio_enums.dart';
+
+class VariantMatrixItem {
+  final String size;
+  final String color;
+  bool isSelected;
+  String sku;
+  String barcode;
+  double price; // Represents Selling Price
+  double purchasePrice;
+  double mrp;
+  double wholesalePrice;
+  int stock;
+  int safetyStock;
+  double reorderLevel;
+  String warehouseLocation;
+
+  // New Discount Fields
+  String discountType; // "Percentage" or "Amount"
+  double discountValue;
+
+  // Advanced Fields
+  String taxStatus;
+  String taxCategory;
+  String taxJurisdiction;
+  String hsnCode;
+  String primarySupplier;
+  String supplierSku;
+  double supplierPurchaseCost;
+  int moq;
+  int leadTime;
+  String marketingTitle;
+  String urlSlug;
+  String metaDescription;
+  String status;
+  String productRelationship;
+  String warrantyInfo;
+
+  MediaMode mediaMode;
+  List<MediaAsset>? customMedia;
+
+  VariantMatrixItem({
+    required this.size,
+    required this.color,
+    this.isSelected = false,
+    required this.sku,
+    this.barcode = "",
+    required this.price,
+    this.purchasePrice = 0,
+    this.mrp = 0,
+    this.wholesalePrice = 0,
+    required this.stock,
+    this.safetyStock = 0,
+    this.reorderLevel = 0,
+    this.warehouseLocation = "",
+    this.discountType = "Percentage",
+    this.discountValue = 0,
+    this.taxStatus = "Taxable",
+    this.taxCategory = "Standard",
+    this.taxJurisdiction = "Default",
+    this.hsnCode = "",
+    this.primarySupplier = "",
+    this.supplierSku = "",
+    this.supplierPurchaseCost = 0,
+    this.moq = 1,
+    this.leadTime = 0,
+    this.marketingTitle = "",
+    this.urlSlug = "",
+    this.metaDescription = "",
+    this.status = "Active",
+    this.productRelationship = "",
+    this.warrantyInfo = "",
+    this.mediaMode = MediaMode.inherited,
+    this.customMedia,
+  });
+}
+
+================
+File: pubspec.yaml
+================
+name: zeno
+description: ZENO Business Operating System - A modular, industry-agnostic BOS.
+version: 2.0.0+3
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  # State Management
+  flutter_bloc: ^8.1.0
+  equatable: ^2.0.5
+
+  # Database
+  isar: ^3.1.0
+  isar_flutter_libs: ^3.1.0
+  path_provider: ^2.1.0
+
+  # Dependency Injection
+  get_it: ^7.6.0
+
+  # Networking & Sync
+  dio: ^5.3.0
+  connectivity_plus: ^5.0.0
+
+  # UI & Icons
+  google_fonts: ^6.1.0
+  flutter_svg: ^2.0.7
+  responsive_framework: ^1.1.0
+  flutter_animate: ^4.5.0
+  glassmorphism_ui: ^0.3.0
+
+  # Enterprise Visualization
+  syncfusion_flutter_charts: ^28.1.33
+  syncfusion_flutter_treemap: ^28.1.33
+  syncfusion_flutter_gauges: ^28.1.33
+  fl_chart: ^1.2.0
+  table_calendar: ^3.1.2
+  flutter_staggered_grid_view: ^0.7.0
+
+  # Utils
+  uuid: ^4.2.1
+  json_annotation: ^4.8.0
+  intl: ^0.20.3
+
+  # AI
+  google_generative_ai: ^0.4.0
+
+  # Phase 1 Integrations
+  upi_india: ^3.0.1
+  blue_thermal_printer: ^1.2.3
+  esc_pos_utils_plus: ^2.0.2
+  mobile_scanner: ^5.2.3
+  url_launcher: ^6.2.1
+  share_plus: ^10.1.0
+  file_picker: ^8.1.2
+  flutter_sms: ^3.0.1
+  flutter_email_sender: ^6.0.3
+
+  # Phase 3 Hardware & Sync
+  geolocator: ^12.0.0
+  local_auth: ^2.3.0
+  workmanager: ^0.5.2
+  firebase_messaging: ^15.0.3
+  permission_handler: ^11.3.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+  
+  # Code Generation
+  build_runner: ^2.4.6
+  isar_generator: ^3.1.0
+  json_serializable: ^6.7.1
+
+flutter:
+  uses-material-design: true
+  
+  # To be added: assets, fonts, etc.
+
+================
+File: lib/features/inventory/domain/models/mappers/product_studio_from_domain.dart
+================
+import '../product_studio_data.dart';
+import '../product.dart';
+import '../variant_matrix_item.dart';
+
+extension ProductStudioFromDomain on ProductStudioData {
+  static ProductStudioData fromDomain(Product domain) {
+    final p = ProductStudioData(id: domain.id);
+    p.title = domain.name;
+    p.description = domain.description ?? "";
+    p.sku = domain.sku.value;
+    p.barcode = domain.barcode?.value ?? "";
+    p.category = domain.category?.name ?? "";
+    p.brand = domain.brand?.name ?? "";
+    p.unit = domain.unit.name;
+    p.taxCode = domain.taxProfile?.name ?? "";
+    p.sellingPrice = domain.basePrice;
+    p.costPrice = domain.baseCost;
+    p.mrp = domain.mrp;
+    p.wholesalePrice = domain.wholesalePrice;
+    p.discountType = domain.discountPct > 0 ? "Percentage" : "Amount";
+    p.discountValue = domain.discountPct > 0 ? domain.discountPct : domain.discountAmount;
+    p.openingStock = domain.openingStock;
+    p.warehouseLocation = domain.warehouseLocation;
+    p.supplierProductName = domain.supplierProductName ?? "";
+    p.supplierPaymentTerms = domain.supplierPaymentTerms ?? "";
+    p.supplierContact = domain.supplierContact ?? "";
+    p.supplierNotes = domain.supplierNotes ?? "";
+    p.manufacturer = domain.manufacturer ?? "";
+    p.tags = domain.tags.join(', ');
+    p.itemType = domain.itemType;
+    p.businessScale = domain.businessScale;
+    p.status = domain.status.name[0].toUpperCase() + domain.status.name.substring(1);
+    p.safetyStock = domain.minStock;
+    p.maxStock = domain.maxStock;
+    p.reorderLevel = domain.reorderLevel;
+    p.businessType = domain.businessType;
+    p.businessCategory = domain.businessCategory;
+    p.gstTaxMode = domain.gstTaxMode;
+    p.enableBatchTracking = domain.batchTracking;
+    p.batches = domain.batches;
+    p.supplierRelationships = domain.supplierRelationships;
+    p.packageType = domain.packageType ?? "";
+    p.unitsPerPackage = domain.unitsPerPackage;
+    p.packageQuantity = domain.packageQuantity;
+    p.stockUnit = domain.stockUnit ?? "Piece (Pc)";
+    p.conversionFactor = domain.conversionFactor;
+    p.material = domain.material ?? "";
+    p.metalType = domain.metalType ?? "";
+    p.purity = domain.purity ?? "";
+    p.weight = domain.weight ?? 0;
+    p.stoneType = domain.stoneType ?? "";
+    p.stoneWeight = domain.stoneWeight ?? 0;
+    p.jewelrySize = domain.jewelrySize ?? "";
+    p.shade = domain.shade ?? "";
+    p.skinType = domain.skinType ?? "";
+    p.hairType = domain.hairType ?? "";
+    p.volume = domain.volume ?? "";
+    p.ingredients = domain.ingredients ?? "";
+    p.usageInfo = domain.usageInfo ?? "";
+    p.fragranceFamily = domain.fragranceFamily ?? "";
+    p.concentration = domain.concentration ?? "";
+    p.gender = domain.gender ?? "";
+    p.scentNotes = domain.scentNotes ?? "";
+    p.serialNumber = domain.serialNumber ?? "";
+    p.imei = domain.imei ?? "";
+    p.modelNumber = domain.modelNumber ?? "";
+    p.partNumber = domain.partNumber ?? "";
+    p.oemNumber = domain.oemNumber ?? "";
+    p.compatibility = domain.compatibility ?? "";
+    p.vehicleMake = domain.vehicleMake ?? "";
+    p.vehicleModel = domain.vehicleModel ?? "";
+    p.styleCategory = domain.styleCategory ?? "";
+    p.season = domain.season ?? "";
+    p.soleMaterial = domain.soleMaterial ?? "";
+    p.closureType = domain.closureType ?? "";
+    p.widthFit = domain.widthFit ?? "";
+    p.sizeStandard = domain.sizeStandard ?? "";
+    p.apparelCategory = domain.apparelCategory ?? "";
+    p.patternDesign = domain.patternDesign ?? "";
+    p.fitType = domain.fitType ?? "";
+    p.sleeveNeckType = domain.sleeveNeckType ?? "";
+    p.careGuide = domain.careGuide ?? "";
+    p.artisanLabel = domain.artisanLabel ?? "";
+    p.collectionEdition = domain.collectionEdition ?? "";
+    p.productionLeadTime = domain.productionLeadTime ?? 0;
+    p.exclusiveSinglePiece = domain.exclusiveSinglePiece;
+    p.madeToOrder = domain.madeToOrder;
+    p.measurementBust = domain.measurementBust ?? "";
+    p.measurementWaist = domain.measurementWaist ?? "";
+    p.measurementHip = domain.measurementHip ?? "";
+    p.measurementFullLength = domain.measurementFullLength ?? "";
+    p.gemstoneCount = domain.gemstoneCount ?? 0;
+    p.hallmarkCert = domain.hallmarkCert ?? "";
+    p.makingChargeMode = domain.makingChargeMode ?? "";
+    p.makingChargeRate = domain.makingChargeRate ?? 0;
+    p.wastagePct = domain.wastagePct ?? 0;
+    p.liveRateLink = domain.liveRateLink ?? "";
+    p.brandRange = domain.brandRange ?? "";
+    p.shadeHexColor = domain.shadeHexColor ?? "";
+    p.safetyCertifications = domain.safetyCertifications;
+    p.periodAfterOpening = domain.periodAfterOpening ?? "";
+    p.perfumeHouse = domain.perfumeHouse ?? "";
+    p.topNotes = domain.topNotes ?? "";
+    p.middleNotes = domain.middleNotes ?? "";
+    p.baseNotes = domain.baseNotes ?? "";
+    p.aisleLocation = domain.aisleLocation ?? "";
+    p.countryOfOrigin = domain.countryOfOrigin ?? "";
+    p.variableWeightPLU = domain.variableWeightPLU;
+    p.pluCode = domain.pluCode ?? "";
+    p.tareWeight = domain.tareWeight;
+    p.onlinePrice = domain.onlinePrice;
+    p.maxDiscountPct = domain.maxDiscountPct;
+    p.channelEligibility = domain.channelEligibility;
+    p.expiryWarningThreshold = domain.expiryWarningThreshold;
+    p.searchKeywords = domain.searchKeywords;
+    p.promotionalBadges = domain.promotionalBadges ?? "";
+    p.division = domain.division ?? "";
+    p.privateLabel = domain.privateLabel;
+    p.seasonalProduct = domain.seasonalProduct;
+    p.masterCaseRatio = domain.masterCaseRatio;
+    p.grossWeight = domain.grossWeight;
+    p.unitDimensions = domain.unitDimensions ?? "";
+    p.packagingDeposit = domain.packagingDeposit;
+    p.importDutyClass = domain.importDutyClass ?? "";
+    p.memberLoyaltyPrice = domain.memberLoyaltyPrice;
+    p.loyaltyPointsMultiplier = domain.loyaltyPointsMultiplier;
+    p.storageClass = domain.storageClass ?? "";
+    p.floorZone = domain.floorZone ?? "";
+    p.organicCertified = domain.organicCertified;
+    p.foodCategory = domain.foodCategory ?? "";
+    p.ingredientsSummary = domain.ingredientsSummary ?? "";
+    p.storageCondition = domain.storageCondition ?? "";
+    p.dietaryBadges = domain.dietaryBadges;
+    p.fastMovingFlag = domain.fastMovingFlag;
+    p.posHotkeyEnabled = domain.posHotkeyEnabled;
+    p.posHotkeyColor = domain.posHotkeyColor ?? "";
+    p.ageRestriction = domain.ageRestriction;
+    p.readyToEatItem = domain.readyToEatItem;
+    p.coldStorageIndicator = domain.coldStorageIndicator;
+    p.multiBarcodes = domain.multiBarcodes;
+    p.marketingTitle = domain.marketingTitle ?? "";
+    p.urlSlug = domain.urlSlug ?? "";
+    p.metaDescription = domain.metaDescription ?? "";
+    p.featuredProduct = domain.featuredProduct;
+    p.productRelationship = domain.productRelationship ?? "";
+    p.warrantyInfo = domain.warrantyInfo ?? "";
+    p.warrantyAvailable = domain.warrantyAvailable;
+    p.warrantyDuration = domain.warrantyDuration ?? 0;
+    p.warrantyUnit = domain.warrantyUnit ?? "Months";
+    p.cuisineType = domain.cuisineType ?? "";
+    p.kotStation = domain.kotStation ?? "";
+    p.foodClass = domain.foodClass ?? "Veg";
+    p.spiceLevel = domain.spiceLevel ?? "Mild";
+    p.allergens = domain.allergens;
+    p.calories = domain.calories;
+    p.recipeBOM = domain.recipeBOM;
+    p.portionSize = domain.portionSize ?? "";
+    p.prepTime = domain.prepTime ?? 0;
+    p.takeawaySurcharge = domain.takeawaySurcharge;
+    p.serviceChargePct = domain.serviceChargePct;
+    p.warrantyDuration = domain.warrantyDuration ?? 0;
+    p.gemstoneCount = domain.gemstoneCount ?? 0;
+    p.cafeCategory = domain.cafeCategory ?? "";
+    p.temperatureProfile = domain.temperatureProfile ?? "Hot";
+    p.cupSizes = domain.cupSizes;
+    p.milkOptions = domain.milkOptions;
+    p.sugarLevels = domain.sugarLevels;
+    p.bakeryType = domain.bakeryType ?? "";
+    p.flavorProfile = domain.flavorProfile ?? "";
+    p.bakeTimestamp = domain.bakeTimestamp;
+    p.freshnessDuration = domain.freshnessDuration;
+    p.freshnessUnit = domain.freshnessUnit ?? "Hours";
+    p.juiceCategory = domain.juiceCategory ?? "";
+    p.fruitBases = domain.fruitBases;
+    p.isCombo = domain.isCombo;
+    p.comboItems = domain.comboItems;
+    p.hotelDepartment = domain.hotelDepartment ?? "";
+    p.allowRoomFolio = domain.allowRoomFolio;
+    p.roomDeliveryCharge = domain.roomDeliveryCharge;
+    p.virtualBrand = domain.virtualBrand ?? "";
+    p.aggregatorMappings = domain.aggregatorMappings;
+    p.containerType = domain.containerType ?? "";
+    p.packagingCost = domain.packagingCost;
+    p.stallAssignment = domain.stallAssignment ?? "";
+    p.managementRoyaltyPct = domain.managementRoyaltyPct;
+    p.digitalMenuDescription = domain.industry.digitalMenuDescription ?? "";
+    p.preparationSlaWindow = domain.industry.preparationSlaWindow ?? "";
+    p.fineDiningCourse = domain.industry.fineDiningCourse ?? "";
+    p.winePairing = domain.industry.winePairing ?? "";
+    p.swiggySku = domain.industry.swiggySku ?? "";
+    p.zomatoSku = domain.industry.zomatoSku ?? "";
+    p.uberEatsSku = domain.industry.uberEatsSku ?? "";
+    p.talabatSku = domain.industry.talabatSku ?? "";
+    p.cakeSize = domain.industry.cakeSize ?? "";
+    p.cakeShape = domain.industry.cakeShape ?? "";
+    p.cakeFilling = domain.industry.cakeFilling ?? "";
+    p.cakeFrosting = domain.industry.cakeFrosting ?? "";
+    p.bakeryShelfLife = domain.industry.bakeryShelfLife ?? "";
+    p.coffeeServingTemp = domain.industry.coffeeServingTemp ?? "";
+    p.barLiquorClass = domain.industry.barLiquorClass ?? "";
+    p.barPourMetric = domain.industry.barPourMetric ?? "";
+    p.mealPlanInclusions = domain.industry.mealPlanInclusions ?? "";
+    p.eventType = domain.industry.eventType ?? "";
+    p.setupInclusions = domain.industry.setupInclusions ?? "";
+    p.kdsCategory = domain.industry.kdsCategory ?? "";
+    p.recipeVersion = domain.industry.recipeVersion ?? "";
+    p.recipePrepNotes = domain.industry.recipePrepNotes ?? "";
+    p.cancellationPolicy = domain.industry.cancellationPolicy ?? "";
+    p.repairCustomerImei = domain.industry.repairCustomerImei ?? "";
+    p.repairComplaintLog = domain.industry.repairComplaintLog ?? "";
+    p.assignedSalesRepresentative = domain.industry.assignedSalesRepresentative ?? "";
+    p.territoryAllocation = domain.industry.territoryAllocation ?? "";
+    p.customsPortOfEntry = domain.industry.customsPortOfEntry ?? "";
+    p.ssccBarcode = domain.industry.ssccBarcode ?? "";
+    p.taxExemptionNo = domain.industry.taxExemptionNo ?? "";
+    p.targetAgeGroup = domain.industry.targetAgeGroup ?? "";
+    p.therapeuticCategory = domain.industry.therapeuticCategory ?? "";
+    p.indicationCategory = domain.industry.indicationCategory ?? "";
+    p.selfMedicationWarning = domain.industry.selfMedicationWarning ?? "";
+    p.drugSchedule = domain.industry.drugSchedule ?? "";
+    p.controlledRegisterId = domain.industry.controlledRegisterId ?? "";
+    p.dataLoggerSerialId = domain.industry.dataLoggerSerialId ?? "";
+    p.masterMoleculeCode = domain.industry.masterMoleculeCode ?? "";
+    p.genericAlternative = domain.industry.genericAlternative ?? "";
+    p.classicalReference = domain.industry.classicalReference ?? "";
+    p.homeopathyLatinName = domain.industry.homeopathyLatinName ?? "";
+    p.homeopathyPotencyScale = domain.industry.homeopathyPotencyScale ?? "";
+    p.homeopathyDilution = domain.industry.homeopathyDilution ?? "";
+    p.homeopathyMotherTincture = domain.industry.homeopathyMotherTincture ?? "";
+    p.implantType = domain.industry.implantType ?? "";
+    p.biocompatibilityGrade = domain.industry.biocompatibilityGrade ?? "";
+    p.udiCode = domain.industry.udiCode ?? "";
+    p.weightCapacity = domain.industry.weightCapacity ?? "";
+    p.rentalPeriod = domain.industry.rentalPeriod ?? "";
+    p.optometrySph = domain.industry.optometrySph ?? "";
+    p.optometryCyl = domain.industry.optometryCyl ?? "";
+    p.optometryAxis = domain.industry.optometryAxis ?? "";
+    p.optometryBaseCurve = domain.industry.optometryBaseCurve ?? "";
+    p.optometryDiameter = domain.industry.optometryDiameter ?? "";
+    p.optometryMoistureContent = domain.industry.optometryMoistureContent ?? "";
+    p.optometryReplacementSchedule = domain.industry.optometryReplacementSchedule ?? "";
+    p.reagentType = domain.industry.reagentType ?? "";
+    p.reagentSensitivity = domain.industry.reagentSensitivity ?? "";
+    p.curingTime = domain.industry.curingTime ?? "";
+    p.settingExpansion = domain.industry.settingExpansion ?? "";
+    p.targetSpecies = domain.industry.targetSpecies ?? "";
+    p.animalWeightRange = domain.industry.animalWeightRange ?? "";
+    p.meatWithdrawalPeriod = domain.industry.meatWithdrawalPeriod ?? "";
+    p.milkWithdrawalPeriod = domain.industry.milkWithdrawalPeriod ?? "";
+    p.activeNutrient = domain.industry.activeNutrient ?? "";
+    p.nutritionalProtein = domain.industry.nutritionalProtein;
+    p.nutritionalCarbs = domain.industry.nutritionalCarbs;
+    p.nutritionalTransFats = domain.industry.nutritionalTransFats;
+    p.dineInPrice = domain.industry.dineInPrice;
+    p.takeawayPrice = domain.industry.takeawayPrice;
+    p.aggregatorPrice = domain.industry.aggregatorPrice;
+    p.packagingSurcharge = domain.industry.packagingSurcharge;
+    p.roomServiceMarkupPct = domain.industry.roomServiceMarkupPct;
+    p.paxPrice = domain.industry.paxPrice;
+    p.targetFoodCostPct = domain.industry.targetFoodCostPct;
+    p.advanceDepositPct = domain.industry.advanceDepositPct;
+    p.minOrderValue = domain.industry.minOrderValue;
+    p.buyerCreditLimit = domain.industry.buyerCreditLimit;
+    p.assignedDoctors = domain.industry.assignedDoctors;
+    p.advanceBookingHours = domain.industry.advanceBookingHours;
+    p.minPax = domain.industry.minPax;
+    p.maxPax = domain.industry.maxPax;
+    p.courseFireDelay = domain.industry.courseFireDelay;
+    p.isLiveMarketPrice = domain.industry.isLiveMarketPrice;
+    p.isExpressPrep = domain.industry.isExpressPrep;
+    p.customMessageAllowed = domain.industry.customMessageAllowed;
+    p.extraShotAllowed = domain.industry.extraShotAllowed;
+    p.isRoomServiceAvailable = domain.industry.isRoomServiceAvailable;
+    p.isAppointmentRequired = domain.industry.isAppointmentRequired;
+    p.minStorageTemp = domain.industry.minStorageTemp;
+    p.maxStorageTemp = domain.industry.maxStorageTemp;
+    p.maxRoomTempExposure = domain.industry.maxRoomTempExposure;
+    p.nutrientPercentage = domain.industry.nutrientPercentage;
+    p.coldChainRequired = domain.industry.coldChainRequired;
+    p.substitutionAllowed = domain.industry.substitutionAllowed;
+    p.isFoldable = domain.industry.isFoldable;
+    p.isMotorized = domain.industry.isMotorized;
+    p.isRentalAvailable = domain.industry.isRentalAvailable;
+    p.harvestDate = domain.industry.harvestDate;
+    p.contractPricingEffectiveFrom = domain.industry.contractPricingEffectiveFrom;
+    p.contractPricingEffectiveTo = domain.industry.contractPricingEffectiveTo;
+    p.scheduledTrialDate = domain.industry.scheduledTrialDate;
+    p.promisedDeliveryDate = domain.industry.promisedDeliveryDate;
+    p.sterilizationExpiry = domain.industry.sterilizationExpiry;
+    p.variants = domain.variants.map((v) => VariantMatrixItem(
+      size: v.attributes["Size"] ?? "", color: v.attributes["Color"] ?? "",
+      sku: v.sku.value, barcode: v.barcode?.value ?? "",
+      price: domain.basePrice + v.priceAdjustment, stock: v.stockLevel.toInt(),
+    )).toList();
+    return p;
+  }
+}
+
+
+
+
+
+================================================================
+End of Codebase
+================================================================
