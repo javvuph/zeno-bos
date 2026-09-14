@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:zeno/app/theme.dart';
+import 'package:zeno/core/localization/country_registry.dart';
+import 'package:zeno/features/administration/presentation/controllers/store_setup_controller.dart';
 import 'package:zeno/features/billing/domain/models/bill.dart';
 
 class ReceiptPreviewDialog extends StatelessWidget {
@@ -10,6 +12,25 @@ class ReceiptPreviewDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<ZenoSemanticColors>()!;
+
+    final storeController = StoreSetupController();
+    final store = storeController.stores.isNotEmpty ? storeController.stores.first : null;
+    final storeName = (store?.name ?? '').trim().isNotEmpty ? store!.name : 'STORE';
+    final legalName = store?.legalName ?? '';
+    final address = store?.address ?? '';
+    final city = store?.city ?? '';
+    final state = store?.state ?? '';
+    final zip = store?.zipCode ?? '';
+    final phone = store?.phone ?? '';
+    final taxId = store?.taxId ?? '';
+    final email = store?.email ?? '';
+    final country = store?.country ?? 'India';
+
+    final countryProfile = CountryRegistry.countries.firstWhere(
+      (c) => c.name.toLowerCase() == country.toLowerCase() || c.code.toLowerCase() == country.toLowerCase(),
+      orElse: () => CountryRegistry.defaultCountry,
+    );
+    final taxLabel = countryProfile.tax.taxIdName;
 
     return Dialog(
       backgroundColor: Colors.transparent,
@@ -43,13 +64,30 @@ class ReceiptPreviewDialog extends StatelessWidget {
                 padding: const EdgeInsets.all(32),
                 child: Column(
                   children: [
-                    const Text('ZENO BUSINESS OS',
-                        style: TextStyle(
+                    Text(storeName.toUpperCase(),
+                        style: const TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.w900,
                             fontSize: 18)),
-                    const Text('Enterprise POS Solution',
-                        style: TextStyle(color: Colors.black, fontSize: 10)),
+                    if (legalName.isNotEmpty && legalName.toLowerCase() != storeName.toLowerCase())
+                      Text(legalName,
+                          style: const TextStyle(color: Colors.black, fontSize: 10)),
+                    if (address.isNotEmpty)
+                      Text(address,
+                          style: const TextStyle(color: Colors.black54, fontSize: 9),
+                          textAlign: TextAlign.center),
+                    if (city.isNotEmpty || state.isNotEmpty || zip.isNotEmpty)
+                      Text('$city, $state $zip'.trim(),
+                          style: const TextStyle(color: Colors.black54, fontSize: 9)),
+                    if (phone.isNotEmpty)
+                      Text('Ph: $phone',
+                          style: const TextStyle(color: Colors.black54, fontSize: 9)),
+                    if (taxId.isNotEmpty)
+                      Text('$taxLabel: $taxId',
+                          style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 9,
+                              fontWeight: FontWeight.bold)),
                     const SizedBox(height: 20),
                     const Divider(color: Colors.black26),
                     _buildInfoRow('Bill ID:', bill.id),
@@ -73,8 +111,9 @@ class ReceiptPreviewDialog extends StatelessWidget {
                             color: Colors.black,
                             fontSize: 10,
                             fontWeight: FontWeight.bold)),
-                    const Text('www.zeno.com',
-                        style: TextStyle(color: Colors.black, fontSize: 8)),
+                    if (email.isNotEmpty)
+                      Text(email,
+                          style: const TextStyle(color: Colors.black, fontSize: 8)),
                   ],
                 ),
               ),

@@ -96,6 +96,10 @@ class MenuRegistry {
                 icon: Icons.inventory_2_rounded,
                 route: 'inventory/products'),
             ZenoMenuItem(
+                label: 'Product Studio',
+                icon: Icons.auto_awesome_motion_rounded,
+                route: 'inventory/studio'),
+            ZenoMenuItem(
                 label: 'Categories',
                 icon: Icons.category_rounded,
                 route: 'inventory/categories'),
