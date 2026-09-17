@@ -403,501 +403,516 @@ const ProductCollectionSchema = CollectionSchema(
       name: r'maxDiscountPct',
       type: IsarType.double,
     ),
-    r'measurementBust': PropertySchema(
+    r'maxStock': PropertySchema(
       id: 77,
+      name: r'maxStock',
+      type: IsarType.double,
+    ),
+    r'measurementBust': PropertySchema(
+      id: 78,
       name: r'measurementBust',
       type: IsarType.string,
     ),
     r'measurementFullLength': PropertySchema(
-      id: 78,
+      id: 79,
       name: r'measurementFullLength',
       type: IsarType.string,
     ),
     r'measurementHip': PropertySchema(
-      id: 79,
+      id: 80,
       name: r'measurementHip',
       type: IsarType.string,
     ),
     r'measurementWaist': PropertySchema(
-      id: 80,
+      id: 81,
       name: r'measurementWaist',
       type: IsarType.string,
     ),
     r'memberLoyaltyPrice': PropertySchema(
-      id: 81,
+      id: 82,
       name: r'memberLoyaltyPrice',
       type: IsarType.double,
     ),
     r'metaDescription': PropertySchema(
-      id: 82,
+      id: 83,
       name: r'metaDescription',
       type: IsarType.string,
     ),
     r'metalType': PropertySchema(
-      id: 83,
+      id: 84,
       name: r'metalType',
       type: IsarType.string,
     ),
     r'middleNotes': PropertySchema(
-      id: 84,
+      id: 85,
       name: r'middleNotes',
       type: IsarType.string,
     ),
     r'milkOptions': PropertySchema(
-      id: 85,
+      id: 86,
       name: r'milkOptions',
       type: IsarType.stringList,
     ),
+    r'minStock': PropertySchema(
+      id: 87,
+      name: r'minStock',
+      type: IsarType.double,
+    ),
     r'modelNumber': PropertySchema(
-      id: 86,
+      id: 88,
       name: r'modelNumber',
       type: IsarType.string,
     ),
     r'multiBarcodes': PropertySchema(
-      id: 87,
+      id: 89,
       name: r'multiBarcodes',
       type: IsarType.stringList,
     ),
     r'name': PropertySchema(
-      id: 88,
+      id: 90,
       name: r'name',
       type: IsarType.string,
     ),
     r'oemNumber': PropertySchema(
-      id: 89,
+      id: 91,
       name: r'oemNumber',
       type: IsarType.string,
     ),
     r'onlinePrice': PropertySchema(
-      id: 90,
+      id: 92,
       name: r'onlinePrice',
       type: IsarType.double,
     ),
     r'openingStock': PropertySchema(
-      id: 91,
+      id: 93,
       name: r'openingStock',
       type: IsarType.double,
     ),
     r'organicCertified': PropertySchema(
-      id: 92,
+      id: 94,
       name: r'organicCertified',
       type: IsarType.bool,
     ),
     r'packageQuantity': PropertySchema(
-      id: 93,
+      id: 95,
       name: r'packageQuantity',
       type: IsarType.double,
     ),
     r'packageType': PropertySchema(
-      id: 94,
+      id: 96,
       name: r'packageType',
       type: IsarType.string,
     ),
     r'packagingCost': PropertySchema(
-      id: 95,
+      id: 97,
       name: r'packagingCost',
       type: IsarType.double,
     ),
     r'packagingDeposit': PropertySchema(
-      id: 96,
+      id: 98,
       name: r'packagingDeposit',
       type: IsarType.double,
     ),
     r'partNumber': PropertySchema(
-      id: 97,
+      id: 99,
       name: r'partNumber',
       type: IsarType.string,
     ),
     r'patternDesign': PropertySchema(
-      id: 98,
+      id: 100,
       name: r'patternDesign',
       type: IsarType.string,
     ),
     r'perfumeHouse': PropertySchema(
-      id: 99,
+      id: 101,
       name: r'perfumeHouse',
       type: IsarType.string,
     ),
     r'periodAfterOpening': PropertySchema(
-      id: 100,
+      id: 102,
       name: r'periodAfterOpening',
       type: IsarType.string,
     ),
     r'pluCode': PropertySchema(
-      id: 101,
+      id: 103,
       name: r'pluCode',
       type: IsarType.string,
     ),
     r'portionSize': PropertySchema(
-      id: 102,
+      id: 104,
       name: r'portionSize',
       type: IsarType.string,
     ),
     r'posHotkeyColor': PropertySchema(
-      id: 103,
+      id: 105,
       name: r'posHotkeyColor',
       type: IsarType.string,
     ),
     r'posHotkeyEnabled': PropertySchema(
-      id: 104,
+      id: 106,
       name: r'posHotkeyEnabled',
       type: IsarType.bool,
     ),
     r'prepTime': PropertySchema(
-      id: 105,
+      id: 107,
       name: r'prepTime',
       type: IsarType.long,
     ),
     r'privateLabel': PropertySchema(
-      id: 106,
+      id: 108,
       name: r'privateLabel',
       type: IsarType.bool,
     ),
     r'productRelationship': PropertySchema(
-      id: 107,
+      id: 109,
       name: r'productRelationship',
       type: IsarType.string,
     ),
     r'productionLeadTime': PropertySchema(
-      id: 108,
+      id: 110,
       name: r'productionLeadTime',
       type: IsarType.long,
     ),
     r'promotionalBadges': PropertySchema(
-      id: 109,
+      id: 111,
       name: r'promotionalBadges',
       type: IsarType.string,
     ),
     r'purity': PropertySchema(
-      id: 110,
+      id: 112,
       name: r'purity',
       type: IsarType.string,
     ),
     r'readyToEatItem': PropertySchema(
-      id: 111,
+      id: 113,
       name: r'readyToEatItem',
       type: IsarType.bool,
     ),
     r'recipeBOM': PropertySchema(
-      id: 112,
+      id: 114,
       name: r'recipeBOM',
       type: IsarType.objectList,
       target: r'RecipeIngredientEmbed',
     ),
+    r'reorderLevel': PropertySchema(
+      id: 115,
+      name: r'reorderLevel',
+      type: IsarType.double,
+    ),
     r'roomDeliveryCharge': PropertySchema(
-      id: 113,
+      id: 116,
       name: r'roomDeliveryCharge',
       type: IsarType.double,
     ),
     r'safetyCertifications': PropertySchema(
-      id: 114,
+      id: 117,
       name: r'safetyCertifications',
       type: IsarType.stringList,
     ),
     r'scentNotes': PropertySchema(
-      id: 115,
+      id: 118,
       name: r'scentNotes',
       type: IsarType.string,
     ),
     r'searchKeywords': PropertySchema(
-      id: 116,
+      id: 119,
       name: r'searchKeywords',
       type: IsarType.stringList,
     ),
     r'season': PropertySchema(
-      id: 117,
+      id: 120,
       name: r'season',
       type: IsarType.string,
     ),
     r'seasonalProduct': PropertySchema(
-      id: 118,
+      id: 121,
       name: r'seasonalProduct',
       type: IsarType.bool,
     ),
     r'secondarySupplier': PropertySchema(
-      id: 119,
+      id: 122,
       name: r'secondarySupplier',
       type: IsarType.string,
     ),
     r'serialNumber': PropertySchema(
-      id: 120,
+      id: 123,
       name: r'serialNumber',
       type: IsarType.string,
     ),
     r'serviceChargePct': PropertySchema(
-      id: 121,
+      id: 124,
       name: r'serviceChargePct',
       type: IsarType.double,
     ),
     r'shade': PropertySchema(
-      id: 122,
+      id: 125,
       name: r'shade',
       type: IsarType.string,
     ),
     r'shadeHexColor': PropertySchema(
-      id: 123,
+      id: 126,
       name: r'shadeHexColor',
       type: IsarType.string,
     ),
     r'sizeStandard': PropertySchema(
-      id: 124,
+      id: 127,
       name: r'sizeStandard',
       type: IsarType.string,
     ),
     r'skinType': PropertySchema(
-      id: 125,
+      id: 128,
       name: r'skinType',
       type: IsarType.string,
     ),
     r'sku': PropertySchema(
-      id: 126,
+      id: 129,
       name: r'sku',
       type: IsarType.string,
     ),
     r'sleeveNeckType': PropertySchema(
-      id: 127,
+      id: 130,
       name: r'sleeveNeckType',
       type: IsarType.string,
     ),
     r'soleMaterial': PropertySchema(
-      id: 128,
+      id: 131,
       name: r'soleMaterial',
       type: IsarType.string,
     ),
     r'spiceLevel': PropertySchema(
-      id: 129,
+      id: 132,
       name: r'spiceLevel',
       type: IsarType.string,
     ),
     r'stallAssignment': PropertySchema(
-      id: 130,
+      id: 133,
       name: r'stallAssignment',
       type: IsarType.string,
     ),
     r'status': PropertySchema(
-      id: 131,
+      id: 134,
       name: r'status',
       type: IsarType.string,
     ),
     r'stockUnit': PropertySchema(
-      id: 132,
+      id: 135,
       name: r'stockUnit',
       type: IsarType.string,
     ),
     r'stoneType': PropertySchema(
-      id: 133,
+      id: 136,
       name: r'stoneType',
       type: IsarType.string,
     ),
     r'stoneWeight': PropertySchema(
-      id: 134,
+      id: 137,
       name: r'stoneWeight',
       type: IsarType.double,
     ),
     r'storageClass': PropertySchema(
-      id: 135,
+      id: 138,
       name: r'storageClass',
       type: IsarType.string,
     ),
     r'storageCondition': PropertySchema(
-      id: 136,
+      id: 139,
       name: r'storageCondition',
       type: IsarType.string,
     ),
     r'styleCategory': PropertySchema(
-      id: 137,
+      id: 140,
       name: r'styleCategory',
       type: IsarType.string,
     ),
     r'sugarLevels': PropertySchema(
-      id: 138,
+      id: 141,
       name: r'sugarLevels',
       type: IsarType.stringList,
     ),
     r'supplierContact': PropertySchema(
-      id: 139,
+      id: 142,
       name: r'supplierContact',
       type: IsarType.string,
     ),
     r'supplierIds': PropertySchema(
-      id: 140,
+      id: 143,
       name: r'supplierIds',
       type: IsarType.stringList,
     ),
     r'supplierLeadTime': PropertySchema(
-      id: 141,
+      id: 144,
       name: r'supplierLeadTime',
       type: IsarType.long,
     ),
     r'supplierMOQ': PropertySchema(
-      id: 142,
+      id: 145,
       name: r'supplierMOQ',
       type: IsarType.long,
     ),
     r'supplierNotes': PropertySchema(
-      id: 143,
+      id: 146,
       name: r'supplierNotes',
       type: IsarType.string,
     ),
     r'supplierPaymentTerms': PropertySchema(
-      id: 144,
+      id: 147,
       name: r'supplierPaymentTerms',
       type: IsarType.string,
     ),
     r'supplierProductCode': PropertySchema(
-      id: 145,
+      id: 148,
       name: r'supplierProductCode',
       type: IsarType.string,
     ),
     r'supplierProductName': PropertySchema(
-      id: 146,
+      id: 149,
       name: r'supplierProductName',
       type: IsarType.string,
     ),
     r'supplierPurchaseCost': PropertySchema(
-      id: 147,
+      id: 150,
       name: r'supplierPurchaseCost',
       type: IsarType.double,
     ),
     r'supplierRelationships': PropertySchema(
-      id: 148,
+      id: 151,
       name: r'supplierRelationships',
       type: IsarType.objectList,
       target: r'SupplierRelationshipEmbed',
     ),
     r'syncStatus': PropertySchema(
-      id: 149,
+      id: 152,
       name: r'syncStatus',
       type: IsarType.string,
     ),
     r'takeawaySurcharge': PropertySchema(
-      id: 150,
+      id: 153,
       name: r'takeawaySurcharge',
       type: IsarType.double,
     ),
     r'tareWeight': PropertySchema(
-      id: 151,
+      id: 154,
       name: r'tareWeight',
       type: IsarType.double,
     ),
     r'taxRate': PropertySchema(
-      id: 152,
+      id: 155,
       name: r'taxRate',
       type: IsarType.double,
     ),
     r'temperatureProfile': PropertySchema(
-      id: 153,
+      id: 156,
       name: r'temperatureProfile',
       type: IsarType.string,
     ),
     r'topNotes': PropertySchema(
-      id: 154,
+      id: 157,
       name: r'topNotes',
       type: IsarType.string,
     ),
     r'unit': PropertySchema(
-      id: 155,
+      id: 158,
       name: r'unit',
       type: IsarType.string,
     ),
     r'unitDimensions': PropertySchema(
-      id: 156,
+      id: 159,
       name: r'unitDimensions',
       type: IsarType.string,
     ),
     r'unitsPerPackage': PropertySchema(
-      id: 157,
+      id: 160,
       name: r'unitsPerPackage',
       type: IsarType.long,
     ),
     r'updatedAt': PropertySchema(
-      id: 158,
+      id: 161,
       name: r'updatedAt',
       type: IsarType.dateTime,
     ),
     r'urlSlug': PropertySchema(
-      id: 159,
+      id: 162,
       name: r'urlSlug',
       type: IsarType.string,
     ),
     r'usageInfo': PropertySchema(
-      id: 160,
+      id: 163,
       name: r'usageInfo',
       type: IsarType.string,
     ),
     r'uuid': PropertySchema(
-      id: 161,
+      id: 164,
       name: r'uuid',
       type: IsarType.string,
     ),
     r'variableWeightPLU': PropertySchema(
-      id: 162,
+      id: 165,
       name: r'variableWeightPLU',
       type: IsarType.bool,
     ),
     r'variants': PropertySchema(
-      id: 163,
+      id: 166,
       name: r'variants',
       type: IsarType.objectList,
       target: r'ProductVariantEmbed',
     ),
     r'vehicleMake': PropertySchema(
-      id: 164,
+      id: 167,
       name: r'vehicleMake',
       type: IsarType.string,
     ),
     r'vehicleModel': PropertySchema(
-      id: 165,
+      id: 168,
       name: r'vehicleModel',
       type: IsarType.string,
     ),
     r'version': PropertySchema(
-      id: 166,
+      id: 169,
       name: r'version',
       type: IsarType.long,
     ),
     r'virtualBrand': PropertySchema(
-      id: 167,
+      id: 170,
       name: r'virtualBrand',
       type: IsarType.string,
     ),
     r'volume': PropertySchema(
-      id: 168,
+      id: 171,
       name: r'volume',
       type: IsarType.string,
     ),
     r'warrantyAvailable': PropertySchema(
-      id: 169,
+      id: 172,
       name: r'warrantyAvailable',
       type: IsarType.bool,
     ),
     r'warrantyDuration': PropertySchema(
-      id: 170,
+      id: 173,
       name: r'warrantyDuration',
       type: IsarType.long,
     ),
     r'warrantyInfo': PropertySchema(
-      id: 171,
+      id: 174,
       name: r'warrantyInfo',
       type: IsarType.string,
     ),
     r'warrantyUnit': PropertySchema(
-      id: 172,
+      id: 175,
       name: r'warrantyUnit',
       type: IsarType.string,
     ),
     r'wastagePct': PropertySchema(
-      id: 173,
+      id: 176,
       name: r'wastagePct',
       type: IsarType.double,
     ),
     r'weight': PropertySchema(
-      id: 174,
+      id: 177,
       name: r'weight',
       type: IsarType.double,
     ),
     r'widthFit': PropertySchema(
-      id: 175,
+      id: 178,
       name: r'widthFit',
       type: IsarType.string,
     )
@@ -1904,120 +1919,123 @@ void _productCollectionSerialize(
   writer.writeDouble(offsets[74], object.masterCaseRatio);
   writer.writeString(offsets[75], object.material);
   writer.writeDouble(offsets[76], object.maxDiscountPct);
-  writer.writeString(offsets[77], object.measurementBust);
-  writer.writeString(offsets[78], object.measurementFullLength);
-  writer.writeString(offsets[79], object.measurementHip);
-  writer.writeString(offsets[80], object.measurementWaist);
-  writer.writeDouble(offsets[81], object.memberLoyaltyPrice);
-  writer.writeString(offsets[82], object.metaDescription);
-  writer.writeString(offsets[83], object.metalType);
-  writer.writeString(offsets[84], object.middleNotes);
-  writer.writeStringList(offsets[85], object.milkOptions);
-  writer.writeString(offsets[86], object.modelNumber);
-  writer.writeStringList(offsets[87], object.multiBarcodes);
-  writer.writeString(offsets[88], object.name);
-  writer.writeString(offsets[89], object.oemNumber);
-  writer.writeDouble(offsets[90], object.onlinePrice);
-  writer.writeDouble(offsets[91], object.openingStock);
-  writer.writeBool(offsets[92], object.organicCertified);
-  writer.writeDouble(offsets[93], object.packageQuantity);
-  writer.writeString(offsets[94], object.packageType);
-  writer.writeDouble(offsets[95], object.packagingCost);
-  writer.writeDouble(offsets[96], object.packagingDeposit);
-  writer.writeString(offsets[97], object.partNumber);
-  writer.writeString(offsets[98], object.patternDesign);
-  writer.writeString(offsets[99], object.perfumeHouse);
-  writer.writeString(offsets[100], object.periodAfterOpening);
-  writer.writeString(offsets[101], object.pluCode);
-  writer.writeString(offsets[102], object.portionSize);
-  writer.writeString(offsets[103], object.posHotkeyColor);
-  writer.writeBool(offsets[104], object.posHotkeyEnabled);
-  writer.writeLong(offsets[105], object.prepTime);
-  writer.writeBool(offsets[106], object.privateLabel);
-  writer.writeString(offsets[107], object.productRelationship);
-  writer.writeLong(offsets[108], object.productionLeadTime);
-  writer.writeString(offsets[109], object.promotionalBadges);
-  writer.writeString(offsets[110], object.purity);
-  writer.writeBool(offsets[111], object.readyToEatItem);
+  writer.writeDouble(offsets[77], object.maxStock);
+  writer.writeString(offsets[78], object.measurementBust);
+  writer.writeString(offsets[79], object.measurementFullLength);
+  writer.writeString(offsets[80], object.measurementHip);
+  writer.writeString(offsets[81], object.measurementWaist);
+  writer.writeDouble(offsets[82], object.memberLoyaltyPrice);
+  writer.writeString(offsets[83], object.metaDescription);
+  writer.writeString(offsets[84], object.metalType);
+  writer.writeString(offsets[85], object.middleNotes);
+  writer.writeStringList(offsets[86], object.milkOptions);
+  writer.writeDouble(offsets[87], object.minStock);
+  writer.writeString(offsets[88], object.modelNumber);
+  writer.writeStringList(offsets[89], object.multiBarcodes);
+  writer.writeString(offsets[90], object.name);
+  writer.writeString(offsets[91], object.oemNumber);
+  writer.writeDouble(offsets[92], object.onlinePrice);
+  writer.writeDouble(offsets[93], object.openingStock);
+  writer.writeBool(offsets[94], object.organicCertified);
+  writer.writeDouble(offsets[95], object.packageQuantity);
+  writer.writeString(offsets[96], object.packageType);
+  writer.writeDouble(offsets[97], object.packagingCost);
+  writer.writeDouble(offsets[98], object.packagingDeposit);
+  writer.writeString(offsets[99], object.partNumber);
+  writer.writeString(offsets[100], object.patternDesign);
+  writer.writeString(offsets[101], object.perfumeHouse);
+  writer.writeString(offsets[102], object.periodAfterOpening);
+  writer.writeString(offsets[103], object.pluCode);
+  writer.writeString(offsets[104], object.portionSize);
+  writer.writeString(offsets[105], object.posHotkeyColor);
+  writer.writeBool(offsets[106], object.posHotkeyEnabled);
+  writer.writeLong(offsets[107], object.prepTime);
+  writer.writeBool(offsets[108], object.privateLabel);
+  writer.writeString(offsets[109], object.productRelationship);
+  writer.writeLong(offsets[110], object.productionLeadTime);
+  writer.writeString(offsets[111], object.promotionalBadges);
+  writer.writeString(offsets[112], object.purity);
+  writer.writeBool(offsets[113], object.readyToEatItem);
   writer.writeObjectList<RecipeIngredientEmbed>(
-    offsets[112],
+    offsets[114],
     allOffsets,
     RecipeIngredientEmbedSchema.serialize,
     object.recipeBOM,
   );
-  writer.writeDouble(offsets[113], object.roomDeliveryCharge);
-  writer.writeStringList(offsets[114], object.safetyCertifications);
-  writer.writeString(offsets[115], object.scentNotes);
-  writer.writeStringList(offsets[116], object.searchKeywords);
-  writer.writeString(offsets[117], object.season);
-  writer.writeBool(offsets[118], object.seasonalProduct);
-  writer.writeString(offsets[119], object.secondarySupplier);
-  writer.writeString(offsets[120], object.serialNumber);
-  writer.writeDouble(offsets[121], object.serviceChargePct);
-  writer.writeString(offsets[122], object.shade);
-  writer.writeString(offsets[123], object.shadeHexColor);
-  writer.writeString(offsets[124], object.sizeStandard);
-  writer.writeString(offsets[125], object.skinType);
-  writer.writeString(offsets[126], object.sku);
-  writer.writeString(offsets[127], object.sleeveNeckType);
-  writer.writeString(offsets[128], object.soleMaterial);
-  writer.writeString(offsets[129], object.spiceLevel);
-  writer.writeString(offsets[130], object.stallAssignment);
-  writer.writeString(offsets[131], object.status);
-  writer.writeString(offsets[132], object.stockUnit);
-  writer.writeString(offsets[133], object.stoneType);
-  writer.writeDouble(offsets[134], object.stoneWeight);
-  writer.writeString(offsets[135], object.storageClass);
-  writer.writeString(offsets[136], object.storageCondition);
-  writer.writeString(offsets[137], object.styleCategory);
-  writer.writeStringList(offsets[138], object.sugarLevels);
-  writer.writeString(offsets[139], object.supplierContact);
-  writer.writeStringList(offsets[140], object.supplierIds);
-  writer.writeLong(offsets[141], object.supplierLeadTime);
-  writer.writeLong(offsets[142], object.supplierMOQ);
-  writer.writeString(offsets[143], object.supplierNotes);
-  writer.writeString(offsets[144], object.supplierPaymentTerms);
-  writer.writeString(offsets[145], object.supplierProductCode);
-  writer.writeString(offsets[146], object.supplierProductName);
-  writer.writeDouble(offsets[147], object.supplierPurchaseCost);
+  writer.writeDouble(offsets[115], object.reorderLevel);
+  writer.writeDouble(offsets[116], object.roomDeliveryCharge);
+  writer.writeStringList(offsets[117], object.safetyCertifications);
+  writer.writeString(offsets[118], object.scentNotes);
+  writer.writeStringList(offsets[119], object.searchKeywords);
+  writer.writeString(offsets[120], object.season);
+  writer.writeBool(offsets[121], object.seasonalProduct);
+  writer.writeString(offsets[122], object.secondarySupplier);
+  writer.writeString(offsets[123], object.serialNumber);
+  writer.writeDouble(offsets[124], object.serviceChargePct);
+  writer.writeString(offsets[125], object.shade);
+  writer.writeString(offsets[126], object.shadeHexColor);
+  writer.writeString(offsets[127], object.sizeStandard);
+  writer.writeString(offsets[128], object.skinType);
+  writer.writeString(offsets[129], object.sku);
+  writer.writeString(offsets[130], object.sleeveNeckType);
+  writer.writeString(offsets[131], object.soleMaterial);
+  writer.writeString(offsets[132], object.spiceLevel);
+  writer.writeString(offsets[133], object.stallAssignment);
+  writer.writeString(offsets[134], object.status);
+  writer.writeString(offsets[135], object.stockUnit);
+  writer.writeString(offsets[136], object.stoneType);
+  writer.writeDouble(offsets[137], object.stoneWeight);
+  writer.writeString(offsets[138], object.storageClass);
+  writer.writeString(offsets[139], object.storageCondition);
+  writer.writeString(offsets[140], object.styleCategory);
+  writer.writeStringList(offsets[141], object.sugarLevels);
+  writer.writeString(offsets[142], object.supplierContact);
+  writer.writeStringList(offsets[143], object.supplierIds);
+  writer.writeLong(offsets[144], object.supplierLeadTime);
+  writer.writeLong(offsets[145], object.supplierMOQ);
+  writer.writeString(offsets[146], object.supplierNotes);
+  writer.writeString(offsets[147], object.supplierPaymentTerms);
+  writer.writeString(offsets[148], object.supplierProductCode);
+  writer.writeString(offsets[149], object.supplierProductName);
+  writer.writeDouble(offsets[150], object.supplierPurchaseCost);
   writer.writeObjectList<SupplierRelationshipEmbed>(
-    offsets[148],
+    offsets[151],
     allOffsets,
     SupplierRelationshipEmbedSchema.serialize,
     object.supplierRelationships,
   );
-  writer.writeString(offsets[149], object.syncStatus);
-  writer.writeDouble(offsets[150], object.takeawaySurcharge);
-  writer.writeDouble(offsets[151], object.tareWeight);
-  writer.writeDouble(offsets[152], object.taxRate);
-  writer.writeString(offsets[153], object.temperatureProfile);
-  writer.writeString(offsets[154], object.topNotes);
-  writer.writeString(offsets[155], object.unit);
-  writer.writeString(offsets[156], object.unitDimensions);
-  writer.writeLong(offsets[157], object.unitsPerPackage);
-  writer.writeDateTime(offsets[158], object.updatedAt);
-  writer.writeString(offsets[159], object.urlSlug);
-  writer.writeString(offsets[160], object.usageInfo);
-  writer.writeString(offsets[161], object.uuid);
-  writer.writeBool(offsets[162], object.variableWeightPLU);
+  writer.writeString(offsets[152], object.syncStatus);
+  writer.writeDouble(offsets[153], object.takeawaySurcharge);
+  writer.writeDouble(offsets[154], object.tareWeight);
+  writer.writeDouble(offsets[155], object.taxRate);
+  writer.writeString(offsets[156], object.temperatureProfile);
+  writer.writeString(offsets[157], object.topNotes);
+  writer.writeString(offsets[158], object.unit);
+  writer.writeString(offsets[159], object.unitDimensions);
+  writer.writeLong(offsets[160], object.unitsPerPackage);
+  writer.writeDateTime(offsets[161], object.updatedAt);
+  writer.writeString(offsets[162], object.urlSlug);
+  writer.writeString(offsets[163], object.usageInfo);
+  writer.writeString(offsets[164], object.uuid);
+  writer.writeBool(offsets[165], object.variableWeightPLU);
   writer.writeObjectList<ProductVariantEmbed>(
-    offsets[163],
+    offsets[166],
     allOffsets,
     ProductVariantEmbedSchema.serialize,
     object.variants,
   );
-  writer.writeString(offsets[164], object.vehicleMake);
-  writer.writeString(offsets[165], object.vehicleModel);
-  writer.writeLong(offsets[166], object.version);
-  writer.writeString(offsets[167], object.virtualBrand);
-  writer.writeString(offsets[168], object.volume);
-  writer.writeBool(offsets[169], object.warrantyAvailable);
-  writer.writeLong(offsets[170], object.warrantyDuration);
-  writer.writeString(offsets[171], object.warrantyInfo);
-  writer.writeString(offsets[172], object.warrantyUnit);
-  writer.writeDouble(offsets[173], object.wastagePct);
-  writer.writeDouble(offsets[174], object.weight);
-  writer.writeString(offsets[175], object.widthFit);
+  writer.writeString(offsets[167], object.vehicleMake);
+  writer.writeString(offsets[168], object.vehicleModel);
+  writer.writeLong(offsets[169], object.version);
+  writer.writeString(offsets[170], object.virtualBrand);
+  writer.writeString(offsets[171], object.volume);
+  writer.writeBool(offsets[172], object.warrantyAvailable);
+  writer.writeLong(offsets[173], object.warrantyDuration);
+  writer.writeString(offsets[174], object.warrantyInfo);
+  writer.writeString(offsets[175], object.warrantyUnit);
+  writer.writeDouble(offsets[176], object.wastagePct);
+  writer.writeDouble(offsets[177], object.weight);
+  writer.writeString(offsets[178], object.widthFit);
 }
 
 ProductCollection _productCollectionDeserialize(
@@ -2110,121 +2128,124 @@ ProductCollection _productCollectionDeserialize(
   object.masterCaseRatio = reader.readDoubleOrNull(offsets[74]);
   object.material = reader.readStringOrNull(offsets[75]);
   object.maxDiscountPct = reader.readDoubleOrNull(offsets[76]);
-  object.measurementBust = reader.readStringOrNull(offsets[77]);
-  object.measurementFullLength = reader.readStringOrNull(offsets[78]);
-  object.measurementHip = reader.readStringOrNull(offsets[79]);
-  object.measurementWaist = reader.readStringOrNull(offsets[80]);
-  object.memberLoyaltyPrice = reader.readDoubleOrNull(offsets[81]);
-  object.metaDescription = reader.readStringOrNull(offsets[82]);
-  object.metalType = reader.readStringOrNull(offsets[83]);
-  object.middleNotes = reader.readStringOrNull(offsets[84]);
-  object.milkOptions = reader.readStringList(offsets[85]);
-  object.modelNumber = reader.readStringOrNull(offsets[86]);
-  object.multiBarcodes = reader.readStringList(offsets[87]);
-  object.name = reader.readString(offsets[88]);
-  object.oemNumber = reader.readStringOrNull(offsets[89]);
-  object.onlinePrice = reader.readDoubleOrNull(offsets[90]);
-  object.openingStock = reader.readDoubleOrNull(offsets[91]);
-  object.organicCertified = reader.readBoolOrNull(offsets[92]);
-  object.packageQuantity = reader.readDoubleOrNull(offsets[93]);
-  object.packageType = reader.readStringOrNull(offsets[94]);
-  object.packagingCost = reader.readDoubleOrNull(offsets[95]);
-  object.packagingDeposit = reader.readDoubleOrNull(offsets[96]);
-  object.partNumber = reader.readStringOrNull(offsets[97]);
-  object.patternDesign = reader.readStringOrNull(offsets[98]);
-  object.perfumeHouse = reader.readStringOrNull(offsets[99]);
-  object.periodAfterOpening = reader.readStringOrNull(offsets[100]);
-  object.pluCode = reader.readStringOrNull(offsets[101]);
-  object.portionSize = reader.readStringOrNull(offsets[102]);
-  object.posHotkeyColor = reader.readStringOrNull(offsets[103]);
-  object.posHotkeyEnabled = reader.readBoolOrNull(offsets[104]);
-  object.prepTime = reader.readLongOrNull(offsets[105]);
-  object.privateLabel = reader.readBoolOrNull(offsets[106]);
-  object.productRelationship = reader.readStringOrNull(offsets[107]);
-  object.productionLeadTime = reader.readLongOrNull(offsets[108]);
-  object.promotionalBadges = reader.readStringOrNull(offsets[109]);
-  object.purity = reader.readStringOrNull(offsets[110]);
-  object.readyToEatItem = reader.readBoolOrNull(offsets[111]);
+  object.maxStock = reader.readDoubleOrNull(offsets[77]);
+  object.measurementBust = reader.readStringOrNull(offsets[78]);
+  object.measurementFullLength = reader.readStringOrNull(offsets[79]);
+  object.measurementHip = reader.readStringOrNull(offsets[80]);
+  object.measurementWaist = reader.readStringOrNull(offsets[81]);
+  object.memberLoyaltyPrice = reader.readDoubleOrNull(offsets[82]);
+  object.metaDescription = reader.readStringOrNull(offsets[83]);
+  object.metalType = reader.readStringOrNull(offsets[84]);
+  object.middleNotes = reader.readStringOrNull(offsets[85]);
+  object.milkOptions = reader.readStringList(offsets[86]);
+  object.minStock = reader.readDoubleOrNull(offsets[87]);
+  object.modelNumber = reader.readStringOrNull(offsets[88]);
+  object.multiBarcodes = reader.readStringList(offsets[89]);
+  object.name = reader.readString(offsets[90]);
+  object.oemNumber = reader.readStringOrNull(offsets[91]);
+  object.onlinePrice = reader.readDoubleOrNull(offsets[92]);
+  object.openingStock = reader.readDoubleOrNull(offsets[93]);
+  object.organicCertified = reader.readBoolOrNull(offsets[94]);
+  object.packageQuantity = reader.readDoubleOrNull(offsets[95]);
+  object.packageType = reader.readStringOrNull(offsets[96]);
+  object.packagingCost = reader.readDoubleOrNull(offsets[97]);
+  object.packagingDeposit = reader.readDoubleOrNull(offsets[98]);
+  object.partNumber = reader.readStringOrNull(offsets[99]);
+  object.patternDesign = reader.readStringOrNull(offsets[100]);
+  object.perfumeHouse = reader.readStringOrNull(offsets[101]);
+  object.periodAfterOpening = reader.readStringOrNull(offsets[102]);
+  object.pluCode = reader.readStringOrNull(offsets[103]);
+  object.portionSize = reader.readStringOrNull(offsets[104]);
+  object.posHotkeyColor = reader.readStringOrNull(offsets[105]);
+  object.posHotkeyEnabled = reader.readBoolOrNull(offsets[106]);
+  object.prepTime = reader.readLongOrNull(offsets[107]);
+  object.privateLabel = reader.readBoolOrNull(offsets[108]);
+  object.productRelationship = reader.readStringOrNull(offsets[109]);
+  object.productionLeadTime = reader.readLongOrNull(offsets[110]);
+  object.promotionalBadges = reader.readStringOrNull(offsets[111]);
+  object.purity = reader.readStringOrNull(offsets[112]);
+  object.readyToEatItem = reader.readBoolOrNull(offsets[113]);
   object.recipeBOM = reader.readObjectList<RecipeIngredientEmbed>(
-    offsets[112],
+    offsets[114],
     RecipeIngredientEmbedSchema.deserialize,
     allOffsets,
     RecipeIngredientEmbed(),
   );
-  object.roomDeliveryCharge = reader.readDoubleOrNull(offsets[113]);
-  object.safetyCertifications = reader.readStringList(offsets[114]);
-  object.scentNotes = reader.readStringOrNull(offsets[115]);
-  object.searchKeywords = reader.readStringList(offsets[116]);
-  object.season = reader.readStringOrNull(offsets[117]);
-  object.seasonalProduct = reader.readBoolOrNull(offsets[118]);
-  object.secondarySupplier = reader.readStringOrNull(offsets[119]);
-  object.serialNumber = reader.readStringOrNull(offsets[120]);
-  object.serviceChargePct = reader.readDoubleOrNull(offsets[121]);
-  object.shade = reader.readStringOrNull(offsets[122]);
-  object.shadeHexColor = reader.readStringOrNull(offsets[123]);
-  object.sizeStandard = reader.readStringOrNull(offsets[124]);
-  object.skinType = reader.readStringOrNull(offsets[125]);
-  object.sku = reader.readString(offsets[126]);
-  object.sleeveNeckType = reader.readStringOrNull(offsets[127]);
-  object.soleMaterial = reader.readStringOrNull(offsets[128]);
-  object.spiceLevel = reader.readStringOrNull(offsets[129]);
-  object.stallAssignment = reader.readStringOrNull(offsets[130]);
-  object.status = reader.readStringOrNull(offsets[131]);
-  object.stockUnit = reader.readStringOrNull(offsets[132]);
-  object.stoneType = reader.readStringOrNull(offsets[133]);
-  object.stoneWeight = reader.readDoubleOrNull(offsets[134]);
-  object.storageClass = reader.readStringOrNull(offsets[135]);
-  object.storageCondition = reader.readStringOrNull(offsets[136]);
-  object.styleCategory = reader.readStringOrNull(offsets[137]);
-  object.sugarLevels = reader.readStringList(offsets[138]);
-  object.supplierContact = reader.readStringOrNull(offsets[139]);
-  object.supplierIds = reader.readStringList(offsets[140]);
-  object.supplierLeadTime = reader.readLongOrNull(offsets[141]);
-  object.supplierMOQ = reader.readLongOrNull(offsets[142]);
-  object.supplierNotes = reader.readStringOrNull(offsets[143]);
-  object.supplierPaymentTerms = reader.readStringOrNull(offsets[144]);
-  object.supplierProductCode = reader.readStringOrNull(offsets[145]);
-  object.supplierProductName = reader.readStringOrNull(offsets[146]);
-  object.supplierPurchaseCost = reader.readDoubleOrNull(offsets[147]);
+  object.reorderLevel = reader.readDoubleOrNull(offsets[115]);
+  object.roomDeliveryCharge = reader.readDoubleOrNull(offsets[116]);
+  object.safetyCertifications = reader.readStringList(offsets[117]);
+  object.scentNotes = reader.readStringOrNull(offsets[118]);
+  object.searchKeywords = reader.readStringList(offsets[119]);
+  object.season = reader.readStringOrNull(offsets[120]);
+  object.seasonalProduct = reader.readBoolOrNull(offsets[121]);
+  object.secondarySupplier = reader.readStringOrNull(offsets[122]);
+  object.serialNumber = reader.readStringOrNull(offsets[123]);
+  object.serviceChargePct = reader.readDoubleOrNull(offsets[124]);
+  object.shade = reader.readStringOrNull(offsets[125]);
+  object.shadeHexColor = reader.readStringOrNull(offsets[126]);
+  object.sizeStandard = reader.readStringOrNull(offsets[127]);
+  object.skinType = reader.readStringOrNull(offsets[128]);
+  object.sku = reader.readString(offsets[129]);
+  object.sleeveNeckType = reader.readStringOrNull(offsets[130]);
+  object.soleMaterial = reader.readStringOrNull(offsets[131]);
+  object.spiceLevel = reader.readStringOrNull(offsets[132]);
+  object.stallAssignment = reader.readStringOrNull(offsets[133]);
+  object.status = reader.readStringOrNull(offsets[134]);
+  object.stockUnit = reader.readStringOrNull(offsets[135]);
+  object.stoneType = reader.readStringOrNull(offsets[136]);
+  object.stoneWeight = reader.readDoubleOrNull(offsets[137]);
+  object.storageClass = reader.readStringOrNull(offsets[138]);
+  object.storageCondition = reader.readStringOrNull(offsets[139]);
+  object.styleCategory = reader.readStringOrNull(offsets[140]);
+  object.sugarLevels = reader.readStringList(offsets[141]);
+  object.supplierContact = reader.readStringOrNull(offsets[142]);
+  object.supplierIds = reader.readStringList(offsets[143]);
+  object.supplierLeadTime = reader.readLongOrNull(offsets[144]);
+  object.supplierMOQ = reader.readLongOrNull(offsets[145]);
+  object.supplierNotes = reader.readStringOrNull(offsets[146]);
+  object.supplierPaymentTerms = reader.readStringOrNull(offsets[147]);
+  object.supplierProductCode = reader.readStringOrNull(offsets[148]);
+  object.supplierProductName = reader.readStringOrNull(offsets[149]);
+  object.supplierPurchaseCost = reader.readDoubleOrNull(offsets[150]);
   object.supplierRelationships =
       reader.readObjectList<SupplierRelationshipEmbed>(
-    offsets[148],
+    offsets[151],
     SupplierRelationshipEmbedSchema.deserialize,
     allOffsets,
     SupplierRelationshipEmbed(),
   );
-  object.syncStatus = reader.readString(offsets[149]);
-  object.takeawaySurcharge = reader.readDoubleOrNull(offsets[150]);
-  object.tareWeight = reader.readDoubleOrNull(offsets[151]);
-  object.taxRate = reader.readDouble(offsets[152]);
-  object.temperatureProfile = reader.readStringOrNull(offsets[153]);
-  object.topNotes = reader.readStringOrNull(offsets[154]);
-  object.unit = reader.readString(offsets[155]);
-  object.unitDimensions = reader.readStringOrNull(offsets[156]);
-  object.unitsPerPackage = reader.readLongOrNull(offsets[157]);
-  object.updatedAt = reader.readDateTime(offsets[158]);
-  object.urlSlug = reader.readStringOrNull(offsets[159]);
-  object.usageInfo = reader.readStringOrNull(offsets[160]);
-  object.uuid = reader.readString(offsets[161]);
-  object.variableWeightPLU = reader.readBoolOrNull(offsets[162]);
+  object.syncStatus = reader.readString(offsets[152]);
+  object.takeawaySurcharge = reader.readDoubleOrNull(offsets[153]);
+  object.tareWeight = reader.readDoubleOrNull(offsets[154]);
+  object.taxRate = reader.readDouble(offsets[155]);
+  object.temperatureProfile = reader.readStringOrNull(offsets[156]);
+  object.topNotes = reader.readStringOrNull(offsets[157]);
+  object.unit = reader.readString(offsets[158]);
+  object.unitDimensions = reader.readStringOrNull(offsets[159]);
+  object.unitsPerPackage = reader.readLongOrNull(offsets[160]);
+  object.updatedAt = reader.readDateTime(offsets[161]);
+  object.urlSlug = reader.readStringOrNull(offsets[162]);
+  object.usageInfo = reader.readStringOrNull(offsets[163]);
+  object.uuid = reader.readString(offsets[164]);
+  object.variableWeightPLU = reader.readBoolOrNull(offsets[165]);
   object.variants = reader.readObjectList<ProductVariantEmbed>(
-    offsets[163],
+    offsets[166],
     ProductVariantEmbedSchema.deserialize,
     allOffsets,
     ProductVariantEmbed(),
   );
-  object.vehicleMake = reader.readStringOrNull(offsets[164]);
-  object.vehicleModel = reader.readStringOrNull(offsets[165]);
-  object.version = reader.readLong(offsets[166]);
-  object.virtualBrand = reader.readStringOrNull(offsets[167]);
-  object.volume = reader.readStringOrNull(offsets[168]);
-  object.warrantyAvailable = reader.readBoolOrNull(offsets[169]);
-  object.warrantyDuration = reader.readLongOrNull(offsets[170]);
-  object.warrantyInfo = reader.readStringOrNull(offsets[171]);
-  object.warrantyUnit = reader.readStringOrNull(offsets[172]);
-  object.wastagePct = reader.readDoubleOrNull(offsets[173]);
-  object.weight = reader.readDoubleOrNull(offsets[174]);
-  object.widthFit = reader.readStringOrNull(offsets[175]);
+  object.vehicleMake = reader.readStringOrNull(offsets[167]);
+  object.vehicleModel = reader.readStringOrNull(offsets[168]);
+  object.version = reader.readLong(offsets[169]);
+  object.virtualBrand = reader.readStringOrNull(offsets[170]);
+  object.volume = reader.readStringOrNull(offsets[171]);
+  object.warrantyAvailable = reader.readBoolOrNull(offsets[172]);
+  object.warrantyDuration = reader.readLongOrNull(offsets[173]);
+  object.warrantyInfo = reader.readStringOrNull(offsets[174]);
+  object.warrantyUnit = reader.readStringOrNull(offsets[175]);
+  object.wastagePct = reader.readDoubleOrNull(offsets[176]);
+  object.weight = reader.readDoubleOrNull(offsets[177]);
+  object.widthFit = reader.readStringOrNull(offsets[178]);
   return object;
 }
 
@@ -2395,7 +2416,7 @@ P _productCollectionDeserializeProp<P>(
     case 76:
       return (reader.readDoubleOrNull(offset)) as P;
     case 77:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readDoubleOrNull(offset)) as P;
     case 78:
       return (reader.readStringOrNull(offset)) as P;
     case 79:
@@ -2403,41 +2424,41 @@ P _productCollectionDeserializeProp<P>(
     case 80:
       return (reader.readStringOrNull(offset)) as P;
     case 81:
-      return (reader.readDoubleOrNull(offset)) as P;
-    case 82:
       return (reader.readStringOrNull(offset)) as P;
+    case 82:
+      return (reader.readDoubleOrNull(offset)) as P;
     case 83:
       return (reader.readStringOrNull(offset)) as P;
     case 84:
       return (reader.readStringOrNull(offset)) as P;
     case 85:
-      return (reader.readStringList(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 86:
-      return (reader.readStringOrNull(offset)) as P;
-    case 87:
       return (reader.readStringList(offset)) as P;
+    case 87:
+      return (reader.readDoubleOrNull(offset)) as P;
     case 88:
-      return (reader.readString(offset)) as P;
-    case 89:
       return (reader.readStringOrNull(offset)) as P;
+    case 89:
+      return (reader.readStringList(offset)) as P;
     case 90:
-      return (reader.readDoubleOrNull(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 91:
-      return (reader.readDoubleOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 92:
-      return (reader.readBoolOrNull(offset)) as P;
+      return (reader.readDoubleOrNull(offset)) as P;
     case 93:
       return (reader.readDoubleOrNull(offset)) as P;
     case 94:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readBoolOrNull(offset)) as P;
     case 95:
       return (reader.readDoubleOrNull(offset)) as P;
     case 96:
-      return (reader.readDoubleOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 97:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readDoubleOrNull(offset)) as P;
     case 98:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readDoubleOrNull(offset)) as P;
     case 99:
       return (reader.readStringOrNull(offset)) as P;
     case 100:
@@ -2449,62 +2470,62 @@ P _productCollectionDeserializeProp<P>(
     case 103:
       return (reader.readStringOrNull(offset)) as P;
     case 104:
-      return (reader.readBoolOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 105:
-      return (reader.readLongOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 106:
       return (reader.readBoolOrNull(offset)) as P;
     case 107:
-      return (reader.readStringOrNull(offset)) as P;
-    case 108:
       return (reader.readLongOrNull(offset)) as P;
+    case 108:
+      return (reader.readBoolOrNull(offset)) as P;
     case 109:
       return (reader.readStringOrNull(offset)) as P;
     case 110:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readLongOrNull(offset)) as P;
     case 111:
-      return (reader.readBoolOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 112:
+      return (reader.readStringOrNull(offset)) as P;
+    case 113:
+      return (reader.readBoolOrNull(offset)) as P;
+    case 114:
       return (reader.readObjectList<RecipeIngredientEmbed>(
         offset,
         RecipeIngredientEmbedSchema.deserialize,
         allOffsets,
         RecipeIngredientEmbed(),
       )) as P;
-    case 113:
-      return (reader.readDoubleOrNull(offset)) as P;
-    case 114:
-      return (reader.readStringList(offset)) as P;
     case 115:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readDoubleOrNull(offset)) as P;
     case 116:
-      return (reader.readStringList(offset)) as P;
+      return (reader.readDoubleOrNull(offset)) as P;
     case 117:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readStringList(offset)) as P;
     case 118:
-      return (reader.readBoolOrNull(offset)) as P;
-    case 119:
       return (reader.readStringOrNull(offset)) as P;
+    case 119:
+      return (reader.readStringList(offset)) as P;
     case 120:
       return (reader.readStringOrNull(offset)) as P;
     case 121:
-      return (reader.readDoubleOrNull(offset)) as P;
+      return (reader.readBoolOrNull(offset)) as P;
     case 122:
       return (reader.readStringOrNull(offset)) as P;
     case 123:
       return (reader.readStringOrNull(offset)) as P;
     case 124:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readDoubleOrNull(offset)) as P;
     case 125:
       return (reader.readStringOrNull(offset)) as P;
     case 126:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 127:
       return (reader.readStringOrNull(offset)) as P;
     case 128:
       return (reader.readStringOrNull(offset)) as P;
     case 129:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 130:
       return (reader.readStringOrNull(offset)) as P;
     case 131:
@@ -2514,98 +2535,104 @@ P _productCollectionDeserializeProp<P>(
     case 133:
       return (reader.readStringOrNull(offset)) as P;
     case 134:
-      return (reader.readDoubleOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 135:
       return (reader.readStringOrNull(offset)) as P;
     case 136:
       return (reader.readStringOrNull(offset)) as P;
     case 137:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readDoubleOrNull(offset)) as P;
     case 138:
-      return (reader.readStringList(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 139:
       return (reader.readStringOrNull(offset)) as P;
     case 140:
-      return (reader.readStringList(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 141:
-      return (reader.readLongOrNull(offset)) as P;
+      return (reader.readStringList(offset)) as P;
     case 142:
-      return (reader.readLongOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 143:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readStringList(offset)) as P;
     case 144:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readLongOrNull(offset)) as P;
     case 145:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readLongOrNull(offset)) as P;
     case 146:
       return (reader.readStringOrNull(offset)) as P;
     case 147:
-      return (reader.readDoubleOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 148:
+      return (reader.readStringOrNull(offset)) as P;
+    case 149:
+      return (reader.readStringOrNull(offset)) as P;
+    case 150:
+      return (reader.readDoubleOrNull(offset)) as P;
+    case 151:
       return (reader.readObjectList<SupplierRelationshipEmbed>(
         offset,
         SupplierRelationshipEmbedSchema.deserialize,
         allOffsets,
         SupplierRelationshipEmbed(),
       )) as P;
-    case 149:
-      return (reader.readString(offset)) as P;
-    case 150:
-      return (reader.readDoubleOrNull(offset)) as P;
-    case 151:
-      return (reader.readDoubleOrNull(offset)) as P;
     case 152:
-      return (reader.readDouble(offset)) as P;
-    case 153:
-      return (reader.readStringOrNull(offset)) as P;
-    case 154:
-      return (reader.readStringOrNull(offset)) as P;
-    case 155:
       return (reader.readString(offset)) as P;
+    case 153:
+      return (reader.readDoubleOrNull(offset)) as P;
+    case 154:
+      return (reader.readDoubleOrNull(offset)) as P;
+    case 155:
+      return (reader.readDouble(offset)) as P;
     case 156:
       return (reader.readStringOrNull(offset)) as P;
     case 157:
-      return (reader.readLongOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 158:
-      return (reader.readDateTime(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 159:
       return (reader.readStringOrNull(offset)) as P;
     case 160:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readLongOrNull(offset)) as P;
     case 161:
-      return (reader.readString(offset)) as P;
+      return (reader.readDateTime(offset)) as P;
     case 162:
-      return (reader.readBoolOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 163:
+      return (reader.readStringOrNull(offset)) as P;
+    case 164:
+      return (reader.readString(offset)) as P;
+    case 165:
+      return (reader.readBoolOrNull(offset)) as P;
+    case 166:
       return (reader.readObjectList<ProductVariantEmbed>(
         offset,
         ProductVariantEmbedSchema.deserialize,
         allOffsets,
         ProductVariantEmbed(),
       )) as P;
-    case 164:
-      return (reader.readStringOrNull(offset)) as P;
-    case 165:
-      return (reader.readStringOrNull(offset)) as P;
-    case 166:
-      return (reader.readLong(offset)) as P;
     case 167:
       return (reader.readStringOrNull(offset)) as P;
     case 168:
       return (reader.readStringOrNull(offset)) as P;
     case 169:
-      return (reader.readBoolOrNull(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 170:
-      return (reader.readLongOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 171:
       return (reader.readStringOrNull(offset)) as P;
     case 172:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readBoolOrNull(offset)) as P;
     case 173:
-      return (reader.readDoubleOrNull(offset)) as P;
+      return (reader.readLongOrNull(offset)) as P;
     case 174:
-      return (reader.readDoubleOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 175:
+      return (reader.readStringOrNull(offset)) as P;
+    case 176:
+      return (reader.readDoubleOrNull(offset)) as P;
+    case 177:
+      return (reader.readDoubleOrNull(offset)) as P;
+    case 178:
       return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -13534,6 +13561,90 @@ extension ProductCollectionQueryFilter
   }
 
   QueryBuilder<ProductCollection, ProductCollection, QAfterFilterCondition>
+      maxStockIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'maxStock',
+      ));
+    });
+  }
+
+  QueryBuilder<ProductCollection, ProductCollection, QAfterFilterCondition>
+      maxStockIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'maxStock',
+      ));
+    });
+  }
+
+  QueryBuilder<ProductCollection, ProductCollection, QAfterFilterCondition>
+      maxStockEqualTo(
+    double? value, {
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'maxStock',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<ProductCollection, ProductCollection, QAfterFilterCondition>
+      maxStockGreaterThan(
+    double? value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'maxStock',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<ProductCollection, ProductCollection, QAfterFilterCondition>
+      maxStockLessThan(
+    double? value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'maxStock',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<ProductCollection, ProductCollection, QAfterFilterCondition>
+      maxStockBetween(
+    double? lower,
+    double? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'maxStock',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<ProductCollection, ProductCollection, QAfterFilterCondition>
       measurementBustIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -14936,6 +15047,90 @@ extension ProductCollectionQueryFilter
         upper,
         includeUpper,
       );
+    });
+  }
+
+  QueryBuilder<ProductCollection, ProductCollection, QAfterFilterCondition>
+      minStockIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'minStock',
+      ));
+    });
+  }
+
+  QueryBuilder<ProductCollection, ProductCollection, QAfterFilterCondition>
+      minStockIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'minStock',
+      ));
+    });
+  }
+
+  QueryBuilder<ProductCollection, ProductCollection, QAfterFilterCondition>
+      minStockEqualTo(
+    double? value, {
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'minStock',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<ProductCollection, ProductCollection, QAfterFilterCondition>
+      minStockGreaterThan(
+    double? value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'minStock',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<ProductCollection, ProductCollection, QAfterFilterCondition>
+      minStockLessThan(
+    double? value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'minStock',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<ProductCollection, ProductCollection, QAfterFilterCondition>
+      minStockBetween(
+    double? lower,
+    double? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'minStock',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        epsilon: epsilon,
+      ));
     });
   }
 
@@ -18104,6 +18299,90 @@ extension ProductCollectionQueryFilter
         upper,
         includeUpper,
       );
+    });
+  }
+
+  QueryBuilder<ProductCollection, ProductCollection, QAfterFilterCondition>
+      reorderLevelIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'reorderLevel',
+      ));
+    });
+  }
+
+  QueryBuilder<ProductCollection, ProductCollection, QAfterFilterCondition>
+      reorderLevelIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'reorderLevel',
+      ));
+    });
+  }
+
+  QueryBuilder<ProductCollection, ProductCollection, QAfterFilterCondition>
+      reorderLevelEqualTo(
+    double? value, {
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'reorderLevel',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<ProductCollection, ProductCollection, QAfterFilterCondition>
+      reorderLevelGreaterThan(
+    double? value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'reorderLevel',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<ProductCollection, ProductCollection, QAfterFilterCondition>
+      reorderLevelLessThan(
+    double? value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'reorderLevel',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<ProductCollection, ProductCollection, QAfterFilterCondition>
+      reorderLevelBetween(
+    double? lower,
+    double? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'reorderLevel',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        epsilon: epsilon,
+      ));
     });
   }
 
@@ -27478,6 +27757,20 @@ extension ProductCollectionQuerySortBy
   }
 
   QueryBuilder<ProductCollection, ProductCollection, QAfterSortBy>
+      sortByMaxStock() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'maxStock', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ProductCollection, ProductCollection, QAfterSortBy>
+      sortByMaxStockDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'maxStock', Sort.desc);
+    });
+  }
+
+  QueryBuilder<ProductCollection, ProductCollection, QAfterSortBy>
       sortByMeasurementBust() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'measurementBust', Sort.asc);
@@ -27586,6 +27879,20 @@ extension ProductCollectionQuerySortBy
       sortByMiddleNotesDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'middleNotes', Sort.desc);
+    });
+  }
+
+  QueryBuilder<ProductCollection, ProductCollection, QAfterSortBy>
+      sortByMinStock() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'minStock', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ProductCollection, ProductCollection, QAfterSortBy>
+      sortByMinStockDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'minStock', Sort.desc);
     });
   }
 
@@ -27936,6 +28243,20 @@ extension ProductCollectionQuerySortBy
       sortByReadyToEatItemDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'readyToEatItem', Sort.desc);
+    });
+  }
+
+  QueryBuilder<ProductCollection, ProductCollection, QAfterSortBy>
+      sortByReorderLevel() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'reorderLevel', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ProductCollection, ProductCollection, QAfterSortBy>
+      sortByReorderLevelDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'reorderLevel', Sort.desc);
     });
   }
 
@@ -29733,6 +30054,20 @@ extension ProductCollectionQuerySortThenBy
   }
 
   QueryBuilder<ProductCollection, ProductCollection, QAfterSortBy>
+      thenByMaxStock() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'maxStock', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ProductCollection, ProductCollection, QAfterSortBy>
+      thenByMaxStockDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'maxStock', Sort.desc);
+    });
+  }
+
+  QueryBuilder<ProductCollection, ProductCollection, QAfterSortBy>
       thenByMeasurementBust() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'measurementBust', Sort.asc);
@@ -29841,6 +30176,20 @@ extension ProductCollectionQuerySortThenBy
       thenByMiddleNotesDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'middleNotes', Sort.desc);
+    });
+  }
+
+  QueryBuilder<ProductCollection, ProductCollection, QAfterSortBy>
+      thenByMinStock() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'minStock', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ProductCollection, ProductCollection, QAfterSortBy>
+      thenByMinStockDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'minStock', Sort.desc);
     });
   }
 
@@ -30191,6 +30540,20 @@ extension ProductCollectionQuerySortThenBy
       thenByReadyToEatItemDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'readyToEatItem', Sort.desc);
+    });
+  }
+
+  QueryBuilder<ProductCollection, ProductCollection, QAfterSortBy>
+      thenByReorderLevel() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'reorderLevel', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ProductCollection, ProductCollection, QAfterSortBy>
+      thenByReorderLevelDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'reorderLevel', Sort.desc);
     });
   }
 
@@ -31545,6 +31908,13 @@ extension ProductCollectionQueryWhereDistinct
   }
 
   QueryBuilder<ProductCollection, ProductCollection, QDistinct>
+      distinctByMaxStock() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'maxStock');
+    });
+  }
+
+  QueryBuilder<ProductCollection, ProductCollection, QDistinct>
       distinctByMeasurementBust({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'measurementBust',
@@ -31609,6 +31979,13 @@ extension ProductCollectionQueryWhereDistinct
       distinctByMilkOptions() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'milkOptions');
+    });
+  }
+
+  QueryBuilder<ProductCollection, ProductCollection, QDistinct>
+      distinctByMinStock() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'minStock');
     });
   }
 
@@ -31796,6 +32173,13 @@ extension ProductCollectionQueryWhereDistinct
       distinctByReadyToEatItem() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'readyToEatItem');
+    });
+  }
+
+  QueryBuilder<ProductCollection, ProductCollection, QDistinct>
+      distinctByReorderLevel() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'reorderLevel');
     });
   }
 
@@ -32780,6 +33164,13 @@ extension ProductCollectionQueryProperty
     });
   }
 
+  QueryBuilder<ProductCollection, double?, QQueryOperations>
+      maxStockProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'maxStock');
+    });
+  }
+
   QueryBuilder<ProductCollection, String?, QQueryOperations>
       measurementBustProperty() {
     return QueryBuilder.apply(this, (query) {
@@ -32840,6 +33231,13 @@ extension ProductCollectionQueryProperty
       milkOptionsProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'milkOptions');
+    });
+  }
+
+  QueryBuilder<ProductCollection, double?, QQueryOperations>
+      minStockProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'minStock');
     });
   }
 
@@ -33025,6 +33423,13 @@ extension ProductCollectionQueryProperty
       QQueryOperations> recipeBOMProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'recipeBOM');
+    });
+  }
+
+  QueryBuilder<ProductCollection, double?, QQueryOperations>
+      reorderLevelProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'reorderLevel');
     });
   }
 

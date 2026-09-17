@@ -108,7 +108,7 @@ class ProductsWorkspaceManifest extends ZenoWorkspaceManifest<Product> {
   }
 
   static List<ZenoKpiData> _getKpiMetrics(BuildContext context) {
-    final products = ProductController.lastInstance?.allProducts ?? [];
+    final products = GetIt.instance<ProductController>().allProducts;
     return getKpiMetricsForProducts(products);
   }
 

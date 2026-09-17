@@ -111,7 +111,7 @@ class ProductMapper {
       )).toList() ?? [],
       batches: pc.batches?.map((b) => Batch(id: b.uuid ?? '', batchNumber: b.batchNumber ?? '', manufacturingDate: b.manufacturingDate ?? DateTime.now(), expiryDate: b.expiryDate, quantity: b.quantity ?? 0.0, purchaseCost: b.purchaseCost ?? 0.0, sellingPrice: b.sellingPrice ?? 0.0, mrp: b.mrp ?? 0.0, supplier: b.supplier, warehouse: b.warehouse, notes: b.notes)).toList() ?? [],
       supplierRelationships: pc.supplierRelationships?.map((s) => SupplierRelationship(id: s.uuid ?? '', supplierName: s.supplierName ?? '', supplierSku: s.supplierSku, supplierProductName: s.supplierProductName, purchaseCost: s.purchaseCost ?? 0.0, moq: s.moq ?? 0, leadTime: s.leadTime ?? 0, paymentTerms: s.paymentTerms, notes: s.notes, isPrimary: s.isPrimary ?? false)).toList() ?? [],
-      reorderLevel: 0.0, minStock: 0.0, maxStock: 0.0, createdAt: pc.createdAt, updatedAt: pc.updatedAt,
+      reorderLevel: pc.reorderLevel ?? 0.0, minStock: pc.minStock ?? 0.0, maxStock: pc.maxStock ?? 0.0, createdAt: pc.createdAt, updatedAt: pc.updatedAt,
       customFields: pc.customFieldsJson?.isNotEmpty == true
           ? Map<String, dynamic>.from(jsonDecode(pc.customFieldsJson!))
           : const {},
@@ -188,6 +188,9 @@ class ProductMapper {
       ..supplierRelationships = product.supplierRelationships.map((s) => SupplierRelationshipEmbed()..uuid = s.id..supplierName = s.supplierName..supplierSku = s.supplierSku..supplierProductName = s.supplierProductName..purchaseCost = s.purchaseCost..moq = s.moq..leadTime = s.leadTime..paymentTerms = s.paymentTerms..notes = s.notes..isPrimary = s.isPrimary).toList();
 
     pc.updatedAt = DateTime.now();
+    pc.minStock = product.minStock;
+    pc.maxStock = product.maxStock;
+    pc.reorderLevel = product.reorderLevel;
     return pc;
   }
 }

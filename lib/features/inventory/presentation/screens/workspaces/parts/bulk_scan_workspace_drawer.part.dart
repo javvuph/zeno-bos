@@ -63,9 +63,7 @@ extension _BulkScanWorkspaceDrawerState on _BulkScanWorkspaceState {
                     product: variant, status: BulkScanStatus.ready));
                 widget.controller.notify();
                 Navigator.pop(dialogContext);
-                setState(() {
-                  _activeTab = BulkWorkspaceTab.variants;
-                });
+                _setActiveTab(BulkWorkspaceTab.variants);
               },
               child: const Text('Add to Bulk'),
             ),

@@ -5,16 +5,11 @@ import '../../domain/services/product_business_logic.dart';
 import '../../domain/services/master_data_service.dart';
 
 class ProductController extends ChangeNotifier {
-  static ProductController? _lastInstance;
   final IProductRepository _repository;
   final ProductBusinessLogic _logic = ProductBusinessLogic();
   final MasterDataService _masterData = MasterDataService();
 
-  ProductController(this._repository) {
-    _lastInstance = this;
-  }
-
-  static ProductController? get lastInstance => _lastInstance;
+  ProductController(this._repository);
 
   Product? _currentProduct;
   Product? get currentProduct => _currentProduct;

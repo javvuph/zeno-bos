@@ -31,10 +31,8 @@ extension ProductStudioControllerSession on ProductStudioController {
           await repository.saveProduct(item.product.toDomain());
         }
       }
-      final listController = ProductController.lastInstance;
-      if (listController != null) {
-        await listController.refreshProducts();
-      }
+      final listController = sl<ProductController>();
+      await listController.refreshProducts();
       final context = navigationContext;
       if (context != null && context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -169,10 +167,8 @@ extension ProductStudioControllerSession on ProductStudioController {
           }
         }
       }
-      final listController = ProductController.lastInstance;
-      if (listController != null) {
-        await listController.refreshProducts();
-      }
+      final listController = sl<ProductController>();
+      await listController.refreshProducts();
       final context = navigationContext;
       if (context != null && context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

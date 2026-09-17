@@ -69,6 +69,7 @@ import 'package:zeno/features/staff/presentation/controllers/staff_controller.da
 import 'package:zeno/features/customers/presentation/controllers/customer_controller.dart';
 import 'package:zeno/features/suppliers/presentation/controllers/supplier_controller.dart';
 import 'package:zeno/features/inventory/presentation/controllers/inventory_controller.dart';
+import 'package:zeno/features/inventory/presentation/controllers/product_controller.dart';
 import 'package:zeno/features/orders/presentation/controllers/sales_controller.dart';
 import 'package:zeno/features/delivery/presentation/controllers/delivery_controller.dart';
 import 'package:zeno/features/administration/presentation/controllers/administration_controller.dart';
@@ -184,6 +185,7 @@ void _registerControllers() {
   sl.registerLazySingleton(() => CustomerController(sl()));
   sl.registerLazySingleton(() => SupplierController(sl()));
   sl.registerLazySingleton(() => InventoryController(sl()));
+  sl.registerLazySingleton<ProductController>(() => ProductController(sl<IProductRepository>()));
   sl.registerLazySingleton(() => SalesController(sl()));
   sl.registerLazySingleton(() => DeliveryController(sl()));
   sl.registerLazySingleton(() => AdministrationController(sl()));

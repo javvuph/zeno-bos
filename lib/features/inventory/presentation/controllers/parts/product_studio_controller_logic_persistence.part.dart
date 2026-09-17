@@ -57,10 +57,9 @@ extension ProductStudioControllerLogicPersistence on ProductStudioController {
 
       final productToSave = _product.toDomain();
       await repository.saveProduct(productToSave);
-      final listController = ProductController.lastInstance;
-      if (listController != null) {
-        await listController.refreshProducts();
-      }
+      final listController = sl<ProductController>();
+      await listController.refreshProducts();
+      
       if (context != null && context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Product saved successfully")),

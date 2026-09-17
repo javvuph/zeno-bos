@@ -5,6 +5,7 @@ import 'package:zeno/features/inventory/domain/models/product.dart';
 import 'package:zeno/features/inventory/domain/models/extensions/product_extensions.dart';
 import 'package:zeno/features/inventory/domain/models/product_master_models.dart';
 import 'package:zeno/features/inventory/presentation/controllers/product_controller.dart';
+import 'package:zeno/core/di/service_locator.dart';
 import 'workspace/inventory_kpi_grid.dart';
 import 'workspace/inventory_controls_bar.dart';
 import 'workspace/inventory_table_card.dart';
@@ -26,7 +27,8 @@ class _InventoryWorkspaceScreenState extends State<InventoryWorkspaceScreen> {
   String _activeTimeFilter = "ALL";   // ALL | NEW | 3M | 6M | 12M | 1Y
   String _searchQuery = "";
   final Set<String> _selectedProductIds = {};
-  ProductController? _productController;
+  final Set<String> _expandedProductIds = {};
+  late final ProductController _productController;
 
   @override
   void initState() {
@@ -35,9 +37,9 @@ class _InventoryWorkspaceScreenState extends State<InventoryWorkspaceScreen> {
   }
 
   void _initProductController() {
-    _productController = ProductController.lastInstance;
-    _productController?.addListener(_onProductsChanged);
-    _productController?.refreshProducts();
+    _productController = sl<ProductController>();
+    _productController.addListener(_onProductsChanged);
+    _productController.refreshProducts();
   }
 
   void _onProductsChanged() {
@@ -46,13 +48,16 @@ class _InventoryWorkspaceScreenState extends State<InventoryWorkspaceScreen> {
 
   @override
   void dispose() {
-    _productController?.removeListener(_onProductsChanged);
+    _productController.removeListener(_onProductsChanged);
     super.dispose();
   }
 
   List<ProductMaster> get _products {
-    final raw = _productController?.allProducts ?? [];
-    return raw.map((p) => ProductMaster.fromDomain(p)).toList();
+    final raw = _productController.allProducts;
+    return raw.map((p) {
+      final pm = ProductMaster.fromDomain(p);
+      return pm.copyWith(isExpanded: _expandedProductIds.contains(pm.id));
+    }).toList();
   }
 
   @override
@@ -123,11 +128,10 @@ class _InventoryWorkspaceScreenState extends State<InventoryWorkspaceScreen> {
                       },
                       onToggleExpand: (id) {
                         setState(() {
-                          final idx = currentProducts.indexWhere((p) => p.id == id);
-                          if (idx != -1) {
-                            currentProducts[idx] = currentProducts[idx].copyWith(
-                              isExpanded: !currentProducts[idx].isExpanded,
-                            );
+                          if (_expandedProductIds.contains(id)) {
+                            _expandedProductIds.remove(id);
+                          } else {
+                            _expandedProductIds.add(id);
                           }
                         });
                       },
@@ -137,9 +141,10 @@ class _InventoryWorkspaceScreenState extends State<InventoryWorkspaceScreen> {
                       onAdjustStock: _openAdjustStockDialog,
                       onDeleteProduct: (id) async {
                         final messenger = ScaffoldMessenger.of(context);
-                        await _productController?.deleteProduct(id);
+                        await _productController.deleteProduct(id);
                         setState(() {
                           _selectedProductIds.remove(id);
+                          _expandedProductIds.remove(id);
                         });
                         messenger.showSnackBar(
                           const SnackBar(
@@ -327,12 +332,12 @@ class _InventoryWorkspaceScreenState extends State<InventoryWorkspaceScreen> {
             ),
             onPressed: () async {
               final newStock = double.tryParse(stockCtrl.text) ?? currentStock;
-              final raw = _productController?.allProducts
-                  .firstWhere((p) => p.id == product.id);
-              if (raw != null) {
+              try {
+                final raw = _productController.allProducts
+                    .firstWhere((p) => p.id == product.id);
                 final updated = raw.copyWith(openingStock: newStock);
-                await _productController?.saveProduct(updated);
-              }
+                await _productController.saveProduct(updated);
+              } catch (_) {}
               if (ctx.mounted) Navigator.pop(ctx);
             },
             child: const Text("Update Stock"),

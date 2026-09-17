@@ -296,43 +296,40 @@ extension _BulkScanWorkspaceActionsState on _BulkScanWorkspaceState {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            const Color(0xFFd4e4f0).withValues(alpha:0.9),
-            const Color(0xFFe8f0f8).withValues(alpha:0.95),
+            const Color(0xFFd4e4f0).withValues(alpha: 0.9),
+            const Color(0xFFe8f0f8).withValues(alpha: 0.95),
           ],
         ),
-        border: Border(top: BorderSide(color: const Color(0xFF0066CC).withValues(alpha:0.2))),
+        border: Border(top: BorderSide(color: const Color(0xFF0066CC).withValues(alpha: 0.2))),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha:0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 20,
             offset: const Offset(0, -2),
           )
         ]
       ),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            ZenoButton(
-              label: "CANCEL",
-              variant: ZenoButtonVariant.secondary,
-              onPressed: () {},
-            ),
-            const SizedBox(width: 12),
-            ZenoButton(
-              label: "SAVE AS DRAFT",
-              variant: ZenoButtonVariant.secondary,
-              onPressed: () {},
-            ),
-            const SizedBox(width: 12),
-            ZenoButton(
-              label: "SAVE",
-              onPressed: widget.controller.addBulkReadyToCatalog,
-              isLoading: widget.controller.isSaving,
-            ),
-          ],
-        ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          ZenoButton(
+            label: "CANCEL",
+            variant: ZenoButtonVariant.secondary,
+            onPressed: () {},
+          ),
+          const SizedBox(width: 12),
+          ZenoButton(
+            label: "SAVE AS DRAFT",
+            variant: ZenoButtonVariant.secondary,
+            onPressed: () {},
+          ),
+          const SizedBox(width: 12),
+          ZenoButton(
+            label: "SAVE",
+            onPressed: widget.controller.addBulkReadyToCatalog,
+            isLoading: widget.controller.isSaving,
+          ),
+        ],
       ),
     );
   }

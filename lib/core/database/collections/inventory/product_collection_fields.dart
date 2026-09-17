@@ -208,6 +208,10 @@ class ProductCollection {
   List<ProductVariantEmbed>? variants;
   String? customFieldsJson;
 
+  double? minStock;
+  double? maxStock;
+  double? reorderLevel;
+
   bool isDeleted = false;
   DateTime createdAt = DateTime.now();
   DateTime updatedAt = DateTime.now();
