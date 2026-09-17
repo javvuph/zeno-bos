@@ -4,8 +4,10 @@ import 'package:zeno/core/widgets/zeno_inputs.dart';
 import 'package:zeno/core/widgets/zeno_card.dart';
 import 'package:zeno/features/inventory/presentation/controllers/product_studio_controller.dart';
 import '../../../../domain/models/product_studio_enums.dart';
-
+import '../../../../domain/models/product_studio_data.dart';
 import 'package:zeno/core/layouts/zeno_responsive_layout.dart';
+
+part 'parts/tab3_price_tax_clothing.part.dart';
 
 class Tab3PriceTax extends StatelessWidget {
   final ProductStudioController controller;
@@ -25,78 +27,10 @@ class Tab3PriceTax extends StatelessWidget {
 
     return ZenoResponsiveLayout(
       child: isClothingSmall 
-        ? Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              flex: 4,
-              child: Column(
-                children: [
-                  _compactSection("STOCK", colors, [
-                    Row(
-                      children: [
-                        Expanded(child: ZenoTextField(label: "Opening Stock", initialValue: p.openingStock.toString(), onChanged: (v) => controller.updateField(openingStock: int.tryParse(v)), keyboardType: TextInputType.number)),
-                        const SizedBox(width: 8),
-                        Expanded(child: ZenoTextField(label: "Reorder Level", initialValue: p.reorderLevel.toString(), onChanged: (v) => controller.updateField(reorderLevel: double.tryParse(v)), keyboardType: TextInputType.number)),
-                      ],
-                    ),
-                  ]),
-                  const SizedBox(height: 8), 
-                  _compactSection("SUPPLIER", colors, [
-                    ZenoDropdown<String>(label: "Primary Supplier", value: p.supplier.isEmpty ? null : p.supplier, items: controller.suppliersList.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => controller.updateField(supplier: v), onQuickAdd: () => _showQuickAddDialog(context, "Supplier", (val) => controller.addSupplier(val))),
-                  ]),
-                  const SizedBox(height: 8), 
-                  _compactSection("TAX", colors, [
-                    Row(
-                      children: [
-                        Expanded(flex: 2, child: ZenoTextField(label: "HSN / Tax Code", initialValue: p.hsnCode, onChanged: (v) => controller.updateField(hsnCode: v))),
-                        const SizedBox(width: 8),
-                        Expanded(flex: 3, child: ZenoDropdown<String>(label: "Tax Status", value: p.taxStatus, items: _withCurrent(_taxStatusOptions, p.taxStatus).map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => controller.updateField(taxStatus: v), onQuickAdd: () => _showQuickAddDialog(context, "Tax Status", (val) => controller.updateField(taxStatus: val)))),
-                      ],
-                    ),
-                    const SizedBox(height: 8), 
-                    ZenoTextField(label: "Tax Rate (%)", initialValue: p.taxRate.toString(), onChanged: (v) => controller.updateField(taxRate: double.tryParse(v)), keyboardType: TextInputType.number),
-                  ]),
-                ],
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              flex: 5,
-              child: Column(
-                children: [
-                  _compactSection("PURCHASE & SELLING", colors, [
-                    Row(
-                      children: [
-                        Expanded(child: ZenoTextField(label: "Purchase / Cost", initialValue: p.costPrice.toString(), onChanged: (v) => controller.updateField(costPrice: double.tryParse(v)), keyboardType: TextInputType.number)),
-                        const SizedBox(width: 8),
-                        Expanded(child: ZenoTextField(label: "Selling Price", initialValue: p.sellingPrice.toString(), onChanged: (v) => controller.updateField(sellingPrice: double.tryParse(v)), keyboardType: TextInputType.number)),
-                        const SizedBox(width: 8),
-                        Expanded(child: ZenoTextField(label: "MRP", initialValue: p.mrp.toString(), onChanged: (v) => controller.updateField(mrp: double.tryParse(v)), keyboardType: TextInputType.number)),
-                      ],
-                    ),
-                  ]),
-                  const SizedBox(height: 8), 
-                  _compactSection("DISCOUNT & PROMOTION", colors, [
-                    Row(
-                      children: [
-                        Expanded(child: ZenoDropdown<String>(label: "Disc Type", value: p.discountType, items: _withCurrent(_discountTypeOptions, p.discountType).map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => controller.updateField(discountType: v), onQuickAdd: () => _showQuickAddDialog(context, "Disc Type", (val) => controller.updateField(discountType: val)))),
-                        const SizedBox(width: 8),
-                        Expanded(child: ZenoTextField(label: "Disc Value", initialValue: p.discountValue.toString(), onChanged: (v) => controller.updateField(discountValue: double.tryParse(v)), keyboardType: TextInputType.number)),
-                      ],
-                    ),
-                    const SizedBox(height: 8), 
-                    ZenoTextField(label: "Promo Price", initialValue: p.promotionalPrice.toString(), onChanged: (v) => controller.updateField(promotionalPrice: double.tryParse(v)), keyboardType: TextInputType.number),
-                  ]),
-                ],
-              ),
-            ),
-          ],
-        )
+        ? _buildClothingSmallLayout(context, p, colors)
         : Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Left Column: Pricing
             Expanded(
               child: Column(
                 children: [
@@ -156,7 +90,6 @@ class Tab3PriceTax extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 10),
-            // Right Column: Taxation
             Expanded(
               child: Column(
                 children: [
@@ -214,13 +147,51 @@ class Tab3PriceTax extends StatelessWidget {
   }
 
   Widget _compactSection(String title, ZenoSemanticColors colors, List<Widget> children) {
-    return ZenoCard(
-      title: title,
-      padding: const EdgeInsets.all(12),
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Color(0x14667EEA), Color(0x0D764BA2)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        border: Border.all(color: const Color(0x33667EEA)),
+        borderRadius: BorderRadius.circular(10),
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: children,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 3,
+                height: 16,
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFF667EEA), Color(0xFF764BA2)],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                title.toUpperCase(),
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF667EEA),
+                  letterSpacing: 0.5,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          ...children,
+        ],
       ),
     );
   }

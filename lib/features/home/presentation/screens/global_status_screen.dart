@@ -53,7 +53,7 @@ class GlobalStatusScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 32),
-            Row(
+            const Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
@@ -62,7 +62,7 @@ class GlobalStatusScreen extends StatelessWidget {
                     title: "Entity & Branch Health",
                     accentColor: ZenoTheme.neonCyan,
                     child: Column(
-                      children: const [
+                      children: [
                         _EntityRow(
                             name: "Corporate Headquarters",
                             status: "Online",
@@ -84,13 +84,13 @@ class GlobalStatusScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(width: 24),
+                SizedBox(width: 24),
                 Expanded(
                   child: CommandCenterWidget(
                     title: "Connected Integrations",
                     accentColor: Colors.purple,
                     child: Column(
-                      children: const [
+                      children: [
                         _IntegrationItem(
                             name: "WhatsApp API", status: "Connected"),
                         _IntegrationItem(

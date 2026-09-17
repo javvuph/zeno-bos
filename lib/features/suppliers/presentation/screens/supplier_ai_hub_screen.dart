@@ -88,24 +88,24 @@ class _SupplierAIHubScreenState extends State<SupplierAIHubScreen> {
                   ),
                 ),
                 const SizedBox(height: ZenoSpacing.xl),
-                Row(
+                const Row(
                   children: [
-                    const Expanded(
+                    Expanded(
                         child: ZenoStatCard(
                             label: "REORDER ACCURACY",
                             value: "96.5%",
                             change: "+2%",
                             icon: Icons.insights,
                             iconColor: Color(0xFF38ef7d))),
-                    const SizedBox(width: ZenoSpacing.lg),
-                    const Expanded(
+                    SizedBox(width: ZenoSpacing.lg),
+                    Expanded(
                         child: ZenoStatCard(
                             label: "SUPPLIER HEALTH",
                             value: "OPTIMAL",
                             icon: Icons.security,
                             iconColor: Color(0xFF00FF88))),
-                    const SizedBox(width: ZenoSpacing.lg),
-                    const Expanded(
+                    SizedBox(width: ZenoSpacing.lg),
+                    Expanded(
                         child: ZenoStatCard(
                             label: "SPEND VARIANCE",
                             value: "2.4%",

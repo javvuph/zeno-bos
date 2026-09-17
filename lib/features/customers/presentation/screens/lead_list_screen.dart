@@ -25,7 +25,7 @@ class LeadListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<ZenoSemanticColors>()!;
-    final List<Lead> _items = [
+    final List<Lead> items = [
       Lead(
           id: "LD-2024-001",
           name: "Initech Corp",
@@ -67,7 +67,7 @@ class LeadListScreen extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: ZenoTable<Lead>(
-              items: _items,
+              items: items,
               columns: [
                 ZenoTableColumn(
                   label: "Lead Identity",

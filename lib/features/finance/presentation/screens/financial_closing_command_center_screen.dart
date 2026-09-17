@@ -54,10 +54,12 @@ class _FinancialClosingCommandCenterScreenState
         selectedItems: _selectedTask != null ? [_selectedTask!] : [],
         columns: manifest.tableColumns(context),
         trafficLightSelector: (t) {
-          if (t.status == ClosingTaskStatus.completed)
+          if (t.status == ClosingTaskStatus.completed) {
             return ZenoTrafficLight.success;
-          if (t.isMandatory && t.status == ClosingTaskStatus.pending)
+          }
+          if (t.isMandatory && t.status == ClosingTaskStatus.pending) {
             return ZenoTrafficLight.danger;
+          }
           return ZenoTrafficLight.info;
         },
       ),

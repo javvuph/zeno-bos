@@ -16,7 +16,9 @@ class CRMIntelligenceEngine {
   double scoreLead(Lead lead) {
     double score = 50.0;
     if (lead.email.contains('@corp.com') ||
-        lead.email.contains('@business.com')) score += 20;
+        lead.email.contains('@business.com')) {
+      score += 20;
+    }
     if (lead.source == 'Referral') score += 15;
     if (lead.companyName != null) score += 10;
     return score.clamp(0, 100);

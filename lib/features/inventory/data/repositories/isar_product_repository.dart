@@ -50,7 +50,10 @@ class IsarProductRepository implements IProductRepository {
 
     final pc = ProductMapper.mapToCollection(product, existing: existing);
 
-    if (existing == null) {
+    if (existing != null) {
+      pc.id = existing.id;
+      pc.createdAt = existing.createdAt;
+    } else {
       pc.createdAt = product.createdAt;
     }
 

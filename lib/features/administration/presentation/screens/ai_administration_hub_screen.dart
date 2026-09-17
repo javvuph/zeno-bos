@@ -89,23 +89,23 @@ class _AIAdministrationHubScreenState extends State<AIAdministrationHubScreen> {
                   ),
                 ),
                 const SizedBox(height: ZenoSpacing.xl),
-                Row(
+                const Row(
                   children: [
-                    const Expanded(
+                    Expanded(
                         child: ZenoStatCard(
                             label: "AI UPTIME",
                             value: "99.98%",
                             icon: Icons.cloud_done_outlined,
                             iconColor: Color(0xFF00FF88))),
-                    const SizedBox(width: ZenoSpacing.lg),
-                    const Expanded(
+                    SizedBox(width: ZenoSpacing.lg),
+                    Expanded(
                         child: ZenoStatCard(
                             label: "AVG. ACCURACY",
                             value: "96.4%",
                             icon: Icons.check_circle_outline,
                             iconColor: Color(0xFF00F0FF))),
-                    const SizedBox(width: ZenoSpacing.lg),
-                    const Expanded(
+                    SizedBox(width: ZenoSpacing.lg),
+                    Expanded(
                         child: ZenoStatCard(
                             label: "TOKEN SPEND",
                             value: "\$1,240",

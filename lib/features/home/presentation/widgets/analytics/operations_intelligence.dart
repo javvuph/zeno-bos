@@ -33,7 +33,7 @@ class OperationsIntelligence extends StatelessWidget {
                       color: ZenoTheme.border,
                       thicknessUnit: GaugeSizeUnit.factor,
                     ),
-                    pointers: <GaugePointer>[
+                    pointers: const <GaugePointer>[
                       RangePointer(
                         value: 84,
                         width: 0.15,
@@ -42,12 +42,12 @@ class OperationsIntelligence extends StatelessWidget {
                         cornerStyle: CornerStyle.bothCurve,
                       )
                     ],
-                    annotations: <GaugeAnnotation>[
+                    annotations: const <GaugeAnnotation>[
                       GaugeAnnotation(
                         widget: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Text("EFFICIENCY",
+                            Text("EFFICIENCY",
                                 style: TextStyle(
                                     fontSize: 8,
                                     color: ZenoTheme.textSecondary,
@@ -67,7 +67,7 @@ class OperationsIntelligence extends StatelessWidget {
                 ],
               ),
             ),
-            Expanded(
+            const Expanded(
               flex: 4,
               child: SingleChildScrollView(
                 child: Column(
@@ -77,7 +77,7 @@ class OperationsIntelligence extends StatelessWidget {
                         label: "Process Velocity",
                         value: "1.2h",
                         target: "1.5h"),
-                    const Divider(color: ZenoTheme.border),
+                    Divider(color: ZenoTheme.border),
                     _OpMetric(
                         label: "Resource Util.", value: "92%", target: "85%"),
                   ],

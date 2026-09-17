@@ -24,7 +24,6 @@ class ZenoHoverDescriptionField extends StatefulWidget {
 class _ZenoHoverDescriptionFieldState extends State<ZenoHoverDescriptionField> {
   OverlayEntry? _overlayEntry;
   final LayerLink _layerLink = LayerLink();
-  bool _isHovered = false;
 
   void _showOverlay() {
     if (_overlayEntry != null) return;

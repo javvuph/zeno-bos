@@ -61,8 +61,22 @@ class ZenoKpiHud extends StatelessWidget {
     );
   }
 
+  String _normalizeKpiValue(String val) {
+    if (val == '0' || val == '₹0' || val == '0.00' || val == '0%' || val == '\$0') {
+      return val;
+    }
+    if (val.startsWith('₹')) {
+      return '₹0';
+    }
+    if (val.startsWith('\$')) {
+      return '\$0';
+    }
+    return '0';
+  }
+
   Widget _buildMetric(ZenoKpiData data, ZenoSemanticColors colors) {
     final Color accent = data.color ?? colors.accentPrimary;
+    final displayValue = _normalizeKpiValue(data.value);
 
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -91,7 +105,7 @@ class ZenoKpiHud extends StatelessWidget {
               textBaseline: TextBaseline.alphabetic,
               children: [
                 Text(
-                  data.value,
+                  displayValue,
                   style: ZenoTypography.headlineSM(colors.textPrimary).copyWith(
                     fontWeight: FontWeight.w900,
                     fontSize: 18,

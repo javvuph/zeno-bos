@@ -20,12 +20,12 @@ class PayableAccountingPanel extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
+          const Row(
             children: [
-              const Icon(Icons.account_balance_rounded,
+              Icon(Icons.account_balance_rounded,
                   size: 20, color: Colors.blue),
-              const SizedBox(width: 12),
-              const Text("GL POSTING PREVIEW",
+              SizedBox(width: 12),
+              Text("GL POSTING PREVIEW",
                   style: TextStyle(fontWeight: FontWeight.w900, fontSize: 13)),
             ],
           ),

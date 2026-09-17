@@ -88,24 +88,24 @@ class _DeliveryAIHubScreenState extends State<DeliveryAIHubScreen> {
                   ),
                 ),
                 const SizedBox(height: ZenoSpacing.xl),
-                Row(
+                const Row(
                   children: [
-                    const Expanded(
+                    Expanded(
                         child: ZenoStatCard(
                             label: "FUEL SAVINGS (AI)",
                             value: "12.4%",
                             change: "+1.2%",
                             icon: Icons.eco_outlined,
                             iconColor: Color(0xFF00FF88))),
-                    const SizedBox(width: ZenoSpacing.lg),
-                    const Expanded(
+                    SizedBox(width: ZenoSpacing.lg),
+                    Expanded(
                         child: ZenoStatCard(
                             label: "ETA CONFIDENCE",
                             value: "97.8%",
                             icon: Icons.verified_user_outlined,
                             iconColor: Color(0xFF00F0FF))),
-                    const SizedBox(width: ZenoSpacing.lg),
-                    const Expanded(
+                    SizedBox(width: ZenoSpacing.lg),
+                    Expanded(
                         child: ZenoStatCard(
                             label: "LATE RISK ALERTS",
                             value: "0",

@@ -54,10 +54,12 @@ class _BankingCommandCenterScreenState
         selectedItems: _selectedTx != null ? [_selectedTx!] : [],
         columns: manifest.tableColumns(context),
         trafficLightSelector: (t) {
-          if (t.status == BankTransactionStatus.reconciled)
+          if (t.status == BankTransactionStatus.reconciled) {
             return ZenoTrafficLight.success;
-          if (t.status == BankTransactionStatus.failed)
+          }
+          if (t.status == BankTransactionStatus.failed) {
             return ZenoTrafficLight.danger;
+          }
           if (t.aiFraudScore > 70) return ZenoTrafficLight.warning;
           return ZenoTrafficLight.info;
         },

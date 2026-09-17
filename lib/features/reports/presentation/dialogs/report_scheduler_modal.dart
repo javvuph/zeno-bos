@@ -32,7 +32,7 @@ class _ReportSchedulerModalState extends State<ReportSchedulerModal> {
           const Text("DELIVERY FREQUENCY", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.grey)),
           const SizedBox(height: 12),
           DropdownButtonFormField<String>(
-            value: _frequency,
+            initialValue: _frequency,
             items: ['Daily', 'Weekly', 'Monthly'].map((f) => DropdownMenuItem(value: f, child: Text(f))).toList(),
             onChanged: (v) => setState(() => _frequency = v!),
           ),

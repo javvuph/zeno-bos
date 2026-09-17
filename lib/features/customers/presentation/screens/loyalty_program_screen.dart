@@ -46,28 +46,28 @@ class _LoyaltyProgramScreenState extends State<LoyaltyProgramScreen> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
+                const Expanded(
                   flex: 1,
                   child: ZenoCard(
                     title: "ACTIVE ENTERPRISE TIERS",
                     child: Column(
                       children: [
-                        const _TierCard(
+                        _TierCard(
                             name: "VIP PLATINUM",
                             points: "50,000+ LTV",
                             color: Color(0xFFFFD700),
                             multiplier: "3.0X"),
-                        const _TierCard(
+                        _TierCard(
                             name: "GOLD EXECUTIVE",
                             points: "10,000 - 49,999 LTV",
                             color: Color(0xFF00D2FF),
                             multiplier: "2.0X"),
-                        const _TierCard(
+                        _TierCard(
                             name: "SILVER PREFERRED",
                             points: "2,500 - 9,999 LTV",
                             color: Color(0xFF9D50BB),
                             multiplier: "1.5X"),
-                        const _TierCard(
+                        _TierCard(
                             name: "STANDARD MEMBER",
                             points: "< 2,500 LTV",
                             color: Colors.grey,

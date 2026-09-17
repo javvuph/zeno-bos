@@ -9,6 +9,8 @@ class BusinessHealthScoreGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scores = BIMockData.getBusinessHealthScores();
+    if (scores.isEmpty) return const SizedBox.shrink();
+    final entries = scores.entries.toList();
 
     return BISectionContainer(
       title: "Business Health Score Matrix",
@@ -22,10 +24,11 @@ class BusinessHealthScoreGrid extends StatelessWidget {
           mainAxisSpacing: 12,
           childAspectRatio: 1.6,
         ),
-        itemCount: scores.length,
+        itemCount: entries.length,
         itemBuilder: (context, index) {
-          final key = scores.keys.elementAt(index);
-          final value = scores[key]!;
+          if (index >= entries.length) return const SizedBox.shrink();
+          final key = entries[index].key;
+          final value = entries[index].value;
           return _buildScoreCard(key, value);
         },
       ),

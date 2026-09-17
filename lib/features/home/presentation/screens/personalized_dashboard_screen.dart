@@ -39,27 +39,27 @@ class _DashboardView extends StatelessWidget {
           ),
           kpiHud: ZenoKpiHud(
             metrics: [
-              ZenoKpiData(
+              const ZenoKpiData(
                 label: "Revenue Today",
-                value: "₹8.4L",
+                value: "₹0",
                 icon: Icons.payments_rounded,
-                change: "14%",
+                change: "0%",
               ),
-              ZenoKpiData(
+              const ZenoKpiData(
                 label: "Pending Approvals",
-                value: "12",
+                value: "0",
                 icon: Icons.verified_rounded,
                 color: Colors.orange,
               ),
-              ZenoKpiData(
+              const ZenoKpiData(
                 label: "Inventory Health",
-                value: "94%",
+                value: "0%",
                 icon: Icons.inventory_2_rounded,
                 color: Colors.green,
               ),
               ZenoKpiData(
                 label: "System Status",
-                value: "STABLE",
+                value: "OFFLINE",
                 icon: Icons.monitor_heart_rounded,
                 color: colors.accentPrimary,
               ),

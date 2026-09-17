@@ -55,7 +55,11 @@ class FnbBasicTab extends StatelessWidget {
             final isSelected = p.allergens.contains(a);
             return FilterChip(label: Text(a, style: const TextStyle(fontSize: 11)), selected: isSelected, onSelected: (s) {
               final list = List<String>.from(p.allergens);
-              if (s) list.add(a); else list.remove(a);
+              if (s) {
+                list.add(a);
+              } else {
+                list.remove(a);
+              }
               controller.updateField(allergens: list);
             }, selectedColor: colors.accentPrimary.withValues(alpha: 0.2), checkmarkColor: colors.accentPrimary);
           }).toList()),

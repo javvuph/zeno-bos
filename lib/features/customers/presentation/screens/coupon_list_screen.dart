@@ -23,7 +23,7 @@ class CouponListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<ZenoSemanticColors>()!;
-    final List<Coupon> _items = [
+    final List<Coupon> items = [
       Coupon(
           code: "WELCOME10",
           discount: "10%",
@@ -62,7 +62,7 @@ class CouponListScreen extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: ZenoTable<Coupon>(
-              items: _items,
+              items: items,
               columns: [
                 ZenoTableColumn(
                   label: "Coupon Code",

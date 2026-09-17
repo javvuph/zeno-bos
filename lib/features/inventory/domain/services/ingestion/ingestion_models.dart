@@ -1,5 +1,4 @@
 import '../../models/product_studio_data.dart';
-import '../../models/product_studio_enums.dart';
 
 enum IngestionSource { aiBill, csv, excel, bulk, api, barcode }
 
@@ -18,6 +17,30 @@ class IngestionRow {
     this.messages = const [],
     this.rawData = const {},
     this.isSelected = false,
+  });
+}
+
+/// A single field pulled out of a bill/document by the AI extractor, shown for
+/// human confirmation in [AIReviewDialog] before it is written to a product.
+class AIExtractedField {
+  final String label;
+  String value;
+
+  /// Extractor confidence in the range 0.0–1.0.
+  final double confidence;
+
+  /// Where the value came from, e.g. "OCR line 4" or "Vendor catalogue".
+  final String source;
+
+  /// Whether the operator has approved this value for population.
+  bool isAccepted;
+
+  AIExtractedField({
+    required this.label,
+    required this.value,
+    this.confidence = 0.0,
+    this.source = "AI",
+    this.isAccepted = true,
   });
 }
 

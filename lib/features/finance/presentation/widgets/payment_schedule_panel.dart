@@ -20,12 +20,12 @@ class PaymentSchedulePanel extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
+          const Row(
             children: [
-              const Icon(Icons.event_note_rounded,
+              Icon(Icons.event_note_rounded,
                   size: 20, color: Colors.indigo),
-              const SizedBox(width: 12),
-              const Text("DISBURSEMENT SCHEDULE",
+              SizedBox(width: 12),
+              Text("DISBURSEMENT SCHEDULE",
                   style: TextStyle(
                       fontWeight: FontWeight.w900,
                       fontSize: 13,
@@ -54,11 +54,11 @@ class PaymentSchedulePanel extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
               border: Border.all(color: Colors.green.withValues(alpha: 0.3)),
             ),
-            child: Row(
+            child: const Row(
               children: [
-                const Icon(Icons.auto_awesome, size: 16, color: Colors.green),
-                const SizedBox(width: 12),
-                const Expanded(
+                Icon(Icons.auto_awesome, size: 16, color: Colors.green),
+                SizedBox(width: 12),
+                Expanded(
                   child: Text(
                     "Pay before Aug 15 to secure ₹236.00 early payment discount.",
                     style: TextStyle(

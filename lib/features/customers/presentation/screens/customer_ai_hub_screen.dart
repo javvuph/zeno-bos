@@ -88,24 +88,24 @@ class _CustomerAIHubScreenState extends State<CustomerAIHubScreen> {
                   ),
                 ),
                 const SizedBox(height: ZenoSpacing.xl),
-                Row(
+                const Row(
                   children: [
-                    const Expanded(
+                    Expanded(
                         child: ZenoStatCard(
                             label: "RETENTION SCORE",
                             value: "94%",
                             change: "+2%",
                             icon: Icons.online_prediction,
                             iconColor: Color(0xFF00FF88))),
-                    const SizedBox(width: ZenoSpacing.lg),
-                    const Expanded(
+                    SizedBox(width: ZenoSpacing.lg),
+                    Expanded(
                         child: ZenoStatCard(
                             label: "SEGMENT CLARITY",
                             value: "OPTIMAL",
                             icon: Icons.pie_chart_outline,
                             iconColor: Color(0xFFFFD700))),
-                    const SizedBox(width: ZenoSpacing.lg),
-                    const Expanded(
+                    SizedBox(width: ZenoSpacing.lg),
+                    Expanded(
                         child: ZenoStatCard(
                             label: "ACQUISITION COST",
                             value: "\$14.2",

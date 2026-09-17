@@ -67,9 +67,9 @@ class GovernanceController extends ChangeNotifier {
   // Dashboard Stats
   int get activeUserCount => _users.length;
   int get sessionCount => _sessions.length;
-  int get healthScore => 94; // Mock score
-  int get securityScore => 88; // Mock score
-  int get pendingApprovals => 4; // Mock count
+  int get healthScore => 0; // Mock score
+  int get securityScore => 0; // Mock score
+  int get pendingApprovals => 0; // Mock count
   
   EnterpriseUser? _selectedUser;
   EnterpriseUser? get selectedUser => _selectedUser;

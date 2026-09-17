@@ -96,8 +96,9 @@ class AuroraFieldRenderer extends StatelessWidget {
     } else if (['subcategory', 'subDepartment', 'productClassification', 'brandType', 'taxStatus', 'taxCategory', 'gstTaxMode', 'gender', 'targetAgeGroup', 'season', 'status', 'productLifecycleStatus', 'prescriptionClass', 'dosageForm', 'foodClass', 'spiceLevel', 'fineDiningCourse', 'storageCondition'].contains(fieldId)) {
       // Standard Dropdowns
       final List<String> dropdownItems;
-      if (fieldId == 'productClassification') dropdownItems = ["Food", "Non-Food"];
-      else if (fieldId == 'brandType') dropdownItems = ["National", "International", "Private Label"];
+      if (fieldId == 'productClassification') {
+        dropdownItems = ["Food", "Non-Food"];
+      } else if (fieldId == 'brandType') dropdownItems = ["National", "International", "Private Label"];
       else if (fieldId == 'taxStatus') dropdownItems = (controller.currentTaxConfig['statuses'] as List<String>);
       else if (fieldId == 'taxCategory') dropdownItems = (controller.currentTaxConfig['categories'] as List<String>);
       else if (fieldId == 'gstTaxMode') dropdownItems = (controller.currentTaxConfig['gstModes'] as List<String>);

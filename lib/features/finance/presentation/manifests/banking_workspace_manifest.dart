@@ -54,21 +54,21 @@ class BankingWorkspaceManifest extends ZenoWorkspaceManifest<BankTransaction> {
   static List<ZenoKpiData> _getKpiMetrics(BuildContext context) => [
         const ZenoKpiData(
             label: "Cash On Hand",
-            value: "₹850K",
+            value: "₹0",
             icon: Icons.savings_outlined),
         const ZenoKpiData(
             label: "Bank Balance",
-            value: "₹4.2M",
+            value: "₹0",
             icon: Icons.account_balance_rounded,
             color: Colors.blue),
         const ZenoKpiData(
             label: "Pending Deps",
-            value: "₹120K",
+            value: "₹0",
             icon: Icons.hourglass_top_rounded,
             color: Colors.orange),
         const ZenoKpiData(
             label: "Today's Flow",
-            value: "+₹34K",
+            value: "₹0",
             icon: Icons.trending_up_rounded,
             color: Color(0xFF00F0FF)),
       ];

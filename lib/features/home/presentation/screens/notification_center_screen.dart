@@ -33,8 +33,8 @@ class NotificationCenterScreen extends StatelessWidget {
                   onPressed: () {},
                   child: const Text("Mark all read",
                       style: TextStyle(fontSize: 12))),
-              child: Column(
-                children: const [
+              child: const Column(
+                children: [
                   HomeNotificationItem(
                       title: "Inventory low for SKU: PHN-15-PRO",
                       time: "2m ago",
@@ -60,11 +60,11 @@ class NotificationCenterScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 24),
-            CommandCenterWidget(
+            const CommandCenterWidget(
               title: "Earlier Today",
               accentColor: ZenoTheme.textSecondary,
               child: Column(
-                children: const [
+                children: [
                   HomeNotificationItem(
                       title: "Backup process completed successfully",
                       time: "5h ago",

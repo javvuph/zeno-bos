@@ -11,7 +11,7 @@ class BillingStatusBar extends StatelessWidget {
     final colors = Theme.of(context).extension<ZenoSemanticColors>()!;
 
     return ZenoStatusBar(
-      leftActions: [
+      leftActions: const [
         ZenoStatusBarIndicator(
             icon: Icons.home_filled, label: "SHIFT: MORNING"),
         ZenoStatusBarIndicator(
@@ -22,7 +22,7 @@ class BillingStatusBar extends StatelessWidget {
         ZenoStatusDot(label: "INTERNET", isActive: true),
       ],
       rightActions: [
-        ZenoStatusDot(label: "CLOUD SYNC", isActive: true),
+        const ZenoStatusDot(label: "CLOUD SYNC", isActive: true),
         Icon(Icons.wb_sunny_outlined, size: 12, color: colors.textDisabled),
       ],
     );

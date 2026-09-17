@@ -30,10 +30,12 @@ class ApprovalWorkflow {
   });
 
   ApprovalStatus get currentStatus {
-    if (steps.any((s) => s.status == ApprovalStatus.rejected))
+    if (steps.any((s) => s.status == ApprovalStatus.rejected)) {
       return ApprovalStatus.rejected;
-    if (steps.every((s) => s.status == ApprovalStatus.approved))
+    }
+    if (steps.every((s) => s.status == ApprovalStatus.approved)) {
       return ApprovalStatus.approved;
+    }
     return ApprovalStatus.pending;
   }
 }

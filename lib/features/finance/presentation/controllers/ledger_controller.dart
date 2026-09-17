@@ -23,8 +23,8 @@ class LedgerController extends ChangeNotifier {
   TrialBalance? get trialBalance => _trialBalance;
 
   // KPI Bridges
-  double get totalAssets => 850400.0; // Mocked
-  double get netProfit => 125000.0; // Mocked
+  double get totalAssets => 0.0;
+  double get netProfit => 0.0;
 
   Future<void> loadLedger() async {
     _isLoading = true;

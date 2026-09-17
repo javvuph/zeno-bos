@@ -6,14 +6,16 @@ import 'package:zeno/features/billing/presentation/controllers/billing_studio_co
 import 'package:zeno/features/billing/presentation/controllers/billing_state.dart';
 import 'package:zeno/features/billing/presentation/controllers/billing_event.dart';
 
+part 'parts/smart_cart_grid_action_chip.part.dart';
+
 class SmartCartGrid extends StatefulWidget {
   const SmartCartGrid({super.key});
 
   @override
-  State<SmartCartGrid> createState() => _SmartCartGridState();
+  State<SmartCartGrid> createState() => SmartCartGridState();
 }
 
-class _SmartCartGridState extends State<SmartCartGrid> {
+class SmartCartGridState extends State<SmartCartGrid> {
   final TextEditingController _scanController = TextEditingController();
   final FocusNode _scanFocusNode = FocusNode();
 
@@ -22,6 +24,10 @@ class _SmartCartGridState extends State<SmartCartGrid> {
     _scanController.dispose();
     _scanFocusNode.dispose();
     super.dispose();
+  }
+
+  void focusQuickAdd() {
+    _scanFocusNode.requestFocus();
   }
 
   void _onScan(String value) {
@@ -38,7 +44,6 @@ class _SmartCartGridState extends State<SmartCartGrid> {
       builder: (context, state) {
         return Column(
           children: [
-            // --- 1. QUICK ADD & SCAN BAR (ACTIVATED) ---
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
               decoration: const BoxDecoration(
@@ -77,7 +82,7 @@ class _SmartCartGridState extends State<SmartCartGrid> {
                               focusNode: _scanFocusNode,
                               onSubmitted: _onScan,
                               decoration: const InputDecoration(
-                                hintText: "SCAN OR TYPE PRODUCT SKU...",
+                                hintText: "SCAN OR TYPE PRODUCT SKU... (F3 / Ctrl+F)",
                                 hintStyle:
                                     TextStyle(fontSize: 9, color: Colors.grey),
                                 border: InputBorder.none,
@@ -98,7 +103,7 @@ class _SmartCartGridState extends State<SmartCartGrid> {
                   const SizedBox(width: 16),
                   _ActionChip(
                       icon: Icons.pause_circle_outline,
-                      label: "HOLD",
+                      label: "HOLD (F8)",
                       color: Colors.orange,
                       onTap: () => context
                           .read<BillingStudioController>()
@@ -114,16 +119,24 @@ class _SmartCartGridState extends State<SmartCartGrid> {
               ),
             ),
 
-            // --- 2. THE HIGH-DENSITY GRID ---
             Expanded(
               child: Container(
                 color: Colors.white,
                 child: ZenoTable<BillItem>(
                   items: state.activeBill.items,
+                  onDeleteRequested: (itemsToDelete) {
+                    for (final item in itemsToDelete) {
+                      context.read<BillingStudioController>().add(
+                            RemoveItemRequested(item.productId),
+                          );
+                    }
+                  },
                   columns: [
                     ZenoTableColumn(
                       label: '#',
                       width: 32,
+                      textExtractor: (item) =>
+                          '${state.activeBill.items.indexOf(item) + 1}',
                       builder: (item) => Text(
                           '${state.activeBill.items.indexOf(item) + 1}',
                           style: const TextStyle(
@@ -132,6 +145,7 @@ class _SmartCartGridState extends State<SmartCartGrid> {
                     ZenoTableColumn(
                       label: 'Item',
                       width: 280,
+                      textExtractor: (item) => item.productName,
                       builder: (item) => Row(
                         children: [
                           Container(
@@ -168,14 +182,15 @@ class _SmartCartGridState extends State<SmartCartGrid> {
                     ZenoTableColumn(
                       label: 'Stock',
                       width: 80,
-                      builder: (item) => Column(
+                      textExtractor: (item) => "120",
+                      builder: (item) => const Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text("120",
+                          Text("120",
                               style: TextStyle(
                                   fontSize: 9, fontWeight: FontWeight.bold)),
-                          const Text("Stock",
+                          Text("Stock",
                               style: TextStyle(
                                   fontSize: 7,
                                   color: Color(0xFF10B981),
@@ -186,6 +201,7 @@ class _SmartCartGridState extends State<SmartCartGrid> {
                     ZenoTableColumn(
                       label: 'Qty',
                       width: 100,
+                      textExtractor: (item) => "${item.quantity}",
                       builder: (item) => Row(
                         children: [
                           _QtyBtn(
@@ -208,22 +224,26 @@ class _SmartCartGridState extends State<SmartCartGrid> {
                       label: 'Price',
                       width: 80,
                       isNumeric: true,
+                      textExtractor: (item) => item.unitPrice.toStringAsFixed(2),
                       builder: (item) => Text(
                           "₹${item.unitPrice.toStringAsFixed(2)}",
                           style: const TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 10)),
                     ),
                     ZenoTableColumn(
-                        label: 'Tax',
-                        width: 50,
-                        isNumeric: true,
-                        builder: (item) => const Text("5%",
-                            style: TextStyle(
-                                fontSize: 9, fontWeight: FontWeight.bold))),
+                      label: 'Tax',
+                      width: 50,
+                      isNumeric: true,
+                      textExtractor: (item) => "5%",
+                      builder: (item) => const Text("5%",
+                          style: TextStyle(
+                              fontSize: 9, fontWeight: FontWeight.bold)),
+                    ),
                     ZenoTableColumn(
                       label: 'Total',
                       width: 90,
                       isNumeric: true,
+                      textExtractor: (item) => item.totalAmount.toStringAsFixed(2),
                       builder: (item) => Text(
                           "₹${item.totalAmount.toStringAsFixed(2)}",
                           style: const TextStyle(
@@ -234,6 +254,7 @@ class _SmartCartGridState extends State<SmartCartGrid> {
                     ZenoTableColumn(
                       label: '',
                       width: 32,
+                      textExtractor: (item) => '',
                       builder: (item) => const Icon(Icons.more_vert_rounded,
                           size: 12, color: Colors.grey),
                     ),
@@ -250,62 +271,5 @@ class _SmartCartGridState extends State<SmartCartGrid> {
   void _updateQty(BuildContext context, BillItem item, int delta) {
     context.read<BillingStudioController>().add(
         UpdateItemQuantityRequested(item.productId, item.quantity + delta));
-  }
-}
-
-class _ActionChip extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final Color color;
-  final VoidCallback onTap;
-  const _ActionChip(
-      {required this.icon,
-      required this.label,
-      required this.color,
-      required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        margin: const EdgeInsets.only(left: 6),
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        decoration: BoxDecoration(
-            color: color.withValues(alpha: 0.05),
-            borderRadius: BorderRadius.circular(6),
-            border: Border.all(color: color.withValues(alpha: 0.2))),
-        child: Row(
-          children: [
-            Icon(icon, size: 10, color: color),
-            const SizedBox(width: 4),
-            Text(label,
-                style: TextStyle(
-                    color: color, fontSize: 8, fontWeight: FontWeight.bold)),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _QtyBtn extends StatelessWidget {
-  final IconData icon;
-  final VoidCallback onTap;
-  const _QtyBtn({required this.icon, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(2),
-        decoration: BoxDecoration(
-            color: const Color(0xFFF1F5F9),
-            borderRadius: BorderRadius.circular(4),
-            border: Border.all(color: const Color(0xFFCBD5E1))),
-        child: Icon(icon, size: 10, color: const Color(0xFF1E293B)),
-      ),
-    );
   }
 }

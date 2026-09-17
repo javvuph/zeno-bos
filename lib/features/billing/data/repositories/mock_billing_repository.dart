@@ -2,59 +2,13 @@ import 'package:zeno/features/billing/domain/models/bill.dart';
 import 'package:zeno/features/billing/domain/models/bill_item.dart';
 import 'package:zeno/features/billing/domain/models/billing_customer.dart';
 import 'package:zeno/features/billing/domain/repositories/i_billing_repository.dart';
-import 'package:zeno/features/billing/domain/models/tax_details.dart';
 
 class MockBillingRepository implements IBillingRepository {
   final List<Bill> _heldBills = [];
 
-  final List<BillingCustomer> _mockCustomers = [
-    const BillingCustomer(
-      id: 'CUST-001',
-      name: 'John Doe',
-      phone: '9876543210',
-      loyaltyTier: 'Gold',
-      currentBalance: 500.0,
-    ),
-    const BillingCustomer(
-      id: 'CUST-002',
-      name: 'Jane Smith',
-      phone: '9123456789',
-      loyaltyTier: 'Silver',
-    ),
-  ];
+  final List<BillingCustomer> _mockCustomers = [];
 
-  final List<BillItem> _mockProducts = [
-    const BillItem(
-      productId: 'PROD-001',
-      productName: 'iPhone 15 Pro Max',
-      sku: 'PHN-15-PRO',
-      variant: 'Natural Titanium / 256GB',
-      unitPrice: 1199.0,
-      quantity: 1,
-      totalAmount: 1199.0,
-      taxes: [TaxDetails(label: 'GST', percentage: 18, amount: 0)],
-    ),
-    const BillItem(
-      productId: 'PROD-002',
-      productName: 'MacBook Air M3',
-      sku: 'MAC-AIR-M3',
-      variant: 'Space Gray',
-      unitPrice: 1099.0,
-      quantity: 1,
-      totalAmount: 1099.0,
-      taxes: [TaxDetails(label: 'GST', percentage: 18, amount: 0)],
-    ),
-    const BillItem(
-      productId: 'PROD-003',
-      productName: 'ZENO Enterprise Mug',
-      sku: 'MUG-ZEN-001',
-      variant: 'White / 350ml',
-      unitPrice: 25.0,
-      quantity: 1,
-      totalAmount: 25.0,
-      taxes: [TaxDetails(label: 'VAT', percentage: 5, amount: 0)],
-    ),
-  ];
+  final List<BillItem> _mockProducts = [];
 
   @override
   Future<void> saveBill(Bill bill) async {

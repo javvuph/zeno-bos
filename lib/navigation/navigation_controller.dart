@@ -3,12 +3,14 @@ import 'package:uuid/uuid.dart';
 import 'package:zeno/navigation/navigation_models.dart';
 import 'package:zeno/navigation/menu_registry.dart';
 
+part 'parts/navigation_controller_tabs.part.dart';
+
 class NavigationController extends ChangeNotifier {
   static final NavigationController _instance =
       NavigationController._internal();
   factory NavigationController() => _instance;
   NavigationController._internal() {
-    final dashboardTab = ZenoTab(
+    const dashboardTab = ZenoTab(
       id: 'default_dashboard',
       title: 'Dashboard',
       icon: Icons.dashboard_outlined,
@@ -60,94 +62,6 @@ class NavigationController extends ChangeNotifier {
 
   List<FavouriteRecord> get favourites => List.unmodifiable(_favourites);
   List<RecentRecord> get recentlyViewed => List.unmodifiable(_recentlyViewed);
-
-  void openTab(String route,
-      {String? title,
-      IconData? icon,
-      Map<String, dynamic>? params,
-      String? recordId}) {
-    final newTab = ZenoTab(
-      id: const Uuid().v4(),
-      title: title ?? _getLabelFromRoute(route),
-      icon: icon ?? _getIconFromRoute(route),
-      route: route,
-      params: params ?? {},
-      filterState: activeTab.filterState, // Preserving filters
-      recordId: recordId,
-    );
-
-    _tabs.add(newTab);
-    _activeTabId = newTab.id;
-
-    if (recordId != null) {
-      _addToRecent(newTab);
-    }
-
-    notifyListeners();
-  }
-
-  void switchTab(String id) {
-    if (_activeTabId == id) return;
-    _activeTabId = id;
-    notifyListeners();
-  }
-
-  void closeTab(String id) {
-    if (_tabs.length <= 1) return;
-    final index = _tabs.indexWhere((t) => t.id == id);
-    if (index == -1) return;
-
-    final closedTab = _tabs.removeAt(index);
-    _closedTabsStack.add(closedTab);
-    if (_closedTabsStack.length > 10) _closedTabsStack.removeAt(0);
-
-    if (_activeTabId == id) {
-      _activeTabId = _tabs[index > 0 ? index - 1 : 0].id;
-    }
-    notifyListeners();
-  }
-
-  void restoreClosedTab() {
-    if (_closedTabsStack.isNotEmpty) {
-      final tab = _closedTabsStack.removeLast();
-      _tabs.add(tab);
-      _activeTabId = tab.id;
-      notifyListeners();
-    }
-  }
-
-  void closeOthers(String id) {
-    _tabs.removeWhere((t) => t.id != id && !t.isPinned);
-    _activeTabId = id;
-    notifyListeners();
-  }
-
-  void closeAll() {
-    _tabs.removeWhere((t) => !t.isPinned);
-    if (_tabs.isEmpty) {
-      openTab('dashboard');
-    } else {
-      _activeTabId = _tabs.first.id;
-    }
-    notifyListeners();
-  }
-
-  void togglePin(String id) {
-    final index = _tabs.indexWhere((t) => t.id == id);
-    if (index != -1) {
-      _tabs[index] = _tabs[index].copyWith(isPinned: !_tabs[index].isPinned);
-      notifyListeners();
-    }
-  }
-
-  void duplicateTab(String id) {
-    final original = _tabs.firstWhere((t) => t.id == id);
-    final copy = original.copyWith(
-        id: const Uuid().v4(), title: "${original.title} (Copy)");
-    _tabs.add(copy);
-    _activeTabId = copy.id;
-    notifyListeners();
-  }
 
   void setActiveHub(String hubId) {
     if (_activeHubId == hubId) return;
@@ -278,18 +192,17 @@ class NavigationController extends ChangeNotifier {
   List<ZenoSearchResult> search(String query) {
     if (query.isEmpty) return [];
 
-    // Mock enterprise search results
     final List<ZenoSearchResult> results = [];
     final q = query.toLowerCase();
 
     if ("sales invoice".contains(q) || "inv".contains(q)) {
-      results.add(ZenoSearchResult(
+      results.add(const ZenoSearchResult(
           title: "INV-2026-00125",
           subtitle: "Sales Invoice - Global Corp",
           icon: Icons.receipt_long,
           route: "billing/invoices/details",
           type: SearchResultType.record));
-      results.add(ZenoSearchResult(
+      results.add(const ZenoSearchResult(
           title: "INV-2026-00128",
           subtitle: "Sales Invoice - Tech Solutions",
           icon: Icons.receipt_long,
@@ -298,7 +211,7 @@ class NavigationController extends ChangeNotifier {
     }
 
     if ("customer".contains(q)) {
-      results.add(ZenoSearchResult(
+      results.add(const ZenoSearchResult(
           title: "Apple Inc.",
           subtitle: "Premium Tier Customer",
           icon: Icons.person,
@@ -307,7 +220,7 @@ class NavigationController extends ChangeNotifier {
     }
 
     if ("inventory".contains(q) || "stock".contains(q)) {
-      results.add(ZenoSearchResult(
+      results.add(const ZenoSearchResult(
           title: "Stock Movement Report",
           subtitle: "Inventory Analytics",
           icon: Icons.bar_chart,
@@ -315,7 +228,7 @@ class NavigationController extends ChangeNotifier {
           type: SearchResultType.module));
     }
 
-    results.add(ZenoSearchResult(
+    results.add(const ZenoSearchResult(
         title: "Create New Invoice",
         subtitle: "Quick Action",
         icon: Icons.add_shopping_cart,

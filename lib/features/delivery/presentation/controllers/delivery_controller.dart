@@ -41,7 +41,7 @@ class DeliveryController extends ChangeNotifier {
   int get pendingAssignmentCount =>
       deliveries.where((d) => d.status == DeliveryStatus.pending).length;
 
-  double get fleetOnTimeRate => 0.945; // Mocked for now
+  double get fleetOnTimeRate => 0.0;
 
   Future<void> loadDeliveries() async {
     _isLoading = true;

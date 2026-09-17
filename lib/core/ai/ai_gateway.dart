@@ -108,7 +108,7 @@ class MockAIProvider implements AIGateway {
         'size': size,
         'stock_quantity': perVariant > 0 ? perVariant : 2,
         'sku':
-            '${productName.substring(0, 3).toUpperCase()}-${productName.replaceAll(RegExp(r'[^A-Za-z]'), '').substring(0, 4).toUpperCase()}-${color.substring(0, 3).toUpperCase()}-${size}',
+            '${productName.substring(0, 3).toUpperCase()}-${productName.replaceAll(RegExp(r'[^A-Za-z]'), '').substring(0, 4).toUpperCase()}-${color.substring(0, 3).toUpperCase()}-$size',
         'cost_price': cost,
         'selling_price': sell,
       };

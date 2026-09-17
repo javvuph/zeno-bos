@@ -125,7 +125,7 @@ class _EmployeeFormScreenState extends State<EmployeeFormScreen> {
           title: "Organizational Assignment",
           children: [
             DropdownButtonFormField<String>(
-              value: _selectedDept,
+              initialValue: _selectedDept,
               decoration: const InputDecoration(
                   labelText: "Department", border: OutlineInputBorder()),
               items: _controller.departments
@@ -142,7 +142,7 @@ class _EmployeeFormScreenState extends State<EmployeeFormScreen> {
             ),
             const SizedBox(height: 12),
             DropdownButtonFormField<EmployeeStatus>(
-              value: _status,
+              initialValue: _status,
               decoration: const InputDecoration(
                   labelText: "Employment Status", border: OutlineInputBorder()),
               items: EmployeeStatus.values

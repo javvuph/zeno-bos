@@ -45,7 +45,7 @@ class FnbPriceTab extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Column(children: [
           Row(children: [
-            Expanded(child: ZenoTextField(label: "CURRENT STOCK QTY", initialValue: p.openingStock.toString(), onChanged: (v) => controller.updateField(openingStock: int.tryParse(v)))),
+            Expanded(child: ZenoTextField(label: "CURRENT STOCK QTY", initialValue: p.openingStock == 0 ? "" : p.openingStock.toString(), onChanged: (v) => controller.updateField(openingStock: double.tryParse(v) ?? 0.0))),
             const SizedBox(width: 12),
             Expanded(child: ZenoDropdown<String>(label: "KITCHEN WAREHOUSE", value: p.warehouseLocation, items: ["Main Kitchen", "Bar Store", "Cold Storage"].map((e)=>DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => controller.updateField(warehouseLocation: v))),
           ]),

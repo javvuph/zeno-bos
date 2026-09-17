@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:zeno/core/di/service_locator.dart';
+import 'package:zeno/core/widgets/keyboard_shortcuts.dart';
 import 'package:zeno/core/widgets/zeno_shell.dart';
 import 'package:zeno/features/inventory/presentation/controllers/inventory_bloc.dart';
 import 'package:zeno/features/inventory/data/services/ai_product_service.dart';
@@ -58,7 +59,9 @@ class ZenoBOS extends StatelessWidget {
             title: 'ZENO Business Operating System',
             debugShowCheckedModeBanner: false,
             theme: themeController.currentTheme,
-            home: const ZenoShell(),
+            home: const ZenoShortcuts(
+              child: ZenoShell(),
+            ),
           );
         },
       ),

@@ -52,13 +52,13 @@ class _KPIOverview extends StatelessWidget {
   const _KPIOverview();
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: const [
-        _MiniStat(label: "Sales", value: "\$12k", color: ZenoTheme.neonGreen),
+    return const Row(
+      children: [
+        _MiniStat(label: "", value: "", color: ZenoTheme.neonGreen),
         SizedBox(width: 12),
-        _MiniStat(label: "Orders", value: "42", color: Colors.orange),
+        _MiniStat(label: "", value: "", color: Colors.orange),
         SizedBox(width: 12),
-        _MiniStat(label: "Profit", value: "\$3.2k", color: ZenoTheme.neonCyan),
+        _MiniStat(label: "", value: "", color: ZenoTheme.neonCyan),
       ],
     );
   }
@@ -101,7 +101,7 @@ class _QuickActionsGrid extends StatelessWidget {
   const _QuickActionsGrid();
   @override
   Widget build(BuildContext context) {
-    return Wrap(
+    return const Wrap(
       spacing: 8,
       runSpacing: 8,
       children: [
@@ -133,11 +133,10 @@ class _AIInsightsList extends StatelessWidget {
   const _AIInsightsList();
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: const [
-        _SmallInsight(text: "Reorder iPhone 15 Pro.", icon: Icons.auto_awesome),
-        _SmallInsight(
-            text: "High demand expected in North.", icon: Icons.trending_up),
+    return const Column(
+      children: [
+        _SmallInsight(text: "", icon: Icons.auto_awesome),
+        _SmallInsight(text: "", icon: Icons.trending_up),
       ],
     );
   }
@@ -166,10 +165,10 @@ class _NotificationsList extends StatelessWidget {
   const _NotificationsList();
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: const [
-        _SmallNotify(title: "New order received", color: ZenoTheme.neonGreen),
-        _SmallNotify(title: "Low stock alert", color: Colors.orange),
+    return const Column(
+      children: [
+        _SmallNotify(title: "", color: ZenoTheme.neonGreen),
+        _SmallNotify(title: "", color: Colors.orange),
       ],
     );
   }
@@ -201,26 +200,26 @@ class _BusinessHealthMini extends StatelessWidget {
   const _BusinessHealthMini();
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return const Row(
       children: [
-        const Text("88",
+        Text("",
             style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.w900,
                 color: ZenoTheme.neonGreen)),
-        const SizedBox(width: 12),
+        SizedBox(width: 12),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              Text("HEALTHY",
+            children: [
+              Text("",
                   style: TextStyle(
                       fontSize: 9,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 1)),
               SizedBox(height: 4),
               LinearProgressIndicator(
-                  value: 0.88,
+                  value: 0.0,
                   minHeight: 2,
                   color: ZenoTheme.neonGreen,
                   backgroundColor: ZenoTheme.border),

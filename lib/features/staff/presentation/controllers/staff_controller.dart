@@ -26,7 +26,7 @@ class StaffController extends ChangeNotifier {
   List<Attendance> _dailyAttendance = [];
   List<Attendance> get dailyAttendance => _dailyAttendance.isEmpty ? _masterData.getMockAttendance() : _dailyAttendance;
 
-  List<PayrollRecord> _payrollHistory = [];
+  final List<PayrollRecord> _payrollHistory = [];
   List<PayrollRecord> get payrollHistory => _payrollHistory.isEmpty ? _masterData.getMockPayroll() : _payrollHistory;
 
   Future<void> loadStaffData() async {
@@ -88,5 +88,5 @@ class StaffController extends ChangeNotifier {
   int get activeStaffCount => employees.where((e) => e.status == EmployeeStatus.active).length;
   int get presentTodayCount => dailyAttendance.length; 
   int get pendingLeaveCount => leaveRequests.where((l) => l.status == LeaveStatus.pending).length;
-  double get monthlyPayrollAmount => 1250000.0; 
+  double get monthlyPayrollAmount => 0.0; 
 }

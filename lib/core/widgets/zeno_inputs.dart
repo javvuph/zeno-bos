@@ -2,6 +2,8 @@
 import 'package:flutter/services.dart';
 import 'package:zeno/app/theme.dart';
 
+export 'zeno_select_input.dart';
+
 enum ZenoFieldWidth { micro, short, medium, standard, full }
 
 class _NumericInputFormatter extends TextInputFormatter {
@@ -29,11 +31,8 @@ class _NumericInputFormatter extends TextInputFormatter {
       return oldValue;
     }
 
-    return TextEditingValue(
-      text: normalized,
-      selection: TextSelection.collapsed(offset: normalized.length),
-      composing: TextRange.empty,
-    );
+    // Preserve user selection and cursor position for lightning-fast backspace & typing
+    return newValue.copyWith(text: normalized);
   }
 }
 
@@ -121,7 +120,7 @@ class _ZenoTextFieldState extends State<ZenoTextField> {
 
   void _handleFocusChange() {
     if (!_effectiveFocusNode.hasFocus) {
-      // Sync on blur if needed
+      // Sync on blur
     }
   }
 
@@ -173,6 +172,12 @@ class _ZenoTextFieldState extends State<ZenoTextField> {
         ? <TextInputFormatter>[_NumericInputFormatter(allowDecimal: _allowsDecimalInput)]
         : null;
 
+    final effectiveTextAlign = _isNumericInput && widget.textAlign == TextAlign.start
+        ? TextAlign.right
+        : widget.textAlign;
+
+    final effectiveHint = widget.hint ?? (_isNumericInput ? "0" : null);
+
     final textField = Container(
       height: widget.maxLines == 1 ? 34 : null,
       width: pixelWidth,
@@ -192,7 +197,7 @@ class _ZenoTextFieldState extends State<ZenoTextField> {
         keyboardType: widget.keyboardType,
         onChanged: widget.onChanged,
         onSubmitted: widget.onSubmitted,
-        textAlign: widget.textAlign,
+        textAlign: effectiveTextAlign,
         inputFormatters: inputFormatters,
         enableSuggestions: !_isNumericInput,
         autocorrect: !_isNumericInput,
@@ -203,7 +208,7 @@ class _ZenoTextFieldState extends State<ZenoTextField> {
           fontWeight: FontWeight.w500,
         ),
         decoration: InputDecoration(
-          hintText: widget.hint,
+          hintText: effectiveHint,
           hintStyle: TextStyle(color: colors.textDisabled, fontSize: 12),
           prefixIcon: widget.prefix != null
               ? IconTheme(
@@ -249,122 +254,6 @@ class _ZenoTextFieldState extends State<ZenoTextField> {
           ),
           const SizedBox(height: 2),
           textField,
-        ],
-      ),
-    );
-  }
-}
-
-class ZenoDropdown<T> extends StatelessWidget {
-  final String label;
-  final List<DropdownMenuItem<T>> items;
-  final T? value;
-  final ValueChanged<T?>? onChanged;
-  final bool isRequired;
-  final ZenoFieldWidth? width;
-  final VoidCallback? onQuickAdd;
-
-  const ZenoDropdown({
-    super.key,
-    required this.label,
-    required this.items,
-    this.value,
-    this.onChanged,
-    this.isRequired = false,
-    this.width,
-    this.onQuickAdd,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = Theme.of(context).extension<ZenoSemanticColors>()!;
-
-    double? pixelWidth;
-    if (width != null) {
-      switch (width!) {
-        case ZenoFieldWidth.micro:
-          pixelWidth = 100;
-          break;
-        case ZenoFieldWidth.short:
-          pixelWidth = 160;
-          break;
-        case ZenoFieldWidth.medium:
-          pixelWidth = 240;
-          break;
-        case ZenoFieldWidth.standard:
-          pixelWidth = 380;
-          break;
-        case ZenoFieldWidth.full:
-          pixelWidth = double.infinity;
-          break;
-      }
-    }
-
-    T? effectiveValue = value;
-    if (value != null && !items.any((item) => item.value == value)) {
-      effectiveValue = null;
-    }
-
-    return SizedBox(
-      width: pixelWidth,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Text(
-                label,
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: colors.textSecondary,
-                  fontFamily: 'Inter',
-                ),
-              ),
-              if (isRequired)
-                Text(" *", style: TextStyle(color: colors.statusDanger, fontSize: 13)),
-              if (onQuickAdd != null) ...[
-                const Spacer(),
-                InkWell(
-                  onTap: onQuickAdd,
-                  child: Container(
-                    padding: const EdgeInsets.all(2),
-                    decoration: BoxDecoration(
-                      color: colors.accentPrimary.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Icon(Icons.add_rounded, size: 14, color: colors.accentPrimary),
-                  ),
-                ),
-              ],
-            ],
-          ),
-          const SizedBox(height: 2),
-          Container(
-            height: 34,
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            decoration: BoxDecoration(
-              color: colors.bgTier2,
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: colors.borderSubtle),
-            ),
-            child: DropdownButtonHideUnderline(
-              child: DropdownButton<T>(
-                value: effectiveValue,
-                items: items,
-                onChanged: onChanged,
-                isExpanded: true,
-                dropdownColor: colors.bgTier1,
-                icon: Icon(Icons.keyboard_arrow_down_rounded,
-                    color: colors.textSecondary, size: 18),
-                style: TextStyle(
-                    fontSize: 13,
-                    color: colors.textPrimary,
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.w500),
-              ),
-            ),
-          ),
         ],
       ),
     );

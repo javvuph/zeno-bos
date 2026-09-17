@@ -99,7 +99,7 @@ class VariantsPillar extends StatelessWidget {
     ]));
   }
 
-  Widget _sectionHeader(String t, IconData i) => Row(children: [Icon(i, size: 14, color: colors.accentPrimary), const SizedBox(width: 8), Text(t, style: TextStyle(fontSize: 11, fontWeight: FontWeight.w900, letterSpacing: 0.3))]);
+  Widget _sectionHeader(String t, IconData i) => Row(children: [Icon(i, size: 14, color: colors.accentPrimary), const SizedBox(width: 8), Text(t, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w900, letterSpacing: 0.3))]);
 
   Widget _colorChip(String color) {
     final isSelected = controller.selectedColors.contains(color);

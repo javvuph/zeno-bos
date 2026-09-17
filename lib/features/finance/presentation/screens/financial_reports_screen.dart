@@ -63,7 +63,7 @@ class _FinancialReportsScreenState extends State<FinancialReportsScreen> {
 
     return Column(
       children: [
-        ZenoHeader(
+        const ZenoHeader(
           title: "TRIAL BALANCE",
           subtitle:
               "Enterprise-grade financial integrity validation across all ledger accounts.",

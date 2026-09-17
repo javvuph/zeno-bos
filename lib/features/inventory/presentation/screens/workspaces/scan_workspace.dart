@@ -99,7 +99,7 @@ class ScanWorkspace extends StatelessWidget {
   Widget _buildMissingFieldsForm(ScanSessionItem latest) {
     return Builder(builder: (context) => ZenoCard(padding: const EdgeInsets.all(20), child: Column(children: [
       Row(children: [
-        Expanded(child: ZenoTextField(label: "Opening Stock *", hint: "Enter local stock level", textAlign: TextAlign.center, initialValue: latest.product.openingStock == 0 ? "" : latest.product.openingStock.toString(), onChanged: (v) => controller.updateField(openingStock: int.tryParse(v)))),
+        Expanded(child: ZenoTextField(label: "Opening Stock *", hint: "Enter local stock level", textAlign: TextAlign.center, initialValue: latest.product.openingStock == 0 ? "" : latest.product.openingStock.toString(), onChanged: (v) => controller.updateField(openingStock: double.tryParse(v) ?? 0.0))),
         const SizedBox(width: 12),
         Expanded(child: ZenoQuickAddDropdown<String>(label: "Warehouse *", value: latest.product.warehouseLocation.isEmpty ? null : latest.product.warehouseLocation, items: controller.locationsList.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(), onChanged: (v) => controller.updateField(warehouseLocation: v), onQuickAdd: () => showAddDialog(context, colors, "Warehouse", (n) => controller.addWarehouse(n)))),
       ]),

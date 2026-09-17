@@ -65,7 +65,7 @@ extension ProductStudioControllerUpdateCore on ProductStudioController {
     String? discountType, double? discountValue, double? maxDiscountPct,
     bool? autoComputeLandedCost, bool? isLiveMarketPrice, DateTime? priceEffectiveFrom,
     String? currency, double? targetMarginPct, double? targetMarkupPct, double? branchSellingPrice,
-    bool? trackInventory, bool? allowNegativeStock, int? openingStock,
+    bool? trackInventory, bool? allowNegativeStock, double? openingStock,
     int? minStock, int? safetyStock,
     int? maxStock, double? reorderLevel, String? warehouseLocation, String? stockUnit,
     String? salesUnit, String? purchaseUnit, double? conversionFactor,

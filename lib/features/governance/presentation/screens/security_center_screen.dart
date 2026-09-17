@@ -99,10 +99,10 @@ class _SecurityCenterScreenState extends State<SecurityCenterScreen> {
                   ),
                 ),
                 const SizedBox(width: 16),
-                Expanded(
+                const Expanded(
                   child: ZenoCard(
                     title: "AUTH ANOMALIES (AI)",
-                    child: const Center(
+                    child: Center(
                       child: Padding(
                         padding: EdgeInsets.all(40),
                         child: Text("NO SUSPICIOUS ACTIVITY DETECTED.",

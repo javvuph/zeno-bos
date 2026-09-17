@@ -64,7 +64,6 @@ class CurrencyService extends ChangeNotifier {
     if (digits == 0) {
       return amount.round();
     }
-    final mod = num.parse(10.toStringAsFixed(0)) * (digits > 1 ? (digits == 2 ? 10 : 100) : 1);
     // multiplier = 10^digits
     num multiplier = 1;
     for (int i = 0; i < digits; i++) {

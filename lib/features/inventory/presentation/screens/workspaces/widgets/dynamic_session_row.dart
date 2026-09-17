@@ -2,7 +2,6 @@ import 'package:flutter/material.dart' hide TableCell;
 import 'package:zeno/app/theme.dart';
 import '../../../controllers/product_studio_controller.dart';
 import '../../../../domain/models/product_studio_models.dart';
-import '../../../../domain/models/product_studio_enums.dart';
 import 'session_table_widgets.dart';
 import 'import_column_config.dart';
 import 'dynamic_table_cells.dart';

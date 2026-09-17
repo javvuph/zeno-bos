@@ -9,9 +9,9 @@ class GlobalFilterBar extends StatelessWidget {
     return Container(
       height: 48,
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: ZenoTheme.surface,
-        border: const Border(bottom: BorderSide(color: ZenoTheme.border)),
+        border: Border(bottom: BorderSide(color: ZenoTheme.border)),
       ),
       child: const Row(
         children: [

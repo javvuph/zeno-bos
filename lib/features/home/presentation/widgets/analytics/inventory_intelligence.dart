@@ -58,11 +58,11 @@ class InventoryIntelligence extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 12),
-            Expanded(
+            const Expanded(
               flex: 5,
               child: SingleChildScrollView(
                 child: Column(
-                  children: const [
+                  children: [
                     _InventoryMetric(
                         label: "Inventory Turnover",
                         value: "8.4x",

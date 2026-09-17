@@ -147,7 +147,7 @@ class SupplierOpsMonitor extends StatelessWidget {
       width: 30,
       height: 30,
       decoration:
-          BoxDecoration(color: ZenoTheme.border, shape: BoxShape.circle),
+          const BoxDecoration(color: ZenoTheme.border, shape: BoxShape.circle),
       alignment: Alignment.center,
       child: Text(grade,
           style: const TextStyle(

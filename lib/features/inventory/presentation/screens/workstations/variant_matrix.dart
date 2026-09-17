@@ -1,8 +1,10 @@
-// @LOCKED: VERSION_CLOTHING_V1
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:zeno/app/theme.dart';
 import '../../controllers/product_studio_controller.dart';
 import 'widgets/variant_matrix_row.dart';
+
+part 'parts/variant_matrix_toolbar.part.dart';
 
 class VariantMatrix extends StatefulWidget {
   final ProductStudioController controller;
@@ -14,25 +16,46 @@ class VariantMatrix extends StatefulWidget {
 }
 
 class _VariantMatrixState extends State<VariantMatrix> {
-  static const double _toolbarFontSize = 12;
-  late final TextEditingController _bulkPriceController;
-  late final TextEditingController _bulkStockController;
-
   ProductStudioController get controller => widget.controller;
   ZenoSemanticColors get colors => widget.colors;
 
-  @override
-  void initState() {
-    super.initState();
-    _bulkPriceController = TextEditingController(text: '0');
-    _bulkStockController = TextEditingController(text: '0');
+  final Map<int, FocusNode> _quantityFocusNodes = {};
+
+  FocusNode _getQuantityFocusNode(int rowIndex) {
+    return _quantityFocusNodes.putIfAbsent(
+      rowIndex,
+      () => FocusNode(debugLabel: 'Quantity_$rowIndex'),
+    );
   }
 
   @override
   void dispose() {
-    _bulkPriceController.dispose();
-    _bulkStockController.dispose();
+    for (var node in _quantityFocusNodes.values) {
+      node.dispose();
+    }
+    _quantityFocusNodes.clear();
     super.dispose();
+  }
+
+  void _handleQuantityKey(int rowIndex, LogicalKeyboardKey key, bool isShift) {
+    final totalRows = controller.generatedVariants.length;
+    if (totalRows == 0) return;
+
+    int nextRow = rowIndex;
+
+    if (key == LogicalKeyboardKey.arrowDown || key == LogicalKeyboardKey.enter) {
+      nextRow = (rowIndex + 1) < totalRows ? rowIndex + 1 : rowIndex;
+    } else if (key == LogicalKeyboardKey.arrowUp) {
+      nextRow = (rowIndex - 1) >= 0 ? rowIndex - 1 : rowIndex;
+    } else if (key == LogicalKeyboardKey.tab) {
+      if (isShift) {
+        nextRow = (rowIndex - 1) >= 0 ? rowIndex - 1 : rowIndex;
+      } else {
+        nextRow = (rowIndex + 1) < totalRows ? rowIndex + 1 : rowIndex;
+      }
+    }
+
+    _getQuantityFocusNode(nextRow).requestFocus();
   }
 
   @override
@@ -49,7 +72,6 @@ class _VariantMatrixState extends State<VariantMatrix> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Header Actions
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -89,9 +111,10 @@ class _VariantMatrixState extends State<VariantMatrix> {
                   controller: controller,
                   colors: colors,
                   isActive: controller.activeVariantIndex == i,
+                  quantityFocusNode: _getQuantityFocusNode(i),
+                  onQuantityKey: (key, isShift) => _handleQuantityKey(i, key, isShift),
                 ),
               ),
-            
             const SizedBox(height: 10),
             _buildFooter(),
           ],
@@ -100,146 +123,13 @@ class _VariantMatrixState extends State<VariantMatrix> {
     );
   }
 
-  Widget _buildActionToolbar() {
+  Widget _buildTableHeader() {
     const borderColor = Color(0xFFE2E8F0);
     return Container(
-      height: 44,
-      decoration: BoxDecoration(
-        color: const Color(0xFFF8FAFC),
-        border: Border.all(color: borderColor),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Expanded(flex: 3, child: _toolbarGridCell(borderColor: borderColor)),
-          Expanded(flex: 2, child: _toolbarGridCell(borderColor: borderColor)),
-          Expanded(
-          flex: 4,
-          child: _toolbarGridCell(
-            borderColor: borderColor,
-            child: _toolbarBtn("Sync 1st", Icons.sync_rounded, const Color(0xFF1E293B), controller.syncAllFromFirstRow),
-          ),
-          ),
-          Expanded(
-          flex: 4,
-          child: _toolbarGridCell(
-            borderColor: borderColor,
-            child: _toolbarBtn("Barcodes", Icons.qr_code_rounded, const Color(0xFF1E293B), controller.generateAllVariantBarcodes),
-          ),
-          ),
-          Expanded(
-          flex: 2,
-          child: _toolbarGridCell(
-            borderColor: borderColor,
-            child: _bulkActionPill("Stock", "0", 36, _bulkStockController, _applyBulkStock),
-          ),
-          ),
-          Expanded(
-          flex: 2,
-          child: _toolbarGridCell(
-            borderColor: borderColor,
-            child: _bulkActionPill("Price", "0", 44, _bulkPriceController, _applyBulkPrice),
-          ),
-          ),
-          Expanded(flex: 1, child: _toolbarGridCell(borderColor: borderColor)),
-          Expanded(
-          flex: 1,
-          child: _toolbarGridCell(
-            borderColor: borderColor,
-            hasRightBorder: false,
-            child: _searchBox(),
-          ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _bulkActionPill(String label, String hint, double width, TextEditingController textController, VoidCallback onApply) => Container(
-    height: 32,
-    padding: const EdgeInsets.symmetric(horizontal: 8),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(6),
-      border: Border.all(color: const Color(0xFFE2E8F0)),
-    ),
-    child: SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Icon(Icons.bolt_rounded, size: 14, color: Color(0xFF3B66F5)),
-          const SizedBox(width: 5),
-          Text(label, style: const TextStyle(fontSize: _toolbarFontSize, fontWeight: FontWeight.w600, color: Color(0xFF64748B))),
-          const SizedBox(width: 3),
-          SizedBox(
-            width: width,
-            child: TextField(
-              controller: textController,
-              decoration: InputDecoration(hintText: hint, border: InputBorder.none, isDense: true, contentPadding: EdgeInsets.zero),
-              style: const TextStyle(fontSize: _toolbarFontSize, fontWeight: FontWeight.w700, color: Color(0xFF1E293B)),
-              keyboardType: TextInputType.number,
-            ),
-          ),
-          InkWell(onTap: onApply, child: const Text("Apply", style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: Color(0xFF3B66F5)))),
-        ],
-      ),
-    ),
-  );
-
-  Widget _searchBox() => Container(
-    height: 32,
-    padding: const EdgeInsets.symmetric(horizontal: 8),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(6),
-      border: Border.all(color: const Color(0xFFE2E8F0)),
-    ),
-    child: const Row(
-      children: [
-        Icon(Icons.search_rounded, size: 14, color: Color(0xFF94A3B8)),
-        SizedBox(width: 6),
-        Expanded(child: TextField(style: TextStyle(fontSize: _toolbarFontSize, fontWeight: FontWeight.w500, color: Color(0xFF1E293B)), decoration: InputDecoration(hintText: "Search SKU, barcode...", hintStyle: TextStyle(fontSize: _toolbarFontSize, fontWeight: FontWeight.w500, color: Color(0xFF94A3B8)), border: InputBorder.none, isDense: true))),
-      ],
-    ),
-  );
-
-  Widget _toolbarBtn(String l, IconData i, Color c, VoidCallback onPressed) => OutlinedButton.icon(
-    onPressed: onPressed,
-    icon: Icon(i, size: 13, color: c.withOpacity(0.8)),
-    label: Text(l, style: TextStyle(fontSize: _toolbarFontSize, fontWeight: FontWeight.w600, color: c)),
-    style: OutlinedButton.styleFrom(
-      minimumSize: const Size(0, 32),
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      side: const BorderSide(color: Color(0xFFCBD5E1)),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-      visualDensity: VisualDensity.compact,
-      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-    ),
-  );
-
-  Widget _toolbarGridCell({
-    required Color borderColor,
-    Widget? child,
-    bool hasRightBorder = true,
-  }) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 5),
-      decoration: BoxDecoration(
-        border: hasRightBorder ? Border(right: BorderSide(color: borderColor)) : null,
-      ),
-      child: child == null ? const SizedBox.shrink() : Center(child: child),
-    );
-  }
-
-  Widget _buildTableHeader() {
-    final borderColor = const Color(0xFFE2E8F0);
-    return Container(
       height: 38,
-      decoration: BoxDecoration(
-        color: const Color(0xFFF8FAFC),
-        border: Border.all(color: borderColor),
+      decoration: const BoxDecoration(
+        color: Color(0xFFF8FAFC),
+        border: Border.fromBorderSide(BorderSide(color: borderColor)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -257,12 +147,9 @@ class _VariantMatrixState extends State<VariantMatrix> {
             ),
           ),
           Expanded(flex: 2, child: _headerCell("SIZE", borderColor, alignment: Alignment.center)),
-          Expanded(flex: 4, child: _headerCell("VARIANT SKU", borderColor)),
-          Expanded(flex: 4, child: _headerCell("BARCODE", borderColor)),
-          Expanded(flex: 2, child: _headerCell("STOCK", borderColor, alignment: Alignment.center)),
-          Expanded(flex: 2, child: _headerCell("PRICE (₹)", borderColor, alignment: Alignment.centerRight)),
-          Expanded(flex: 1, child: _headerCell("MEDIA", borderColor, alignment: Alignment.center)),
-          Expanded(flex: 1, child: _headerCell("ACTIONS", borderColor, alignment: Alignment.centerRight, hasRightBorder: false)),
+          Expanded(flex: 4, child: _headerCell("VARIANT SKU (AUTO)", borderColor)),
+          Expanded(flex: 4, child: _headerCell("BARCODE (AUTO)", borderColor)),
+          Expanded(flex: 2, child: _headerCell("QUANTITY (EDIT)", borderColor, alignment: Alignment.center, hasRightBorder: false)),
         ],
       ),
     );
@@ -307,7 +194,7 @@ class _VariantMatrixState extends State<VariantMatrix> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.layers_outlined, size: 36, color: colors.textDisabled.withOpacity(0.5)),
+            Icon(Icons.layers_outlined, size: 36, color: colors.textDisabled.withValues(alpha: 0.5)),
             const SizedBox(height: 8),
             Text("NO VARIANTS GENERATED - Select sizes & colours above", style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: colors.textDisabled)),
           ],
@@ -317,8 +204,9 @@ class _VariantMatrixState extends State<VariantMatrix> {
   }
 
   Widget _buildFooter() {
+    final totalStock = controller.generatedVariants.fold(0, (sum, v) => sum + v.stock);
     return Padding(
-      padding: const EdgeInsets.only(top: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
       child: Row(
         children: [
           Text(
@@ -326,19 +214,9 @@ class _VariantMatrixState extends State<VariantMatrix> {
             style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Color(0xFF64748B)),
           ),
           const Spacer(),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-            decoration: BoxDecoration(
-              border: Border.all(color: const Color(0xFFE2E8F0)),
-              borderRadius: BorderRadius.circular(6),
-            ),
-            child: const Row(
-              children: [
-                Text("View All", style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.bold, color: Color(0xFF1E293B))),
-                SizedBox(width: 6),
-                Icon(Icons.keyboard_arrow_down_rounded, size: 14, color: Color(0xFF1E293B)),
-              ],
-            ),
+          Text(
+            "Total Initial Stock: $totalStock",
+            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: Color(0xFF1E293B)),
           ),
         ],
       ),
@@ -346,38 +224,20 @@ class _VariantMatrixState extends State<VariantMatrix> {
   }
 
   Future<void> _confirmClearAll(BuildContext context) async {
-    final shouldClear = await showDialog<bool>(
+    final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Clear all variants?'),
-        content: const Text('This will remove all generated variants from the table.'),
+        title: const Text('Clear All Variants', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
+        content: const Text('Are you sure you want to clear all generated variants?'),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Clear All'),
-          ),
+          TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.of(context).pop(true), child: Text('Clear', style: TextStyle(color: colors.statusDanger))),
         ],
       ),
     );
-
-    if (shouldClear == true) {
+    if (confirmed == true) {
       controller.clearAllVariants();
+      setState(() {});
     }
-  }
-
-  void _applyBulkPrice() {
-    final value = double.tryParse(_bulkPriceController.text.trim());
-    if (value == null) return;
-    controller.applyBulkPrice(value);
-  }
-
-  void _applyBulkStock() {
-    final value = int.tryParse(_bulkStockController.text.trim());
-    if (value == null) return;
-    controller.applyBulkStock(value);
   }
 }

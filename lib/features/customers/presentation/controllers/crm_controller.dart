@@ -61,7 +61,7 @@ class CRMController extends ChangeNotifier {
       tickets.where((t) => t.status != TicketStatus.closed).length;
   int get slaBreachesCount => tickets.where((t) => t.isSlaBreached).length;
 
-  double get totalPipelineValue => 4500000.0; // Mocked aggregate
+  double get totalPipelineValue => 0.0;
 
   int get activitiesTodayCount {
     final now = DateTime.now();

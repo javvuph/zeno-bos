@@ -24,7 +24,7 @@ class PaymentManagementScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<PaymentTransaction> _payments = [
+    final List<PaymentTransaction> payments = [
       PaymentTransaction(
           id: "PAY-001",
           method: "Cash",
@@ -56,7 +56,7 @@ class PaymentManagementScreen extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: ZenoTable<PaymentTransaction>(
-              items: _payments,
+              items: payments,
               columns: [
                 ZenoTableColumn(
                   label: "Payment ID",
@@ -67,7 +67,7 @@ class PaymentManagementScreen extends StatelessWidget {
                   label: "Method",
                   width: 150,
                   builder: (p) =>
-                      ZenoBadge(label: p.method, color: Color(0xFF6a11cb)),
+                      ZenoBadge(label: p.method, color: const Color(0xFF6a11cb)),
                 ),
                 ZenoTableColumn(
                   label: "Invoice Ref",
@@ -89,8 +89,8 @@ class PaymentManagementScreen extends StatelessWidget {
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: p.status == "Reversed"
-                              ? Color(0xFFFF4B2B)
-                              : Color(0xFF00FF88))),
+                              ? const Color(0xFFFF4B2B)
+                              : const Color(0xFF00FF88))),
                 ),
               ],
             ),

@@ -8,6 +8,8 @@ import '../controllers/customer_controller.dart';
 import '../../domain/models/customer_tier.dart';
 import 'customer_form_screen.dart';
 
+part 'parts/customer_dashboard_widgets.part.dart';
+
 class CustomerDashboardScreen extends StatefulWidget {
   const CustomerDashboardScreen({super.key});
 
@@ -50,7 +52,7 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> {
           subtitle:
               "ANALYZE YOUR CUSTOMER BASE, LOYALTY PERFORMANCE, AND ACQUISITION TRENDS.",
           actions: [
-            _HeaderButton(
+            const _HeaderButton(
                 label: "Export Database", icon: Icons.download_outlined),
             const SizedBox(width: ZenoSpacing.md),
             _HeaderButton(
@@ -61,8 +63,7 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> {
             ),
           ],
         ),
-        // STICKY KPI SUMMARY
-        SizedBox(height: 8, child: _buildStickyKPI(colors)),
+        _buildStickyKPI(colors),
         Expanded(
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: ZenoSpacing.lg),
@@ -72,11 +73,9 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // AI CRM Insights
                     Expanded(
                       flex: 2,
-                      child: SelectionContainer.disabled(
-                        child: ZenoCard(
+                      child: ZenoCard(
                         title: "AI CUSTOMER INSIGHTS",
                         trailing: const Icon(Icons.auto_awesome,
                             size: 16, color: Color(0xFF00F0FF)),
@@ -129,11 +128,9 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> {
                     ),
                     const SizedBox(width: ZenoSpacing.lg),
 
-                    // Top Customers
                     Expanded(
                       flex: 1,
-                      child: SelectionContainer.disabled(
-                        child: ZenoCard(
+                      child: ZenoCard(
                         title: "TOP PERFORMING CLIENTS",
                         child: Column(
                           children: [
@@ -147,7 +144,8 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> {
                                       color: c.tier == CustomerTier.vip
                                           ? const Color(0xFFFFD700)
                                           : const Color(0xFF00D2FF),
-                                    )),
+                                    ))
+                                ,
                             const SizedBox(height: ZenoSpacing.md),
                             SizedBox(
                               width: double.infinity,
@@ -183,7 +181,7 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> {
         border: Border(bottom: BorderSide(color: colors.borderSubtle)),
       ),
       child: Row(
-        children: [
+        children: <Widget>[
           _KPIItem(
               label: "TOTAL CUSTOMERS",
               value: controller.customers.length.toString(),
@@ -196,17 +194,17 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> {
               icon: Icons.card_membership_outlined,
               color: const Color(0xFFFFD700)),
           _vDivider(colors),
-          _KPIItem(
+          const _KPIItem(
               label: "AVG. LTV",
               value: "\$1,450",
               icon: Icons.insights_outlined,
-              color: const Color(0xFF9D50BB)),
+              color: Color(0xFF9D50BB)),
           _vDivider(colors),
-          _KPIItem(
+          const _KPIItem(
               label: "CHURN RISK",
               value: "2.4%",
               icon: Icons.person_off_outlined,
-              color: const Color(0xFFee0979),
+              color: Color(0xFFee0979),
               isNegative: true),
         ],
       ),
@@ -218,164 +216,4 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> {
       width: 1,
       color: colors.borderSubtle,
       margin: const EdgeInsets.symmetric(horizontal: ZenoSpacing.xl));
-}
-
-class _KPIItem extends StatelessWidget {
-  final String label;
-  final String value;
-  final IconData icon;
-  final Color color;
-  final bool isNegative;
-  const _KPIItem(
-      {required this.label,
-      required this.value,
-      required this.icon,
-      required this.color,
-      this.isNegative = false});
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = Theme.of(context).extension<ZenoSemanticColors>()!;
-    return Row(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(8)),
-          child: Icon(icon, size: 18, color: color),
-        ),
-        const SizedBox(width: ZenoSpacing.md),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(label, style: ZenoTypography.micro(colors.textDisabled)),
-            const SizedBox(height: 2),
-            Text(value,
-                style: ZenoTypography.headlineMD(colors.textPrimary)
-                    .copyWith(fontWeight: FontWeight.w900)),
-          ],
-        ),
-      ],
-    );
-  }
-}
-
-class _HeaderButton extends StatelessWidget {
-  final String label;
-  final IconData icon;
-  final bool isPrimary;
-  final VoidCallback? onPressed;
-
-  const _HeaderButton(
-      {required this.label,
-      required this.icon,
-      this.isPrimary = false,
-      this.onPressed});
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = Theme.of(context).extension<ZenoSemanticColors>()!;
-    return ElevatedButton.icon(
-      onPressed: onPressed ?? () {},
-      icon: Icon(icon, size: 16),
-      label: Text(label),
-      style: ElevatedButton.styleFrom(
-        backgroundColor: isPrimary ? colors.accentPrimary : colors.bgSurface,
-        foregroundColor: colors.textPrimary,
-        side: isPrimary ? null : BorderSide(color: colors.borderSubtle),
-      ),
-    );
-  }
-}
-
-class _CRMInsightMetric extends StatelessWidget {
-  final String label;
-  final double value;
-  final Color color;
-
-  const _CRMInsightMetric(
-      {required this.label, required this.value, required this.color});
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = Theme.of(context).extension<ZenoSemanticColors>()!;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(label,
-                style: TextStyle(fontSize: 12, color: colors.textSecondary)),
-            Text("${(value * 100).toInt()}%",
-                style: TextStyle(
-                    fontSize: 12, fontWeight: FontWeight.bold, color: color)),
-          ],
-        ),
-        const SizedBox(height: 8),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(2),
-          child: LinearProgressIndicator(
-            value: value,
-            backgroundColor: color.withValues(alpha: 0.1),
-            valueColor: AlwaysStoppedAnimation<Color>(color),
-            minHeight: 4,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _CustomerListItem extends StatelessWidget {
-  final String name;
-  final String info;
-  final IconData icon;
-  final Color color;
-
-  const _CustomerListItem({
-    required this.name,
-    required this.info,
-    required this.icon,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = Theme.of(context).extension<ZenoSemanticColors>()!;
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 20),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.1),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(icon, size: 14, color: color),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(name,
-                    style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.bold,
-                        color: colors.textPrimary)),
-                Text(info,
-                    style:
-                        TextStyle(fontSize: 11, color: colors.textSecondary)),
-              ],
-            ),
-          ),
-          Icon(Icons.trending_up,
-              size: 12, color: const Color(0xFF38ef7d).withValues(alpha: 0.6)),
-        ],
-      ),
-    );
-  }
 }

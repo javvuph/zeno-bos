@@ -20,12 +20,12 @@ class AssetFinancialPanel extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
+          const Row(
             children: [
-              const Icon(Icons.calculate_outlined,
+              Icon(Icons.calculate_outlined,
                   size: 20, color: Colors.blue),
-              const SizedBox(width: 12),
-              const Text("VALUATION SUMMARY",
+              SizedBox(width: 12),
+              Text("VALUATION SUMMARY",
                   style: TextStyle(
                       fontWeight: FontWeight.w900,
                       fontSize: 13,

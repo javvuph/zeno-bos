@@ -7,11 +7,11 @@ class CustomerAnalytics extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BISectionContainer(
+    return const BISectionContainer(
       title: "Customer Analytics",
       accentColor: Colors.purple,
       child: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -30,38 +30,38 @@ class CustomerAnalytics extends StatelessWidget {
                     color: ZenoTheme.neonGreen),
               ],
             ),
-            const SizedBox(height: 20),
-            const Text("RETENTION RATE",
+            SizedBox(height: 20),
+            Text("RETENTION RATE",
                 style: TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.bold,
                     color: ZenoTheme.textSecondary)),
-            const SizedBox(height: 8),
-            const BIAnalyticRow(
+            SizedBox(height: 8),
+            BIAnalyticRow(
                 label: "Q3 Retention",
                 value: "78%",
                 percentage: 78,
                 color: ZenoTheme.neonGreen),
-            const SizedBox(height: 12),
-            const Text("LIFETIME VALUE (LTV)",
+            SizedBox(height: 12),
+            Text("LIFETIME VALUE (LTV)",
                 style: TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.bold,
                     color: ZenoTheme.textSecondary)),
-            const SizedBox(height: 8),
-            const BIAnalyticRow(
+            SizedBox(height: 8),
+            BIAnalyticRow(
                 label: "Avg LTV",
                 value: "\$1,240",
                 percentage: 65,
                 color: Colors.purple),
-            const SizedBox(height: 12),
-            const Text("CUSTOMER GROWTH",
+            SizedBox(height: 12),
+            Text("CUSTOMER GROWTH",
                 style: TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.bold,
                     color: ZenoTheme.textSecondary)),
-            const SizedBox(height: 8),
-            const BIAnalyticRow(
+            SizedBox(height: 8),
+            BIAnalyticRow(
                 label: "Monthly Growth",
                 value: "12%",
                 percentage: 40,
@@ -101,7 +101,7 @@ class _StatItem extends StatelessWidget {
                     const TextStyle(fontSize: 20, fontWeight: FontWeight.w900)),
             const SizedBox(width: 8),
             Text(trend,
-                style: TextStyle(
+                style: const TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.bold,
                     color: ZenoTheme.neonGreen)),

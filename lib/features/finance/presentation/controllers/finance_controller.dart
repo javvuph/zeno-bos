@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../../domain/repositories/i_finance_repository.dart';
 import '../../domain/models/account.dart';
 import '../../domain/models/journal_entry.dart';
-import '../../domain/models/account_type.dart';
 import '../../domain/models/trial_balance.dart';
 import '../../domain/services/financial_engine.dart';
 import '../../domain/services/finance_master_data_service.dart';
@@ -21,7 +20,7 @@ class FinanceController extends ChangeNotifier {
   List<Account> get accounts =>
       _accounts.isEmpty ? _masterData.getMockAccounts() : _accounts;
 
-  List<JournalEntry> _entries = [];
+  final List<JournalEntry> _entries = [];
   List<JournalEntry> get entries =>
       _entries.isEmpty ? _masterData.getMockEntries() : _entries;
 

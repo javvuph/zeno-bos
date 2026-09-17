@@ -14,12 +14,12 @@ class AIMorningReportScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
+            const Row(
               children: [
-                const Icon(Icons.auto_awesome,
+                Icon(Icons.auto_awesome,
                     color: ZenoTheme.neonCyan, size: 28),
-                const SizedBox(width: 16),
-                const Text(
+                SizedBox(width: 16),
+                Text(
                   "AI MORNING REPORT",
                   style: TextStyle(
                       fontSize: 24,
@@ -33,10 +33,10 @@ class AIMorningReportScreen extends StatelessWidget {
               style: TextStyle(color: ZenoTheme.textSecondary),
             ),
             const SizedBox(height: 32),
-            CommandCenterWidget(
+            const CommandCenterWidget(
               title: "Executive Summary",
               accentColor: ZenoTheme.neonCyan,
-              child: const Text(
+              child: Text(
                 "Good morning, Alex. Business health is up 4% compared to yesterday. "
                 "The surge is driven by high pre-orders for the 'X-Series' products. "
                 "However, shipping delays from North Branch may impact delivery SLAs by 12% today.",
@@ -45,14 +45,14 @@ class AIMorningReportScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 24),
-            Row(
+            const Row(
               children: [
                 Expanded(
                   child: CommandCenterWidget(
                     title: "Risk Alerts",
                     accentColor: Colors.red,
                     child: Column(
-                      children: const [
+                      children: [
                         _AIInsightItem(
                             text:
                                 "High risk of 'Out of Stock' for iPhone 15 Pro within 48 hours.",
@@ -65,13 +65,13 @@ class AIMorningReportScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(width: 24),
+                SizedBox(width: 24),
                 Expanded(
                   child: CommandCenterWidget(
                     title: "Opportunities",
                     accentColor: ZenoTheme.neonGreen,
                     child: Column(
-                      children: const [
+                      children: [
                         _AIInsightItem(
                             text:
                                 "Upsell potential identified for 'Premium Plan' users.",

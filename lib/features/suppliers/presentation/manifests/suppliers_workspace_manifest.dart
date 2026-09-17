@@ -58,26 +58,26 @@ class SuppliersWorkspaceManifest extends ZenoWorkspaceManifest<Supplier> {
   static List<ZenoKpiData> _getKpiMetrics(BuildContext context) => [
         const ZenoKpiData(
             label: "Total Suppliers",
-            value: "142",
+            value: "0",
             icon: Icons.factory_outlined),
         const ZenoKpiData(
             label: "Active Contracts",
-            value: "28",
+            value: "0",
             icon: Icons.history_edu_outlined,
             color: Colors.blue),
         const ZenoKpiData(
             label: "Avg Lead Time",
-            value: "3.8d",
+            value: "0d",
             icon: Icons.timer_outlined,
             color: Colors.indigo),
         const ZenoKpiData(
             label: "Outstanding AP",
-            value: "₹4.2M",
+            value: "₹0",
             icon: Icons.account_balance_wallet_outlined,
             color: Colors.orange),
         const ZenoKpiData(
             label: "AI Health Score",
-            value: "94%",
+            value: "0%",
             icon: Icons.auto_awesome,
             color: Colors.purple),
       ];

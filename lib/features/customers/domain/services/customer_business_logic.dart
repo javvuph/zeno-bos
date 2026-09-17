@@ -104,8 +104,9 @@ class CustomerBusinessLogic {
   List<String> autoSegment(Customer customer) {
     final segments = <String>[];
     if (customer.loyalty.totalSpent > 25000) segments.add('seg_high_value');
-    if (customer.credit.currentBalance > (customer.credit.creditLimit * 0.8))
+    if (customer.credit.currentBalance > (customer.credit.creditLimit * 0.8)) {
       segments.add('seg_credit_risk');
+    }
 
     final lastPurchase = customer.lastPurchaseAt;
     if (lastPurchase != null &&

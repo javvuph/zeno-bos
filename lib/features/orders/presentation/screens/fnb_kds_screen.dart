@@ -19,7 +19,7 @@ class FnbKdsScreen extends StatelessWidget {
           Row(children: [
             const Text("AUTO-REFRESH", style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold)),
             const SizedBox(width: 8),
-            Transform.scale(scale: 0.6, child: Switch(value: true, onChanged: (v) {}, activeColor: colors.accentPrimary)),
+            Transform.scale(scale: 0.6, child: Switch(value: true, onChanged: (v) {}, activeThumbColor: colors.accentPrimary)),
           ]),
         ],
       ),

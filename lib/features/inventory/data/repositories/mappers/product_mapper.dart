@@ -23,7 +23,12 @@ class ProductMapper {
       unit: Unit(id: '', name: pc.unit, symbol: pc.unit),
       category: Category(id: pc.categoryId, name: pc.categoryId),
       brand: pc.brandId != null ? Brand(id: pc.brandId!, name: pc.brandId!) : null,
-      basePrice: pc.basePrice, itemType: ItemType.values.firstWhere((e) => e.name == pc.itemType, orElse: () => ItemType.stockProduct),
+      basePrice: pc.basePrice,
+      baseCost: pc.supplierPurchaseCost ?? 0.0,
+      openingStock: (pc.variants != null && pc.variants!.isNotEmpty)
+          ? pc.variants!.fold<double>(0.0, (sum, v) => sum + (v.stockLevel ?? 0.0))
+          : (pc.openingStock ?? 0.0),
+      itemType: ItemType.values.firstWhere((e) => e.name == pc.itemType, orElse: () => ItemType.stockProduct),
       status: ProductStatus.values.firstWhere((e) => e.name == pc.status, orElse: () => ProductStatus.active),
       businessType: pc.businessType ?? "Retail", businessCategory: pc.businessCategory ?? "Supermarket",
       gstTaxMode: pc.gstTaxMode ?? "Intra-State", supplierIds: pc.supplierIds ?? [],
@@ -127,7 +132,8 @@ class ProductMapper {
       ..supplierContact = product.supplierContact..supplierNotes = product.supplierNotes..supplierProductCode = product.supplierProductCode
       ..supplierPurchaseCost = product.supplierPurchaseCost..supplierMOQ = product.supplierMOQ..supplierLeadTime = product.supplierLeadTime
       ..secondarySupplier = product.secondarySupplier..packageType = product.packageType..unitsPerPackage = product.unitsPerPackage
-      ..packageQuantity = product.packageQuantity..stockUnit = product.stockUnit..conversionFactor = product.conversionFactor;
+      ..packageQuantity = product.packageQuantity..stockUnit = product.stockUnit..conversionFactor = product.conversionFactor
+      ..openingStock = product.openingStock;
     
     pc..material = product.material..metalType = product.metalType..purity = product.purity..weight = product.weight
       ..stoneType = product.stoneType..stoneWeight = product.stoneWeight..jewelrySize = product.jewelrySize..shade = product.shade

@@ -1,0 +1,268 @@
+import 'package:flutter/material.dart';
+import 'package:zeno/features/inventory/domain/models/product_master_models.dart';
+import 'inventory_variant_subtable.dart';
+
+class InventoryProductRow extends StatelessWidget {
+  final ProductMaster product;
+  final bool isSelected;
+  final ValueChanged<bool?> onSelectChanged;
+  final VoidCallback onToggleExpand;
+  final VoidCallback onEdit;
+  final VoidCallback onAdjustStock;
+  final VoidCallback onDelete;
+
+  const InventoryProductRow({
+    super.key,
+    required this.product,
+    required this.isSelected,
+    required this.onSelectChanged,
+    required this.onToggleExpand,
+    required this.onEdit,
+    required this.onAdjustStock,
+    required this.onDelete,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final aging = getAgingMeta(product.addedDate);
+    final stock = product.totalStock;
+
+    return Column(
+      children: [
+        // PARENT ROW (CLEAN TEXT IDENTITY)
+        Container(
+          height: 52,
+          decoration: const BoxDecoration(
+            border: Border(bottom: BorderSide(color: Color(0xFFF1F5F9))),
+          ),
+          child: Row(
+            children: [
+              const SizedBox(width: 16),
+              SizedBox(
+                width: 24,
+                child: Checkbox(
+                  value: isSelected,
+                  onChanged: onSelectChanged,
+                  visualDensity: VisualDensity.compact,
+                ),
+              ),
+              const SizedBox(width: 12),
+
+              // PRODUCT / STYLE CELL (Text-Only Identity + Aging Badge)
+              Expanded(
+                flex: 4,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            product.name,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 13,
+                              color: Color(0xFF0F172A),
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                          decoration: BoxDecoration(
+                            color: aging.bgColor,
+                            borderRadius: BorderRadius.circular(4),
+                            border: Border.all(color: aging.borderColor),
+                          ),
+                          child: Text(
+                            aging.tag,
+                            style: TextStyle(
+                              fontSize: 9,
+                              fontWeight: FontWeight.w800,
+                              color: aging.textColor,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 2),
+                    Row(
+                      children: [
+                        Text(
+                          product.sku,
+                          style: const TextStyle(
+                            fontFamily: 'monospace',
+                            fontSize: 11,
+                            color: Color(0xFF64748B),
+                          ),
+                        ),
+                        const Text(" • ", style: TextStyle(color: Color(0xFF94A3B8))),
+                        Text(
+                          "Added ${formatDate(product.addedDate)}",
+                          style: const TextStyle(
+                            fontSize: 11,
+                            color: Color(0xFF64748B),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+
+              // RETAIL
+              SizedBox(
+                width: 120,
+                child: Text(
+                  "₹${product.retail.toStringAsFixed(0)}",
+                  style: const TextStyle(
+                    fontFamily: 'monospace',
+                    fontWeight: FontWeight.w700,
+                    fontSize: 13,
+                    color: Color(0xFF0F172A),
+                  ),
+                ),
+              ),
+
+              // STOCK
+              SizedBox(
+                width: 110,
+                child: Text(
+                  "${stock.toStringAsFixed(0)} PCS",
+                  style: const TextStyle(
+                    fontFamily: 'monospace',
+                    fontWeight: FontWeight.w700,
+                    fontSize: 13,
+                    color: Color(0xFF0F172A),
+                  ),
+                ),
+              ),
+
+              // LOCATION
+              SizedBox(
+                width: 130,
+                child: Text(
+                  product.location,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 12,
+                    color: Color(0xFF64748B),
+                  ),
+                ),
+              ),
+
+              // VARIANTS CAPSULE PILL (Height 32, Radius 9999)
+              SizedBox(
+                width: 160,
+                child: product.isStandalone
+                    ? Container(
+                        height: 32,
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF5F3FF),
+                          borderRadius: BorderRadius.circular(9999),
+                          border: Border.all(color: const Color(0xFFDDD6FE), width: 1.5),
+                        ),
+                        alignment: Alignment.center,
+                        child: const Text(
+                          "STANDALONE",
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w800,
+                            color: Color(0xFF7C3AED),
+                            letterSpacing: 0.5,
+                          ),
+                        ),
+                      )
+                    : InkWell(
+                        onTap: onToggleExpand,
+                        borderRadius: BorderRadius.circular(9999),
+                        child: Container(
+                          height: 32,
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          decoration: BoxDecoration(
+                            color: product.isExpanded
+                                ? const Color(0xFF4338CA)
+                                : const Color(0xFFEEF2FF),
+                            borderRadius: BorderRadius.circular(9999),
+                            border: Border.all(
+                              color: const Color(0xFFC7D2FE),
+                              width: 1.5,
+                            ),
+                          ),
+                          alignment: Alignment.center,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                product.isExpanded ? "▼ " : "▶ ",
+                                style: TextStyle(
+                                  fontSize: 8,
+                                  color: product.isExpanded
+                                      ? Colors.white
+                                      : const Color(0xFF4338CA),
+                                ),
+                              ),
+                              Text(
+                                "${product.variants.length} VARIANTS",
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w800,
+                                  color: product.isExpanded
+                                      ? Colors.white
+                                      : const Color(0xFF4338CA),
+                                  letterSpacing: 0.5,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+              ),
+
+              // 3-DOT ACTION MENU
+              SizedBox(
+                width: 60,
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: PopupMenuButton<String>(
+                    icon: const Icon(Icons.more_horiz_rounded,
+                        color: Color(0xFF64748B)),
+                    onSelected: (val) {
+                      if (val == "edit") onEdit();
+                      if (val == "adjust") onAdjustStock();
+                      if (val == "delete") onDelete();
+                    },
+                    itemBuilder: (context) => [
+                      const PopupMenuItem(
+                        value: "edit",
+                        child: Text("✏️ Edit Product"),
+                      ),
+                      const PopupMenuItem(
+                        value: "adjust",
+                        child: Text("📦 Adjust Stock"),
+                      ),
+                      const PopupMenuDivider(),
+                      const PopupMenuItem(
+                        value: "delete",
+                        child: Text("🗑️ Delete Style",
+                            style: TextStyle(color: Color(0xFFDC2626))),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(width: 16),
+            ],
+          ),
+        ),
+
+        // NESTED ACCORDION SUBTABLE
+        if (!product.isStandalone && product.isExpanded)
+          InventoryVariantSubtable(product: product),
+      ],
+    );
+  }
+}

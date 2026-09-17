@@ -39,9 +39,9 @@ class _LiveTrackingHubScreenState extends State<LiveTrackingHubScreen> {
           title: "Real-Time Tracking".toUpperCase(),
           subtitle:
               "LIVE GPS MONITORING OF FLEET MOVEMENT, VEHICLE UTILIZATION, AND ROUTE COMPLIANCE.",
-          actions: [
+          actions: const [
             _HubButton(label: "Satellite View", icon: Icons.layers_outlined),
-            const SizedBox(width: ZenoSpacing.md),
+            SizedBox(width: ZenoSpacing.md),
             _HubButton(
                 label: "Live Fleet Map", icon: Icons.map, isPrimary: true),
           ],

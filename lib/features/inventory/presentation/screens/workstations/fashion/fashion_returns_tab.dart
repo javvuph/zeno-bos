@@ -18,7 +18,7 @@ class FashionReturnsTab extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Column(children: [
           Row(children: [
-            Expanded(child: ZenoTextField(label: "INVOICE NUMBER", hint: "Scan or type invoice ID...")),
+            const Expanded(child: ZenoTextField(label: "INVOICE NUMBER", hint: "Scan or type invoice ID...")),
             const SizedBox(width: 12),
             ZenoButton(label: "LOAD INVOICE", variant: ZenoButtonVariant.secondary, size: ZenoButtonSize.sm, onPressed: () {}),
           ]),

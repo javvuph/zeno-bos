@@ -95,14 +95,14 @@ class AICommandCenterScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 24),
-                Expanded(
+                const Expanded(
                   child: Column(
                     children: [
                       CommandCenterWidget(
                         title: "Automation Suggestions",
                         accentColor: ZenoTheme.neonGreen,
                         child: Column(
-                          children: const [
+                          children: [
                             _AutomationTile(
                                 title: "Auto-reorder Low Stock",
                                 desc: "Trigger when stock < 10%"),
@@ -115,12 +115,12 @@ class AICommandCenterScreen extends StatelessWidget {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 24),
+                      SizedBox(height: 24),
                       CommandCenterWidget(
                         title: "Smart Recommendations",
                         accentColor: Colors.amber,
                         child: Column(
-                          children: const [
+                          children: [
                             _AIInsightRow(
                                 text:
                                     "Promote 'X-Series' in the North Region."),

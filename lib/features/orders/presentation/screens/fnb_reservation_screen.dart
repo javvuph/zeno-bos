@@ -49,7 +49,7 @@ class _FnbReservationScreenState extends State<FnbReservationScreen> {
   }
 
   Widget _buildCalendarView(ZenoSemanticColors colors) => Container(color: colors.bgTier1, child: Column(children: [
-    Padding(padding: const EdgeInsets.all(16), child: Row(children: [Text("AUGUST 2026", style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w900)), const Spacer(), IconButton(icon: const Icon(Icons.chevron_left), onPressed: () {}), IconButton(icon: const Icon(Icons.chevron_right), onPressed: () {})])),
+    Padding(padding: const EdgeInsets.all(16), child: Row(children: [const Text("AUGUST 2026", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w900)), const Spacer(), IconButton(icon: const Icon(Icons.chevron_left), onPressed: () {}), IconButton(icon: const Icon(Icons.chevron_right), onPressed: () {})])),
     Expanded(child: GridView.builder(padding: const EdgeInsets.all(16), gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 7, childAspectRatio: 1.2), itemCount: 31, itemBuilder: (context, i) => _DateCell(day: i + 1, colors: colors))),
   ]));
 

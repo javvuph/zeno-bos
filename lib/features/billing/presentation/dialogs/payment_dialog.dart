@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:zeno/app/theme.dart';
 import 'package:zeno/features/billing/domain/models/bill.dart';
 import 'package:zeno/features/billing/domain/models/payment.dart';
@@ -33,35 +34,80 @@ class _PaymentDialogState extends State<PaymentDialog> {
   }
 
   @override
+  void dispose() {
+    _amountController.dispose();
+    super.dispose();
+  }
+
+  void _confirmPayment() {
+    final payment = Payment(
+      transactionId: 'TXN-${DateTime.now().millisecondsSinceEpoch}',
+      method: _selectedMethod,
+      amount: double.tryParse(_amountController.text) ?? widget.bill.grandTotal,
+      timestamp: DateTime.now(),
+      status: 'Completed',
+    );
+    widget.onPaymentConfirmed(payment);
+    Navigator.pop(context);
+  }
+
+  void _cyclePaymentMethod(bool forward) {
+    setState(() {
+      const methods = PaymentMethod.values;
+      final currentIdx = methods.indexOf(_selectedMethod);
+      if (forward) {
+        _selectedMethod = methods[(currentIdx + 1) % methods.length];
+      } else {
+        _selectedMethod =
+            methods[(currentIdx - 1 + methods.length) % methods.length];
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<ZenoSemanticColors>()!;
 
-    return Dialog(
-      backgroundColor: Colors.transparent,
-      child: Container(
-        width: 500,
-        decoration: BoxDecoration(
-          color: colors.bgTier2,
-          borderRadius: BorderRadius.circular(ZenoRadius.lg),
-          border: Border.all(color: colors.borderSubtle),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _buildHeader(colors),
-            Padding(
-              padding: const EdgeInsets.all(ZenoSpacing.lg),
-              child: Column(
-                children: [
-                  _buildAmountDisplay(colors),
-                  const SizedBox(height: ZenoSpacing.lg),
-                  _buildPaymentMethods(colors),
-                  const SizedBox(height: ZenoSpacing.xl),
-                  _buildActionButtons(colors),
-                ],
-              ),
+    return CallbackShortcuts(
+      bindings: {
+        const SingleActivator(LogicalKeyboardKey.escape): () =>
+            Navigator.pop(context),
+        const SingleActivator(LogicalKeyboardKey.enter): _confirmPayment,
+        const SingleActivator(LogicalKeyboardKey.arrowRight): () =>
+            _cyclePaymentMethod(true),
+        const SingleActivator(LogicalKeyboardKey.arrowLeft): () =>
+            _cyclePaymentMethod(false),
+      },
+      child: FocusScope(
+        autofocus: true,
+        child: Dialog(
+          backgroundColor: Colors.transparent,
+          child: Container(
+            width: 500,
+            decoration: BoxDecoration(
+              color: colors.bgTier2,
+              borderRadius: BorderRadius.circular(ZenoRadius.lg),
+              border: Border.all(color: colors.borderSubtle),
             ),
-          ],
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _buildHeader(colors),
+                Padding(
+                  padding: const EdgeInsets.all(ZenoSpacing.lg),
+                  child: Column(
+                    children: [
+                      _buildAmountDisplay(colors),
+                      const SizedBox(height: ZenoSpacing.lg),
+                      _buildPaymentMethods(colors),
+                      const SizedBox(height: ZenoSpacing.xl),
+                      _buildActionButtons(colors),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -80,7 +126,7 @@ class _PaymentDialogState extends State<PaymentDialog> {
           const Icon(Icons.payments_outlined, size: 20),
           const SizedBox(width: ZenoSpacing.md),
           Text(
-            'PROCESS PAYMENT',
+            'PROCESS PAYMENT (Enter to Confirm, Esc to Close)',
             style: ZenoTypography.headlineMD(colors.textPrimary),
           ),
           const Spacer(),
@@ -133,12 +179,14 @@ class _PaymentDialogState extends State<PaymentDialog> {
       ),
       child: TextField(
         controller: _amountController,
+        autofocus: true,
         textAlign: TextAlign.center,
         style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
             color: colors.textPrimary),
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
+        onSubmitted: (_) => _confirmPayment(),
         decoration: const InputDecoration(
           border: InputBorder.none,
           prefixText: '\$',
@@ -182,18 +230,7 @@ class _PaymentDialogState extends State<PaymentDialog> {
       width: double.infinity,
       height: 50,
       child: ElevatedButton(
-        onPressed: () {
-          final payment = Payment(
-            transactionId: 'TXN-${DateTime.now().millisecondsSinceEpoch}',
-            method: _selectedMethod,
-            amount: double.tryParse(_amountController.text) ??
-                widget.bill.grandTotal,
-            timestamp: DateTime.now(),
-            status: 'Completed',
-          );
-          widget.onPaymentConfirmed(payment);
-          Navigator.pop(context);
-        },
+        onPressed: _confirmPayment,
         style: ElevatedButton.styleFrom(
           backgroundColor: colors.accentPrimary,
           foregroundColor: Colors.black,
@@ -201,7 +238,7 @@ class _PaymentDialogState extends State<PaymentDialog> {
               borderRadius: BorderRadius.circular(ZenoRadius.md)),
         ),
         child: const Text(
-          'CONFIRM PAYMENT',
+          'CONFIRM PAYMENT [Enter]',
           style: TextStyle(fontWeight: FontWeight.w900, letterSpacing: 1.0),
         ),
       ),

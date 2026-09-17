@@ -12,7 +12,6 @@ import 'package:zeno/features/governance/presentation/screens/integration_govern
 
 // --- INVENTORY ---
 import 'package:zeno/features/inventory/presentation/screens/category_command_center_screen.dart';
-import 'package:zeno/features/inventory/presentation/screens/product_command_center_screen.dart';
 import 'package:zeno/features/inventory/presentation/screens/brand_command_center_screen.dart';
 import 'package:zeno/features/inventory/presentation/screens/unit_command_center_screen.dart';
 import 'package:zeno/features/inventory/presentation/screens/variants_command_center_screen.dart';
@@ -27,6 +26,7 @@ import 'package:zeno/features/inventory/presentation/screens/price_management_sc
 import 'package:zeno/features/inventory/presentation/screens/physical_count_screen.dart';
 import 'package:zeno/features/inventory/presentation/screens/goods_received_list_screen.dart';
 import 'package:zeno/features/inventory/presentation/screens/product_studio_screen.dart';
+import 'package:zeno/features/inventory/presentation/screens/inventory_workspace_screen.dart';
 
 // --- AI CENTER ---
 import 'package:zeno/features/ai_center/presentation/screens/ai_chat_screen.dart';
@@ -43,6 +43,7 @@ import 'package:zeno/features/customers/presentation/screens/customer_ai_hub_scr
 import 'package:zeno/features/customers/presentation/screens/loyalty_program_screen.dart';
 
 // --- BILLING / FINANCE ---
+import 'package:zeno/features/billing/presentation/screens/billing_studio_screen.dart';
 import 'package:zeno/features/billing/presentation/screens/new_bill_screen.dart';
 import 'package:zeno/features/billing/presentation/screens/fnb_billing_screen.dart';
 import 'package:zeno/features/billing/presentation/screens/invoice_list_screen.dart';
@@ -99,246 +100,18 @@ import 'package:zeno/features/automation/presentation/screens/automation_builder
 // --- SETTINGS / MISC ---
 import 'package:zeno/features/settings/presentation/screens/settings_main_screen.dart';
 
+part 'zeno_router_routes.dart';
+part 'parts/zeno_router_routes_part2.part.dart';
+
 class ZenoRouter {
   static Widget getScreen(String route, {Map<String, dynamic>? params}) {
-    switch (route) {
-      // --- 1. HOME ---
-      case 'home':
-      case 'dashboard':
-        return const PersonalizedDashboardScreen();
-      case 'home/tasks':
-        return const PlannerScreen();
-      case 'home/approvals':
-        return const AutomationCommandCenterScreen();
-      case 'home/activity':
-        return const CRMExecutiveDashboard();
+    final screen1 = resolveRoutePart1(route, params);
+    if (screen1 != null) return screen1;
 
-      // --- 2. INVENTORY ---
-      case 'inventory/products':
-        return const ProductCommandCenterScreen();
-      case 'inventory/studio':
-        return const ProductStudioScreen();
-      case 'inventory/categories':
-        return const CategoryCommandCenterScreen();
-      case 'inventory/brands':
-        return const BrandCommandCenterScreen();
-      case 'inventory/units':
-        return const UnitCommandCenterScreen();
-      case 'inventory/variants':
-        return const VariantsCommandCenterScreen();
-      case 'inventory/warehouses':
-        return const WarehouseCommandCenterScreen();
-      case 'inventory/rules':
-        return const InventoryRulesCommandCenterScreen();
-      case 'inventory/reorder':
-        return const ProductListScreen(
-            filterStatus: 'low_stock', title: 'Reorder Alerts');
-      case 'inventory/transfers':
-        return const StockOperationsCommandCenterScreen();
-      case 'inventory/barcodes':
-        return const BarcodeStudioCommandCenterScreen();
-      case 'inventory/stock-count':
-        return const PhysicalCountScreen();
-      case 'inventory/intelligence':
-        return const InventoryIntelligenceCommandCenterScreen();
-      case 'inventory/reports':
-        return const ReportListScreen();
+    final screen2 = resolveRoutePart2(route, params);
+    if (screen2 != null) return screen2;
 
-      // --- 3. SALES ---
-      case 'sales/new':
-      case 'sales/pos':
-        return const NewBillScreen();
-      case 'sales/fnb-billing':
-        return FnbBillingScreen(
-          tableId: params?['tableId'] as String?,
-          guestCount: params?['guestCount'] as int?,
-        );
-      case 'sales/history':
-      case 'sales/invoices':
-        return const InvoiceListScreen();
-      case 'sales/dues':
-        return const FinanceDashboardScreen();
-      case 'sales/quotations':
-        return const QuotationCommandCenterScreen();
-      case 'sales/pricing':
-        return const PriceManagementScreen(focusType: 'Cost');
-      case 'sales/intelligence':
-        return const OrderAIHubScreen();
-      case 'sales/reports':
-        return const UnifiedReportViewerScreen(
-            reportTitle: "Sales Performance", module: 'sales');
-
-      // --- 4. ORDERS ---
-      case 'orders/dashboard':
-        return const OrdersDashboardScreen();
-      case 'orders/list':
-        return const OrderListScreen();
-      case 'orders/new':
-        return const SalesOrderFormScreen();
-      case 'orders/fulfillment':
-        return const OrderFulfillmentScreen(stage: 'Picking');
-      case 'orders/returns':
-        return const UnifiedReportViewerScreen(
-            reportTitle: "Sales Returns \u0026 RMA", module: 'sales');
-      case 'orders/intelligence':
-        return const OrderAIHubScreen();
-      case 'orders/fnb/tables':
-        return const FnbTableManagementScreen();
-      case 'orders/fnb/kds':
-        return FnbKdsScreen(station: params?['station'] as String? ?? "Main Kitchen");
-      case 'orders/fnb/reservations':
-        return const FnbReservationScreen();
-
-      // --- 5. PROCUREMENT ---
-      case 'procurement/orders':
-        return const PurchaseOrderCommandCenterScreen();
-      case 'procurement/suppliers':
-        return const SupplierDashboardScreen();
-      case 'procurement/rfq':
-        return const RFQCommandCenterScreen();
-      case 'procurement/receiving':
-        return const GoodsReceivedListScreen();
-      case 'procurement/bills':
-        return const VendorBillCommandCenterScreen();
-      case 'procurement/payables':
-        return const PayablesCommandCenterScreen();
-      case 'procurement/landed-cost':
-        return const UnifiedReportViewerScreen(
-            reportTitle: "Landed Cost Analysis", module: 'procurement');
-      case 'procurement/intelligence':
-        return const SupplierAIHubScreen();
-      case 'procurement/reports':
-        return const UnifiedReportViewerScreen(
-            reportTitle: "Procurement Analytics", module: 'procurement');
-
-      // --- 6. CRM ---
-      case 'crm/customers':
-        return const Customer360DashboardScreen();
-      case 'crm/leads':
-        return const OpportunityPipelineScreen();
-      case 'crm/activities':
-        return const CRMExecutiveDashboard();
-      case 'crm/campaigns':
-        return const CampaignDashboardScreen();
-      case 'crm/tickets':
-        return const ServiceDeskScreen();
-      case 'crm/loyalty':
-        return const LoyaltyProgramScreen();
-      case 'crm/intelligence':
-        return const CustomerAIHubScreen();
-      case 'crm/reports':
-        return const UnifiedReportViewerScreen(
-            reportTitle: "CRM Analytics", module: 'crm');
-
-      // --- 7. HR ---
-      case 'hr/staff':
-        return const StaffListScreen();
-      case 'hr/attendance':
-        return const AttendanceHubScreen();
-      case 'hr/leave':
-        return const LeaveManagementScreen();
-      case 'hr/payroll':
-        return const PayrollCommandCenterScreen();
-      case 'hr/recruitment':
-        return const RecruitmentHubScreen();
-      case 'hr/performance':
-        return const PerformanceDashboardScreen();
-      case 'hr/intelligence':
-        return const StaffAIHubScreen();
-      case 'hr/reports':
-        return const UnifiedReportViewerScreen(
-            reportTitle: "HR Analytics", module: 'hr');
-
-      // --- 8. REPORTS ---
-      case 'reports/builder':
-        return const ReportBuilderScreen();
-      case 'reports/executive':
-        return const ExecutiveBIScreen();
-      case 'reports/financial':
-        return const UnifiedReportViewerScreen(
-            reportTitle: "Profit \u0026 Loss", module: 'finance');
-      case 'reports/sales':
-        return const UnifiedReportViewerScreen(
-            reportTitle: "Sales Performance", module: 'sales');
-      case 'reports/inventory':
-        return const UnifiedReportViewerScreen(
-            reportTitle: "Inventory Valuation", module: 'inventory');
-      case 'reports/procurement':
-        return const UnifiedReportViewerScreen(
-            reportTitle: "Procurement Analytics", module: 'procurement');
-      case 'reports/hr':
-        return const UnifiedReportViewerScreen(
-            reportTitle: "HR Analytics", module: 'hr');
-      case 'reports/crm':
-        return const UnifiedReportViewerScreen(
-            reportTitle: "CRM Analytics", module: 'crm');
-
-      // --- 9. FINANCE ---
-      case 'finance/ledger':
-        return const GeneralLedgerCommandCenterScreen();
-      case 'finance/journal':
-        return const JournalEntryFormScreen();
-      case 'finance/payables':
-        return const PayablesCommandCenterScreen();
-      case 'finance/banking':
-        return const BankingCommandCenterScreen();
-      case 'finance/budget':
-        return const BudgetCommandCenterScreen();
-      case 'finance/assets':
-        return const FixedAssetCommandCenterScreen();
-      case 'finance/tax':
-        return const TaxManagementHubScreen();
-      case 'finance/closing':
-        return const FinancialClosingCommandCenterScreen();
-      case 'finance/intelligence':
-        return const FinanceIntelligenceCommandCenterScreen();
-      case 'finance/reports':
-        return const UnifiedReportViewerScreen(
-            reportTitle: "Finance Analytics", module: 'finance');
-
-      // --- 10. AI ---
-      case 'ai/home':
-        return const AIChatScreen();
-      case 'ai/risk':
-        return const AIDashboardScreen();
-      case 'ai/sales-forecast':
-        return const AIDashboardScreen();
-      case 'ai/stock-forecast':
-        return const AIDashboardScreen();
-      case 'ai/fraud':
-        return const SecurityCenterScreen();
-      case 'ai/automation':
-        return const AutomationCommandCenterScreen();
-
-      // --- 11. ADMIN ---
-      case 'admin/profile':
-        return const StoreSetupModal();
-      case 'admin/security':
-        return const SecurityCenterScreen();
-      case 'admin/workflows':
-        return const AutomationCommandCenterScreen();
-      case 'admin/governance':
-        return const GovernanceHubScreen();
-      case 'admin/automation':
-        return const AutomationCommandCenterScreen();
-      case 'admin/automation/builder':
-        return const AutomationBuilderScreen();
-      case 'admin/audit':
-        return const AuditCenterScreen();
-      case 'admin/backup':
-        return const BackupCenterScreen();
-      case 'admin/settings':
-        return const SettingsMainScreen();
-      case 'admin/integrations':
-        return const IntegrationGovernanceScreen();
-      case 'admin/security-policy':
-        return const SecurityPolicyScreen();
-      case 'admin/health':
-        return const SystemHealthScreen();
-
-      default:
-        return _buildUnderConstruction(route);
-    }
+    return _buildUnderConstruction(route);
   }
 
   static Widget _buildUnderConstruction(String route) {

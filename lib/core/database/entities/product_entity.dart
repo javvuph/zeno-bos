@@ -6,7 +6,7 @@ part 'product_entity.g.dart';
 class ProductEntity {
   Id id = Isar.autoIncrement;
 
-  @Index(unique: true)
+  @Index(unique: true, replace: true)
   late String sku;
 
   late String name;

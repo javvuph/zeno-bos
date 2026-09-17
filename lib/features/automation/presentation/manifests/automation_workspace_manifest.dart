@@ -99,7 +99,7 @@ class AutomationWorkspaceManifest extends ZenoWorkspaceManifest<Automation> {
           width: 150,
           builder: (a) => Row(
             children: [
-              Icon(Icons.bolt_rounded, size: 12, color: Colors.amber),
+              const Icon(Icons.bolt_rounded, size: 12, color: Colors.amber),
               const SizedBox(width: 8),
               Text(a.trigger.type.name.toUpperCase(),
                   style: const TextStyle(fontSize: 10)),

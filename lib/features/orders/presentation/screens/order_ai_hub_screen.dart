@@ -46,17 +46,17 @@ class OrderAIHubScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 24),
-                Row(
+                const Row(
                   children: [
-                    const Expanded(
+                    Expanded(
                         child: ZenoStatCard(
                             label: "Fulfillment Accuracy",
                             value: "99.8%",
                             change: "+0.2%",
                             icon: Icons.verified_outlined,
                             iconColor: Color(0xFF38ef7d))),
-                    const SizedBox(width: 24),
-                    const Expanded(
+                    SizedBox(width: 24),
+                    Expanded(
                         child: ZenoStatCard(
                             label: "Avg Delivery Time",
                             value: "42 min",

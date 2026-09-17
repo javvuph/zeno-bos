@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:zeno/app/theme.dart';
+import 'package:zeno/core/widgets/zeno_card.dart';
+import 'package:zeno/core/widgets/zeno_inputs.dart';
 import '../../../controllers/product_studio_controller.dart';
 import '../../workstations/fnb/specs/kitchen_recipe_specs_tab.dart';
 

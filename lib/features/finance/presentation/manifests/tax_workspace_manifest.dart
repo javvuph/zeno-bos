@@ -123,12 +123,12 @@ class TaxWorkspaceManifest extends ZenoWorkspaceManifest<TaxRule> {
         ),
         ZenoTableColumn(
           label: "STATUS",
-          builder: (r) => Row(
+          builder: (r) => const Row(
             children: [
-              const Icon(Icons.check_circle_rounded,
+              Icon(Icons.check_circle_rounded,
                   size: 12, color: Colors.green),
-              const SizedBox(width: 8),
-              const Text("ACTIVE",
+              SizedBox(width: 8),
+              Text("ACTIVE",
                   style: TextStyle(
                       fontSize: 9,
                       fontWeight: FontWeight.bold,

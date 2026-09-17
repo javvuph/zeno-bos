@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:zeno/features/inventory/presentation/widgets/product_form.dart';
+import 'package:zeno/features/inventory/presentation/widgets/product_studio_variants_table.dart';
 import 'package:zeno/app/theme.dart';
 
 class InventoryWorkArea extends StatelessWidget {
@@ -7,16 +8,17 @@ class InventoryWorkArea extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return const Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // The Dynamic Form
-        const ProductForm(),
+        ProductForm(),
 
-        // Product List (Placeholder)
+        // Product List / Variants Table
         Expanded(
-          child: Container(
-            padding: const EdgeInsets.all(32),
-            child: const Column(
+          child: SingleChildScrollView(
+            padding: EdgeInsets.all(32),
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text("Product Catalog",
@@ -26,6 +28,15 @@ class InventoryWorkArea extends StatelessWidget {
                 Text("All products are stored in a single unified database.",
                     style: TextStyle(color: ZenoTheme.textSecondary)),
                 Divider(height: 48),
+                
+                // Show the new Product Studio Variants Table
+                Text("Variant Configuration",
+                    style:
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                SizedBox(height: 16),
+                ProductStudioVariantsTable(),
+                
+                SizedBox(height: 48),
                 Center(
                   child: Opacity(
                     opacity: 0.3,
@@ -33,7 +44,7 @@ class InventoryWorkArea extends StatelessWidget {
                       children: [
                         Icon(Icons.inventory_2, size: 80),
                         SizedBox(height: 16),
-                        Text("No products added yet."),
+                        Text("No other products added yet."),
                       ],
                     ),
                   ),

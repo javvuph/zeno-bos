@@ -25,7 +25,7 @@ class MarketingCampaignScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<ZenoSemanticColors>()!;
-    final List<Campaign> _items = [
+    final List<Campaign> items = [
       Campaign(
           name: "Holiday Blast 2024",
           channel: "Email",
@@ -67,7 +67,7 @@ class MarketingCampaignScreen extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: ZenoTable<Campaign>(
-              items: _items,
+              items: items,
               columns: [
                 ZenoTableColumn(
                   label: "Campaign Name",

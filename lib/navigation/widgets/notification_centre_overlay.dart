@@ -123,36 +123,7 @@ class _ZenoNotificationCentreOverlayState
   }
 
   Widget _buildNotificationList(NavigationController nav) {
-    // Mock Notifications for demo
-    final List<ZenoNotification> mockNotifications = [
-      ZenoNotification(
-          id: "1",
-          title: "Low Stock Alert",
-          message: "iPhone 15 Pro is below safety level (4 units remaining).",
-          timestamp: DateTime.now().subtract(const Duration(minutes: 10)),
-          category: NotificationCategory.inventory,
-          actionRoute: "inventory/stock/current"),
-      ZenoNotification(
-          id: "2",
-          title: "Payment Received",
-          message: "Global Corp settled invoice INV-2026-00125 (\$12,400).",
-          timestamp: DateTime.now().subtract(const Duration(hours: 1)),
-          category: NotificationCategory.finance),
-      ZenoNotification(
-          id: "3",
-          title: "AI Strategy Insight",
-          message:
-              "Demand forecast suggests 18% increase in weekend retail traffic.",
-          timestamp: DateTime.now().subtract(const Duration(hours: 3)),
-          category: NotificationCategory.ai,
-          actionRoute: "ai/business/insights"),
-      ZenoNotification(
-          id: "4",
-          title: "System Maintenance",
-          message: "Cloud sync will be paused for 15 mins at 02:00 UTC.",
-          timestamp: DateTime.now().subtract(const Duration(hours: 5)),
-          category: NotificationCategory.system),
-    ];
+    const List<ZenoNotification> mockNotifications = [];
 
     final filtered = selectedFilter == null
         ? mockNotifications
@@ -191,8 +162,8 @@ class _ZenoNotificationCentreOverlayState
                   style: const TextStyle(
                       fontSize: 11, color: ZenoTheme.textPrimary, height: 1.4)),
               const SizedBox(height: 8),
-              Text("12 minutes ago",
-                  style: const TextStyle(
+              const Text("12 minutes ago",
+                  style: TextStyle(
                       fontSize: 9, color: ZenoTheme.textSecondary)),
             ],
           ),
@@ -215,15 +186,15 @@ class _ZenoNotificationCentreOverlayState
           borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(16),
               bottomRight: Radius.circular(16))),
-      child: Row(
+      child: const Row(
         children: [
-          const Icon(Icons.settings_outlined,
+          Icon(Icons.settings_outlined,
               size: 14, color: ZenoTheme.textSecondary),
-          const SizedBox(width: 8),
-          const Text("Notification Settings",
+          SizedBox(width: 8),
+          Text("Notification Settings",
               style: TextStyle(fontSize: 10, color: ZenoTheme.textSecondary)),
-          const Spacer(),
-          const Text("VIEW ALL HISTORY",
+          Spacer(),
+          Text("VIEW ALL HISTORY",
               style: TextStyle(
                   fontSize: 10,
                   fontWeight: FontWeight.bold,

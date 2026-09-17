@@ -14,8 +14,12 @@ extension ProductStudioControllerSession on ProductStudioController {
   void addScannedProductToCatalog() async { await saveProduct(); if (scanSession.isNotEmpty) scanSession.first.status = ScanItemStatus.added; resetProduct(); }
 
   void pickImportFile() async {
-    final result = await FilePicker.platform.pickFiles();
-    if (result != null) { isImporting = true; notify(); await Future.delayed(const Duration(seconds: 1)); isImporting = false; notify(); }
+    isImporting = true;
+    notify();
+    // TODO: integrate FilePicker result into importItems bulk workflow
+    await Future.delayed(const Duration(seconds: 1));
+    isImporting = false;
+    notify();
   }
   
   void addManualImportRow() { importItems.insert(0, BulkScanItem(product: ProductStudioData.empty(), status: BulkScanStatus.review)); notify(); }

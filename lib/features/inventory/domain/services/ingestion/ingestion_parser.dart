@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'ingestion_models.dart';
 
 class IngestionParser {
   /// Parses CSV string into a list of maps.

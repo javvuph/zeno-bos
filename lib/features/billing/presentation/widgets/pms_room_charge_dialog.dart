@@ -12,11 +12,11 @@ class PmsRoomChargeDialog extends StatelessWidget {
     return AlertDialog(
       backgroundColor: colors.bgTier2,
       title: const Text("PMS ROOM POST", style: TextStyle(fontSize: 12, fontWeight: FontWeight.w900)),
-      content: Column(
+      content: const Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           ZenoTextField(label: "ROOM NUMBER", hint: "Enter room number..."),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           ZenoTextField(label: "GUEST NAME", hint: "Enter guest name..."),
         ],
       ),

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:zeno/app/theme.dart';
 import 'package:zeno/core/widgets/zeno_inputs.dart';
-import 'package:zeno/core/widgets/zeno_card.dart';
 import '../../../controllers/product_studio_controller.dart';
+
+part 'parts/fashion_basic_fields.part.dart';
 
 class FashionBasicTab extends StatefulWidget {
   final ProductStudioController controller;
@@ -32,7 +33,6 @@ class _FashionBasicTabState extends State<FashionBasicTab> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // LEFT COLUMN: Product Identity, Photo & Online Description
         Expanded(
           flex: 5,
           child: Column(
@@ -86,23 +86,24 @@ class _FashionBasicTabState extends State<FashionBasicTab> {
                     const SizedBox(width: 10),
                     Expanded(
                       child: ZenoTextField(
-                        label: "Barcode / GTIN",
-                        controller: _barcodeController(p.barcode),
+                        label: controller.hasVariants ? "Barcode / GTIN (Assigned per variant)" : "Barcode / GTIN",
+                        controller: _barcodeController(controller.hasVariants ? "" : p.barcode),
                         onChanged: (v) => controller.updateField(barcode: v),
-                        suffix: IconButton(
-                          icon: const Icon(Icons.auto_fix_high_rounded, size: 16, color: Color(0xFF6366F1)),
-                          tooltip: "Auto-generate Barcode",
-                          onPressed: controller.generateSuggestedBarcode,
-                        ),
+                        readOnly: controller.hasVariants,
+                        suffix: controller.hasVariants
+                            ? null
+                            : IconButton(
+                                icon: const Icon(Icons.auto_fix_high_rounded, size: 16, color: Color(0xFF6366F1)),
+                                tooltip: "Auto-generate Barcode",
+                                onPressed: controller.generateSuggestedBarcode,
+                              ),
                       ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 12),
-                // Primary Photo Slot
                 _buildPhotoSlot(widget.colors),
                 const SizedBox(height: 12),
-                // Description Box with AI Auto-Write
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -149,7 +150,6 @@ class _FashionBasicTabState extends State<FashionBasicTab> {
         ),
         const SizedBox(width: 16),
 
-        // RIGHT COLUMN: Pricing & Stock (Basic Mode) OR Audience & Governance (Advanced Mode)
         Expanded(
           flex: 5,
           child: Column(
@@ -205,8 +205,8 @@ class _FashionBasicTabState extends State<FashionBasicTab> {
                   controller.generatedVariants.isEmpty
                       ? ZenoTextField(
                           label: "Flat Opening Stock Quantity",
-                          initialValue: p.openingStock.toString(),
-                          onChanged: (v) => controller.updateField(openingStock: int.tryParse(v) ?? 0),
+                          initialValue: p.openingStock == 0 ? "" : p.openingStock.toString(),
+                          onChanged: (v) => controller.updateField(openingStock: double.tryParse(v) ?? 0.0),
                           keyboardType: TextInputType.number,
                           width: ZenoFieldWidth.full,
                         )
@@ -290,111 +290,6 @@ class _FashionBasicTabState extends State<FashionBasicTab> {
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildPhotoSlot(ZenoSemanticColors colors) {
-    return Container(
-      width: double.infinity,
-      height: 90,
-      decoration: BoxDecoration(
-        color: const Color(0xFFF8FAFC),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: const Color(0xFFCBD5E1)),
-      ),
-      child: InkWell(
-        onTap: controller.pickPrimaryImage,
-        borderRadius: BorderRadius.circular(8),
-        child: const Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.add_a_photo_outlined, size: 24, color: Color(0xFF6366F1)),
-            SizedBox(height: 4),
-            Text("Upload Primary Photo or Camera Snap", style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF334155))),
-            Text("JPG, PNG up to 5MB", style: TextStyle(fontSize: 9, color: Color(0xFF64748B))),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _autoWriteAIDescription(BuildContext context) {
-    if (controller.product.title.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter a Product Name first!')),
-      );
-      return;
-    }
-
-    final category = controller.product.category.isNotEmpty ? controller.product.category : "Apparel";
-    final name = controller.product.title;
-
-    final generated = "Premium $category — $name. Crafted for maximum comfort, durability, and daily elegance. Perfect for casual and modern wear.";
-    setState(() {
-      controller.updateField(description: generated);
-    });
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('✨ AI generated online shop description!')),
-    );
-  }
-
-  Widget _compactSection(String title, ZenoSemanticColors colors, List<Widget> children) {
-    return ZenoCard(
-      title: title,
-      padding: const EdgeInsets.all(12),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: children,
-      ),
-    );
-  }
-
-  List<String> _withCurrent(List<String> options, String current) {
-    if (current.isEmpty || options.contains(current)) return options;
-    return [...options, current];
-  }
-
-  void _showQuickAddDialog(BuildContext context, String type, Function(String) onAdd) {
-    final textController = TextEditingController();
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        title: Text("Add Custom $type", style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-        content: TextField(
-          controller: textController,
-          style: const TextStyle(fontSize: 13),
-          decoration: InputDecoration(
-            labelText: "$type Name",
-            hintText: "Enter $type name",
-            isDense: true,
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-          ),
-          autofocus: true,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("CANCEL", style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold, fontSize: 11)),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              if (textController.text.trim().isNotEmpty) {
-                onAdd(textController.text.trim());
-                Navigator.pop(context);
-              }
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF6366F1),
-              foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-            ),
-            child: const Text("ADD", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11)),
-          ),
-        ],
-      ),
     );
   }
 }

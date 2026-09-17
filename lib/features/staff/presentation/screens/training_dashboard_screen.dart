@@ -33,28 +33,28 @@ class _TrainingDashboardScreenState extends State<TrainingDashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return const Column(
       children: [
-        const ZenoHeader(
+        ZenoHeader(
           title: "Learning & Development",
           subtitle:
               "Manage employee certifications, training courses, and skill matrices.",
         ),
         Expanded(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
+            padding: EdgeInsets.all(24),
             child: Column(
               children: [
                 Row(
                   children: [
-                    const Expanded(
+                    Expanded(
                         child: ZenoStatCard(
                             label: "Active Courses",
                             value: "24",
                             icon: Icons.school_outlined,
                             iconColor: Color(0xFFFF9800))),
-                    const SizedBox(width: 24),
-                    const Expanded(
+                    SizedBox(width: 24),
+                    Expanded(
                         child: ZenoStatCard(
                             label: "Certifications Issued",
                             value: "850",
@@ -62,7 +62,7 @@ class _TrainingDashboardScreenState extends State<TrainingDashboardScreen> {
                             iconColor: Color(0xFF00FF88))),
                   ],
                 ),
-                const SizedBox(height: 24),
+                SizedBox(height: 24),
                 ZenoCard(
                   title: "UPCOMING TRAINING SESSIONS",
                   child: Column(

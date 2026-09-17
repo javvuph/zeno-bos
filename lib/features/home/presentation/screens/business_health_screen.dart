@@ -25,7 +25,7 @@ class BusinessHealthScreen extends StatelessWidget {
               style: TextStyle(color: ZenoTheme.textSecondary),
             ),
             const SizedBox(height: 32),
-            Center(
+            const Center(
               child: Column(
                 children: [
                   Stack(
@@ -43,12 +43,12 @@ class BusinessHealthScreen extends StatelessWidget {
                       ),
                       Column(
                         children: [
-                          const Text("88",
+                          Text("88",
                               style: TextStyle(
                                   fontSize: 64,
                                   fontWeight: FontWeight.w900,
                                   color: ZenoTheme.neonGreen)),
-                          const Text("HEALTHY",
+                          Text("HEALTHY",
                               style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
@@ -58,8 +58,8 @@ class BusinessHealthScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 16),
-                  const Text(
+                  SizedBox(height: 16),
+                  Text(
                       "Your business is performing 12% better than last month.",
                       style: TextStyle(
                           color: ZenoTheme.textPrimary,

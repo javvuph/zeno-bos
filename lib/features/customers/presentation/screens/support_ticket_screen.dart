@@ -25,7 +25,7 @@ class SupportTicketScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<ZenoSemanticColors>()!;
-    final List<SupportTicket> _items = [
+    final List<SupportTicket> items = [
       SupportTicket(
           id: "TKT-5521",
           customer: "Alex Rivera",
@@ -67,7 +67,7 @@ class SupportTicketScreen extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: ZenoTable<SupportTicket>(
-              items: _items,
+              items: items,
               columns: [
                 ZenoTableColumn(
                   label: "Ticket ID",

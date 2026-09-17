@@ -36,7 +36,7 @@ class KitchenRecipeSpecsTab extends StatelessWidget {
             const SizedBox(width: 12),
             Expanded(child: ZenoTextField(label: "TARGET FOOD COST %", initialValue: p.targetFoodCostPct.toString(), onChanged: (v) => controller.updateField(targetFoodCostPct: double.tryParse(v)))),
             const SizedBox(width: 12),
-            Expanded(child: ZenoTextField(label: "PORTION COST", initialValue: "42.50", readOnly: true, prefix: const Text("₹"))),
+            const Expanded(child: ZenoTextField(label: "PORTION COST", initialValue: "42.50", readOnly: true, prefix: Text("₹"))),
           ]),
           const SizedBox(height: 16),
           ZenoTextField(label: "PREP NOTES", initialValue: p.recipePrepNotes, onChanged: (v) => controller.updateField(recipePrepNotes: v), maxLines: 3),

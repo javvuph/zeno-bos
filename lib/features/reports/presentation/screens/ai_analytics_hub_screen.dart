@@ -88,24 +88,24 @@ class _AIAnalyticsHubScreenState extends State<AIAnalyticsHubScreen> {
                   ),
                 ),
                 const SizedBox(height: ZenoSpacing.xl),
-                Row(
+                const Row(
                   children: [
-                    const Expanded(
+                    Expanded(
                         child: ZenoStatCard(
                             label: "GROWTH OPPORTUNITY",
                             value: "HIGH",
                             change: "+15%",
                             icon: Icons.auto_graph,
                             iconColor: Color(0xFF00FF88))),
-                    const SizedBox(width: ZenoSpacing.lg),
-                    const Expanded(
+                    SizedBox(width: ZenoSpacing.lg),
+                    Expanded(
                         child: ZenoStatCard(
                             label: "PREDICTION CONFIDENCE",
                             value: "94.2%",
                             icon: Icons.verified_user_outlined,
                             iconColor: Color(0xFF00F0FF))),
-                    const SizedBox(width: ZenoSpacing.lg),
-                    const Expanded(
+                    SizedBox(width: ZenoSpacing.lg),
+                    Expanded(
                         child: ZenoStatCard(
                             label: "ANOMALIES DETECTED",
                             value: "2",

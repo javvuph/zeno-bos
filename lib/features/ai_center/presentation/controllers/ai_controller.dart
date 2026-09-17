@@ -52,10 +52,10 @@ class AIController extends ChangeNotifier {
   Map<String, dynamic> get lastGlobalContext => _lastGlobalContext;
 
   // Executive KPIs
-  double get healthScore => 0.982;
-  double get avgResponseTime => 1.25;
-  double get confidenceScore => 0.945;
-  double get accuracyRate => 0.964;
+  double get healthScore => 0.0;
+  double get avgResponseTime => 0.0;
+  double get confidenceScore => 0.0;
+  double get accuracyRate => 0.0;
 
   // KPI Bridges
   double get totalMonthlyCost =>

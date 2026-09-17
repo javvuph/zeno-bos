@@ -17,7 +17,7 @@ class VendorBillController extends ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  List<VendorBill> _bills = [];
+  final List<VendorBill> _bills = [];
   List<VendorBill> get bills =>
       _bills.isEmpty ? _masterData.getMockVendorBills() : _bills;
 

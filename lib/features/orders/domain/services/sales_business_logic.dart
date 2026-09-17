@@ -13,8 +13,9 @@ class SalesBusinessLogic {
   /// Determines the next logical status for an order based on fulfillment
   SalesOrderStatus calculateNextStatus(
       SalesOrder order, List<Shipment> shipments) {
-    if (order.status == SalesOrderStatus.cancelled)
+    if (order.status == SalesOrderStatus.cancelled) {
       return SalesOrderStatus.cancelled;
+    }
 
     bool hasShipments = shipments.isNotEmpty;
     if (!hasShipments) return order.status;
@@ -40,9 +41,10 @@ class SalesBusinessLogic {
     }
 
     if (allDelivered) return SalesOrderStatus.delivered;
-    if (partial)
+    if (partial) {
       return SalesOrderStatus
           .processing; // Or a specific 'partially_shipped' if added
+    }
     return SalesOrderStatus.shipped;
   }
 

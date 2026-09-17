@@ -39,7 +39,7 @@ class MediaPillar extends StatelessWidget {
 
   Widget _galleryGrid() {
     final urls = controller.product.galleryUrls;
-    final int defaultSlotCount = 3;
+    const int defaultSlotCount = 3;
     final int totalDisplaySlots = urls.length > defaultSlotCount ? urls.length : defaultSlotCount;
 
     List<Widget> items = [];

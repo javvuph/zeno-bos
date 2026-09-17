@@ -63,7 +63,7 @@ class _RetailReplenishmentTabState extends State<RetailReplenishmentTab> {
         padding: const EdgeInsets.all(16),
         child: Column(children: [
           Row(children: [
-            Expanded(child: ZenoTextField(label: "AVG DAILY SALES (VELOCITY)", initialValue: "12.5", readOnly: true)),
+            const Expanded(child: ZenoTextField(label: "AVG DAILY SALES (VELOCITY)", initialValue: "12.5", readOnly: true)),
             const SizedBox(width: 12),
             Expanded(child: ZenoTextField(label: "RECOMMENDED ORDER QTY", initialValue: recommendedQty.toString(), readOnly: true)),
           ]),

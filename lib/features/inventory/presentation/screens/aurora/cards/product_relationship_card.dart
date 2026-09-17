@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../controllers/product_studio_controller.dart';
+import '../../../controllers/product_studio_controller.dart';
 import '../widgets/zeno_master_dropdown_field.dart';
-import '../../../domain/models/product_studio_models.dart';
+import '../../../../domain/models/product_studio_models.dart';
 
 class ProductRelationshipCard extends StatelessWidget {
   final ProductStudioController controller;

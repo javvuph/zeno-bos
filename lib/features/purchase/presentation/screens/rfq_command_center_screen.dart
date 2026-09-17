@@ -65,8 +65,9 @@ class _RFQCommandCenterScreenState extends State<RFQCommandCenterScreen> {
   }
 
   Widget _buildComparisonView() {
-    if (controller.selectedRFQ == null)
+    if (controller.selectedRFQ == null) {
       return const Center(child: Text("Select an RFQ"));
+    }
 
     return Column(
       children: [

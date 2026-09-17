@@ -126,9 +126,9 @@ class SupplierComparisonMatrix extends StatelessWidget {
 
   Widget _scoreCell(double score) {
     Color color = Colors.red;
-    if (score > 85)
+    if (score > 85) {
       color = Colors.green;
-    else if (score > 70) color = Colors.orange;
+    } else if (score > 70) color = Colors.orange;
 
     return Container(
       height: 48,

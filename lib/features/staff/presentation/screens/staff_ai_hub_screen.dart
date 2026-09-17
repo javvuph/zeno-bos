@@ -88,23 +88,23 @@ class _StaffAIHubScreenState extends State<StaffAIHubScreen> {
                   ),
                 ),
                 const SizedBox(height: ZenoSpacing.xl),
-                Row(
+                const Row(
                   children: [
-                    const Expanded(
+                    Expanded(
                         child: ZenoStatCard(
                             label: "ATTRITION RISK",
                             value: "LOW",
                             icon: Icons.security,
                             iconColor: Color(0xFF00FF88))),
-                    const SizedBox(width: ZenoSpacing.lg),
-                    const Expanded(
+                    SizedBox(width: ZenoSpacing.lg),
+                    Expanded(
                         child: ZenoStatCard(
                             label: "STAFF SENTIMENT",
                             value: "POSITIVE",
                             icon: Icons.psychology_outlined,
                             iconColor: Color(0xFF00F0FF))),
-                    const SizedBox(width: ZenoSpacing.lg),
-                    const Expanded(
+                    SizedBox(width: ZenoSpacing.lg),
+                    Expanded(
                         child: ZenoStatCard(
                             label: "SMART SCHEDULES",
                             value: "ACTIVE",

@@ -14,7 +14,7 @@ class PurchaseAnalytics extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            Row(
+            const Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 _PurchaseMetric(

@@ -20,12 +20,12 @@ class BudgetAiAdvisorPanel extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
+          const Row(
             children: [
-              const Icon(Icons.auto_awesome,
+              Icon(Icons.auto_awesome,
                   size: 20, color: Color(0xFF00F0FF)),
-              const SizedBox(width: 12),
-              const Text("AI BUDGET ADVISOR",
+              SizedBox(width: 12),
+              Text("AI BUDGET ADVISOR",
                   style: TextStyle(
                       fontWeight: FontWeight.w900,
                       fontSize: 13,

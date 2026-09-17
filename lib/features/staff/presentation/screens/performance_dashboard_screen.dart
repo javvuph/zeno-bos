@@ -49,7 +49,7 @@ class _PerformanceDashboardScreenState
             padding: const EdgeInsets.all(24),
             child: Row(
               children: [
-                Expanded(
+                const Expanded(
                   flex: 1,
                   child: ZenoCard(
                     title: "OVERALL KPI RATING",
@@ -57,12 +57,12 @@ class _PerformanceDashboardScreenState
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text("4.2",
+                          Text("4.2",
                               style: TextStyle(
                                   fontSize: 48,
                                   fontWeight: FontWeight.w900,
                                   color: Color(0xFF9D50BB))),
-                          const Text("Out of 5.0",
+                          Text("Out of 5.0",
                               style: TextStyle(
                                   color: ZenoTheme.textSecondary,
                                   fontSize: 12)),
@@ -80,7 +80,7 @@ class _PerformanceDashboardScreenState
                       shrinkWrap: true,
                       itemCount: 3,
                       itemBuilder: (context, index) =>
-                          _AppraisalItem(name: "John Smith", dept: "Sales"),
+                          const _AppraisalItem(name: "John Smith", dept: "Sales"),
                     ),
                   ),
                 ),

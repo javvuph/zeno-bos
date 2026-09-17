@@ -21,4 +21,24 @@ class ProductVariant {
   });
 
   String get displayName => attributes.values.join(' / ');
+
+  ProductVariant copyWith({
+    String? id,
+    String? productId,
+    SKU? sku,
+    Barcode? barcode,
+    Map<String, String>? attributes,
+    double? priceAdjustment,
+    double? stockLevel,
+  }) {
+    return ProductVariant(
+      id: id ?? this.id,
+      productId: productId ?? this.productId,
+      sku: sku ?? this.sku,
+      barcode: barcode ?? this.barcode,
+      attributes: attributes ?? this.attributes,
+      priceAdjustment: priceAdjustment ?? this.priceAdjustment,
+      stockLevel: stockLevel ?? this.stockLevel,
+    );
+  }
 }

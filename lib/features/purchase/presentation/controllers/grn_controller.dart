@@ -23,7 +23,7 @@ class GRNController extends ChangeNotifier {
   GRN? get selectedGRN => _selectedGRN;
 
   // KPI Bridges
-  int get expectedToday => 5; // Mock
+  int get expectedToday => 0; // Mock
   int get receivedToday =>
       grns.where((g) => g.receivedDate.day == DateTime.now().day).length;
 

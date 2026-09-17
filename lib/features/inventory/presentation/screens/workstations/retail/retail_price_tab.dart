@@ -61,7 +61,7 @@ class RetailPriceTab extends StatelessWidget {
           ]),
           const SizedBox(height: 16),
           Row(children: [
-            Expanded(child: ZenoTextField(label: "OPENING STOCK", initialValue: p.openingStock.toString(), onChanged: (v) => controller.updateField(openingStock: int.tryParse(v)))),
+            Expanded(child: ZenoTextField(label: "OPENING STOCK", initialValue: p.openingStock == 0 ? "" : p.openingStock.toString(), onChanged: (v) => controller.updateField(openingStock: double.tryParse(v) ?? 0.0))),
             const SizedBox(width: 12),
             Expanded(child: ZenoTextField(label: "SAFETY STOCK", initialValue: p.safetyStock.toString(), onChanged: (v) => controller.updateField(safetyStock: int.tryParse(v)))),
             const SizedBox(width: 12),

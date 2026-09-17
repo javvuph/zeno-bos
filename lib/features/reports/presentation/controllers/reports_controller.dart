@@ -72,17 +72,17 @@ class ReportsController extends ChangeNotifier {
 
   // BI Dashboard KPIs
   List<DashboardKPI> get dashboardKPIs => [
-    DashboardKPI(id: 'rev', label: 'Revenue', value: '₹4.2M', change: 12.0, icon: Icons.trending_up, color: Colors.green),
-    DashboardKPI(id: 'pro', label: 'Profit', value: '₹840K', change: 8.5, icon: Icons.account_balance_wallet, color: Colors.blue),
-    DashboardKPI(id: 'exp', label: 'Expenses', value: '₹1.2M', change: -2.4, icon: Icons.shopping_cart, color: Colors.red),
-    DashboardKPI(id: 'tax', label: 'Tax Liability', value: '₹340K', change: 0.0, icon: Icons.gavel, color: Colors.orange),
+    const DashboardKPI(id: 'rev', label: 'Revenue', value: '₹0', change: 0.0, icon: Icons.trending_up, color: Colors.green),
+    const DashboardKPI(id: 'pro', label: 'Profit', value: '₹0', change: 0.0, icon: Icons.account_balance_wallet, color: Colors.blue),
+    const DashboardKPI(id: 'exp', label: 'Expenses', value: '₹0', change: 0.0, icon: Icons.shopping_cart, color: Colors.red),
+    const DashboardKPI(id: 'tax', label: 'Tax Liability', value: '₹0', change: 0.0, icon: Icons.gavel, color: Colors.orange),
   ];
 
   // Dashboard Stats
-  double get totalRevenue => 4250000.0; 
-  double get netProfit => 850000.0;
-  double get cashPosition => 1200000.0;
-  int get salesGrowth => 12; 
+  double get totalRevenue => 0.0; 
+  double get netProfit => 0.0;
+  double get cashPosition => 0.0;
+  int get salesGrowth => 0; 
 
   Map<String, dynamic> get aiRestockAdvice => {
     "category": "Fresh Produce",

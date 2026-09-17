@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:zeno/app/theme.dart';
 import 'package:zeno/core/widgets/zeno_inputs.dart';
 import 'package:zeno/core/widgets/zeno_card.dart';
 import 'package:zeno/features/inventory/presentation/controllers/product_studio_controller.dart';
@@ -30,7 +29,7 @@ class Tab4StockSupply extends StatelessWidget {
                         children: [
                           Row(
                             children: [
-                              Expanded(child: ZenoTextField(label: "Opening", initialValue: p.openingStock.toString(), onChanged: (v) => controller.updateField(openingStock: int.tryParse(v)), keyboardType: TextInputType.number)),
+                              Expanded(child: ZenoTextField(label: "Opening", initialValue: p.openingStock == 0 ? "" : p.openingStock.toString(), onChanged: (v) => controller.updateField(openingStock: double.tryParse(v) ?? 0.0), keyboardType: TextInputType.number)),
                               const SizedBox(width: 8),
                               Expanded(child: ZenoTextField(label: "Reorder", initialValue: p.reorderLevel.toString(), onChanged: (v) => controller.updateField(reorderLevel: double.tryParse(v)), keyboardType: TextInputType.number)),
                             ],

@@ -66,7 +66,7 @@ class _FnbTableManagementScreenState extends State<FnbTableManagementScreen> {
 
 class _TableWidget extends StatelessWidget {
   final String label, status; final double x, y; final int capacity; final bool isLarge;
-  const _TableWidget({required this.label, required this.status, required this.x, required this.y, required this.capacity, this.isLarge = false});
+  const _TableWidget({required this.label, required this.status, required this.x, required this.y, required this.capacity}) : isLarge = false;
 
   @override
   Widget build(BuildContext context) {

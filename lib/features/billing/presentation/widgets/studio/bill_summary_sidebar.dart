@@ -115,37 +115,37 @@ class BillSummarySidebar extends StatelessWidget {
                   crossAxisSpacing: 6,
                   childAspectRatio: 0.95,
                   physics: const NeverScrollableScrollPhysics(),
-                  children: [
+                  children: const [
                     _PaymentBtn(
                         icon: Icons.payments,
                         label: "Cash",
                         hint: "F1",
-                        color: const Color(0xFF10B981)),
+                        color: Color(0xFF10B981)),
                     _PaymentBtn(
                         icon: Icons.credit_card,
                         label: "Card",
                         hint: "F2",
-                        color: const Color(0xFF3B82F6)),
+                        color: Color(0xFF3B82F6)),
                     _PaymentBtn(
                         icon: Icons.qr_code,
                         label: "UPI",
                         hint: "F3",
-                        color: const Color(0xFFF59E0B)),
+                        color: Color(0xFFF59E0B)),
                     _PaymentBtn(
                         icon: Icons.account_balance_wallet,
                         label: "Wallet",
                         hint: "F4",
-                        color: const Color(0xFFF97316)),
+                        color: Color(0xFFF97316)),
                     _PaymentBtn(
                         icon: Icons.card_giftcard,
                         label: "Gift",
                         hint: "F5",
-                        color: const Color(0xFFEF4444)),
+                        color: Color(0xFFEF4444)),
                     _PaymentBtn(
                         icon: Icons.store,
                         label: "Credit",
                         hint: "F6",
-                        color: const Color(0xFF06B6D4)),
+                        color: Color(0xFF06B6D4)),
                   ],
                 ),
               ),

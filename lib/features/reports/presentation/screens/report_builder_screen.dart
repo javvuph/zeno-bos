@@ -73,7 +73,7 @@ class _ReportBuilderScreenState extends State<ReportBuilderScreen> {
           title: "Data Source \u0026 Module",
           children: [
             DropdownButtonFormField<ReportModule>(
-              value: _module,
+              initialValue: _module,
               decoration: const InputDecoration(labelText: "Data Module", border: OutlineInputBorder()),
               items: ReportModule.values.map((m) => DropdownMenuItem(value: m, child: Text(m.name.toUpperCase()))).toList(),
               onChanged: (v) => setState(() => _module = v!),
@@ -84,7 +84,7 @@ class _ReportBuilderScreenState extends State<ReportBuilderScreen> {
           title: "Visualization Strategy",
           children: [
             DropdownButtonFormField<ReportVisualization>(
-              value: _visualization,
+              initialValue: _visualization,
               decoration: const InputDecoration(labelText: "Primary View", border: OutlineInputBorder()),
               items: ReportVisualization.values.map((v) => DropdownMenuItem(value: v, child: Text(v.name.toUpperCase()))).toList(),
               onChanged: (v) => setState(() => _visualization = v!),

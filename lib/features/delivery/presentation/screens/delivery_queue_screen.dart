@@ -9,6 +9,8 @@ import 'package:zeno/core/di/service_locator.dart';
 import '../dialogs/pod_dialog.dart';
 import 'package:zeno/navigation/navigation_controller.dart';
 
+part 'parts/delivery_queue_widgets.part.dart';
+
 class DeliveryQueueScreen extends StatefulWidget {
   const DeliveryQueueScreen({super.key});
 
@@ -63,7 +65,6 @@ class _DeliveryQueueScreenState extends State<DeliveryQueueScreen> {
             ),
           ],
         ),
-        // STICKY FILTER BAR
         _buildStickyFilters(colors),
         Expanded(
           child: Padding(
@@ -242,12 +243,15 @@ class _DeliveryQueueScreenState extends State<DeliveryQueueScreen> {
   }
 
   Color _getStatusColor(String status) {
-    if (status == "out_for_delivery" || status == "In Transit")
+    if (status == "out_for_delivery" || status == "In Transit") {
       return const Color(0xFF00FF88);
-    if (status == "assigned" || status == "Assigned")
+    }
+    if (status == "assigned" || status == "Assigned") {
       return const Color(0xFF00D2FF);
-    if (status == "pending" || status == "Pending")
+    }
+    if (status == "pending" || status == "Pending") {
       return const Color(0xFFFF9800);
+    }
     return const Color(0xFFFF4B2B);
   }
 
@@ -258,103 +262,6 @@ class _DeliveryQueueScreenState extends State<DeliveryQueueScreen> {
         order: order,
         onConfirm: (pod) => controller.submitPOD(pod),
       ),
-    );
-  }
-}
-
-class _FilterTab extends StatelessWidget {
-  final String label;
-  final int count;
-  final bool isSelected;
-  final ZenoSemanticColors colors;
-  final bool isWarning;
-  const _FilterTab(
-      {required this.label,
-      required this.count,
-      this.isSelected = false,
-      required this.colors,
-      this.isWarning = false});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Text(label,
-            style: ZenoTypography.micro(isSelected
-                    ? colors.accentPrimary
-                    : (isWarning ? colors.statusWarning : colors.textDisabled))
-                .copyWith(
-                    fontWeight:
-                        isSelected ? FontWeight.w900 : FontWeight.w600)),
-        const SizedBox(width: 8),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-          decoration: BoxDecoration(
-              color: isSelected
-                  ? colors.accentPrimary.withValues(alpha: 0.1)
-                  : (isWarning
-                      ? colors.statusWarning.withValues(alpha: 0.1)
-                      : colors.bgTier3),
-              borderRadius: BorderRadius.circular(4)),
-          child: Text(count.toString(),
-              style: ZenoTypography.micro(isSelected
-                  ? colors.accentPrimary
-                  : (isWarning ? colors.statusWarning : colors.textSecondary))),
-        ),
-      ],
-    );
-  }
-}
-
-class _ActionBtn extends StatelessWidget {
-  final String label;
-  final IconData icon;
-  final bool isPrimary;
-  final ZenoSemanticColors colors;
-  final VoidCallback? onPressed;
-  const _ActionBtn(
-      {required this.label,
-      required this.icon,
-      this.isPrimary = false,
-      required this.colors,
-      this.onPressed});
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton.icon(
-      onPressed: onPressed ?? () {},
-      icon: Icon(icon, size: 16),
-      label: Text(label.toUpperCase(),
-          style: ZenoTypography.caption(
-                  isPrimary ? Colors.black : colors.textPrimary)
-              .copyWith(fontWeight: FontWeight.w900)),
-      style: ElevatedButton.styleFrom(
-        backgroundColor: isPrimary ? colors.accentPrimary : colors.bgTier3,
-        foregroundColor: isPrimary ? Colors.black : colors.textPrimary,
-        elevation: 0,
-        padding: const EdgeInsets.symmetric(
-            horizontal: ZenoSpacing.lg, vertical: 14),
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(ZenoRadius.md)),
-        side: isPrimary ? null : BorderSide(color: colors.borderSubtle),
-      ),
-    );
-  }
-}
-
-class _IconAction extends StatelessWidget {
-  final IconData icon;
-  final Color color;
-  const _IconAction({required this.icon, required this.color});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(6),
-      decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.05),
-          borderRadius: BorderRadius.circular(6)),
-      child: Icon(icon, size: 16, color: color),
     );
   }
 }

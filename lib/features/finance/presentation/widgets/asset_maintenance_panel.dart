@@ -23,12 +23,12 @@ class AssetMaintenancePanel extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
+          const Row(
             children: [
-              const Icon(Icons.build_circle_outlined,
+              Icon(Icons.build_circle_outlined,
                   size: 20, color: Colors.orange),
-              const SizedBox(width: 12),
-              const Text("SERVICE HISTORY",
+              SizedBox(width: 12),
+              Text("SERVICE HISTORY",
                   style: TextStyle(fontWeight: FontWeight.w900, fontSize: 13)),
             ],
           ),

@@ -106,7 +106,7 @@ class _AIReviewDialogState extends State<AIReviewDialog> {
   }
 
   Widget _buildConfidenceBadge(ZenoSemanticColors colors, double confidence) {
-    final color = confidence > 0.9 ? colors.statusSuccess : confidence > 0.7 ? colors.statusWarning : colors.statusError;
+    final color = confidence > 0.9 ? colors.statusSuccess : confidence > 0.7 ? colors.statusWarning : colors.statusDanger;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(4)),

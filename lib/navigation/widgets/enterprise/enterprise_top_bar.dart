@@ -105,12 +105,12 @@ class EnterpriseTopBar extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
-                          "John Perera",
+                          "",
                           style: TextStyle(
                               fontSize: 13, fontWeight: FontWeight.bold),
                         ),
                         Text(
-                          "Administrator",
+                          "",
                           style: TextStyle(
                               fontSize: 11, color: ZenoTheme.textSecondary),
                         ),

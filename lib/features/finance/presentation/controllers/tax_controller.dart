@@ -25,9 +25,9 @@ class TaxController extends ChangeNotifier {
   TaxRule? get selectedRule => _selectedRule;
 
   // KPI Bridges
-  double get gstCollected => 153072.0; // Mocked from Returns
-  double get gstPayable => 110572.0; // Collected - Credit
-  double get complianceRate => 100.0;
+  double get gstCollected => 0.0;
+  double get gstPayable => 0.0;
+  double get complianceRate => 0.0;
 
   Future<void> loadTaxManagement() async {
     _isLoading = true;

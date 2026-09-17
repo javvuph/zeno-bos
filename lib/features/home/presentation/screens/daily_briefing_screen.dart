@@ -9,28 +9,28 @@ class DailyBriefingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: ZenoTheme.background,
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
+      child: const SingleChildScrollView(
+        padding: EdgeInsets.all(24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               "DAILY BRIEFING",
               style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w900,
                   letterSpacing: 1.2),
             ),
-            const Text(
+            Text(
               "Your personalized priority list for today.",
               style: TextStyle(color: ZenoTheme.textSecondary),
             ),
-            const SizedBox(height: 32),
+            SizedBox(height: 32),
             CommandCenterWidget(
               title: "Immediate Attention",
               accentColor: Colors.red,
               child: Column(
-                children: const [
+                children: [
                   _BriefingItem(
                       title: "5 Inventory items out of stock",
                       priority: "Critical",
@@ -46,12 +46,12 @@ class DailyBriefingScreen extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
             CommandCenterWidget(
               title: "Today's Schedule",
               accentColor: ZenoTheme.neonCyan,
               child: Column(
-                children: const [
+                children: [
                   _BriefingItem(
                       title: "Meeting with Suppliers (Logistics)",
                       priority: "10:00 AM",
@@ -67,12 +67,12 @@ class DailyBriefingScreen extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
             CommandCenterWidget(
               title: "Drafts & Pending",
               accentColor: Colors.orange,
               child: Column(
-                children: const [
+                children: [
                   _BriefingItem(
                       title: "Draft Purchase Order: iPhone Series",
                       priority: "Draft",

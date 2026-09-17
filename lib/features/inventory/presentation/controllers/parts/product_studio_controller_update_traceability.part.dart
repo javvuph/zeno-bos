@@ -44,7 +44,7 @@ extension ProductStudioControllerUpdateTraceability on ProductStudioController {
     BusinessScale? businessScale, dynamic itemType, String? businessType,
     String? businessCategory, String? stallAssignment, double? managementRoyaltyPct,
     String? foodCategory, String? ingredientsSummary, List<String>? dietaryBadges,
-    List<String>? cupSizes, List<String>? fruitBases, List<String>? comboItems,
+    List<String>? cupSizes, List<String>? fruitBases, List<ComboItem>? comboItems,
     bool? allowRoomFolio, double? roomDeliveryCharge, double? takeawaySurcharge,
     bool? variableWeightPLU, List<String>? channelEligibility, String? division,
     bool? privateLabel, String? posHotkeyColor, String? cancellationPolicy,
@@ -175,7 +175,7 @@ extension ProductStudioControllerUpdateTraceability on ProductStudioController {
     if (dietaryBadges != null) p.dietaryBadges = dietaryBadges;
     if (cupSizes != null) p.cupSizes = cupSizes;
     if (fruitBases != null) p.fruitBases = fruitBases;
-    if (comboItems != null) p.comboItems = comboItems.map((e) => ComboItem(sku: e)).toList();
+    if (comboItems != null) p.comboItems = comboItems;
     if (allowRoomFolio != null) p.allowRoomFolio = allowRoomFolio;
     if (roomDeliveryCharge != null) p.roomDeliveryCharge = roomDeliveryCharge;
     if (takeawaySurcharge != null) p.takeawaySurcharge = takeawaySurcharge;

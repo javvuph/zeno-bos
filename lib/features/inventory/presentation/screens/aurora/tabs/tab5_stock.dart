@@ -57,8 +57,8 @@ class Tab5Stock extends StatelessWidget {
                             child: ZenoTextField(
                               key: const ValueKey('openingStock'),
                               label: "Opening Stock",
-                              initialValue: p.openingStock.toString(),
-                              onChanged: (v) => controller.updateField(openingStock: int.tryParse(v)),
+                              initialValue: p.openingStock == 0 ? "" : p.openingStock.toString(),
+                              onChanged: (v) => controller.updateField(openingStock: double.tryParse(v) ?? 0.0),
                               keyboardType: TextInputType.number,
                             ),
                           ),

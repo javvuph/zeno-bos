@@ -68,8 +68,9 @@ class _PurchaseOrderCommandCenterScreenState
         po.status != POStatus.received) {
       return ZenoTrafficLight.danger;
     }
-    if (po.status == POStatus.partiallyReceived)
+    if (po.status == POStatus.partiallyReceived) {
       return ZenoTrafficLight.warning;
+    }
     return ZenoTrafficLight.neutral;
   }
 }

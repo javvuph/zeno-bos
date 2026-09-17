@@ -1,6 +1,9 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:zeno/core/database/database_service.dart';
 import 'package:zeno/core/di/service_locator.dart';
+import 'package:zeno/features/inventory/data/services/ai_product_service.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:zeno/features/administration/presentation/controllers/store_setup_controller.dart';
 import '../../domain/repositories/i_product_repository.dart';
@@ -14,17 +17,18 @@ import '../../domain/services/replenishment_service.dart';
 import '../../domain/services/fashion_analytics_service.dart';
 import '../../domain/services/markdown_approval_service.dart';
 import '../../domain/models/mappers/product_studio_mapper.dart';
-import '../../domain/models/combo_item.dart';
 import 'product_controller.dart';
 import 'registries/sub_business_registry.dart' as sub;
 import 'registries/capability_registry.dart' as cap;
 import 'registries/capability_fashion.dart';
 import 'registries/aurora_tab_registry.dart';
 import 'registries/field_visibility_registry.dart' as field;
-import '../screens/aurora/aurora_tab_composer.dart';
 
 part 'parts/product_studio_controller_logic.part.dart';
+part 'parts/product_studio_controller_logic_persistence.part.dart';
+part 'parts/product_studio_controller_logic_fields.part.dart';
 part 'parts/product_studio_controller_variants.part.dart';
+part 'parts/product_studio_controller_variants_ai.part.dart';
 part 'parts/product_studio_controller_session.part.dart';
 part 'parts/product_studio_controller_update.part.dart';
 part 'parts/product_studio_controller_update_core.part.dart';
@@ -78,6 +82,11 @@ class ProductStudioController extends ChangeNotifier {
 
   ProductStudioData _product = ProductStudioData.empty();
   ProductStudioData get product => _product;
+
+  // Guards concurrent image picker invocations: desktop file dialogs can only
+  // have one instance open, so rapid/duplicate taps must be ignored rather than
+  // queued — otherwise the second call silently fails and looks like a dead button.
+  bool _isPickingImage = false;
 
   // --- Profile & Scoping [Enterprise V3.5] ---
   String get activeBusiness => _product.businessType;

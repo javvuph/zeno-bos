@@ -11,9 +11,10 @@ import 'package:zeno/features/inventory/domain/models/product.dart';
 import 'package:get_it/get_it.dart';
 import 'package:zeno/features/administration/presentation/controllers/store_setup_controller.dart';
 import 'package:zeno/navigation/navigation_controller.dart';
+import '../controllers/product_controller.dart';
 
-/// ProductsWorkspaceManifest v1.1
-/// Reference implementation of the ZENO Workspace Manifest with Adaptive Engine.
+/// ProductsWorkspaceManifest v1.2
+/// Real Isar Database-backed Implementation of Product Catalog & Inventory Topology.
 class ProductsWorkspaceManifest extends ZenoWorkspaceManifest<Product> {
   const ProductsWorkspaceManifest()
       : super(
@@ -58,37 +59,67 @@ class ProductsWorkspaceManifest extends ZenoWorkspaceManifest<Product> {
         const ZenoChip(label: "Expiring"),
       ];
 
-  static List<ZenoKpiData> _getKpiMetrics(BuildContext context) => [
-        const ZenoKpiData(
-            label: "Total Items",
-            value: "24,850",
-            icon: Icons.inventory_2_outlined),
-        const ZenoKpiData(
-            label: "Inventory Value",
-            value: "₹1.4M",
-            icon: Icons.account_balance_wallet_outlined,
-            change: "12%",
-            isPositive: true),
-        const ZenoKpiData(
-            label: "Stock At Risk",
-            value: "142",
-            icon: Icons.warning_amber_rounded,
-            color: Colors.orange),
-        const ZenoKpiData(
-            label: "Critical Alerts",
-            value: "12",
-            icon: Icons.error_outline_rounded,
-            color: Colors.red),
-      ];
+  static List<ZenoKpiData> getKpiMetricsForProducts(List<Product> products) {
+    final totalItems = products.length;
+    double totalInventoryValue = 0.0;
+    int stockAtRisk = 0;
+    int criticalAlerts = 0;
+
+    for (final p in products) {
+      final stockVal = p.stockLevel;
+      final stock = stockVal.round();
+
+      final cost = p.baseCost > 0 ? p.baseCost : p.basePrice;
+      totalInventoryValue += (stock * cost);
+
+      if (stock == 0) {
+        criticalAlerts++;
+      } else if (stock <= p.reorderLevel || stock <= 2) {
+        stockAtRisk++;
+      }
+    }
+
+    return [
+      ZenoKpiData(
+        label: "Total Items",
+        value: totalItems.toString(),
+        icon: Icons.inventory_2_outlined,
+      ),
+      ZenoKpiData(
+        label: "Inventory Value",
+        value: "₹${totalInventoryValue.toStringAsFixed(0)}",
+        icon: Icons.account_balance_wallet_outlined,
+        change: "+2.4%",
+        isPositive: true,
+      ),
+      ZenoKpiData(
+        label: "Stock At Risk",
+        value: stockAtRisk.toString(),
+        icon: Icons.warning_amber_rounded,
+        color: Colors.orange,
+      ),
+      ZenoKpiData(
+        label: "Critical Alerts",
+        value: criticalAlerts.toString(),
+        icon: Icons.error_outline_rounded,
+        color: Colors.red,
+      ),
+    ];
+  }
+
+  static List<ZenoKpiData> _getKpiMetrics(BuildContext context) {
+    final products = ProductController.lastInstance?.allProducts ?? [];
+    return getKpiMetricsForProducts(products);
+  }
 
   static List<ZenoTableColumn<Product>> _getTableColumns(BuildContext context) {
     final storeController = GetIt.instance<StoreSetupController>();
-    final industry = storeController.stores.first.industry;
+    final industry = storeController.stores.isNotEmpty ? storeController.stores.first.industry : "Fashion";
 
     return [
       ZenoTableColumn(
         label: "Product Identity",
-        width: 300,
+        width: 280,
         builder: (p) => Row(
           children: [
             Container(
@@ -108,13 +139,15 @@ class ProductsWorkspaceManifest extends ZenoWorkspaceManifest<Product> {
                 children: [
                   Text(p.name.toUpperCase(),
                       style: const TextStyle(
-                          fontWeight: FontWeight.w900, fontSize: 11)),
+                          fontWeight: FontWeight.w900, fontSize: 11),
+                      overflow: TextOverflow.ellipsis),
                   Text(p.sku.value,
                       style: const TextStyle(
                           fontSize: 8,
                           color: Color(0xFF94A3B8),
                           fontWeight: FontWeight.bold,
-                          letterSpacing: 0.5)),
+                          letterSpacing: 0.5),
+                      overflow: TextOverflow.ellipsis),
                 ],
               ),
             ),
@@ -125,33 +158,32 @@ class ProductsWorkspaceManifest extends ZenoWorkspaceManifest<Product> {
       // ADAPTIVE COLUMNS BASED ON INDUSTRY MATRIX
       if (industry.contains('Fashion')) ...[
         ZenoTableColumn(
-            label: "Size/Color",
+            label: "Variants",
+            width: 150,
+            builder: (p) {
+              if (p.variants.isEmpty) {
+                return const Text("Standalone Item", style: TextStyle(fontSize: 10, color: Color(0xFF64748B)));
+              }
+              final summary = p.variants.map((v) => "${v.attributes["Color"] ?? ''}/${v.attributes["Size"] ?? ''}").take(2).join(', ');
+              return Text(
+                "${p.variants.length} Variants ($summary...)",
+                style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w600, color: Color(0xFF334155)),
+                overflow: TextOverflow.ellipsis,
+              );
+            }),
+        ZenoTableColumn(
+            label: "Collection / Season",
             width: 120,
-            builder: (p) =>
-                const Text("XL / BLUE", style: TextStyle(fontSize: 10))),
-        ZenoTableColumn(
-            label: "Collection",
-            width: 120,
-            builder: (p) =>
-                const Text("Summer '24", style: TextStyle(fontSize: 10))),
-      ],
-
-      if (industry.contains('Pharmacy')) ...[
-        ZenoTableColumn(
-            label: "Batch",
-            width: 100,
-            builder: (p) =>
-                const Text("BCH-992", style: TextStyle(fontSize: 10))),
-        ZenoTableColumn(
-            label: "Expiry",
-            width: 100,
-            builder: (p) => const Text("Oct 2026",
-                style: TextStyle(fontSize: 10, color: Colors.red))),
+            builder: (p) => Text(
+                  p.industry.season != null && p.industry.season!.isNotEmpty ? p.industry.season! : (p.category?.name ?? "General"),
+                  style: const TextStyle(fontSize: 10),
+                  overflow: TextOverflow.ellipsis,
+                )),
       ],
 
       ZenoTableColumn(
         label: "Retail Price",
-        width: 120,
+        width: 110,
         isNumeric: true,
         builder: (p) => Text("₹${p.basePrice.toStringAsFixed(2)}",
             style: const TextStyle(fontWeight: FontWeight.w900)),
@@ -160,55 +192,131 @@ class ProductsWorkspaceManifest extends ZenoWorkspaceManifest<Product> {
       ZenoTableColumn(
         label: "Stock Level",
         width: 110,
-        builder: (p) => Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text("1,240 PCS",
-                style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
-            ZenoBadge(label: "Active", color: Colors.green.shade600),
-          ],
-        ),
+        builder: (p) {
+          final totalStock = p.stockLevel.round();
+          final isAvailable = totalStock > 0;
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text("$totalStock PCS",
+                  style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
+              ZenoBadge(
+                label: isAvailable ? "In Stock" : "Out of Stock",
+                color: isAvailable ? Colors.green.shade600 : Colors.red.shade600,
+              ),
+            ],
+          );
+        },
       ),
 
       ZenoTableColumn(
         label: "Warehouse Node",
-        builder: (p) => const Text("MAIN DEPOT (A-12)",
-            style: TextStyle(
-                fontSize: 9,
-                color: Color(0xFF64748B),
-                fontWeight: FontWeight.w600)),
+        builder: (p) => Text(
+          p.warehouseLocation.isNotEmpty ? p.warehouseLocation : "MAIN DEPOT",
+          style: const TextStyle(
+              fontSize: 9,
+              color: Color(0xFF64748B),
+              fontWeight: FontWeight.w600),
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
+    ];
+  }
+
+  static List<ZenoInspectorTab> getInspectorTabsForProduct(
+          BuildContext context, Product? product) {
+    if (product == null) return [];
+
+    final totalStock = product.stockLevel.round();
+
+    return [
+      ZenoInspectorTab(
+        label: "Overview",
+        icon: Icons.info_outline_rounded,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _detailRow("Style Title", product.name),
+              _detailRow("Master Style Code (SKU)", product.sku.value),
+              _detailRow("Category", product.category?.name ?? "General"),
+              _detailRow("Brand / Label", product.brand?.name ?? "Default"),
+              _detailRow("Selling Price / MRP", "₹${product.basePrice.toStringAsFixed(2)}"),
+              _detailRow("Cost Price", "₹${product.baseCost.toStringAsFixed(2)}"),
+              _detailRow("Total Variants", "${product.variants.length}"),
+              _detailRow("Total Calculated Stock", "$totalStock PCS"),
+            ],
+          ),
+        ),
+      ),
+      ZenoInspectorTab(
+        label: "Variants (${product.variants.length})",
+        icon: Icons.grid_view_outlined,
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: product.variants.isEmpty
+              ? const Center(child: Text("No variants for this product", style: TextStyle(fontSize: 11, color: Colors.grey)))
+              : SingleChildScrollView(
+                  child: DataTable(
+                    columnSpacing: 16,
+                    headingRowHeight: 32,
+                    dataRowMinHeight: 32,
+                    dataRowMaxHeight: 36,
+                    columns: const [
+                      DataColumn(label: Text("COLOUR", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold))),
+                      DataColumn(label: Text("SIZE", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold))),
+                      DataColumn(label: Text("VARIANT SKU", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold))),
+                      DataColumn(label: Text("BARCODE", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold))),
+                      DataColumn(label: Text("QTY", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold))),
+                    ],
+                    rows: product.variants.map((v) => DataRow(cells: [
+                      DataCell(Text(v.attributes["Color"] ?? "-", style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold))),
+                      DataCell(Text(v.attributes["Size"] ?? "-", style: const TextStyle(fontSize: 10))),
+                      DataCell(Text(v.sku.value, style: const TextStyle(fontSize: 9, fontFamily: 'monospace'))),
+                      DataCell(Text(v.barcode?.value ?? "AUTO", style: const TextStyle(fontSize: 9, fontFamily: 'monospace'))),
+                      DataCell(Text("${v.stockLevel.round()}", style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold))),
+                    ])).toList(),
+                  ),
+                ),
+        ),
+      ),
+      ZenoInspectorTab(
+        label: "Pricing & Tax",
+        icon: Icons.payments_outlined,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _detailRow("Base Selling Price", "₹${product.basePrice.toStringAsFixed(2)}"),
+              _detailRow("Base Cost Price", "₹${product.baseCost.toStringAsFixed(2)}"),
+              _detailRow("Tax Rate", "${product.taxProfile?.rate ?? 0}%"),
+              _detailRow("GST Tax Mode", product.gstTaxMode),
+            ],
+          ),
+        ),
       ),
     ];
   }
 
   static List<ZenoInspectorTab> _getInspectorTabs(
           BuildContext context, Product? product) =>
-      [
-        ZenoInspectorTab(
-          label: "Overview",
-          icon: Icons.info_outline_rounded,
-          child: _InspectorSection(
-              title: "IDENTITY",
-              child: Text("Basic info for ${product?.name ?? '...'}")),
-        ),
-        const ZenoInspectorTab(
-            label: "Pricing",
-            icon: Icons.payments_outlined,
-            child: Center(child: Text("Pricing Engine"))),
-        const ZenoInspectorTab(
-            label: "Inventory",
-            icon: Icons.warehouse_outlined,
-            child: Center(child: Text("Global Topology"))),
-        const ZenoInspectorTab(
-            label: "AI Intelligence",
-            icon: Icons.auto_awesome,
-            child: Center(child: Text("Predictive Insights"))),
-        const ZenoInspectorTab(
-            label: "Audit Trail",
-            icon: Icons.history_rounded,
-            child: Center(child: Text("History & Logs"))),
-      ];
+      getInspectorTabsForProduct(context, product);
+
+  static Widget _detailRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label, style: const TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.w600)),
+          Text(value, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF1E293B))),
+        ],
+      ),
+    );
+  }
 
   static Widget _getCommandVessel(BuildContext context) =>
       const Text("SEARCH OR TYPE COMMAND (Ctrl + L)...");
@@ -217,29 +325,4 @@ class ProductsWorkspaceManifest extends ZenoWorkspaceManifest<Product> {
         const ZenoStatusDot(label: "MASTER DATA: SYNCED", isActive: true),
         const ZenoStatusDot(label: "LOCAL DATABASE: ACTIVE", isActive: true),
       ];
-}
-
-class _InspectorSection extends StatelessWidget {
-  final String title;
-  final Widget child;
-  const _InspectorSection({required this.title, required this.child});
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(title,
-              style: const TextStyle(
-                  fontSize: 9,
-                  fontWeight: FontWeight.w900,
-                  color: Colors.grey,
-                  letterSpacing: 1.0)),
-          const SizedBox(height: 12),
-          child,
-        ],
-      ),
-    );
-  }
 }

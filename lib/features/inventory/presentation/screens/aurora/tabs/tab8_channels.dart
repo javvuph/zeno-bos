@@ -2,7 +2,7 @@
 import 'package:zeno/app/theme.dart';
 import 'package:zeno/core/widgets/zeno_inputs.dart';
 import 'package:zeno/core/widgets/zeno_card.dart';
-import 'package:zeno/core/widgets/zeno_image_widget.dart';
+import 'package:zeno/core/widgets/zeno_image_gallery.dart';
 import '../../../../domain/models/product_studio_enums.dart';
 import '../../../controllers/product_studio_controller.dart';
 import 'package:zeno/core/layouts/zeno_responsive_layout.dart';
@@ -37,32 +37,16 @@ class _Tab8ChannelsState extends State<Tab8Channels> {
                 Expanded(
                   flex: 4,
                   child: _compactSection("PRODUCT IMAGES", colors, [
-                    const Text("PRIMARY IMAGE", style: TextStyle(fontSize: 8, fontWeight: FontWeight.w900, color: Colors.grey, letterSpacing: 0.5)),
-                    const SizedBox(height: 6),
-                    InkWell(
-                      onTap: () => widget.controller.pickPrimaryImage(),
-                      child: Container(
-                        width: double.infinity,
-                        height: 110, 
-                        decoration: BoxDecoration(color: colors.bgTier3, borderRadius: BorderRadius.circular(12), border: Border.all(color: colors.borderSubtle)),
-                        child: currentP.primaryImageUrl.isEmpty 
-                          ? const Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [Icon(Icons.add_a_photo_outlined, size: 24, color: Colors.grey), SizedBox(height: 4), Text("Upload Primary", style: TextStyle(fontSize: 9, color: Colors.grey))]))
-                          : ClipRRect(borderRadius: BorderRadius.circular(11), child: ZenoImageWidget(url: currentP.primaryImageUrl, fit: BoxFit.contain)),
-                      ),
+                    ZenoImageGallery(
+                      primaryUrl: currentP.primaryImageUrl,
+                      galleryUrls: currentP.galleryUrls,
+                      onPickPrimary: widget.controller.pickPrimaryImage,
+                      onDeletePrimary: widget.controller.deletePrimaryImage,
+                      onAddToGallery: widget.controller.addToGallery,
+                      onRemoveGalleryImage: widget.controller.removeGalleryImage,
+                      onSetGalleryAsPrimary: widget.controller.setGalleryImageAsPrimary,
+                      slotSize: 60,
                     ),
-                    const SizedBox(height: 10), 
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text("PRODUCT GALLERY", style: TextStyle(fontSize: 8, fontWeight: FontWeight.w900, color: Colors.grey, letterSpacing: 0.5)),
-                        InkWell(
-                          onTap: () => widget.controller.addToGallery(),
-                          child: const Text("+ Upload More", style: TextStyle(fontSize: 8, fontWeight: FontWeight.bold, color: Color(0xFF6366F1))),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 6),
-                    _buildGallerySlots(currentP.galleryUrls, isCompact: true),
                   ]),
                 ),
                 const SizedBox(width: 12),
@@ -106,42 +90,16 @@ class _Tab8ChannelsState extends State<Tab8Channels> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            if (widget.controller.isFieldVisible('primaryImageUrl')) ...[
-                              const Text("PRIMARY IMAGE", style: TextStyle(fontSize: 8, fontWeight: FontWeight.w900, color: Colors.grey, letterSpacing: 0.5)),
-                              const SizedBox(height: 6),
-                              Container(
-                                width: double.infinity,
-                                height: 160,
-                                decoration: BoxDecoration(
-                                  color: colors.bgTier3,
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(color: colors.borderSubtle),
-                                ),
-                                child: currentP.primaryImageUrl.isEmpty 
-                                  ? Center(child: IconButton(icon: const Icon(Icons.add_a_photo_outlined, size: 32, color: Colors.grey), onPressed: () => widget.controller.pickPrimaryImage()))
-                                  : Stack(
-                                      children: [
-                                        ClipRRect(borderRadius: BorderRadius.circular(11), child: ZenoImageWidget(url: currentP.primaryImageUrl, width: double.infinity, height: 160, fit: BoxFit.contain)),
-                                        Positioned(top: 4, right: 4, child: IconButton(icon: const Icon(Icons.edit_outlined, color: Colors.white, size: 16), onPressed: () => widget.controller.pickPrimaryImage(), style: IconButton.styleFrom(backgroundColor: Colors.black45, padding: EdgeInsets.zero, visualDensity: VisualDensity.compact))),
-                                      ],
-                                    ),
+                            if (widget.controller.isFieldVisible('primaryImageUrl') || widget.controller.isFieldVisible('galleryUrls'))
+                              ZenoImageGallery(
+                                primaryUrl: currentP.primaryImageUrl,
+                                galleryUrls: currentP.galleryUrls,
+                                onPickPrimary: widget.controller.pickPrimaryImage,
+                                onDeletePrimary: widget.controller.deletePrimaryImage,
+                                onAddToGallery: widget.controller.addToGallery,
+                                onRemoveGalleryImage: widget.controller.removeGalleryImage,
+                                onSetGalleryAsPrimary: widget.controller.setGalleryImageAsPrimary,
                               ),
-                              const SizedBox(height: 12),
-                            ],
-                            if (widget.controller.isFieldVisible('galleryUrls')) ...[
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text("GALLERY IMAGES", style: TextStyle(fontSize: 8, fontWeight: FontWeight.w900, color: Colors.grey, letterSpacing: 0.5)),
-                                  InkWell(
-                                    onTap: () => widget.controller.addToGallery(),
-                                    child: const Text("+ Upload", style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: Color(0xFF6366F1))),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 6),
-                              _buildGallerySlots(currentP.galleryUrls, isCompact: false),
-                            ],
                           ],
                         ),
                       ),
@@ -210,103 +168,6 @@ class _Tab8ChannelsState extends State<Tab8Channels> {
     );
   }
 
-  Widget _buildGallerySlots(List<String> urls, {required bool isCompact}) {
-    final double slotSize = isCompact ? 48 : 60;
-    final int defaultSlotCount = 3;
-    final int totalDisplaySlots = urls.length > defaultSlotCount ? urls.length : defaultSlotCount;
-
-    List<Widget> slots = [];
-
-    for (int i = 0; i < totalDisplaySlots; i++) {
-      if (i < urls.length) {
-        final url = urls[i];
-        slots.add(
-          Stack(
-            children: [
-              Container(
-                width: slotSize,
-                height: slotSize,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: const Color(0xFFE2E8F0)),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(7),
-                  child: ZenoImageWidget(url: url, fit: BoxFit.cover),
-                ),
-              ),
-              Positioned(
-                top: 2,
-                right: 2,
-                child: InkWell(
-                  onTap: () => widget.controller.removeGalleryImage(i),
-                  child: Container(
-                    padding: const EdgeInsets.all(2),
-                    decoration: const BoxDecoration(color: Colors.black54, shape: BoxShape.circle),
-                    child: const Icon(Icons.close, size: 10, color: Colors.white),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      } else {
-        final slotNum = i + 1;
-        slots.add(
-          InkWell(
-            onTap: () => widget.controller.addToGallery(),
-            child: Container(
-              width: slotSize,
-              height: slotSize,
-              decoration: BoxDecoration(
-                color: const Color(0xFFF8FAFC),
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: const Color(0xFFE2E8F0)),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.add_photo_alternate_outlined, size: 16, color: Color(0xFFCBD5E1)),
-                  const SizedBox(height: 2),
-                  Text("Slot $slotNum", style: const TextStyle(fontSize: 8, fontWeight: FontWeight.bold, color: Color(0xFF94A3B8))),
-                ],
-              ),
-            ),
-          ),
-        );
-      }
-    }
-
-    // Always add "+" button at end
-    slots.add(
-      InkWell(
-        onTap: () => widget.controller.addToGallery(),
-        child: Container(
-          width: slotSize,
-          height: slotSize,
-          decoration: BoxDecoration(
-            color: const Color(0xFFEEF2FF),
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: const Color(0xFF818CF8)),
-          ),
-          child: const Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.add_rounded, size: 20, color: Color(0xFF6366F1)),
-              Text("Add", style: TextStyle(fontSize: 8, fontWeight: FontWeight.w800, color: Color(0xFF6366F1))),
-            ],
-          ),
-        ),
-      ),
-    );
-
-    return Wrap(
-      spacing: 6,
-      runSpacing: 6,
-      children: slots,
-    );
-  }
-
   Widget _channelToggle(String l, bool v, ValueChanged<bool> o) => Row(
     mainAxisSize: MainAxisSize.min,
     children: [
@@ -316,13 +177,51 @@ class _Tab8ChannelsState extends State<Tab8Channels> {
   );
 
   Widget _compactSection(String title, ZenoSemanticColors colors, List<Widget> children) {
-    return ZenoCard(
-      title: title,
-      padding: const EdgeInsets.all(12),
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Color(0x14667EEA), Color(0x0D764BA2)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        border: Border.all(color: const Color(0x33667EEA)),
+        borderRadius: BorderRadius.circular(10),
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: children,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 3,
+                height: 16,
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFF667EEA), Color(0xFF764BA2)],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                title.toUpperCase(),
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF667EEA),
+                  letterSpacing: 0.5,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          ...children,
+        ],
       ),
     );
   }

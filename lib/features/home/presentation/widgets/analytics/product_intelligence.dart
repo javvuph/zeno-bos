@@ -42,12 +42,12 @@ class ProductIntelligence extends StatelessWidget {
                           animationDuration: 0,
                         )
                       ],
-                      annotations: <CircularChartAnnotation>[
+                      annotations: const <CircularChartAnnotation>[
                         CircularChartAnnotation(
                           widget: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Text("TOTAL",
+                              Text("TOTAL",
                                   style: TextStyle(
                                       fontSize: 8,
                                       color: ZenoTheme.textSecondary,

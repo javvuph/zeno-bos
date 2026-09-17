@@ -46,24 +46,24 @@ class AIBillingHubScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 24),
-                Row(
+                const Row(
                   children: [
-                    const Expanded(
+                    Expanded(
                         child: ZenoStatCard(
                             label: "Upsell Success",
                             value: "24%",
                             change: "+3%",
                             icon: Icons.trending_up,
                             iconColor: Color(0xFF00F0FF))),
-                    const SizedBox(width: 24),
-                    const Expanded(
+                    SizedBox(width: 24),
+                    Expanded(
                         child: ZenoStatCard(
                             label: "Fraud Risk",
                             value: "Low",
                             icon: Icons.security,
                             iconColor: Color(0xFF00FF88))),
-                    const SizedBox(width: 24),
-                    const Expanded(
+                    SizedBox(width: 24),
+                    Expanded(
                         child: ZenoStatCard(
                             label: "AI Bill Checks",
                             value: "850",

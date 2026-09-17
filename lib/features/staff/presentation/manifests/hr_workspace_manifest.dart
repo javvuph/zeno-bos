@@ -121,13 +121,13 @@ class HRWorkspaceManifest extends ZenoWorkspaceManifest<Employee> {
         ),
         ZenoTableColumn(
           label: "PERFORMANCE",
-          builder: (e) => Row(
+          builder: (e) => const Row(
             children: [
-              const Icon(Icons.star_rounded, size: 12, color: Colors.amber),
-              const SizedBox(width: 4),
-              const Text("4.8", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
-              const Spacer(),
-              const ZenoBadge(label: "TOP TALENT", color: Colors.purple, isSolid: false),
+              Icon(Icons.star_rounded, size: 12, color: Colors.amber),
+              SizedBox(width: 4),
+              Text("4.8", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
+              Spacer(),
+              ZenoBadge(label: "TOP TALENT", color: Colors.purple, isSolid: false),
             ],
           ),
         ),

@@ -26,17 +26,17 @@ class AIForecastingHub extends StatelessWidget {
                 key: const ValueKey('ai_forecasting_cartesian_chart'),
                 plotAreaBorderWidth: 0,
                 margin: EdgeInsets.zero,
-                primaryXAxis: charts.DateTimeAxis(
-                  majorGridLines: const charts.MajorGridLines(width: 0),
+                primaryXAxis: const charts.DateTimeAxis(
+                  majorGridLines: charts.MajorGridLines(width: 0),
                   labelStyle:
-                      const TextStyle(fontSize: 9, color: ZenoTheme.textSecondary),
+                      TextStyle(fontSize: 9, color: ZenoTheme.textSecondary),
                 ),
-                primaryYAxis: charts.NumericAxis(
-                  majorGridLines: const charts.MajorGridLines(
+                primaryYAxis: const charts.NumericAxis(
+                  majorGridLines: charts.MajorGridLines(
                       color: ZenoTheme.border, dashArray: [5, 5]),
-                  axisLine: const charts.AxisLine(width: 0),
+                  axisLine: charts.AxisLine(width: 0),
                   labelStyle:
-                      const TextStyle(fontSize: 9, color: ZenoTheme.textSecondary),
+                      TextStyle(fontSize: 9, color: ZenoTheme.textSecondary),
                 ),
                 tooltipBehavior:
                     charts.TooltipBehavior(enable: true, header: "Forecast", animationDuration: 0),

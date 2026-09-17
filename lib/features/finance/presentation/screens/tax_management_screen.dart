@@ -67,17 +67,17 @@ class _TaxManagementScreenState extends State<TaxManagementScreen> {
                         _TaxRateItem(
                             label: "Standard GST",
                             rate: "18%",
-                            color: Color(0xFF38ef7d),
+                            color: const Color(0xFF38ef7d),
                             colors: colors),
                         _TaxRateItem(
                             label: "Reduced VAT",
                             rate: "5%",
-                            color: Color(0xFF00D2FF),
+                            color: const Color(0xFF00D2FF),
                             colors: colors),
                         _TaxRateItem(
                             label: "Luxury Surcharge",
                             rate: "28%",
-                            color: Color(0xFFee0979),
+                            color: const Color(0xFFee0979),
                             colors: colors),
                       ],
                     ),

@@ -5,6 +5,8 @@ import 'package:zeno/core/widgets/zeno_table.dart';
 export 'package:zeno/core/widgets/zeno_table.dart'
     show ZenoTable, ZenoTableColumn;
 
+part 'parts/zeno_data_grid_toolbar.part.dart';
+
 class ZenoDataGridTemplate<T> extends StatefulWidget {
   final String title;
   final String? subtitle;
@@ -14,6 +16,8 @@ class ZenoDataGridTemplate<T> extends StatefulWidget {
   final Widget? primaryAction;
   final List<Widget> bulkActions;
   final Function(T)? onRowTap;
+  final ValueChanged<List<T>>? onDeleteRequested;
+  final ValueChanged<List<List<String>>>? onPaste;
   final bool isLoading;
   final int totalCount;
   final Function(String)? onSearch;
@@ -29,6 +33,8 @@ class ZenoDataGridTemplate<T> extends StatefulWidget {
     this.primaryAction,
     this.bulkActions = const [],
     this.onRowTap,
+    this.onDeleteRequested,
+    this.onPaste,
     this.isLoading = false,
     this.totalCount = 0,
     this.onSearch,
@@ -48,34 +54,30 @@ class _ZenoDataGridTemplateState<T> extends State<ZenoDataGridTemplate<T>> {
     final colors = Theme.of(context).extension<ZenoSemanticColors>()!;
 
     return Container(
-      color: colors.bgTier1, // Spec: Background bgTier1
+      color: colors.bgTier1,
       child: Stack(
         children: [
           Column(
             children: [
-              // PAGE HEADER
               _buildHeader(colors),
-
-              // TOOLBAR (Filters & Search)
               _buildToolbar(colors),
-
-              // DATA GRID (Table)
               Expanded(
                 child: ZenoTable<T>(
                   items: widget.items,
                   columns: widget.columns,
                   isLoading: widget.isLoading,
                   selectedItems: _selectedItems,
+                  onSelectionChanged: (selection) {
+                    setState(() => _selectedItems = selection);
+                  },
+                  onDeleteRequested: widget.onDeleteRequested,
+                  onPaste: widget.onPaste,
                   onRowTap: widget.onRowTap,
                 ),
               ),
-
-              // PAGINATION FOOTER
               _buildPagination(colors),
             ],
           ),
-
-          // BULK ACTIONS OVERLAY
           if (_selectedItems.isNotEmpty) _buildBulkActionsOverlay(colors),
         ],
       ),
@@ -123,14 +125,13 @@ class _ZenoDataGridTemplateState<T> extends State<ZenoDataGridTemplate<T>> {
       height: 44,
       padding: const EdgeInsets.symmetric(horizontal: 24),
       decoration: BoxDecoration(
-        color: colors.bgTier2, // Spec: bgTier2 for toolbar
+        color: colors.bgTier2,
         border: Border(bottom: BorderSide(color: colors.borderSubtle)),
       ),
       child: Row(
         children: [
-          // Fuzzy Search Box
           Container(
-            width: 320, // Spec: 320px
+            width: 320,
             height: 28,
             decoration: BoxDecoration(
               color: colors.bgTier1,
@@ -164,7 +165,6 @@ class _ZenoDataGridTemplateState<T> extends State<ZenoDataGridTemplate<T>> {
             ),
           ),
           const Spacer(),
-          // Action Icons
           _ToolbarIcon(
               icon: Icons.filter_list_rounded,
               colors: colors,
@@ -191,7 +191,7 @@ class _ZenoDataGridTemplateState<T> extends State<ZenoDataGridTemplate<T>> {
 
   Widget _buildBulkActionsOverlay(ZenoSemanticColors colors) {
     return Positioned(
-      bottom: 64, // Floating above pagination
+      bottom: 64,
       left: 0,
       right: 0,
       child: Center(
@@ -255,7 +255,6 @@ class _ZenoDataGridTemplateState<T> extends State<ZenoDataGridTemplate<T>> {
                 fontSize: 11, color: colors.textSecondary, fontFamily: 'Inter'),
           ),
           const Spacer(),
-          // Simple Page Stepper
           _PageArrow(icon: Icons.chevron_left_rounded, colors: colors),
           const SizedBox(width: 8),
           _PageNumber(label: "1", isActive: true, colors: colors),
@@ -266,85 +265,5 @@ class _ZenoDataGridTemplateState<T> extends State<ZenoDataGridTemplate<T>> {
         ],
       ),
     );
-  }
-}
-
-class _ToolbarIcon extends StatelessWidget {
-  final IconData icon;
-  final String tooltip;
-  final ZenoSemanticColors colors;
-  final VoidCallback? onTap;
-
-  const _ToolbarIcon(
-      {required this.icon,
-      required this.tooltip,
-      required this.colors,
-      this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return Tooltip(
-      message: tooltip,
-      child: IconButton(
-        onPressed: onTap ?? () {},
-        icon: Icon(icon, size: 18, color: colors.textSecondary),
-        visualDensity: VisualDensity.compact,
-        hoverColor: colors.bgHover,
-      ),
-    );
-  }
-}
-
-class _PageNumber extends StatelessWidget {
-  final String label;
-  final bool isActive;
-  final ZenoSemanticColors colors;
-
-  const _PageNumber(
-      {required this.label, required this.colors, this.isActive = false});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 24,
-      height: 24,
-      alignment: Alignment.center,
-      margin: const EdgeInsets.symmetric(horizontal: 2),
-      decoration: BoxDecoration(
-        color: isActive
-            ? colors.accentPrimary.withValues(alpha: 0.1)
-            : Colors.transparent,
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          fontSize: 11,
-          fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
-          color: isActive ? colors.accentPrimary : colors.textSecondary,
-        ),
-      ),
-    );
-  }
-}
-
-class _PageArrow extends StatelessWidget {
-  final IconData icon;
-  final ZenoSemanticColors colors;
-  const _PageArrow({required this.icon, required this.colors});
-
-  @override
-  Widget build(BuildContext context) {
-    return Icon(icon, size: 18, color: colors.textSecondary);
-  }
-}
-
-class _VerticalDivider extends StatelessWidget {
-  final ZenoSemanticColors colors;
-  const _VerticalDivider({required this.colors});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(width: 1, height: 16, color: colors.borderSubtle);
   }
 }

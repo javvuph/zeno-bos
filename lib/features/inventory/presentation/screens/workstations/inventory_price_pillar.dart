@@ -75,7 +75,7 @@ class InventoryPricePillar extends StatelessWidget {
                       key: const ValueKey('openingStock'),
                       label: "Opening Stock",
                       initialValue: p.openingStock == 0 ? "" : p.openingStock.toString(),
-                      onChanged: (v) => controller.updateField(openingStock: int.tryParse(v)),
+                      onChanged: (v) => controller.updateField(openingStock: double.tryParse(v) ?? 0.0),
                       width: ZenoFieldWidth.micro,
                     ),
                     ZenoTextField(

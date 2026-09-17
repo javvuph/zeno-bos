@@ -96,7 +96,7 @@ class _JournalEntryFormScreenState extends State<JournalEntryFormScreen> {
                       Expanded(
                         flex: 3,
                         child: DropdownButtonFormField<String>(
-                          value: line.accountId.isEmpty ? null : line.accountId,
+                          initialValue: line.accountId.isEmpty ? null : line.accountId,
                           decoration:
                               const InputDecoration(labelText: "Account"),
                           items: _controller.accounts

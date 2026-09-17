@@ -88,24 +88,24 @@ class _FinanceAIHubScreenState extends State<FinanceAIHubScreen> {
                   ),
                 ),
                 const SizedBox(height: ZenoSpacing.xl),
-                Row(
+                const Row(
                   children: [
-                    const Expanded(
+                    Expanded(
                         child: ZenoStatCard(
                             label: "FORECAST ACCURACY",
                             value: "98.4%",
                             change: "+0.5%",
                             icon: Icons.insights,
                             iconColor: Color(0xFF38ef7d))),
-                    const SizedBox(width: ZenoSpacing.lg),
-                    const Expanded(
+                    SizedBox(width: ZenoSpacing.lg),
+                    Expanded(
                         child: ZenoStatCard(
                             label: "FRAUD RISK",
                             value: "NEGLIGIBLE",
                             icon: Icons.security,
                             iconColor: Color(0xFF00FF88))),
-                    const SizedBox(width: ZenoSpacing.lg),
-                    const Expanded(
+                    SizedBox(width: ZenoSpacing.lg),
+                    Expanded(
                         child: ZenoStatCard(
                             label: "BUDGET COMPLIANCE",
                             value: "92%",

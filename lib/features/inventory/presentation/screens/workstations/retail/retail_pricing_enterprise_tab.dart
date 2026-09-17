@@ -30,7 +30,7 @@ class RetailPricingEnterpriseTab extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Column(children: [
           Row(children: [
-            Expanded(child: ZenoTextField(label: "FUTURE SELLING PRICE", initialValue: "0", prefix: const Text("₹"))),
+            const Expanded(child: ZenoTextField(label: "FUTURE SELLING PRICE", initialValue: "0", prefix: Text("₹"))),
             const SizedBox(width: 12),
             Expanded(child: _datePicker("EFFECTIVE FROM", p.priceEffectiveFrom, (d) => controller.updateField(priceEffectiveFrom: d))),
           ]),

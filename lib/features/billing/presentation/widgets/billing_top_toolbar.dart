@@ -108,17 +108,17 @@ class BillingTopToolbar extends StatelessWidget {
   }
 
   Widget _buildTerminalInfo() {
-    return Row(
+    return const Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        _TagPill(label: "POS", color: const Color(0xFF6366F1), isSolid: true),
-        const SizedBox(width: 6),
+        _TagPill(label: "POS", color: Color(0xFF6366F1), isSolid: true),
+        SizedBox(width: 6),
         _TagPill(
             label: "Retail Mode",
-            color: const Color(0xFF10B981),
+            color: Color(0xFF10B981),
             hasDropdown: true),
-        const SizedBox(width: 12),
-        const Column(
+        SizedBox(width: 12),
+        Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -173,20 +173,20 @@ class BillingTopToolbar extends StatelessWidget {
   }
 
   Widget _buildUserProfile() {
-    return Row(
+    return const Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         CircleAvatar(
             radius: 12,
-            backgroundColor: const Color(0xFFF1F5F9),
-            child: const Icon(Icons.person, size: 14, color: Colors.grey)),
-        const SizedBox(width: 8),
-        const Text("Arjun",
+            backgroundColor: Color(0xFFF1F5F9),
+            child: Icon(Icons.person, size: 14, color: Colors.grey)),
+        SizedBox(width: 8),
+        Text("Arjun",
             style: TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.w900,
                 color: Color(0xFF1E293B))),
-        const Icon(Icons.keyboard_arrow_down_rounded,
+        Icon(Icons.keyboard_arrow_down_rounded,
             size: 14, color: Color(0xFF64748B)),
       ],
     );

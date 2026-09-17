@@ -45,7 +45,7 @@ class BICalendar extends StatelessWidget {
           Expanded(
             child: ListView(
               padding: const EdgeInsets.all(10),
-              children: [
+              children: const [
                 _EventItem(
                     time: "09:00",
                     title: "HQ Dispatch Start",

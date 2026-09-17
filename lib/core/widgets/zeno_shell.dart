@@ -9,9 +9,7 @@ import 'package:zeno/navigation/widgets/zeno_quick_access_toolbar.dart';
 import 'package:zeno/navigation/menu_registry.dart';
 import 'package:zeno/navigation/widgets/enterprise/workspace_control_bar.dart';
 import 'package:zeno/navigation/widgets/zeno_mega_menu_overlay.dart';
-import 'package:zeno/core/widgets/premium/zeno_command_palette.dart';
 import 'package:zeno/core/widgets/premium/zeno_quick_actions_dock.dart';
-import 'package:flutter/services.dart';
 
 class ZenoShell extends StatefulWidget {
   const ZenoShell({super.key});
@@ -52,94 +50,74 @@ class _ZenoShellState extends State<ZenoShell> {
     return ListenableBuilder(
       listenable: _navController,
       builder: (context, _) {
-        return CallbackShortcuts(
-          bindings: {
-            const SingleActivator(LogicalKeyboardKey.keyK, control: true):
-                _showCommandPalette,
-            const SingleActivator(LogicalKeyboardKey.keyK, meta: true):
-                _showCommandPalette,
-          },
-          child: Focus(
-            autofocus: true,
-            child: Scaffold(
-              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-              body: Stack(
+        // Global chords (Ctrl+K, F1, Ctrl+/, tab cycling) are owned by
+        // ZenoShortcuts in main.dart, which wraps this shell.
+        return Scaffold(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          body: Stack(
+            children: [
+              // 1. MAIN UI LAYER
+              Column(
                 children: [
-                  // 1. MAIN UI LAYER
-                  Column(
-                    children: [
-                      const TopCommandBar(),
-                      Expanded(
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            MouseRegion(
-                              onExit: (_) =>
-                                  _megaMenuKey.currentState?.hideMenu(),
-                              child: ZenoNavRail(
-                                activeCategory: _activeNavCategory,
-                                onHover: (cat, offset) => _megaMenuKey
-                                    .currentState
-                                    ?.showMenu(cat, offset),
-                              ),
-                            ),
-                            Expanded(
-                              child: Column(
-                                children: [
-                                  const ZenoQuickAccessToolbar(),
-                                  if (_isDashboardPage)
-                                    const WorkspaceControlBar(),
-                                  Expanded(
-                                    child: Container(
-                                      key: ValueKey(_navController.activeTab.id),
-                                      color: Theme.of(context)
-                                          .scaffoldBackgroundColor,
-                                      child: KeyedSubtree(
-                                        key: ValueKey(
-                                          _navController.activeTab.route),
-                                        child: ZenoRouter.getScreen(
-                                          _navController.activeTab.route,
-                                          params: _navController.activeTab.params,
-                                        ),
-                                      ),
+                  const TopCommandBar(),
+                  Expanded(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        MouseRegion(
+                          onExit: (_) => _megaMenuKey.currentState?.hideMenu(),
+                          child: ZenoNavRail(
+                            activeCategory: _activeNavCategory,
+                            onHover: (cat, offset) => _megaMenuKey.currentState
+                                ?.showMenu(cat, offset),
+                          ),
+                        ),
+                        Expanded(
+                          child: Column(
+                            children: [
+                              const ZenoQuickAccessToolbar(),
+                              if (_isDashboardPage) const WorkspaceControlBar(),
+                              Expanded(
+                                child: Container(
+                                  key: ValueKey(_navController.activeTab.id),
+                                  color:
+                                      Theme.of(context).scaffoldBackgroundColor,
+                                  child: KeyedSubtree(
+                                    key: ValueKey(
+                                        _navController.activeTab.route),
+                                    child: ZenoRouter.getScreen(
+                                      _navController.activeTab.route,
+                                      params: _navController.activeTab.params,
                                     ),
                                   ),
-                                  const EnterpriseBottomStatusBar(),
-                                ],
+                                ),
                               ),
-                            ),
-                            if (_navController.isSidePanelOpen)
-                              const EnterpriseRightPanel(),
-                          ],
+                              const EnterpriseBottomStatusBar(),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                        if (_navController.isSidePanelOpen)
+                          const EnterpriseRightPanel(),
+                      ],
+                    ),
                   ),
-                  // 2. MEGA MENU LAYER
-                  ZenoMegaMenuOverlay(
-                    key: _megaMenuKey,
-                    onCategoryChanged: (cat) {
-                      if (mounted) {
-                        setState(() => _activeNavCategory = cat);
-                      }
-                    },
-                  ),
-                  // 4. QUICK ACTIONS DOCK (Self-positioning)
-                  const ZenoQuickActionsDock(),
                 ],
               ),
-            ),
+              // 2. MEGA MENU LAYER
+              ZenoMegaMenuOverlay(
+                key: _megaMenuKey,
+                onCategoryChanged: (cat) {
+                  if (mounted) {
+                    setState(() => _activeNavCategory = cat);
+                  }
+                },
+              ),
+              // 4. QUICK ACTIONS DOCK (Self-positioning)
+              const ZenoQuickActionsDock(),
+            ],
           ),
         );
       },
-    );
-  }
-
-  void _showCommandPalette() {
-    showDialog(
-      context: context,
-      barrierColor: Colors.black.withValues(alpha: 0.4),
-      builder: (context) => const ZenoCommandPalette(),
     );
   }
 }

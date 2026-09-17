@@ -21,14 +21,14 @@ class _AutomationBuilderScreenState extends State<AutomationBuilderScreen> {
           ZenoHeader(
             title: "Workflow Architect".toUpperCase(),
             subtitle: "CONSTRUCT INTELLIGENT BUSINESS LOGIC NODES.",
-            actions: [
-              const ZenoButton(
+            actions: const [
+              ZenoButton(
                   label: "SIMULATION MODE",
                   icon: Icons.play_lesson_rounded,
                   variant: ZenoButtonVariant.secondary,
                   size: ZenoButtonSize.sm),
-              const SizedBox(width: 12),
-              const ZenoButton(
+              SizedBox(width: 12),
+              ZenoButton(
                   label: "VALIDATE & SAVE",
                   icon: Icons.check_circle_outline_rounded,
                   size: ZenoButtonSize.sm),

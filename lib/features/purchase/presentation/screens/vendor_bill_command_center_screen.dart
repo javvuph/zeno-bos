@@ -56,12 +56,15 @@ class _VendorBillCommandCenterScreenState
             controller.selectedBill != null ? [controller.selectedBill!] : [],
         columns: manifest.tableColumns(context),
         trafficLightSelector: (b) {
-          if (b.status == VendorBillStatus.verified)
+          if (b.status == VendorBillStatus.verified) {
             return ZenoTrafficLight.success;
-          if (b.status == VendorBillStatus.mismatch)
+          }
+          if (b.status == VendorBillStatus.mismatch) {
             return ZenoTrafficLight.danger;
-          if (b.status == VendorBillStatus.overdue)
+          }
+          if (b.status == VendorBillStatus.overdue) {
             return ZenoTrafficLight.warning;
+          }
           return ZenoTrafficLight.neutral; // Safer fallback
         },
       ),

@@ -155,8 +155,8 @@ class _ZenoButtonState extends State<ZenoButton> {
                 )
               else ...[
                 if (widget.icon != null) Icon(widget.icon, size: iconSize, color: textColor),
-                if (widget.icon != null && !widget.label.isEmpty) const SizedBox(width: 10),
-                if (!widget.label.isEmpty) Text(widget.label.toUpperCase(), style: textStyle),
+                if (widget.icon != null && widget.label.isNotEmpty) const SizedBox(width: 10),
+                if (widget.label.isNotEmpty) Text(widget.label.toUpperCase(), style: textStyle),
               ],
             ],
           ),

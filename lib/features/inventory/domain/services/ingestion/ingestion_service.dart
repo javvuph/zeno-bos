@@ -1,4 +1,3 @@
-import 'package:file_picker/file_picker.dart';
 
 import 'ingestion_models.dart';
 import 'ingestion_parser.dart';
@@ -17,9 +16,10 @@ class IngestionService {
   Future<IngestionMappingResult> processCSV(
       String csvContent, Map<String, String>? manualMapping) async {
     final rawRows = parser.parseCSV(csvContent);
-    if (rawRows.isEmpty)
+    if (rawRows.isEmpty) {
       return const IngestionMappingResult(
           rows: [], summary: IngestionSummary());
+    }
 
     final headers = rawRows.first.keys.toList();
     // In a real app, we'd get all available field IDs from the registry
@@ -50,9 +50,9 @@ class IngestionService {
               ? IngestionRowStatus.warning
               : IngestionRowStatus.valid;
 
-      if (status == IngestionRowStatus.valid)
+      if (status == IngestionRowStatus.valid) {
         valid++;
-      else if (status == IngestionRowStatus.warning)
+      } else if (status == IngestionRowStatus.warning)
         warnings++;
       else
         errors++;
@@ -92,9 +92,9 @@ class IngestionService {
               ? IngestionRowStatus.warning
               : IngestionRowStatus.valid;
 
-      if (status == IngestionRowStatus.valid)
+      if (status == IngestionRowStatus.valid) {
         valid++;
-      else if (status == IngestionRowStatus.warning)
+      } else if (status == IngestionRowStatus.warning)
         warnings++;
       else
         errors++;

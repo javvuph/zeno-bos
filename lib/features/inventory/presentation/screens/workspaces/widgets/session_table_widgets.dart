@@ -86,16 +86,15 @@ class SessionRow extends StatelessWidget {
   final ProductStudioController controller;
   final ZenoSemanticColors colors;
   final Function(int, Function(ProductStudioData)) updateField;
+  final List<String> fields;
 
   const SessionRow({
     super.key, required this.index, required this.item, required this.controller,
-    required this.colors, required this.updateField
+    required this.colors, required this.updateField, required this.fields
   });
 
   @override
   Widget build(BuildContext context) {
-    final fields = controller.getBulkEntryFields();
-    
     // Calculate width dynamically
     double totalWidth = 36 + 56 + 48; // Static cols
     for (var f in fields) {

@@ -44,19 +44,19 @@ class PlannerScreen extends StatelessWidget {
             ),
           ),
           const VerticalDivider(width: 1, color: ZenoTheme.border),
-          Expanded(
+          const Expanded(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.all(24),
+              padding: EdgeInsets.all(24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text("TODAY'S SCHEDULE",
+                  Text("TODAY'S SCHEDULE",
                       style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w900,
                           color: ZenoTheme.textSecondary,
                           letterSpacing: 1)),
-                  const SizedBox(height: 24),
+                  SizedBox(height: 24),
                   _ScheduleItem(
                       time: "09:00 AM",
                       title: "Daily Stand-up",

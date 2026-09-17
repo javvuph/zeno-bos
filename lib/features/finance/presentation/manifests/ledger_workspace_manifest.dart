@@ -55,11 +55,11 @@ class LedgerWorkspaceManifest extends ZenoWorkspaceManifest<JournalEntry> {
   static List<ZenoKpiData> _getKpiMetrics(BuildContext context) => [
         const ZenoKpiData(
             label: "Total Assets",
-            value: "₹24.8M",
+            value: "₹0",
             icon: Icons.assured_workload_outlined),
         const ZenoKpiData(
             label: "Net Profit",
-            value: "₹4.2M",
+            value: "₹0",
             icon: Icons.trending_up_rounded,
             color: Colors.green),
         const ZenoKpiData(
@@ -68,8 +68,8 @@ class LedgerWorkspaceManifest extends ZenoWorkspaceManifest<JournalEntry> {
             icon: Icons.balance_rounded,
             color: Color(0xFF00F0FF)),
         const ZenoKpiData(
-            label: "Today\u0027s Postings",
-            value: "156",
+            label: "Today's Postings",
+            value: "0",
             icon: Icons.history_edu_rounded,
             color: Colors.indigo),
       ];

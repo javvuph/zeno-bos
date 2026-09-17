@@ -55,21 +55,21 @@ class ExpenseWorkspaceManifest extends ZenoWorkspaceManifest<ExpenseEntry> {
   static List<ZenoKpiData> _getKpiMetrics(BuildContext context) => [
         const ZenoKpiData(
             label: "Total Expenses",
-            value: "₹2.4M",
+            value: "₹0",
             icon: Icons.analytics_outlined),
         const ZenoKpiData(
             label: "Pending Claims",
-            value: "14",
+            value: "0",
             icon: Icons.hourglass_empty_rounded,
             color: Colors.orange),
         const ZenoKpiData(
             label: "Approved",
-            value: "₹840K",
+            value: "₹0",
             icon: Icons.task_alt_rounded,
             color: Colors.green),
         const ZenoKpiData(
             label: "Budget Alert",
-            value: "92%",
+            value: "0%",
             icon: Icons.warning_amber_rounded,
             color: Colors.red),
       ];

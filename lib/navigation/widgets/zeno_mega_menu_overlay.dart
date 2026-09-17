@@ -64,8 +64,9 @@ class ZenoMegaMenuOverlayState extends State<ZenoMegaMenuOverlay> {
 
   @override
   Widget build(BuildContext context) {
-    if (_activeCategory == null || _activeOffset == null)
+    if (_activeCategory == null || _activeOffset == null) {
       return const SizedBox.shrink();
+    }
 
     const double menuWidth = 260;
     final screenHeight = MediaQuery.of(context).size.height;

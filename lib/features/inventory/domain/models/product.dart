@@ -42,6 +42,17 @@ class Product {
     this.industry = const ProductIndustryFields(), this.customFields = const {},
   });
 
+  bool get hasVariants => variants.isNotEmpty;
+
+  double get stockLevel {
+    if (hasVariants) {
+      return variants.fold<double>(0.0, (sum, v) => sum + v.stockLevel);
+    }
+    return openingStock;
+  }
+
+  int roundStock(double value) => value.round();
+
   // Proxy getters for industry fields
   String? get material => industry.material; String? get metalType => industry.metalType; String? get purity => industry.purity;
   double? get weight => industry.weight; String? get stoneType => industry.stoneType; double? get stoneWeight => industry.stoneWeight;

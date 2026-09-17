@@ -80,12 +80,12 @@ class TodayOverviewScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 24),
-                Expanded(
+                const Expanded(
                   child: CommandCenterWidget(
                     title: "Live Feed",
                     accentColor: ZenoTheme.neonCyan,
                     child: Column(
-                      children: const [
+                      children: [
                         HomeNotificationItem(
                             title: "New Order #1245 from Web",
                             time: "2m ago",

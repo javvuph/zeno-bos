@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:zeno/core/widgets/templates/zeno_input_form_template.dart';
 import 'package:zeno/core/di/service_locator.dart';
 import '../../domain/models/account.dart';
-import '../../domain/models/account_type.dart';
 import '../../domain/repositories/i_finance_repository.dart';
 import '../controllers/finance_controller.dart';
 import 'package:uuid/uuid.dart';
@@ -70,7 +69,7 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
                   labelText: "Account Name", border: OutlineInputBorder()),
             ),
             DropdownButtonFormField<AccountCategory>(
-              value: _selectedCategory,
+              initialValue: _selectedCategory,
               decoration: const InputDecoration(
                   labelText: "Category", border: OutlineInputBorder()),
               items: AccountCategory.values
@@ -80,7 +79,7 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
               onChanged: (v) => setState(() => _selectedCategory = v!),
             ),
             DropdownButtonFormField<AccountType>(
-              value: _selectedType,
+              initialValue: _selectedType,
               decoration: const InputDecoration(
                   labelText: "Account Type", border: OutlineInputBorder()),
               items: AccountType.values

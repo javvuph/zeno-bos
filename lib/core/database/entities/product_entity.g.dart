@@ -58,7 +58,7 @@ const ProductEntitySchema = CollectionSchema(
       id: -3348042439688860591,
       name: r'sku',
       unique: true,
-      replace: false,
+      replace: true,
       properties: [
         IndexPropertySchema(
           name: r'sku',

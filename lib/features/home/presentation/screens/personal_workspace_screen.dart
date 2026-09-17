@@ -62,11 +62,11 @@ class PersonalWorkspaceScreen extends StatelessWidget {
                                   ),
                           ),
                           const SizedBox(height: 24),
-                          CommandCenterWidget(
+                          const CommandCenterWidget(
                             title: "Pinned Modules",
                             accentColor: ZenoTheme.neonCyan,
                             child: Column(
-                              children: const [
+                              children: [
                                 _PinnedRow(
                                     name: "Warehouse Management",
                                     module: "Inventory",
@@ -115,8 +115,8 @@ class PersonalWorkspaceScreen extends StatelessWidget {
                             trailing: IconButton(
                                 icon: const Icon(Icons.add, size: 16),
                                 onPressed: () {}),
-                            child: Column(
-                              children: const [
+                            child: const Column(
+                              children: [
                                 _NoteItem(
                                     text:
                                         "Review supplier contracts by Friday."),

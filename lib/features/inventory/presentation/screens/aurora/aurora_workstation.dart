@@ -16,6 +16,9 @@ class AuroraWorkstation extends StatelessWidget {
   final ProductStudioController controller;
   final ZenoSemanticColors colors;
 
+  static const Color kPurplePrimary = Color(0xFF667EEA);
+  static const Color kPurpleSecondary = Color(0xFF764BA2);
+
   const AuroraWorkstation({
     super.key,
     required this.controller,
@@ -28,7 +31,13 @@ class AuroraWorkstation extends StatelessWidget {
       listenable: controller,
       builder: (context, _) {
         return Container(
-          color: colors.bgTier1, 
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0x0D667EEA), Color(0x05764BA2)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
           child: Column(
             children: [
               _buildModernNavigation(),
@@ -47,11 +56,11 @@ class AuroraWorkstation extends StatelessWidget {
     final tabs = AuroraTabComposer.compose(controller);
 
     return Container(
-      height: 36,
+      height: 40,
       padding: const EdgeInsets.symmetric(horizontal: 24),
       decoration: const BoxDecoration(
         color: Colors.white,
-        border: Border(bottom: BorderSide(color: Color(0xFFE2E8F0))),
+        border: Border(bottom: BorderSide(color: Color(0x33667EEA))),
       ),
       child: Row(
         children: tabs.asMap().entries.map((entry) {
@@ -71,8 +80,8 @@ class AuroraWorkstation extends StatelessWidget {
               if (index < tabs.length - 1)
                 Container(
                   width: 1,
-                  height: 24,
-                  color: const Color(0xFFE2E8F0),
+                  height: 20,
+                  color: const Color(0x33667EEA),
                   margin: const EdgeInsets.symmetric(horizontal: 16),
                 ),
             ],
@@ -117,15 +126,15 @@ class _ModernTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const activeColor = Color(0xFF6366F1);
-    const inactiveColor = Color(0xFF64748B);
+    const activeColor = Color(0xFF667EEA);
+    const inactiveColor = Color(0xFF666666);
 
     return InkWell(
       onTap: onTap,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const SizedBox(height: 5),
+          const SizedBox(height: 6),
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -138,21 +147,26 @@ class _ModernTab extends StatelessWidget {
               Text(
                 label,
                 style: TextStyle(
-                  fontSize: 10,
-                  fontWeight: FontWeight.w900,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w700,
                   color: isActive ? activeColor : inactiveColor,
                   letterSpacing: 0.5,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 5),
+          const SizedBox(height: 6),
           AnimatedContainer(
             duration: const Duration(milliseconds: 200),
-            height: 2.5,
+            height: 3,
             width: label.length * 7.0 + 20, 
             decoration: BoxDecoration(
-              color: isActive ? activeColor : Colors.transparent,
+              gradient: isActive
+                  ? const LinearGradient(
+                      colors: [Color(0xFF667EEA), Color(0xFF764BA2)],
+                    )
+                  : null,
+              color: isActive ? null : Colors.transparent,
               borderRadius: const BorderRadius.vertical(top: Radius.circular(2)),
             ),
           ),

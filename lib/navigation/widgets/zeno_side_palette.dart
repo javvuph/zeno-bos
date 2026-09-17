@@ -12,9 +12,9 @@ class ZenoSidePalette extends StatelessWidget {
         color: ZenoTheme.surface,
         border: Border(right: BorderSide(color: ZenoTheme.border)),
       ),
-      child: Column(
+      child: const Column(
         children: [
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           _SideIcon(
               icon: Icons.dashboard_outlined,
               label: 'Dashboard',
@@ -23,9 +23,9 @@ class ZenoSidePalette extends StatelessWidget {
           _SideIcon(icon: Icons.star_outline, label: 'Favorites'),
           _SideIcon(icon: Icons.history_outlined, label: 'Recent'),
           _SideIcon(icon: Icons.layers_outlined, label: 'Workspaces'),
-          const Spacer(),
+          Spacer(),
           _SideIcon(icon: Icons.help_outline, label: 'Help & Support'),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
         ],
       ),
     );

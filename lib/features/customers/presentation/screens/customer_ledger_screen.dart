@@ -28,7 +28,7 @@ class CustomerLedgerScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<ZenoSemanticColors>()!;
-    final List<LedgerEntry> _entries = [
+    final List<LedgerEntry> entries = [
       LedgerEntry(
           date: "2024-10-20",
           type: "INVOICE",
@@ -76,7 +76,7 @@ class CustomerLedgerScreen extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: ZenoTable<LedgerEntry>(
-              items: _entries,
+              items: entries,
               columns: [
                 ZenoTableColumn(
                     label: "Date", width: 120, builder: (e) => Text(e.date)),

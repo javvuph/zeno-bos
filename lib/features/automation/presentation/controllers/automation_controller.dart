@@ -41,8 +41,8 @@ class AutomationController extends ChangeNotifier {
       _automations.where((a) => a.status == AutomationStatus.draft).length;
   int get failureCount => _recentRuns.where((r) => r.status == RunStatus.failed).length;
 
-  double get totalTimeSaved => 124.5; // Mock hours saved
-  int get actionsExecutedToday => 842; // Mock action count
+  double get totalTimeSaved => 0.0; // Mock hours saved
+  int get actionsExecutedToday => 0; // Mock action count
 
   Automation? _selectedAutomation;
   Automation? get selectedAutomation => _selectedAutomation;

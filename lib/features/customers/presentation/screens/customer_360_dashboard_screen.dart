@@ -55,8 +55,9 @@ class _Customer360DashboardScreenState
         columns: manifest.tableColumns(context),
         trafficLightSelector: (c) {
           if (c.tier == CustomerTier.vip) return ZenoTrafficLight.success;
-          if (c.outstandingBalance > c.credit.creditLimit)
+          if (c.outstandingBalance > c.credit.creditLimit) {
             return ZenoTrafficLight.danger;
+          }
           if (c.aiHealthScore < 50) return ZenoTrafficLight.warning;
           return ZenoTrafficLight.info;
         },

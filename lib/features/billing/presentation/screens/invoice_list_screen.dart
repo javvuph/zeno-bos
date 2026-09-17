@@ -26,36 +26,7 @@ class InvoiceListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<Invoice> _invoices = [
-      Invoice(
-          id: "INV-8821",
-          customer: "Guest",
-          amount: 45.50,
-          method: "Cash",
-          status: "Paid",
-          date: "Oct 24, 11:20 PM"),
-      Invoice(
-          id: "INV-8820",
-          customer: "Alex R.",
-          amount: 1200.00,
-          method: "Card",
-          status: "Paid",
-          date: "Oct 24, 10:45 PM"),
-      Invoice(
-          id: "INV-8819",
-          customer: "Maria S.",
-          amount: 85.00,
-          method: "UPI",
-          status: "Refunded",
-          date: "Oct 24, 09:15 PM"),
-      Invoice(
-          id: "INV-8818",
-          customer: "John Doe",
-          amount: 450.20,
-          method: "Wallet",
-          status: "Cancelled",
-          date: "Oct 24, 08:30 PM"),
-    ];
+    final List<Invoice> invoices = [];
 
     return Column(
       children: [
@@ -67,14 +38,14 @@ class InvoiceListScreen extends StatelessWidget {
           actions: [
             _FilterButton(),
             const SizedBox(width: 12),
-            _ActionButton(label: "Export CSV", icon: Icons.download_outlined),
+            const _ActionButton(label: "Export CSV", icon: Icons.download_outlined),
           ],
         ),
         Expanded(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: ZenoTable<Invoice>(
-              items: _invoices,
+              items: invoices,
               columns: [
                 ZenoTableColumn(
                   label: "Invoice ID",
@@ -116,10 +87,10 @@ class InvoiceListScreen extends StatelessWidget {
                   builder: (i) => ZenoBadge(
                     label: i.status,
                     color: i.status == "Paid"
-                        ? Color(0xFF00FF88)
+                        ? const Color(0xFF00FF88)
                         : (i.status == "Refunded"
-                            ? Color(0xFFFFD700)
-                            : Color(0xFFFF4B2B)),
+                            ? const Color(0xFFFFD700)
+                            : const Color(0xFFFF4B2B)),
                   ),
                 ),
                 ZenoTableColumn(

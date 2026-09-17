@@ -35,8 +35,9 @@ class PersonalizedDashboardGrid extends StatelessWidget {
 
           if (isArchitectural && !isEditMode) {
             double height = 96;
-            if (instance.widgetKey == 'exec_analytical_core')
+            if (instance.widgetKey == 'exec_analytical_core') {
               height = 340; // Spec: 340px
+            }
             if (instance.widgetKey == 'exec_performance_matrix') height = 360;
 
             return StaggeredGridTile.extent(

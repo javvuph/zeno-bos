@@ -28,7 +28,7 @@ class AIIntelligenceEngine {
   List<AIRecommendation> generateExecutiveRecommendations(
       Map<String, dynamic> context) {
     final List<AIRecommendation> recs = [];
-    final uuid = const Uuid();
+    const uuid = Uuid();
 
     // 1. Inventory Insights
     if (context['inventory'] != null) {
@@ -97,7 +97,7 @@ class AIIntelligenceEngine {
   List<AIPrediction> calculateBusinessPredictions(
       Map<String, dynamic> context) {
     final List<AIPrediction> predictions = [];
-    final uuid = const Uuid();
+    const uuid = Uuid();
 
     // Sales Forecast (Simple linear growth simulation)
     if (context['sales'] != null) {

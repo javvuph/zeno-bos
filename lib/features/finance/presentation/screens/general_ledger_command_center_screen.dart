@@ -54,10 +54,12 @@ class _GeneralLedgerCommandCenterScreenState
         selectedItems: _selectedEntry != null ? [_selectedEntry!] : [],
         columns: manifest.tableColumns(context),
         trafficLightSelector: (j) {
-          if (j.status == JournalEntryStatus.posted)
+          if (j.status == JournalEntryStatus.posted) {
             return ZenoTrafficLight.success;
-          if (j.status == JournalEntryStatus.draft)
+          }
+          if (j.status == JournalEntryStatus.draft) {
             return ZenoTrafficLight.info;
+          }
           return ZenoTrafficLight.danger;
         },
       ),

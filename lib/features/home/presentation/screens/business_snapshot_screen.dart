@@ -81,12 +81,12 @@ class BusinessSnapshotScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 24),
-                Expanded(
+                const Expanded(
                   child: CommandCenterWidget(
                     title: "Branch Performance",
                     accentColor: Colors.orange,
                     child: Column(
-                      children: const [
+                      children: [
                         _BranchRow(
                             name: "Main HQ",
                             value: "\$540k",

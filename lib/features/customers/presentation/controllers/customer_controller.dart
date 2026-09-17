@@ -20,7 +20,7 @@ class CustomerController extends ChangeNotifier {
   List<Customer> _deletedCustomers = [];
   List<Customer> get deletedCustomers => _deletedCustomers;
 
-  List<CustomerSegment> _groups = [];
+  final List<CustomerSegment> _groups = [];
   List<CustomerSegment> get groups =>
       _groups.isEmpty ? _masterData.getSegments() : _groups;
 

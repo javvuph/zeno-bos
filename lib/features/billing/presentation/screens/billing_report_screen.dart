@@ -16,7 +16,7 @@ class BillingReportScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<SalesReport> _reports = [
+    final List<SalesReport> reports = [
       SalesReport(title: "Daily Sales", metric: "\$4,250", icon: Icons.today),
       SalesReport(
           title: "Tax Collected",
@@ -43,14 +43,14 @@ class BillingReportScreen extends StatelessWidget {
               mainAxisSpacing: 16,
               childAspectRatio: 1.5,
             ),
-            itemCount: _reports.length,
+            itemCount: reports.length,
             itemBuilder: (context, index) {
-              final r = _reports[index];
+              final r = reports[index];
               return ZenoCard(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(r.icon, size: 28, color: Color(0xFFee0979)),
+                    Icon(r.icon, size: 28, color: const Color(0xFFee0979)),
                     const SizedBox(height: 12),
                     Text(r.title,
                         style: const TextStyle(

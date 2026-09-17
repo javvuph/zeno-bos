@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:zeno/core/widgets/zeno_card.dart';
 import 'package:zeno/features/inventory/presentation/controllers/product_studio_controller.dart';
 import '../aurora_field_renderer.dart';
@@ -69,9 +69,9 @@ class Tab4Commercial extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.2), blurRadius: 10, offset: const Offset(0, 4))],
       ),
-      child: Row(
+      child: const Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: const [
+        children: [
           _ResultItem(label: "LANDED COST", value: "Î“Ã©â•£ 84.50", color: Colors.white),
           _ResultItem(label: "SELLING PRICE", value: "Î“Ã©â•£ 120.00", color: Color(0xFF38BDF8)),
           _ResultItem(label: "DISCOUNT", value: "10% / Î“Ã©â•£ 12", color: Color(0xFFFB7185)),

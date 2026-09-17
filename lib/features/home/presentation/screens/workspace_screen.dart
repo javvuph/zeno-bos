@@ -8,7 +8,7 @@ class WorkspaceScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return const Column(
       children: [
         ZenoHeader(
           title: "Personal Workspace",
@@ -17,7 +17,7 @@ class WorkspaceScreen extends StatelessWidget {
         ),
         Expanded(
           child: Padding(
-            padding: const EdgeInsets.all(24),
+            padding: EdgeInsets.all(24),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -36,10 +36,10 @@ class WorkspaceScreen extends StatelessWidget {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 24),
+                      SizedBox(height: 24),
                       ZenoCard(
                         title: "PERSONAL NOTES",
-                        child: const TextField(
+                        child: TextField(
                           maxLines: 5,
                           style: TextStyle(fontSize: 13),
                           decoration: InputDecoration(
@@ -50,7 +50,7 @@ class WorkspaceScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                const SizedBox(width: 24),
+                SizedBox(width: 24),
                 Expanded(
                   flex: 1,
                   child: ZenoCard(

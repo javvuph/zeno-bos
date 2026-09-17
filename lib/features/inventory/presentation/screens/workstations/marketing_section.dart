@@ -175,7 +175,7 @@ class MarketingSection extends StatelessWidget {
                           hint: "12",
                           textAlign: TextAlign.center,
                           initialValue:
-                              controller.product.warrantyDuration?.toString() ??
+                              controller.product.warrantyDuration.toString() ??
                                   "",
                           onChanged: (v) => controller.updateField(
                               warrantyDuration: int.tryParse(v)),

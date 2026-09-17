@@ -56,21 +56,21 @@ class VendorBillWorkspaceManifest extends ZenoWorkspaceManifest<VendorBill> {
   static List<ZenoKpiData> _getKpiMetrics(BuildContext context) => [
         const ZenoKpiData(
             label: "Draft Bills",
-            value: "14",
+            value: "0",
             icon: Icons.description_outlined),
         const ZenoKpiData(
             label: "Pending Match",
-            value: "28",
+            value: "0",
             icon: Icons.compare_arrows_rounded,
             color: Colors.orange),
         const ZenoKpiData(
             label: "Due This Week",
-            value: "₹840K",
+            value: "₹0",
             icon: Icons.event_note_rounded,
             color: Colors.indigo),
         const ZenoKpiData(
             label: "AI Match Rate",
-            value: "92%",
+            value: "0%",
             icon: Icons.auto_awesome,
             color: Color(0xFF00F0FF)),
       ];

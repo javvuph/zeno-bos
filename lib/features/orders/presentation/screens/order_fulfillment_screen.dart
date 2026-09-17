@@ -43,7 +43,7 @@ class OrderFulfillmentScreen extends StatelessWidget {
                   flex: 1,
                   child: ZenoCard(
                     title: "OPERATION QUEUE",
-                    trailing: Text("8 ACTIVE"),
+                    trailing: const Text("8 ACTIVE"),
                     child: ListView.builder(
                       shrinkWrap: true,
                       itemCount: 4,
@@ -88,7 +88,7 @@ class OrderFulfillmentScreen extends StatelessWidget {
                                 style:
                                     ZenoTypography.micro(colors.textDisabled)),
                             const SizedBox(height: 32),
-                            SizedBox(
+                            const SizedBox(
                               width: 240,
                               child: _HeaderButton(
                                   label: "BEGIN NEXT TASK",
