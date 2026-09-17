@@ -62,56 +62,71 @@ extension _BulkScanWorkspaceActionsState on _BulkScanWorkspaceState {
 
   Widget _buildQuickStartPanel() {
     return Container(
-      margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
       decoration: BoxDecoration(
-        color: widget.colors.bgTier2,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: widget.colors.borderSubtle),
+        color: const Color(0xFFFFFFFF).withValues(alpha:0.9),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFF0066CC).withValues(alpha:0.2)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha:0.04),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          )
+        ],
       ),
       child: Row(
         children: [
+          Container(
+            width: 48,
+            height: 48,
+            decoration: BoxDecoration(
+              color: const Color(0xFF0066CC).withValues(alpha:0.08),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: const Color(0xFF0066CC).withValues(alpha:0.2)),
+            ),
+            child: const Icon(Icons.inventory_2_outlined, color: Color(0xFF0066CC), size: 24),
+          ),
+          const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+              children: const [
                 Text(
                   'Bulk workspace ready',
                   style: TextStyle(
-                    fontSize: 14,
+                    fontSize: 15,
                     fontWeight: FontWeight.w800,
-                    color: widget.colors.textPrimary,
+                    color: Color(0xFF1a2a3a),
                   ),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 Text(
                   'Scan a barcode, add a manual row, or upload supplier bills to start filling the bulk sheet.',
                   style: TextStyle(
-                    fontSize: 12,
-                    color: widget.colors.textSecondary,
+                    fontSize: 13,
+                    color: Color(0xFF4a5f7f),
                   ),
                 ),
               ],
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 24),
           Wrap(
-            spacing: 8,
-            runSpacing: 8,
+            spacing: 12,
+            runSpacing: 12,
             children: [
               ZenoButton(
                 label: 'MANUAL ROW',
                 icon: Icons.add_rounded,
                 variant: ZenoButtonVariant.secondary,
-                size: ZenoButtonSize.sm,
                 onPressed: () => widget.controller.handleBulkBarcodeScanned(
                     'MANUAL-${DateTime.now().millisecond}'),
               ),
               ZenoButton(
                 label: 'UPLOAD BILLS',
                 icon: Icons.receipt_long_outlined,
-                variant: ZenoButtonVariant.secondary,
-                size: ZenoButtonSize.sm,
                 onPressed: _pickAndProcessBill,
               ),
             ],
@@ -124,16 +139,22 @@ extension _BulkScanWorkspaceActionsState on _BulkScanWorkspaceState {
   Widget _buildBottomActionBar() {
     return Container(
       height: 48,
-      color: widget.colors.accentPrimary.withValues(alpha: 0.1),
-      padding: const EdgeInsets.symmetric(horizontal: 24),
+      color: const Color(0xFFFFFFFF).withValues(alpha:0.8),
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      decoration: BoxDecoration(
+        border: Border(
+          top: BorderSide(color: const Color(0xFF0066CC).withValues(alpha:0.2)),
+          bottom: BorderSide(color: const Color(0xFF0066CC).withValues(alpha:0.2)),
+        ),
+      ),
       child: Row(
         children: [
           Text(
               "${widget.controller.bulkScanItems.where((i) => i.isSelected).length} SELECTED",
-              style: TextStyle(
-                  fontSize: 10,
-                  fontWeight: FontWeight.bold,
-                  color: widget.colors.accentPrimary)),
+              style: const TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w800,
+                  color: Color(0xFF1a2a3a))),
           const Spacer(),
           ZenoButton(
               label: "BULK EDIT",
@@ -160,26 +181,26 @@ extension _BulkScanWorkspaceActionsState on _BulkScanWorkspaceState {
         size: compact ? ZenoButtonSize.sm : ZenoButtonSize.md,
         onPressed: () {},
       ),
-      const SizedBox(width: 8),
+      const SizedBox(width: 10),
       Container(
         width: compact ? 180 : 250,
         height: compact ? 36 : 40,
         decoration: BoxDecoration(
-          color: const Color(0xFFF8FAFC),
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: const Color(0xFFE2E8F0)), // Subtler border
+          color: const Color(0xFFF0F8FF).withValues(alpha:0.95),
+          borderRadius: BorderRadius.circular(6),
+          border: Border.all(color: const Color(0xFF0066CC).withValues(alpha:0.2)),
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 12),
         child: TextField(
           decoration: const InputDecoration(
             hintText: "Enter Barcode...",
-            hintStyle: TextStyle(fontSize: 13, color: Color(0xFF94A3B8)),
+            hintStyle: TextStyle(fontSize: 13, color: Color(0xFF4a5f7f)),
             border: InputBorder.none,
           ),
           onSubmitted: (v) => widget.controller.handleBulkBarcodeScanned(v),
         ),
       ),
-      const SizedBox(width: 8),
+      const SizedBox(width: 10),
       ZenoButton(
         label: "MANUAL ROW",
         variant: ZenoButtonVariant.secondary,
@@ -188,7 +209,7 @@ extension _BulkScanWorkspaceActionsState on _BulkScanWorkspaceState {
         onPressed: () => widget.controller
             .handleBulkBarcodeScanned("MANUAL-${DateTime.now().millisecond}"),
       ),
-      const SizedBox(width: 8),
+      const SizedBox(width: 10),
       ZenoButton(
         label: "IMPORT",
         variant: ZenoButtonVariant.secondary,
@@ -196,7 +217,7 @@ extension _BulkScanWorkspaceActionsState on _BulkScanWorkspaceState {
         size: compact ? ZenoButtonSize.sm : ZenoButtonSize.md,
         onPressed: () => _pickAndProcessBill(),
       ),
-      const SizedBox(width: 8),
+      const SizedBox(width: 10),
       ZenoButton(
         label: "BILL AI",
         icon: Icons.auto_awesome_rounded,
@@ -207,17 +228,17 @@ extension _BulkScanWorkspaceActionsState on _BulkScanWorkspaceState {
     ];
 
     return Container(
-      margin: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+      margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: const Color(0xFFFFFFFF),
-        border: Border.all(color: const Color(0xFFD1E0F0)),
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: const [
+        color: const Color(0xFFFFFFFF).withValues(alpha:0.9),
+        border: Border.all(color: const Color(0xFF0066CC).withValues(alpha:0.2)),
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
           BoxShadow(
-            color: Color(0x05000000),
+            color: Colors.black.withValues(alpha:0.04),
             blurRadius: 10,
-            offset: Offset(0, 4),
+            offset: const Offset(0, 2),
           )
         ]
       ),
@@ -232,37 +253,86 @@ extension _BulkScanWorkspaceActionsState on _BulkScanWorkspaceState {
             ),
           ),
           const SizedBox(width: 16),
-          _StatToken(
-              label: "SCANNED",
-              value: "${widget.controller.bulkScanItems.length}",
-              color: const Color(0xFF1A2A3A)),
-          const SizedBox(width: 16),
-          _StatToken(
-              label: "READY",
-              value:
-                  "${widget.controller.bulkScanItems.where((i) => i.status == BulkScanStatus.ready).length}",
-              color: const Color(0xFF118A36)),
-          const SizedBox(width: 16),
-          _StatToken(
-              label: "REVIEW",
-              value:
-                  "${widget.controller.bulkScanItems.where((i) => i.status == BulkScanStatus.review || i.status == BulkScanStatus.notFound).length + widget.controller.bulkScanItems.where((i) => i.status == BulkScanStatus.duplicate).length}",
-              color: const Color(0xFFEA580C)),
-          const SizedBox(width: 24),
-          ZenoButton(
-            label: "SAVE",
-            onPressed: widget.controller.addBulkReadyToCatalog,
-            isLoading: widget.controller.isSaving,
-            size: compact ? ZenoButtonSize.sm : ZenoButtonSize.md,
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            decoration: BoxDecoration(
+              border: Border(
+                left: BorderSide(color: const Color(0xFF0066CC).withValues(alpha:0.2)),
+                right: BorderSide(color: const Color(0xFF0066CC).withValues(alpha:0.2)),
+              ),
+            ),
+            child: Row(
+              children: [
+                _StatToken(
+                    label: "SCANNED",
+                    value: "${widget.controller.bulkScanItems.length}",
+                    color: const Color(0xFF0066CC)),
+                const SizedBox(width: 16),
+                _StatToken(
+                    label: "READY",
+                    value:
+                        "${widget.controller.bulkScanItems.where((i) => i.status == BulkScanStatus.ready).length}",
+                    color: const Color(0xFF0066CC)),
+                const SizedBox(width: 16),
+                _StatToken(
+                    label: "REVIEW",
+                    value:
+                        "${widget.controller.bulkScanItems.where((i) => i.status == BulkScanStatus.review || i.status == BulkScanStatus.notFound).length + widget.controller.bulkScanItems.where((i) => i.status == BulkScanStatus.duplicate).length}",
+                    color: const Color(0xFFf97316)),
+              ],
+            ),
           ),
-          const SizedBox(width: 8),
-          ZenoButton(
-            label: "LEGACY FINISH",
-            variant: ZenoButtonVariant.ghost,
-            size: compact ? ZenoButtonSize.sm : ZenoButtonSize.md,
-            onPressed: widget.controller.addBulkReadyToCatalog,
-          ),
+          const SizedBox(width: 12),
         ],
+      ),
+    );
+  }
+
+  Widget _buildStickyFooter() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            const Color(0xFFd4e4f0).withValues(alpha:0.9),
+            const Color(0xFFe8f0f8).withValues(alpha:0.95),
+          ],
+        ),
+        border: Border(top: BorderSide(color: const Color(0xFF0066CC).withValues(alpha:0.2))),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha:0.04),
+            blurRadius: 20,
+            offset: const Offset(0, -2),
+          )
+        ]
+      ),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            ZenoButton(
+              label: "CANCEL",
+              variant: ZenoButtonVariant.secondary,
+              onPressed: () {},
+            ),
+            const SizedBox(width: 12),
+            ZenoButton(
+              label: "SAVE AS DRAFT",
+              variant: ZenoButtonVariant.secondary,
+              onPressed: () {},
+            ),
+            const SizedBox(width: 12),
+            ZenoButton(
+              label: "SAVE",
+              onPressed: widget.controller.addBulkReadyToCatalog,
+              isLoading: widget.controller.isSaving,
+            ),
+          ],
+        ),
       ),
     );
   }

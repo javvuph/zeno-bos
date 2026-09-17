@@ -163,16 +163,6 @@ extension _BulkScanWorkspaceTableState on _BulkScanWorkspaceState {
           'metaDescription',
           'marketingTitle',
         ];
-      default:
-        return const [
-          'primaryImageUrl',
-          'title',
-          'category',
-          'brand',
-          'sku',
-          'barcode',
-          'description',
-        ];
     }
   }
 
@@ -192,10 +182,10 @@ extension _BulkScanWorkspaceTableState on _BulkScanWorkspaceState {
           ];
 
     return Container(
-      height: 48,
-      margin: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-      decoration: const BoxDecoration(
-        border: Border(bottom: BorderSide(color: Color(0xFFD1E0F0))),
+      height: 38,
+      margin: const EdgeInsets.only(bottom: 16),
+      decoration: BoxDecoration(
+        border: Border(bottom: BorderSide(color: const Color(0xFF0066CC).withValues(alpha: 0.2))),
       ),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
@@ -204,32 +194,33 @@ extension _BulkScanWorkspaceTableState on _BulkScanWorkspaceState {
           children: tabs.map((tab) {
             final selected = _activeTab == tab.tab;
             return Padding(
-              padding: const EdgeInsets.only(right: 32),
+              padding: const EdgeInsets.only(right: 8),
               child: InkWell(
                 onTap: () {
                   if (tab.tab == BulkWorkspaceTab.variants) {
                     _openVariantDrawer();
                     return;
                   }
-                  setState(() => _activeTab = tab.tab);
+                  _setActiveTab(tab.tab);
                 },
                 child: Container(
-                  padding: const EdgeInsets.only(bottom: 12),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   decoration: BoxDecoration(
                     border: Border(
                         bottom: BorderSide(
-                            color: selected ? const Color(0xFF0073E6) : Colors.transparent,
-                            width: 3)),
+                            color: selected ? const Color(0xFF0066CC) : Colors.transparent,
+                            width: 2)),
                   ),
                   child: Text(
                     tab.label,
                     style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: selected ? FontWeight.w800 : FontWeight.w700,
+                      fontSize: 12,
+                      fontWeight: selected ? FontWeight.w800 : FontWeight.w600,
                       letterSpacing: 0.5,
+                      textBaseline: TextBaseline.alphabetic,
                       color: selected
-                          ? const Color(0xFF0073E6)
-                          : const Color(0xFF5F748D),
+                          ? const Color(0xFF0066CC)
+                          : const Color(0xFF4a5f7f),
                     ),
                   ),
                 ),

@@ -11,11 +11,10 @@ class TableCell extends StatelessWidget {
   const TableCell({super.key, required this.width, required this.child, this.decoration});
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).extension<ZenoSemanticColors>()!;
     return Container(
       width: width, height: double.infinity,
-      decoration: decoration ?? BoxDecoration(border: Border(right: BorderSide(color: colors.borderSubtle))),
-      padding: const EdgeInsets.symmetric(horizontal: 8),
+      decoration: decoration ?? BoxDecoration(border: Border(right: BorderSide(color: const Color(0xFFF1F5F9)))),
+      padding: const EdgeInsets.symmetric(horizontal: 12),
       alignment: Alignment.centerLeft,
       child: child,
     );
@@ -95,39 +94,54 @@ class SessionRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double getBulkColumnWidth(dynamic field) {
+      final String key = field?.toString().toLowerCase() ?? '';
+      if (key == 'primaryimageurl') return 56.0;
+      if (key.contains('name') || key.contains('title')) return 220.0;
+      if (key.contains('description')) return 180.0;
+      if (key.contains('sku') || key.contains('barcode') || key.contains('code') || key.contains('gtin')) return 130.0;
+      if (key.contains('price') || key.contains('cost') || key.contains('mrp') || key.contains('purchase')) return 105.0;
+      if (key.contains('discount')) return 95.0;
+      if (key.contains('stock') || key.contains('quantity')) return 95.0;
+      if (key.contains('alert') || key.contains('threshold') || key.contains('reorder')) return 105.0;
+      if (key.contains('category') || key.contains('brand') || key.contains('label') || key.contains('supplier')) return 115.0;
+      if (key.contains('country')) return 120.0;
+      if (key.contains('action') || key.contains('status')) return 85.0;
+      return 110.0;
+    }
+
     // Calculate width dynamically
-    double totalWidth = 36 + 56 + 48; // Static cols
+    double totalWidth = 24 + 42 + 56; // Static cols
     for (var f in fields) {
-      if (f == 'title') {
-        totalWidth += 200;
-      } else if (f == 'description') {
-        totalWidth += 150;
-      } else if (f.contains('Price') || f == 'mrp' || f == 'costPrice') {
-        totalWidth += 90;
-      } else if (f.contains('Stock') || f == 'openingStock') {
-        totalWidth += 80;
-      } else {
-        totalWidth += 120;
-      }
+      totalWidth += getBulkColumnWidth(f);
     }
 
     final isDuplicate = item.status == BulkScanStatus.duplicate;
     return Container(
       width: totalWidth, height: 44, padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
-        border: Border(bottom: BorderSide(color: isDuplicate ? colors.statusWarning : colors.borderSubtle), left: BorderSide(color: isDuplicate ? colors.statusWarning : colors.borderSubtle), right: BorderSide(color: isDuplicate ? colors.statusWarning : colors.borderSubtle)),
+        border: Border(
+          bottom: BorderSide(color: isDuplicate ? colors.statusWarning : const Color(0xFFe8e8e8)),
+          right: BorderSide(color: const Color(0xFFF1F5F9), width: 1),
+        ),
         color: isDuplicate
             ? colors.statusWarning.withValues(alpha: 0.08)
-            : (item.isSelected ? colors.accentPrimary.withValues(alpha: 0.05) : null),
+            : (item.isSelected ? const Color(0xFF0066CC).withValues(alpha:0.05) : const Color(0xFFFAFBFC)),
       ),
       child: Row(
         children: [
-          Checkbox(value: item.isSelected, onChanged: (v) => _toggleSelect(v ?? false), visualDensity: VisualDensity.compact),
-          TableCell(width: 36, child: Text("${index + 1}", style: TextStyle(fontSize: 10, color: colors.textDisabled))),
-          TableCell(width: 56, child: Container(width: 32, height: 32, decoration: BoxDecoration(color: colors.bgTier3, borderRadius: BorderRadius.circular(4)), child: Icon(Icons.image_outlined, size: 14, color: colors.textDisabled))),
-          
+          SizedBox(
+            width: 24,
+            child: Checkbox(value: item.isSelected, onChanged: (v) => _toggleSelect(v ?? false), visualDensity: VisualDensity.compact),
+          ),
+          TableCell(width: 42, child: Text("${index + 1}", style: TextStyle(fontSize: 10, color: colors.textDisabled))),
+          TableCell(width: 56, child: Container(width: 24, height: 24, decoration: BoxDecoration(color: const Color(0xFF0066CC).withValues(alpha:0.1), borderRadius: BorderRadius.circular(4), border: Border.all(color: const Color(0xFF0066CC).withValues(alpha:0.2))), child: Icon(Icons.image_outlined, size: 14, color: const Color(0xFF0066CC)))),
+
           // Dynamic Fields
-          ...fields.map((f) => DynamicTableCell(fieldId: f, index: index, item: item, controller: controller, updateField: updateField)),
+          ...fields.map((f) => SizedBox(
+                width: getBulkColumnWidth(f),
+                child: DynamicTableCell(fieldId: f, index: index, item: item, controller: controller, updateField: updateField),
+              )),
         ],
       ),
     );
