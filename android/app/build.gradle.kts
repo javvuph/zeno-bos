@@ -7,6 +7,7 @@ plugins {
 android {
     namespace = "com.zeno.bos"
     compileSdk = flutter.compileSdkVersion
+    ndkVersion = "28.2.13676358"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -23,8 +24,6 @@ android {
 
     buildTypes {
         release {
-            // Temporary signing for installable test APK. Production signing
-            // can be added later without changing application functionality.
             signingConfig = signingConfigs.getByName("debug")
         }
     }
@@ -38,4 +37,10 @@ kotlin {
 
 flutter {
     source = "../.."
+}
+
+afterEvaluate {
+    tasks.withType<JavaCompile>().configureEach {
+        options.release.set(17)
+    }
 }
