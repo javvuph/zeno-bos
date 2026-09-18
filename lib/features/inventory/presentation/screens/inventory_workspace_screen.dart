@@ -191,7 +191,7 @@ class _InventoryWorkspaceScreenState extends State<InventoryWorkspaceScreen> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Column(
+        Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
@@ -222,15 +222,15 @@ class _InventoryWorkspaceScreenState extends State<InventoryWorkspaceScreen> {
               icon: const Icon(Icons.upload_file_outlined, size: 14),
               label: const Text("Export"),
               style: OutlinedButton.styleFrom(
-                foregroundColor: const Color(0xFF0F172A),
-                backgroundColor: Colors.white,
+                foregroundColor: textPrimary,
+                backgroundColor: colors?.bgSurface ?? Colors.white,
                 side: BorderSide(color: border),
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
-                textStyle: const TextStyle(
+                textStyle: TextStyle(
                     fontSize: 12, fontWeight: FontWeight.w700),
               ),
             ),
@@ -248,7 +248,7 @@ class _InventoryWorkspaceScreenState extends State<InventoryWorkspaceScreen> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
-                textStyle: const TextStyle(
+                textStyle: TextStyle(
                     fontSize: 12, fontWeight: FontWeight.w700),
               ),
             ),
@@ -316,7 +316,7 @@ class _InventoryWorkspaceScreenState extends State<InventoryWorkspaceScreen> {
       builder: (ctx) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
         title: Text("Adjust Stock — ${product.name}",
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800)),
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800)),
         content: SizedBox(
           width: 320,
           child: Column(
@@ -325,7 +325,7 @@ class _InventoryWorkspaceScreenState extends State<InventoryWorkspaceScreen> {
             children: [
               Text(
                 "Current Total Stock: ${currentStock.toStringAsFixed(0)} PCS",
-                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF64748B)),
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF64748B)),
               ),
               const SizedBox(height: 12),
               TextField(
@@ -347,7 +347,7 @@ class _InventoryWorkspaceScreenState extends State<InventoryWorkspaceScreen> {
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF4F46E5),
+              backgroundColor: accent,
               foregroundColor: Colors.white,
             ),
             onPressed: () async {
