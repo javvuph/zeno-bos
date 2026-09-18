@@ -85,14 +85,14 @@ class _BulkScanWorkspaceState extends State<BulkScanWorkspace> {
     }
 
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            Color(0xFFe8f0f8),
-            Color(0xFFd4e4f0),
-            Color(0xFFe8f0f8),
+            ZenoTheme.auroraLightBackground,
+            ZenoTheme.auroraLightNested,
+            ZenoTheme.auroraLightBackground,
           ],
           stops: [0.0, 0.5, 1.0],
         ),
@@ -112,7 +112,7 @@ class _BulkScanWorkspaceState extends State<BulkScanWorkspace> {
                         decoration: BoxDecoration(
                           color: const Color(0xFFFFFFFF).withValues(alpha: 0.9),
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: const Color(0xFF0066CC).withValues(alpha: 0.2)),
+                          border: Border.all(color: const colors.accentPrimary.withValues(alpha: 0.2)),
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black.withValues(alpha: 0.04),
@@ -177,12 +177,12 @@ class _StatToken extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
       Text(label,
-          style: const TextStyle(
+          style: TextStyle(
               fontSize: 9,
               fontWeight: FontWeight.bold,
               letterSpacing: 0.5,
               textBaseline: TextBaseline.alphabetic,
-              color: Color(0xFF4a5f7f))),
+              color: colors.textSecondary)),
       Text(value,
           style: TextStyle(
               fontSize: 14, fontWeight: FontWeight.w700, color: color)),
@@ -199,19 +199,19 @@ class ColHeader extends StatelessWidget {
     return Container(
       width: width,
       decoration: BoxDecoration(
-        border: Border(right: BorderSide(color: const Color(0xFF0066CC).withValues(alpha: 0.2))),
-        color: const Color(0xFFF8F9FA),
+        border: Border(right: BorderSide(color: const colors.accentPrimary.withValues(alpha: 0.2))),
+        color: const colors.bgTier2,
       ),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       alignment: Alignment.centerLeft,
       child: Text(label,
           overflow: TextOverflow.ellipsis,
-          style: const TextStyle(
+          style: TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w600,
               letterSpacing: 0.5,
               textBaseline: TextBaseline.alphabetic,
-              color: Color(0xFF4a5f7f))),
+              color: colors.textSecondary)),
     );
   }
 }
