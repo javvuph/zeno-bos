@@ -2,12 +2,13 @@ part of '../bulk_scan_workspace.dart';
 
 extension _BulkScanWorkspaceActionsState on _BulkScanWorkspaceState {
   Future<void> _pickAndProcessBill() async {
-    final files = await FilePicker.pickFiles(
+    final result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
+      allowMultiple: true,
       allowedExtensions: ['pdf', 'png', 'jpg', 'jpeg', 'webp'],
     );
 
-    if (!mounted || files.isEmpty) {
+    if (!mounted || result == null) {
       return;
     }
 
@@ -33,7 +34,7 @@ extension _BulkScanWorkspaceActionsState on _BulkScanWorkspaceState {
     }
 
     try {
-      for (final file in files) {
+      for (final file in result.files) {
         if (file.path == null) continue;
         final products = await _ingestionService.processAIBillMultiple(file.path!);
         for (final product in products) {
