@@ -448,6 +448,28 @@ class _AiCommandCard extends StatelessWidget {
   }
 }
 
+
+class _KpiStrip extends StatelessWidget {
+  const _KpiStrip();
+  @override Widget build(BuildContext context) {
+    final c=Theme.of(context).extension<ZenoSemanticColors>()!;
+    return SizedBox(height:104, child: ListView(scrollDirection:Axis.horizontal, children:[
+      _KpiCard(label:'TODAY SALES',value:'₹ 24.8K',change:'+12.4%',icon:Icons.trending_up_rounded,accent:c.accentPrimary),
+      _KpiCard(label:'ORDERS',value:'128',change:'+8.2%',icon:Icons.shopping_bag_outlined,accent:c.accentPurple),
+      _KpiCard(label:'PROFIT',value:'₹ 6.4K',change:'+9.7%',icon:Icons.account_balance_wallet_outlined,accent:c.statusSuccess),
+    ]));
+  }
+}
+class _KpiCard extends StatelessWidget {
+  final String label,value,change; final IconData icon; final Color accent;
+  const _KpiCard({required this.label,required this.value,required this.change,required this.icon,required this.accent});
+  @override Widget build(BuildContext context){final c=Theme.of(context).extension<ZenoSemanticColors>()!;return Container(width:142,margin:const EdgeInsets.only(right:10),padding:const EdgeInsets.all(13),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(18),border:Border.all(color:c.borderSubtle)),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Icon(icon,size:18,color:accent),const Spacer(),Text(label,style:TextStyle(fontSize:8,fontWeight:FontWeight.w800,letterSpacing:1,color:c.textSecondary)),const SizedBox(height:2),Row(children:[Text(value,style:TextStyle(fontSize:15,fontWeight:FontWeight.w900,color:c.textPrimary)),const Spacer(),Text(change,style:TextStyle(fontSize:8,fontWeight:FontWeight.w800,color:accent))])]);}
+}
+class _InsightCard extends StatelessWidget {
+  final VoidCallback onTap; const _InsightCard({required this.onTap});
+  @override Widget build(BuildContext context){final c=Theme.of(context).extension<ZenoSemanticColors>()!;return InkWell(onTap:onTap,borderRadius:BorderRadius.circular(18),child:Container(padding:const EdgeInsets.all(15),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(18),border:Border.all(color:c.borderSubtle)),child:Row(children:[Container(width:38,height:38,decoration:BoxDecoration(color:c.accentPurple.withValues(alpha:.10),borderRadius:BorderRadius.circular(12)),child:Icon(Icons.insights_rounded,color:c.accentPurple,size:20)),const SizedBox(width:12),Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text('AI BUSINESS SIGNAL',style:TextStyle(fontSize:9,fontWeight:FontWeight.w900,letterSpacing:1.2,color:c.accentPurple)),const SizedBox(height:4),Text('Fast-moving products are driving today’s sales.',style:TextStyle(fontSize:12,fontWeight:FontWeight.w700,color:c.textPrimary)),const SizedBox(height:3),Text('Open Analytics for the full intelligence view.',style:TextStyle(fontSize:9,color:c.textSecondary))]),),Icon(Icons.arrow_forward_ios_rounded,size:13,color:c.textSecondary)]));}
+}
+
 class _ActionCard extends StatelessWidget {
   final IconData icon;
   final String label;
