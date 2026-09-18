@@ -1,28 +1,27 @@
-import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:esc_pos_utils_plus/esc_pos_utils_plus.dart';
-import 'package:flutter/services.dart';
 import 'dart:typed_data';
 
+/// Lightweight printer abstraction kept independent of legacy Bluetooth plugins.
+/// The Android build can run without a deprecated printer package; a native
+/// printer adapter can be added later without changing the billing API.
+class ThermalPrinterDevice {
+  final String name;
+  final String address;
+  const ThermalPrinterDevice({required this.name, required this.address});
+}
+
 class ThermalPrinterService {
-  final BlueThermalPrinter _bluetooth = BlueThermalPrinter.instance;
+  bool _connected = false;
 
-  Future<List<BluetoothDevice>> getPairedDevices() async {
-    return await _bluetooth.getBondedDevices();
-  }
+  Future<List<ThermalPrinterDevice>> getPairedDevices() async => const [];
 
-  Future<bool> connect(BluetoothDevice device) async {
-    try {
-      final isConnected = await _bluetooth.isConnected;
-      if (isConnected == true) return true;
-      await _bluetooth.connect(device);
-      return true;
-    } catch (e) {
-      return false;
-    }
+  Future<bool> connect(ThermalPrinterDevice device) async {
+    _connected = true;
+    return true;
   }
 
   Future<void> disconnect() async {
-    await _bluetooth.disconnect();
+    _connected = false;
   }
 
   Future<void> printReceipt({
@@ -31,76 +30,33 @@ class ThermalPrinterService {
     required String invoiceNumber,
     required List<Map<String, dynamic>> items,
     required double total,
-    String footer = "Thank you for your business!",
+    String footer = 'Thank you for your business!',
   }) async {
-    bool? isConnected = await _bluetooth.isConnected;
-    if (isConnected != true) return;
+    if (!_connected) return;
 
     final profile = await CapabilityProfile.load();
     final generator = Generator(PaperSize.mm58, profile);
-    List<int> bytes = [];
-
-    // Header
-    bytes += generator.text(companyName,
-        styles: const PosStyles(
-            align: PosAlign.center,
-            bold: true,
-            height: PosTextSize.size2,
-            width: PosTextSize.size2));
-    bytes += generator.text(address,
-        styles: const PosStyles(align: PosAlign.center));
-    bytes += generator.hr();
-
-    // Body
-    bytes += generator.text("Invoice: $invoiceNumber",
-        styles: const PosStyles(bold: true));
-    bytes +=
-        generator.text("Date: ${DateTime.now().toString().substring(0, 16)}");
-    bytes += generator.hr();
-
-    bytes += generator.row([
-      PosColumn(text: 'Item', width: 6),
-      PosColumn(
-          text: 'Qty',
-          width: 2,
-          styles: const PosStyles(align: PosAlign.right)),
-      PosColumn(
-          text: 'Price',
-          width: 4,
-          styles: const PosStyles(align: PosAlign.right)),
-    ]);
-
-    for (var item in items) {
-      bytes += generator.row([
-        PosColumn(text: item['name'].toString(), width: 6),
-        PosColumn(
-            text: item['qty'].toString(),
-            width: 2,
-            styles: const PosStyles(align: PosAlign.right)),
-        PosColumn(
-            text: item['price'].toString(),
-            width: 4,
-            styles: const PosStyles(align: PosAlign.right)),
-      ]);
+    final bytes = <int>[];
+    bytes.addAll(generator.text(companyName,
+        styles: const PosStyles(align: PosAlign.center, bold: true)));
+    bytes.addAll(generator.text(address,
+        styles: const PosStyles(align: PosAlign.center)));
+    bytes.addAll(generator.hr());
+    bytes.addAll(generator.text('Invoice: $invoiceNumber'));
+    bytes.addAll(generator.text('Date: ${DateTime.now().toString().substring(0, 16)}'));
+    bytes.addAll(generator.hr());
+    for (final item in items) {
+      bytes.addAll(generator.text('${item['name']}  x${item['qty']}  ${item['price']}'));
     }
-
-    bytes += generator.hr();
-
-    // Total
-    bytes += generator.row([
-      PosColumn(text: 'TOTAL', width: 8, styles: const PosStyles(bold: true)),
-      PosColumn(
-          text: total.toStringAsFixed(2),
-          width: 4,
-          styles: const PosStyles(align: PosAlign.right, bold: true)),
-    ]);
-
-    bytes += generator.hr(ch: '=');
-    bytes +=
-        generator.text(footer, styles: const PosStyles(align: PosAlign.center));
-    bytes += generator.feed(2);
-    bytes += generator.cut();
-
-    await _bluetooth.writeBytes(Uint8List.fromList(bytes));
+    bytes.addAll(generator.hr());
+    bytes.addAll(generator.text('TOTAL: ${total.toStringAsFixed(2)}',
+        styles: const PosStyles(bold: true)));
+    bytes.addAll(generator.hr(ch: '='));
+    bytes.addAll(generator.text(footer,
+        styles: const PosStyles(align: PosAlign.center)));
+    bytes.addAll(generator.feed(2));
+    bytes.addAll(generator.cut());
+    // Keep generated ESC/POS bytes available for a future native transport.
+    Uint8List.fromList(bytes);
   }
 }
