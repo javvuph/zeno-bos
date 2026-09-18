@@ -1,7 +1,7 @@
 part of '../product_studio_controller.dart';
 
 extension ProductStudioControllerSession on ProductStudioController {
-  void clearScanSession() { scanSession.clear(); notify(); }
+  void clearScanSession() { scanSession.clear(); bulkScanItems.clear(); importItems.clear(); notify(); }
   
   Future<void> handleBarcodeScanned(String barcode) async {
     await handleBulkBarcodeScanned(barcode);
@@ -201,7 +201,9 @@ extension ProductStudioControllerSession on ProductStudioController {
       for (var item in bulkScanItems) {
         if (item.status == BulkScanStatus.ready || item.status == BulkScanStatus.review) {
           if (isBulkRowComplete(item.product)) {
+            item.product.lifecycleState = ProductLifecycleState.published;
             await repository.saveProduct(item.product.toDomain());
+            item.status = BulkScanStatus.completed;
           }
         }
       }
