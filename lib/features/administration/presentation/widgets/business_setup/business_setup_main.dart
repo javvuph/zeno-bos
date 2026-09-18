@@ -144,12 +144,12 @@ class _BusinessSetupMainState extends State<BusinessSetupMain> {
         backgroundColor: Colors.transparent,
         body: Center(
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(14),
             child: Container(
-              constraints: const BoxConstraints(maxWidth: 1600),
+              constraints: const BoxConstraints(maxWidth: 1440),
               decoration: BusinessSetupTheme.glassPanelDecoration(),
               child: Padding(
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.all(18),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   mainAxisSize: MainAxisSize.min,
