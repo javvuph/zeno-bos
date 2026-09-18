@@ -72,17 +72,17 @@ class InventoryVariantSubtable extends StatelessWidget {
             ],
             rows: product.variants.map((variant) {
               String statusLabel = "IN STOCK";
-              Color statusBg = const Color(0xFFDCFCE7);
-              Color statusText = const Color(0xFF166534);
+              Color statusBg = (colors?.statusSuccess ?? const Color(0xFF16A34A)).withValues(alpha: 0.12);
+              Color statusText = colors?.statusSuccess ?? const Color(0xFF16A34A);
 
               if (variant.qty == 0) {
                 statusLabel = "OUT OF STOCK";
-                statusBg = const Color(0xFFFEE2E2);
-                statusText = const Color(0xFF991B1B);
+                statusBg = (colors?.statusDanger ?? const Color(0xFFDC2626)).withValues(alpha: 0.12);
+                statusText = colors?.statusDanger ?? const Color(0xFFDC2626);
               } else if (variant.qty <= product.reorderLevel) {
                 statusLabel = "LOW STOCK";
-                statusBg = const Color(0xFFFEF3C7);
-                statusText = const Color(0xFF92400E);
+                statusBg = (colors?.statusWarning ?? const Color(0xFFD97706)).withValues(alpha: 0.14);
+                statusText = colors?.statusWarning ?? const Color(0xFFD97706);
               }
 
               return DataRow(
