@@ -40,7 +40,7 @@ class InventoryControlsBar extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 10),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(9),
                 border: Border.all(color: border),
               ),
               child: DropdownButtonHideUnderline(
@@ -91,9 +91,9 @@ class InventoryControlsBar extends StatelessWidget {
           width: 320,
           height: 36,
           decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: const Color(0xFFE2E8F0)),
+            color: Colors.white.withValues(alpha: 0.86),
+            borderRadius: BorderRadius.circular(9),
+            border: Border.all(color: border),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Row(
@@ -129,7 +129,7 @@ class InventoryControlsBar extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
         decoration: BoxDecoration(
           color: isActive ? accent.withValues(alpha: 0.10) : Colors.white.withValues(alpha: 0.78),
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(9),
           border: Border.all(
             color: isActive ? accent.withValues(alpha: 0.30) : border,
           ),
