@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:zeno/app/theme.dart';
-import 'package:zeno/navigation/menu/menu_models.dart';
 import 'package:zeno/navigation/menu_registry.dart';
 import 'package:zeno/navigation/navigation_controller.dart';
 import 'package:zeno/navigation/zeno_router.dart';
