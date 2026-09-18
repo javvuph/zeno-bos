@@ -10,7 +10,7 @@ extension _ProductStudioScreenHeaderState on _ProductStudioScreenState {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
-        color: const Color(0xFFEFF4F9),
+        color: colors.bgTier2,
         border: const Border(bottom: BorderSide(color: Color(0xFFD1E0F0), width: 1)),
       ),
       child: Row(
@@ -51,7 +51,7 @@ extension _ProductStudioScreenHeaderState on _ProductStudioScreenState {
             decoration: BoxDecoration(
               color: Colors.white.withValues(alpha: 0.6),
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: const Color(0xFFD1E0F0), width: 1),
+              border: Border.all(color: colors.borderSubtle, width: 1),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -73,7 +73,7 @@ extension _ProductStudioScreenHeaderState on _ProductStudioScreenState {
             decoration: BoxDecoration(
               color: Colors.white.withValues(alpha: 0.6),
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: const Color(0xFFD1E0F0), width: 1),
+              border: Border.all(color: colors.borderSubtle, width: 1),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -104,9 +104,9 @@ extension _ProductStudioScreenHeaderState on _ProductStudioScreenState {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       decoration: BoxDecoration(
-        color: const Color(0xFFDCEAF9),
+        color: colors.accentPrimary.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: const Color(0xFFB8D4F0), width: 1),
+        border: Border.all(color: colors.accentPrimary.withValues(alpha: 0.20), width: 1),
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
@@ -144,9 +144,9 @@ extension _ProductStudioScreenHeaderState on _ProductStudioScreenState {
   }
 
   Widget _tagCompact(String label, {bool isSuccess = false}) {
-    final bgColor = isSuccess ? const Color(0xFFCFF7D3) : const Color(0xFFDCEAF9);
-    final borderColor = isSuccess ? const Color(0xFFA3EEB0) : const Color(0xFFB8D4F0);
-    final textColor = isSuccess ? const Color(0xFF118A36) : const Color(0xFF0059B3);
+    final bgColor = isSuccess ? colors.statusSuccess.withValues(alpha: 0.10) : colors.accentPrimary.withValues(alpha: 0.08);
+    final borderColor = isSuccess ? colors.statusSuccess.withValues(alpha: 0.22) : colors.accentPrimary.withValues(alpha: 0.20);
+    final textColor = isSuccess ? colors.statusSuccess : colors.accentPrimary;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       decoration: BoxDecoration(
@@ -166,9 +166,9 @@ extension _ProductStudioScreenHeaderState on _ProductStudioScreenState {
     return Container(
       padding: const EdgeInsets.all(3),
       decoration: BoxDecoration(
-        color: const Color(0xFFEFF4F9),
+        color: colors.bgTier2,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: const Color(0xFFD1E0F0), width: 1),
+        border: Border.all(color: colors.borderSubtle, width: 1),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -192,14 +192,14 @@ extension _ProductStudioScreenHeaderState on _ProductStudioScreenState {
           color: isActive ? Colors.white : Colors.transparent,
           borderRadius: BorderRadius.circular(20),
           boxShadow: isActive ? [const BoxShadow(color: Color(0x0D000000), blurRadius: 3, offset: Offset(0, 1))] : null,
-          border: Border.all(color: isActive ? const Color(0xFF0073E6) : Colors.transparent, width: 1),
+          border: Border.all(color: isActive ? colors.accentPrimary : Colors.transparent, width: 1),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 14, color: isActive ? const Color(0xFF0073E6) : const Color(0xFF5F748D)),
+            Icon(icon, size: 14, color: isActive ? colors.accentPrimary : colors.textSecondary),
             const SizedBox(width: 6),
-            Text(label, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: isActive ? const Color(0xFF0073E6) : const Color(0xFF5F748D), letterSpacing: 0.3)),
+            Text(label, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: isActive ? colors.accentPrimary : colors.textSecondary, letterSpacing: 0.3)),
           ],
         ),
       ),
@@ -215,12 +215,12 @@ extension _ProductStudioScreenHeaderState on _ProductStudioScreenState {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: const Color(0xFFD1E0F0), width: 1),
+          border: Border.all(color: colors.borderSubtle, width: 1),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 14, color: const Color(0xFF0073E6)),
+            Icon(icon, size: 14, color: colors.accentPrimary),
             const SizedBox(width: 6),
             Text(label, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Color(0xFF1A2A3A), letterSpacing: 0.3)),
           ],
@@ -239,9 +239,9 @@ extension _ProductStudioScreenHeaderState on _ProductStudioScreenState {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(icon == Icons.refresh_rounded ? 50 : 8),
-          border: Border.all(color: const Color(0xFFD1E0F0), width: 1),
+          border: Border.all(color: colors.borderSubtle, width: 1),
         ),
-        child: Icon(icon, size: 16, color: icon == Icons.refresh_rounded ? const Color(0xFF1A2A3A) : const Color(0xFF0073E6)),
+        child: Icon(icon, size: 16, color: icon == Icons.refresh_rounded ? colors.textPrimary : colors.accentPrimary),
       ),
     );
   }
@@ -255,10 +255,10 @@ extension _ProductStudioScreenHeaderState on _ProductStudioScreenState {
           child: Switch(
             value: controller.isAdvancedMode,
             onChanged: (v) => controller.toggleViewMode(),
-            activeTrackColor: const Color(0xFF0073E6),
-            inactiveTrackColor: const Color(0xFFE2E8F0),
+            activeTrackColor: colors.accentPrimary,
+            inactiveTrackColor: colors.bgTier3,
             inactiveThumbColor: Colors.white,
-            trackOutlineColor: WidgetStateProperty.resolveWith((states) => const Color(0xFFCBD5E1)),
+            trackOutlineColor: WidgetStateProperty.resolveWith((states) => colors.borderSubtle),
           ),
         ),
         Text("ADVANCED", style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: Color(0xFF1A2A3A), letterSpacing: 0.3)),
@@ -267,9 +267,9 @@ extension _ProductStudioScreenHeaderState on _ProductStudioScreenState {
   }
 
   Widget _tagSmall(String label, {bool isSuccess = false}) {
-    final bgColor = isSuccess ? const Color(0xFFCFF7D3) : const Color(0xFFDCEAF9);
-    final borderColor = isSuccess ? const Color(0xFFA3EEB0) : const Color(0xFFB8D4F0);
-    final textColor = isSuccess ? const Color(0xFF118A36) : const Color(0xFF0059B3);
+    final bgColor = isSuccess ? colors.statusSuccess.withValues(alpha: 0.10) : colors.accentPrimary.withValues(alpha: 0.08);
+    final borderColor = isSuccess ? colors.statusSuccess.withValues(alpha: 0.22) : colors.accentPrimary.withValues(alpha: 0.20);
+    final textColor = isSuccess ? colors.statusSuccess : colors.accentPrimary;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
@@ -293,9 +293,9 @@ extension _ProductStudioScreenHeaderState on _ProductStudioScreenState {
 
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFFDCEAF9),
+        color: colors.accentPrimary.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFB8D4F0), width: 0.5),
+        border: Border.all(color: colors.accentPrimary.withValues(alpha: 0.20), width: 0.5),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -337,16 +337,16 @@ extension _ProductStudioScreenHeaderState on _ProductStudioScreenState {
         duration: const Duration(milliseconds: 180),
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
         decoration: BoxDecoration(
-          color: isActive ? const Color(0xFF0073E6) : Colors.white,
+          color: isActive ? colors.accentPrimary : Colors.white,
           borderRadius: BorderRadius.circular(6),
-          border: Border.all(color: isActive ? const Color(0xFF0073E6) : const Color(0xFFD1E0F0), width: 0.5),
+          border: Border.all(color: isActive ? colors.accentPrimary : colors.borderSubtle, width: 0.5),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 12, color: isActive ? Colors.white : const Color(0xFF5F748D)),
+            Icon(icon, size: 12, color: isActive ? Colors.white : colors.textSecondary),
             const SizedBox(width: 4),
-            Text(label, style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: isActive ? Colors.white : const Color(0xFF5F748D), letterSpacing: 0.2)),
+            Text(label, style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: isActive ? Colors.white : colors.textSecondary, letterSpacing: 0.2)),
           ],
         ),
       ),
@@ -362,12 +362,12 @@ extension _ProductStudioScreenHeaderState on _ProductStudioScreenState {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(6),
-          border: Border.all(color: const Color(0xFFD1E0F0), width: 0.5),
+          border: Border.all(color: colors.borderSubtle, width: 0.5),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 12, color: const Color(0xFF0073E6)),
+            Icon(icon, size: 12, color: colors.accentPrimary),
             const SizedBox(width: 4),
             Text(label, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: Color(0xFF1A2A3A), letterSpacing: 0.2)),
           ],
@@ -386,9 +386,9 @@ extension _ProductStudioScreenHeaderState on _ProductStudioScreenState {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(4),
-          border: Border.all(color: const Color(0xFFD1E0F0), width: 0.5),
+          border: Border.all(color: colors.borderSubtle, width: 0.5),
         ),
-        child: Icon(icon, size: 12, color: icon == Icons.refresh_rounded ? const Color(0xFF1A2A3A) : const Color(0xFF0073E6)),
+        child: Icon(icon, size: 12, color: icon == Icons.refresh_rounded ? colors.textPrimary : colors.accentPrimary),
       ),
     );
   }
@@ -397,10 +397,10 @@ extension _ProductStudioScreenHeaderState on _ProductStudioScreenState {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: controller.isAdvancedMode ? const Color(0xFF0073E6) : Colors.white,
+        color: controller.isAdvancedMode ? colors.accentPrimary : Colors.white,
         borderRadius: BorderRadius.circular(6),
         border: Border.all(
-          color: controller.isAdvancedMode ? const Color(0xFF0073E6) : const Color(0xFFD1E0F0),
+          color: controller.isAdvancedMode ? colors.accentPrimary : colors.borderSubtle,
           width: 0.5,
         ),
       ),
@@ -413,7 +413,7 @@ extension _ProductStudioScreenHeaderState on _ProductStudioScreenState {
             Icon(
               controller.isAdvancedMode ? Icons.check_circle_rounded : Icons.settings_rounded,
               size: 12,
-              color: controller.isAdvancedMode ? Colors.white : const Color(0xFF5F748D),
+              color: controller.isAdvancedMode ? Colors.white : colors.textSecondary,
             ),
             const SizedBox(width: 4),
             Text(
@@ -421,7 +421,7 @@ extension _ProductStudioScreenHeaderState on _ProductStudioScreenState {
               style: TextStyle(
                 fontSize: 10,
                 fontWeight: FontWeight.w700,
-                color: controller.isAdvancedMode ? Colors.white : const Color(0xFF5F748D),
+                color: controller.isAdvancedMode ? Colors.white : colors.textSecondary,
                 letterSpacing: 0.2,
               ),
             ),
