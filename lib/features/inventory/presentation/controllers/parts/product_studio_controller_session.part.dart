@@ -245,5 +245,50 @@ extension ProductStudioControllerSession on ProductStudioController {
       notify();
     }
   }
-  void deleteSelectedBulkItems() { bulkScanItems.removeWhere((item) => item.isSelected); notify(); }
+  void deleteSelectedBulkItems() {
+    bulkScanItems.removeWhere((item) => item.isSelected);
+    notify();
+  }
+
+  Future<void> saveBulkAsDraft() async {
+    if (bulkScanItems.isEmpty) return;
+    setSaving(true);
+    try {
+      for (final item in bulkScanItems) {
+        item.product.lifecycleState = ProductLifecycleState.draft;
+        await repository.saveProduct(item.product.toDomain());
+      }
+      await sl<ProductController>().refreshProducts();
+      final context = navigationContext;
+      if (context != null && context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Draft saved successfully')),
+        );
+      }
+    } catch (e) {
+      final context = navigationContext;
+      if (context != null && context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to save draft: $e')),
+        );
+      }
+    } finally {
+      setSaving(false);
+      notify();
+    }
+  }
+
+  Future<void> bulkEditSelected({
+    double? costPrice,
+    double? sellingPrice,
+    double? reorderLevel,
+  }) async {
+    for (final item in bulkScanItems.where((item) => item.isSelected)) {
+      if (costPrice != null) item.product.costPrice = costPrice;
+      if (sellingPrice != null) item.product.sellingPrice = sellingPrice;
+      if (reorderLevel != null) item.product.reorderLevel = reorderLevel;
+    }
+    _reconcileBulkDuplicateStatus();
+    notify();
+  }
 }
