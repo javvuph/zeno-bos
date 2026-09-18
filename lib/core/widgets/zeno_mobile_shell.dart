@@ -355,6 +355,8 @@ class _MobileCommandCenter extends StatelessWidget {
         _KpiStrip(),
         const SizedBox(height: 14),
         _InsightCard(onTap: () => onRoute('reports')),
+        const SizedBox(height: 14),
+        _TodayPulse(onRoute: onRoute),
         const SizedBox(height: 18),
         Row(children: [
           Expanded(child: _ActionCard(
@@ -470,7 +472,27 @@ class _InsightCard extends StatelessWidget {
   @override Widget build(BuildContext context){final c=Theme.of(context).extension<ZenoSemanticColors>()!;return InkWell(onTap:onTap,borderRadius:BorderRadius.circular(18),child:Container(padding:const EdgeInsets.all(15),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(18),border:Border.all(color:c.borderSubtle)),child:Row(children:[Container(width:38,height:38,decoration:BoxDecoration(color:c.accentPurple.withValues(alpha:.10),borderRadius:BorderRadius.circular(12)),child:Icon(Icons.insights_rounded,color:c.accentPurple,size:20)),const SizedBox(width:12),Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text('AI BUSINESS SIGNAL',style:TextStyle(fontSize:9,fontWeight:FontWeight.w900,letterSpacing:1.2,color:c.accentPurple)),const SizedBox(height:4),Text('Fast-moving products are driving today’s sales.',style:TextStyle(fontSize:12,fontWeight:FontWeight.w700,color:c.textPrimary)),const SizedBox(height:3),Text('Open Analytics for the full intelligence view.',style:TextStyle(fontSize:9,color:c.textSecondary))]),),Icon(Icons.arrow_forward_ios_rounded,size:13,color:c.textSecondary)]));}
 }
 
-class _ActionCard extends StatelessWidget {
+
+class _TodayPulse extends StatelessWidget {
+  final ValueChanged<String> onRoute;
+  const _TodayPulse({required this.onRoute});
+  @override Widget build(BuildContext context){
+    final c=Theme.of(context).extension<ZenoSemanticColors>()!;
+    return Container(padding:const EdgeInsets.all(15),decoration:BoxDecoration(color:c.bgTier2.withValues(alpha:.92),borderRadius:BorderRadius.circular(20),border:Border.all(color:c.borderSubtle)),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+      Row(children:[Text('TODAY PULSE',style:TextStyle(fontSize:10,fontWeight:FontWeight.w900,letterSpacing:1.5,color:c.textSecondary)),const Spacer(),Text('LIVE',style:TextStyle(fontSize:8,fontWeight:FontWeight.w900,letterSpacing:1,color:c.statusSuccess))]),
+      const SizedBox(height:13),
+      _PulseRow(icon:Icons.warning_amber_rounded,title:'Low stock',value:'7 products',accent:c.amberGold,onTap:()=>onRoute('inventory/products')),
+      _PulseRow(icon:Icons.local_shipping_outlined,title:'Deliveries',value:'12 active',accent:c.accentPrimary,onTap:()=>onRoute('orders/dashboard')),
+      _PulseRow(icon:Icons.people_outline_rounded,title:'Customers',value:'18 new',accent:c.accentPurple,onTap:()=>onRoute('customers')),
+    ]));
+  }
+}
+class _PulseRow extends StatelessWidget {
+  final IconData icon; final String title,value; final Color accent; final VoidCallback onTap;
+  const _PulseRow({required this.icon,required this.title,required this.value,required this.accent,required this.onTap});
+  @override Widget build(BuildContext context){final c=Theme.of(context).extension<ZenoSemanticColors>()!;return InkWell(onTap:onTap,borderRadius:BorderRadius.circular(12),child:Padding(padding:const EdgeInsets.symmetric(vertical:7),child:Row(children:[Container(width:32,height:32,decoration:BoxDecoration(color:accent.withValues(alpha:.10),borderRadius:BorderRadius.circular(10)),child:Icon(icon,size:17,color:accent)),const SizedBox(width:10),Expanded(child:Text(title,style:TextStyle(fontSize:11,fontWeight:FontWeight.w700,color:c.textPrimary))),Text(value,style:TextStyle(fontSize:10,fontWeight:FontWeight.w800,color:c.textSecondary)),const SizedBox(width:5),Icon(Icons.chevron_right_rounded,size:17,color:c.textDisabled)])));}
+}
+\nclass _ActionCard extends StatelessWidget {
   final IconData icon;
   final String label;
   final String sub;
