@@ -108,11 +108,11 @@ class InventoryKpiGrid extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
       decoration: BoxDecoration(
-        color: surface.withValues(alpha: 0.82),
+        color: surface.withValues(alpha: 0.86),
         gradient: gradientColors != null
             ? LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
                 colors: gradientColors,
               )
             : null,
