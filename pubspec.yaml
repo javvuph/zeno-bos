@@ -50,7 +50,7 @@ dependencies:
   google_generative_ai: ^0.4.0
 
   # Phase 1 Integrations
-  upi_india: ^3.0.2
+  upi_india: ^3.0.1
   blue_thermal_printer: ^1.2.3
   esc_pos_utils_plus: ^2.0.2
   mobile_scanner: ^5.2.3
