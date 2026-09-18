@@ -47,7 +47,7 @@ extension _ProductStudioScreenHeaderState on _ProductStudioScreenState {
 
           const Spacer(),
 
-          // Section 2: Manual, Bulk & Import
+          // Section 2: Scan & Import
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
