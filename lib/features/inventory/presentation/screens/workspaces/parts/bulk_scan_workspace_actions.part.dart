@@ -172,7 +172,7 @@ extension _BulkScanWorkspaceActionsState on _BulkScanWorkspaceState {
               label: "BULK EDIT",
               variant: ZenoButtonVariant.secondary,
               size: ZenoButtonSize.sm,
-              onPressed: () {}),
+              onPressed: _openBulkEditDialog),
           const SizedBox(width: 12),
           ZenoButton(
               label: "DELETE SELECTED",
@@ -250,7 +250,7 @@ extension _BulkScanWorkspaceActionsState on _BulkScanWorkspaceState {
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: const Color(0xFFFFFFFF).withValues(alpha:0.9),
+        color: colors.bgSurface.withValues(alpha:0.9),
         border: Border.all(color: colors.accentPrimary.withValues(alpha:0.2)),
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
