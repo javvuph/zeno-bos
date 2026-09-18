@@ -38,6 +38,8 @@ class _BulkScanWorkspaceState extends State<BulkScanWorkspace> {
   late final IngestionService _ingestionService;
   BulkWorkspaceTab _activeTab = BulkWorkspaceTab.basicInfo;
 
+  ZenoSemanticColors get colors => widget.colors;
+
   @override
   void initState() {
     super.initState();
@@ -85,18 +87,7 @@ class _BulkScanWorkspaceState extends State<BulkScanWorkspace> {
     }
 
     return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            ZenoTheme.auroraLightBackground,
-            ZenoTheme.auroraLightNested,
-            ZenoTheme.auroraLightBackground,
-          ],
-          stops: [0.0, 0.5, 1.0],
-        ),
-      ),
+      decoration: BoxDecoration(color: colors.bgTier1),
       child: Column(
         children: [
           Expanded(
@@ -110,9 +101,9 @@ class _BulkScanWorkspaceState extends State<BulkScanWorkspace> {
                     Expanded(
                       child: Container(
                         decoration: BoxDecoration(
-                          color: const Color(0xFFFFFFFF).withValues(alpha: 0.9),
+                          color: colors.bgSurface.withValues(alpha: 0.9),
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: const colors.accentPrimary.withValues(alpha: 0.2)),
+                          border: Border.all(color: colors.accentPrimary.withValues(alpha: 0.2)),
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black.withValues(alpha: 0.04),
@@ -200,7 +191,7 @@ class ColHeader extends StatelessWidget {
       width: width,
       decoration: BoxDecoration(
         border: Border(right: BorderSide(color: const colors.accentPrimary.withValues(alpha: 0.2))),
-        color: const colors.bgTier2,
+        color: colors.bgTier2,
       ),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       alignment: Alignment.centerLeft,
