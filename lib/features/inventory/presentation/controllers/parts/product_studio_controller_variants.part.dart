@@ -323,16 +323,17 @@ extension ProductStudioControllerVariants on ProductStudioController {
   }
 
   Future<List<MediaAsset>> _pickImageAssets() async {
-    final files = await FilePicker.pickFiles(
+    final result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
+      allowMultiple: true,
       allowedExtensions: const ['jpg', 'jpeg', 'png', 'webp'],
     );
 
-    if (files.isEmpty) {
+    if (result == null) {
       return const <MediaAsset>[];
     }
 
-    return files
+    return result.files
         .where((file) => file.path != null)
         .map((file) => MediaAsset(
               id: 'M-${DateTime.now().microsecondsSinceEpoch}-${file.name}',
