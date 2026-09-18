@@ -8,54 +8,83 @@ extension _ProductStudioScreenHeaderState on _ProductStudioScreenState {
         : (activeSubCategories.isNotEmpty ? activeSubCategories.first : "Clothing");
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
         color: const Color(0xFFEFF4F9),
         border: const Border(bottom: BorderSide(color: Color(0xFFD1E0F0), width: 1)),
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          // Section 1: Title & Category Info
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                width: 40, height: 40,
+                width: 32, height: 32,
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(colors: [Color(0xFF7C3AED), Color(0xFF4F46E5)]),
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Icon(Icons.shopping_bag_rounded, color: Colors.white, size: 20),
+                child: const Icon(Icons.shopping_bag_rounded, color: Colors.white, size: 16),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: 10),
               const Text(
                 "Product Studio",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: Colors.black, letterSpacing: -0.3),
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: Colors.black, letterSpacing: -0.3),
               ),
-              const SizedBox(width: 24),
-              _tagCompact("0%"),
-              const SizedBox(width: 8),
-              _tagCompact(controller.activeBusiness.toUpperCase()),
-              const SizedBox(width: 8),
-              _buildSubCategorySelector(activeSubCategories, currentSubCategory),
-              const SizedBox(width: 8),
-              _tagCompact(controller.product.businessScale.toString().split('.').last.toUpperCase(), isSuccess: true),
+              const SizedBox(width: 16),
+              _tagSmall("0%"),
+              const SizedBox(width: 6),
+              _tagSmall(controller.activeBusiness.toUpperCase()),
+              const SizedBox(width: 6),
+              _buildSubCategorySelectorSmall(activeSubCategories, currentSubCategory),
+              const SizedBox(width: 6),
+              _tagSmall(controller.product.businessScale.toString().split('.').last.toUpperCase(), isSuccess: true),
             ],
           ),
 
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _segmentedModeSelector(),
-              const SizedBox(width: 12),
-              _utilityButton(Icons.upload_file_rounded, "Import", () => controller.setCreationMode(ProductCreationMode.import)),
-              const SizedBox(width: 12),
-              _iconTool(Icons.refresh_rounded, () {}),
-              const SizedBox(width: 12),
-              _iconTool(Icons.fullscreen_rounded, controller.toggleFullscreen),
-              const SizedBox(width: 12),
-              _advancedToggle(),
-            ],
+          const Spacer(),
+
+          // Section 2: Manual, Bulk & Import
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.6),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: const Color(0xFFD1E0F0), width: 1),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _modeSegmentSmall("MANUAL", Icons.notes_rounded, controller.currentMode == ProductCreationMode.manual, () => controller.setCreationMode(ProductCreationMode.manual)),
+                const SizedBox(width: 8),
+                _modeSegmentSmall("BULK", Icons.layers_rounded, controller.currentMode == ProductCreationMode.bulkScan, () => controller.setCreationMode(ProductCreationMode.bulkScan)),
+                const SizedBox(width: 8),
+                _utilityButtonSmall(Icons.upload_file_rounded, "Import", () => controller.setCreationMode(ProductCreationMode.import)),
+              ],
+            ),
+          ),
+
+          const SizedBox(width: 12),
+
+          // Section 3: Tools
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.6),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: const Color(0xFFD1E0F0), width: 1),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _iconToolSmall(Icons.refresh_rounded, () {}),
+                const SizedBox(width: 4),
+                _iconToolSmall(Icons.fullscreen_rounded, controller.toggleFullscreen),
+                const SizedBox(width: 8),
+                _advancedToggleSmall(),
+              ],
+            ),
           ),
         ],
       ),
@@ -234,6 +263,171 @@ extension _ProductStudioScreenHeaderState on _ProductStudioScreenState {
         ),
         Text("ADVANCED", style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: Color(0xFF1A2A3A), letterSpacing: 0.3)),
       ],
+    );
+  }
+
+  Widget _tagSmall(String label, {bool isSuccess = false}) {
+    final bgColor = isSuccess ? const Color(0xFFCFF7D3) : const Color(0xFFDCEAF9);
+    final borderColor = isSuccess ? const Color(0xFFA3EEB0) : const Color(0xFFB8D4F0);
+    final textColor = isSuccess ? const Color(0xFF118A36) : const Color(0xFF0059B3);
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: borderColor, width: 0.5),
+      ),
+      child: Text(label, style: TextStyle(fontSize: 10, fontWeight: FontWeight.w600, color: textColor, letterSpacing: 0.2, textBaseline: TextBaseline.alphabetic)),
+    );
+  }
+
+  Widget _buildSubCategorySelectorSmall(List<String> activeSubCategories, String currentSubCategory) {
+    if (activeSubCategories.length <= 1) {
+      return _tagSmall(currentSubCategory.toUpperCase());
+    }
+
+    String selectedValue = activeSubCategories.firstWhere(
+      (s) => s.toLowerCase() == currentSubCategory.toLowerCase(),
+      orElse: () => activeSubCategories.first,
+    );
+
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color(0xFFDCEAF9),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFFB8D4F0), width: 0.5),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        child: DropdownButtonHideUnderline(
+          child: DropdownButton<String>(
+            value: selectedValue,
+            isDense: true,
+            isExpanded: false,
+            icon: const Icon(Icons.arrow_drop_down_rounded, color: Color(0xFF0059B3), size: 12),
+            style: const TextStyle(
+              color: Color(0xFF0059B3),
+              fontWeight: FontWeight.w600,
+              fontSize: 10,
+              letterSpacing: 0.2,
+              height: 1.0,
+            ),
+            items: activeSubCategories.map((type) {
+              return DropdownMenuItem<String>(
+                value: type,
+                child: Text(type.toUpperCase()),
+              );
+            }).toList(),
+            onChanged: (newType) {
+              if (newType != null) {
+                controller.setProfile(controller.activeBusiness, newType);
+              }
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _modeSegmentSmall(String label, IconData icon, bool isActive, VoidCallback onTap) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(6),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 180),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        decoration: BoxDecoration(
+          color: isActive ? const Color(0xFF0073E6) : Colors.white,
+          borderRadius: BorderRadius.circular(6),
+          border: Border.all(color: isActive ? const Color(0xFF0073E6) : const Color(0xFFD1E0F0), width: 0.5),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 12, color: isActive ? Colors.white : const Color(0xFF5F748D)),
+            const SizedBox(width: 4),
+            Text(label, style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: isActive ? Colors.white : const Color(0xFF5F748D), letterSpacing: 0.2)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _utilityButtonSmall(IconData icon, String label, VoidCallback onTap) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(6),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(6),
+          border: Border.all(color: const Color(0xFFD1E0F0), width: 0.5),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 12, color: const Color(0xFF0073E6)),
+            const SizedBox(width: 4),
+            Text(label, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: Color(0xFF1A2A3A), letterSpacing: 0.2)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _iconToolSmall(IconData icon, VoidCallback onTap) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(4),
+      child: Container(
+        width: 28,
+        height: 28,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(4),
+          border: Border.all(color: const Color(0xFFD1E0F0), width: 0.5),
+        ),
+        child: Icon(icon, size: 12, color: icon == Icons.refresh_rounded ? const Color(0xFF1A2A3A) : const Color(0xFF0073E6)),
+      ),
+    );
+  }
+
+  Widget _advancedToggleSmall() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        color: controller.isAdvancedMode ? const Color(0xFF0073E6) : Colors.white,
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(
+          color: controller.isAdvancedMode ? const Color(0xFF0073E6) : const Color(0xFFD1E0F0),
+          width: 0.5,
+        ),
+      ),
+      child: InkWell(
+        onTap: () => controller.toggleViewMode(),
+        borderRadius: BorderRadius.circular(6),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              controller.isAdvancedMode ? Icons.check_circle_rounded : Icons.settings_rounded,
+              size: 12,
+              color: controller.isAdvancedMode ? Colors.white : const Color(0xFF5F748D),
+            ),
+            const SizedBox(width: 4),
+            Text(
+              "ADVANCED",
+              style: TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.w700,
+                color: controller.isAdvancedMode ? Colors.white : const Color(0xFF5F748D),
+                letterSpacing: 0.2,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

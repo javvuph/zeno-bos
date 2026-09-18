@@ -106,7 +106,6 @@ class _BulkScanWorkspaceState extends State<BulkScanWorkspace> {
                 children: [
                   _buildTopActionBar(compact: MediaQuery.of(context).size.width < 1200),
                   _buildBulkTabBar(),
-                  if (widget.controller.bulkScanItems.isEmpty) _buildQuickStartPanel(),
                   if (widget.controller.bulkScanItems.isNotEmpty)
                     Expanded(
                       child: Container(

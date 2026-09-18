@@ -118,7 +118,7 @@ class SessionRow extends StatelessWidget {
 
     final isDuplicate = item.status == BulkScanStatus.duplicate;
     return Container(
-      width: totalWidth, height: 44, padding: const EdgeInsets.symmetric(horizontal: 12),
+      width: totalWidth, height: 44,
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(color: isDuplicate ? colors.statusWarning : const Color(0xFFe8e8e8)),
@@ -128,21 +128,24 @@ class SessionRow extends StatelessWidget {
             ? colors.statusWarning.withValues(alpha: 0.08)
             : (item.isSelected ? const Color(0xFF0066CC).withValues(alpha:0.05) : const Color(0xFFFAFBFC)),
       ),
-      child: Row(
-        children: [
-          SizedBox(
-            width: 24,
-            child: Checkbox(value: item.isSelected, onChanged: (v) => _toggleSelect(v ?? false), visualDensity: VisualDensity.compact),
-          ),
-          TableCell(width: 42, child: Text("${index + 1}", style: TextStyle(fontSize: 10, color: colors.textDisabled))),
-          TableCell(width: 56, child: Container(width: 24, height: 24, decoration: BoxDecoration(color: const Color(0xFF0066CC).withValues(alpha:0.1), borderRadius: BorderRadius.circular(4), border: Border.all(color: const Color(0xFF0066CC).withValues(alpha:0.2))), child: Icon(Icons.image_outlined, size: 14, color: const Color(0xFF0066CC)))),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        child: Row(
+          children: [
+            SizedBox(
+              width: 24,
+              child: Checkbox(value: item.isSelected, onChanged: (v) => _toggleSelect(v ?? false), visualDensity: VisualDensity.compact),
+            ),
+            TableCell(width: 42, child: Text("${index + 1}", style: TextStyle(fontSize: 10, color: colors.textDisabled))),
+            TableCell(width: 56, child: Container(width: 24, height: 24, decoration: BoxDecoration(color: const Color(0xFF0066CC).withValues(alpha:0.1), borderRadius: BorderRadius.circular(4), border: Border.all(color: const Color(0xFF0066CC).withValues(alpha:0.2))), child: Icon(Icons.image_outlined, size: 14, color: const Color(0xFF0066CC)))),
 
-          // Dynamic Fields
-          ...fields.map((f) => SizedBox(
-                width: getBulkColumnWidth(f),
-                child: DynamicTableCell(fieldId: f, index: index, item: item, controller: controller, updateField: updateField),
-              )),
-        ],
+            // Dynamic Fields
+            ...fields.map((f) => SizedBox(
+                  width: getBulkColumnWidth(f),
+                  child: DynamicTableCell(fieldId: f, index: index, item: item, controller: controller, updateField: updateField),
+                )),
+          ],
+        ),
       ),
     );
   }

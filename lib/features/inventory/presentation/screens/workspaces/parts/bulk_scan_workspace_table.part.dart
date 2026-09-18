@@ -187,11 +187,17 @@ extension _BulkScanWorkspaceTableState on _BulkScanWorkspaceState {
       decoration: BoxDecoration(
         border: Border(bottom: BorderSide(color: const Color(0xFF0066CC).withValues(alpha: 0.2))),
       ),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: tabs.map((tab) {
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Flexible(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: tabs.map((tab) {
             final selected = _activeTab == tab.tab;
             return Padding(
               padding: const EdgeInsets.only(right: 8),
@@ -227,7 +233,10 @@ extension _BulkScanWorkspaceTableState on _BulkScanWorkspaceState {
               ),
             );
           }).toList(),
-        ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
