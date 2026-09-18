@@ -23,10 +23,8 @@ class InventoryVariantSubtable extends StatelessWidget {
     return Container(
       color: tier2.withValues(alpha: 0.72),
       padding: const EdgeInsets.only(left: 50, right: 18, top: 12, bottom: 16),
-      decoration: const BoxDecoration(
-        border: Border(
-          left: BorderSide(color: accent, width: 2),
-        ),
+      decoration: BoxDecoration(
+        border: Border(left: BorderSide(color: accent, width: 2)),
       ),
       child: Container(
         decoration: BoxDecoration(
@@ -49,7 +47,7 @@ class InventoryVariantSubtable extends StatelessWidget {
                 spacing: 22,
                 runSpacing: 6,
                 children: [
-                  Text("CATEGORY  " + (product.category.isEmpty ? '—' : product.category), style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: colors.textPrimary)),
+                  Text("CATEGORY  " + (product.category.isEmpty ? '—' : product.category), style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: colors?.textPrimary ?? const Color(0xFF26324A))),
                   Text("BRAND  " + (product.brand.isEmpty ? '—' : product.brand), style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: colors.textPrimary)),
                   Text("COST  ₹" + product.cost.toStringAsFixed(0), style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: colors.textPrimary)),
                   Text("MARGIN  " + product.marginPercentage.toStringAsFixed(0) + "%", style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: colors.textPrimary)),
@@ -93,7 +91,6 @@ class InventoryVariantSubtable extends StatelessWidget {
                   DataCell(Text(variant.sku, style: const TextStyle(fontSize: 11, fontFamily: 'monospace', color: Color(0xFF64748B)))),
                   DataCell(Text(variant.barcode, style: const TextStyle(fontSize: 11, fontFamily: 'monospace', color: Color(0xFF64748B)))),
                   DataCell(Text("${variant.qty.toStringAsFixed(0)} PCS", style: const TextStyle(fontSize: 12, fontFamily: 'monospace', fontWeight: FontWeight.w700))),
-                  DataCell(Text("₹${product.cost.toStringAsFixed(0)}", style: const TextStyle(fontSize: 12, fontFamily: 'monospace'))),
                   DataCell(
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
