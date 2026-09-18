@@ -221,6 +221,7 @@ class InventoryTableCard extends StatelessWidget {
   }
 
   Widget _buildEmptyState() {
+    final colors = Theme.of(context).extension<ZenoSemanticColors>();
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 60, horizontal: 20),
       alignment: Alignment.center,
