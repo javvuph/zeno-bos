@@ -352,6 +352,10 @@ class _MobileCommandCenter extends StatelessWidget {
         const SizedBox(height: 18),
         _AiCommandCard(onTap: () => onRoute('ai')),
         const SizedBox(height: 14),
+        _KpiStrip(),
+        const SizedBox(height: 14),
+        _InsightCard(onTap: () => onRoute('reports')),
+        const SizedBox(height: 18),
         Row(children: [
           Expanded(child: _ActionCard(
             icon: Icons.point_of_sale_rounded, label: 'NEW BILL', sub: 'Checkout',
