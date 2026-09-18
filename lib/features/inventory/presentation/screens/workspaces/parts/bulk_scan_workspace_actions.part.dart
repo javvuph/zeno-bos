@@ -125,6 +125,18 @@ extension _BulkScanWorkspaceActionsState on _BulkScanWorkspaceState {
                     'MANUAL-${DateTime.now().millisecond}'),
               ),
               ZenoButton(
+                label: 'IMPORT',
+                icon: Icons.file_open_outlined,
+                variant: ZenoButtonVariant.secondary,
+                onPressed: widget.controller.pickImportFile,
+              ),
+              ZenoButton(
+                label: 'UPLOAD IMAGE',
+                icon: Icons.image_outlined,
+                variant: ZenoButtonVariant.secondary,
+                onPressed: _pickAndProcessImage,
+              ),
+              ZenoButton(
                 label: 'UPLOAD BILL',
                 icon: Icons.receipt_long_outlined,
                 onPressed: _pickAndProcessBill,
