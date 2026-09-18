@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:zeno/app/theme_colors.dart';
 import 'package:zeno/features/inventory/domain/models/product_master_models.dart';
 import 'inventory_variant_subtable.dart';
 
@@ -26,6 +27,15 @@ class InventoryProductRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final aging = getAgingMeta(product.addedDate);
     final stock = product.totalStock;
+    final colors = Theme.of(context).extension<ZenoSemanticColors>();
+    final border = colors?.borderSubtle ?? const Color(0xFFD9DFF2);
+    final textPrimary = colors?.textPrimary ?? const Color(0xFF26324A);
+    final textSecondary = colors?.textSecondary ?? const Color(0xFF64748B);
+    final status = stock <= 0
+        ? ("OUT OF STOCK", colors?.statusDanger ?? const Color(0xFFDC2626), const Color(0xFFFEE2E2))
+        : (stock <= product.reorderLevel
+            ? ("LOW STOCK", colors?.statusWarning ?? const Color(0xFFB45309), const Color(0xFFFFF7D6))
+            : ("IN STOCK", colors?.statusSuccess ?? const Color(0xFF15803D), const Color(0xFFE9F9EF)));
 
     return Column(
       children: [
@@ -33,7 +43,7 @@ class InventoryProductRow extends StatelessWidget {
         Container(
           height: 52,
           decoration: const BoxDecoration(
-            border: Border(bottom: BorderSide(color: Color(0xFFF1F5F9))),
+            border: Border(bottom: BorderSide(color: border.withValues(alpha: 0.72))),
           ),
           child: Row(
             children: [
@@ -63,7 +73,7 @@ class InventoryProductRow extends StatelessWidget {
                             style: const TextStyle(
                               fontWeight: FontWeight.w700,
                               fontSize: 13,
-                              color: Color(0xFF0F172A),
+                              color: textPrimary,
                             ),
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -95,7 +105,7 @@ class InventoryProductRow extends StatelessWidget {
                           style: const TextStyle(
                             fontFamily: 'monospace',
                             fontSize: 11,
-                            color: Color(0xFF64748B),
+                            color: textSecondary,
                           ),
                         ),
                         const Text(" • ", style: TextStyle(color: Color(0xFF94A3B8))),
@@ -139,6 +149,9 @@ class InventoryProductRow extends StatelessWidget {
                   ),
                 ),
               ),
+
+              // STATUS
+              SizedBox(width: 110, child: Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4), decoration: BoxDecoration(color: status.$3, borderRadius: BorderRadius.circular(999)), child: Text(status.$1, style: TextStyle(fontSize: 9, fontWeight: FontWeight.w800, color: status.$2)))),
 
               // LOCATION
               SizedBox(
