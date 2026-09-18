@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:zeno/app/theme.dart';
 
 class BusinessSetupTheme {
-  static const Color primaryPurple = Color(0xFF667EEA);
-  static const Color secondaryPurple = Color(0xFF764BA2);
-  static const Color accentCyan = Color(0xFF00D4FF);
-  static const Color textDark = Color(0xFF333333);
-  static const Color textGray = Color(0xFF666666);
-  static const Color textMuted = Color(0xFF999999);
+  static const Color primaryPurple = ZenoTheme.indigo500;
+  static const Color secondaryPurple = ZenoTheme.violet500;
+  static const Color accentCyan = ZenoTheme.cyan500;
+  static const Color textDark = ZenoTheme.auroraLightText;
+  static const Color textGray = ZenoTheme.auroraLightSecondaryText;
+  static const Color textMuted = Color(0xFF98A3B8);
 
   static const LinearGradient bgGradient = LinearGradient(
     colors: [primaryPurple, secondaryPurple],
@@ -29,23 +30,17 @@ class BusinessSetupTheme {
   static BoxDecoration formSectionDecoration() {
     return BoxDecoration(
       gradient: formGradient,
-      border: Border.all(color: const Color(0x33667EEA)),
-      borderRadius: BorderRadius.circular(10),
+      border: Border.all(color: ZenoTheme.auroraLightBorder),
+      borderRadius: BorderRadius.circular(ZenoRadius.md),
     );
   }
 
   static BoxDecoration glassPanelDecoration() {
     return BoxDecoration(
-      color: const Color(0xF2FFFFFF),
-      borderRadius: BorderRadius.circular(12),
+      color: ZenoTheme.auroraLightSurface.withValues(alpha: 0.95),
+      borderRadius: BorderRadius.circular(ZenoRadius.lg),
       border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
-      boxShadow: const [
-        BoxShadow(
-          color: Color(0x5E1F2687),
-          blurRadius: 32,
-          offset: Offset(0, 8),
-        ),
-      ],
+      boxShadow: ZenoElevation.soft,
     );
   }
 
@@ -95,7 +90,7 @@ class BusinessSetupTheme {
             const Text(
               " *",
               style: TextStyle(
-                color: Colors.red,
+                color: ZenoTheme.ruby500,
                 fontSize: 11,
                 fontWeight: FontWeight.bold,
               ),
