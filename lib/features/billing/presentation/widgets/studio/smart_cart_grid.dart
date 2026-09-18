@@ -5,6 +5,8 @@ import 'package:zeno/features/billing/domain/models/bill_item.dart';
 import 'package:zeno/features/billing/presentation/controllers/billing_studio_controller.dart';
 import 'package:zeno/features/billing/presentation/controllers/billing_state.dart';
 import 'package:zeno/features/billing/presentation/controllers/billing_event.dart';
+import 'package:zeno/core/di/service_locator.dart';
+import 'package:zeno/features/inventory/presentation/controllers/product_controller.dart';
 
 part 'parts/smart_cart_grid_action_chip.part.dart';
 
@@ -18,6 +20,7 @@ class SmartCartGrid extends StatefulWidget {
 class SmartCartGridState extends State<SmartCartGrid> {
   final TextEditingController _scanController = TextEditingController();
   final FocusNode _scanFocusNode = FocusNode();
+  final ProductController _inventory = sl<ProductController>();
 
   @override
   void dispose() {
@@ -182,18 +185,18 @@ class SmartCartGridState extends State<SmartCartGrid> {
                     ZenoTableColumn(
                       label: 'Stock',
                       width: 80,
-                      textExtractor: (item) => "120",
-                      builder: (item) => const Column(
+                      textExtractor: (item) => _stockFor(item).toString(),
+                      builder: (item) => Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("120",
-                              style: TextStyle(
+                          Text("${_stockFor(item)}",
+                              style: const TextStyle(
                                   fontSize: 9, fontWeight: FontWeight.bold)),
-                          Text("Stock",
+                          Text(_stockFor(item) > 0 ? "In stock" : "Out of stock",
                               style: TextStyle(
                                   fontSize: 7,
-                                  color: Color(0xFF10B981),
+                                  color: _stockFor(item) > 0 ? const Color(0xFF10B981) : const Color(0xFFDC2626),
                                   fontWeight: FontWeight.bold)),
                         ],
                       ),
@@ -234,10 +237,10 @@ class SmartCartGridState extends State<SmartCartGrid> {
                       label: 'Tax',
                       width: 50,
                       isNumeric: true,
-                      textExtractor: (item) => "5%",
-                      builder: (item) => const Text("5%",
-                          style: TextStyle(
-                              fontSize: 9, fontWeight: FontWeight.bold)),
+                      textExtractor: (item) => item.taxes.isEmpty ? "0%" : "${item.taxes.first.percentage}%",
+                      builder: (item) => Text(
+                          item.taxes.isEmpty ? "0%" : "${item.taxes.first.percentage}%",
+                          style: const TextStyle(fontSize: 9, fontWeight: FontWeight.bold)),
                     ),
                     ZenoTableColumn(
                       label: 'Total',
@@ -266,6 +269,15 @@ class SmartCartGridState extends State<SmartCartGrid> {
         );
       },
     );
+  }
+
+  int _stockFor(BillItem item) {
+    final product = _inventory.allProducts.cast<dynamic>().firstWhere(
+      (p) => p.id == item.productId,
+      orElse: () => null,
+    );
+    if (product == null) return 0;
+    return product.stockLevel.round();
   }
 
   void _updateQty(BuildContext context, BillItem item, int delta) {
