@@ -24,6 +24,7 @@ class FashionVariantsTab extends StatefulWidget {
 class _FashionVariantsTabState extends State<FashionVariantsTab> {
   ProductStudioController get controller => widget.controller;
   ZenoSemanticColors get colors => widget.colors;
+  bool _aiGenerating = false;
 
   @override
   Widget build(BuildContext context) {
