@@ -5,9 +5,8 @@ import 'package:zeno/navigation/menu_registry.dart';
 import 'package:zeno/navigation/navigation_controller.dart';
 import 'package:zeno/navigation/zeno_router.dart';
 
-/// Mobile presentation of the existing ZENO navigation.
-/// It reuses the existing menu registry, routes and screens; no business
-/// logic or data models are duplicated here.
+/// Mobile presentation layer for the existing ZENO navigation.
+/// Business logic, persistence, models and routed screens remain shared.
 class ZenoMobileShell extends StatefulWidget {
   final NavigationController navigationController;
 
@@ -30,20 +29,63 @@ class _ZenoMobileShellState extends State<ZenoMobileShell> {
     'orders/dashboard',
   ];
 
+  static const _bottomLabels = <String>[
+    'Home',
+    'Billing',
+    'Inventory',
+    'Orders',
+  ];
+
+  static const _bottomIcons = <IconData>[
+    Icons.dashboard_rounded,
+    Icons.point_of_sale_rounded,
+    Icons.inventory_2_rounded,
+    Icons.shopping_bag_rounded,
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    widget.navigationController.addListener(_onNavigationChanged);
+    _syncBottomIndex();
+  }
+
+  @override
+  void dispose() {
+    widget.navigationController.removeListener(_onNavigationChanged);
+    super.dispose();
+  }
+
+  void _onNavigationChanged() {
+    if (!mounted) return;
+    setState(_syncBottomIndex);
+  }
+
+  void _syncBottomIndex() {
+    final route = widget.navigationController.currentRoute;
+    final index = _bottomRoutes.indexWhere((item) {
+      if (item == 'dashboard') {
+        return route == 'dashboard' || route == 'home';
+      }
+      return route == item || route.startsWith('$item/');
+    });
+    if (index >= 0) {
+      _bottomIndex = index;
+    }
+  }
+
   void _navigate(String route) {
-    Navigator.of(context).maybePop();
     widget.navigationController.navigateTo(route);
   }
 
   void _selectBottom(int index) {
-    setState(() => _bottomIndex = index);
     widget.navigationController.navigateTo(_bottomRoutes[index]);
   }
 
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<ZenoSemanticColors>()!;
-    final route = widget.navigationController.activeTab.route;
+    final route = widget.navigationController.currentRoute;
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -70,7 +112,7 @@ class _ZenoMobileShellState extends State<ZenoMobileShell> {
           IconButton(
             tooltip: 'Notifications',
             icon: const Icon(Icons.notifications_none_rounded),
-            onPressed: () {},
+            onPressed: () => widget.navigationController.toggleNotifications(),
           ),
           const SizedBox(width: 4),
         ],
@@ -78,19 +120,34 @@ class _ZenoMobileShellState extends State<ZenoMobileShell> {
       body: SafeArea(
         top: false,
         child: KeyedSubtree(
-          key: ValueKey('\${widget.navigationController.activeTab.route}-mobile'),
+          key: ValueKey(
+            '${widget.navigationController.currentRoute}-mobile',
+          ),
           child: ZenoRouter.getScreen(
-            widget.navigationController.activeTab.route,
+            widget.navigationController.currentRoute,
             params: widget.navigationController.activeTab.params,
           ),
         ),
       ),
-      bottomNavigationBar: _buildBottomBar(context, colors),
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: _bottomIndex,
+        onDestinationSelected: _selectBottom,
+        backgroundColor: colors.bgTier2,
+        indicatorColor: colors.accentPrimary.withValues(alpha: 0.14),
+        height: 66,
+        destinations: List.generate(
+          _bottomLabels.length,
+          (index) => NavigationDestination(
+            icon: Icon(_bottomIcons[index]),
+            selectedIcon: Icon(_bottomIcons[index]),
+            label: _bottomLabels[index],
+          ),
+        ),
+      ),
     );
   }
 
   Widget _buildTitle(ZenoSemanticColors colors, String route) {
-    final label = _routeTitle(route);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -105,7 +162,7 @@ class _ZenoMobileShellState extends State<ZenoMobileShell> {
           ),
         ),
         Text(
-          label,
+          _routeTitle(route),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: TextStyle(
@@ -186,14 +243,12 @@ class _ZenoMobileShellState extends State<ZenoMobileShell> {
               child: ListView.builder(
                 padding: const EdgeInsets.symmetric(vertical: 8),
                 itemCount: MenuRegistry.all.length,
-                itemBuilder: (context, index) {
-                  return _MobileMenuGroup(
-                    category: MenuRegistry.all[index],
-                    currentRoute: widget.navigationController.currentRoute,
-                    onRoute: _navigate,
-                    colors: colors,
-                  );
-                },
+                itemBuilder: (context, index) => _MobileMenuGroup(
+                  category: MenuRegistry.all[index],
+                  currentRoute: widget.navigationController.currentRoute,
+                  onRoute: _navigate,
+                  colors: colors,
+                ),
               ),
             ),
           ],
@@ -202,46 +257,24 @@ class _ZenoMobileShellState extends State<ZenoMobileShell> {
     );
   }
 
-  Widget _buildBottomBar(BuildContext context, ZenoSemanticColors colors) {
-    const labels = ['Home', 'Billing', 'Inventory', 'Orders'];
-    const icons = [
-      Icons.dashboard_rounded,
-      Icons.point_of_sale_rounded,
-      Icons.inventory_2_rounded,
-      Icons.shopping_bag_rounded,
-    ];
-
-    return NavigationBar(
-      selectedIndex: _bottomIndex,
-      onDestinationSelected: _selectBottom,
-      backgroundColor: colors.bgTier2,
-      indicatorColor: colors.accentPrimary.withValues(alpha: 0.14),
-      height: 66,
-      destinations: List.generate(
-        labels.length,
-        (index) => NavigationDestination(
-          icon: Icon(icons[index]),
-          selectedIcon: Icon(icons[index]),
-          label: labels[index],
-        ),
-      ),
-    );
-  }
-
   void _openSearch(BuildContext context) {
     showSearch(
       context: context,
-      delegate: _ZenoMobileSearchDelegate(
-        onSelect: _navigate,
-      ),
+      delegate: _ZenoMobileSearchDelegate(onSelect: (route) {
+        _navigate(route);
+      }),
     );
   }
 
   String _routeTitle(String route) {
     if (route == 'dashboard' || route == 'home') return 'Dashboard';
-    if (route.startsWith('sales/')) return 'Billing';
+    if (route.startsWith('sales/') || route.startsWith('billing/')) {
+      return 'Billing';
+    }
     if (route.startsWith('inventory/')) return 'Inventory';
-    if (route.startsWith('orders/')) return 'Orders';
+    if (route.startsWith('orders/') || route.startsWith('procurement/')) {
+      return 'Orders';
+    }
     if (route.startsWith('customers/')) return 'Customers';
     if (route.startsWith('finance/')) return 'Finance';
     if (route.startsWith('staff/')) return 'Staff';
@@ -266,8 +299,10 @@ class _MobileMenuGroup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final items = category.columns.expand((column) => column.items).toList();
-    final hasItems = items.isNotEmpty;
+    final items = category.columns
+        .expand((column) => column.items)
+        .where((item) => item.route != null)
+        .toList();
 
     return ExpansionTile(
       leading: Icon(category.icon, color: category.color, size: 20),
@@ -283,38 +318,34 @@ class _MobileMenuGroup extends StatelessWidget {
       collapsedIconColor: colors.textSecondary,
       tilePadding: const EdgeInsets.symmetric(horizontal: 18),
       childrenPadding: const EdgeInsets.only(left: 14, right: 10, bottom: 4),
-      children: hasItems
-          ? items
-              .where((item) => item.route != null)
-              .map(
-                (item) => ListTile(
-                  dense: true,
-                  visualDensity: const VisualDensity(vertical: -1),
-                  leading: Icon(
-                    item.icon,
-                    size: 17,
-                    color: item.color ?? category.color,
-                  ),
-                  title: Text(
-                    item.label,
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: colors.textPrimary,
-                    ),
-                  ),
-                  trailing: currentRoute == item.route
-                      ? Icon(
-                          Icons.check_rounded,
-                          size: 16,
-                          color: colors.accentPrimary,
-                        )
-                      : null,
-                  onTap: () => onRoute(item.route!),
-                ),
-              )
-              .toList()
-          : const [],
+      children: [
+        for (final item in items)
+          ListTile(
+            dense: true,
+            visualDensity: const VisualDensity(vertical: -1),
+            leading: Icon(
+              item.icon,
+              size: 17,
+              color: item.color ?? category.color,
+            ),
+            title: Text(
+              item.label,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: colors.textPrimary,
+              ),
+            ),
+            trailing: currentRoute == item.route
+                ? Icon(
+                    Icons.check_rounded,
+                    size: 16,
+                    color: colors.accentPrimary,
+                  )
+                : null,
+            onTap: () => onRoute(item.route!),
+          ),
+      ],
     );
   }
 }
