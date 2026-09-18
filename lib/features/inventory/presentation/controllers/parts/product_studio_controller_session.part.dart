@@ -3,27 +3,79 @@ part of '../product_studio_controller.dart';
 extension ProductStudioControllerSession on ProductStudioController {
   void clearScanSession() { scanSession.clear(); notify(); }
   
-  void handleBarcodeScanned(String barcode) async {
-    isScanning = true; notify();
-    final existing = await repository.getProductByBarcode(barcode);
-    if (existing != null) { scanSession.insert(0, ScanSessionItem(product: ProductStudioFromDomain.fromDomain(existing), status: ScanItemStatus.exists)); }
-    else { scanSession.insert(0, ScanSessionItem(product: ProductStudioData.empty()..barcode = barcode, status: ScanItemStatus.notFound)); }
-    isScanning = false; notify();
+  Future<void> handleBarcodeScanned(String barcode) async {
+    await handleBulkBarcodeScanned(barcode);
   }
 
-  void addScannedProductToCatalog() async { await saveProduct(); if (scanSession.isNotEmpty) scanSession.first.status = ScanItemStatus.added; resetProduct(); }
+  Future<void> addScannedProductToCatalog() async {
+    await addBulkReadyToCatalog();
+  }
 
-  void pickImportFile() async {
+  Future<void> pickImportFile() async {
+    if (isImporting) return;
     isImporting = true;
     notify();
-    // TODO: integrate FilePicker result into importItems bulk workflow
-    await Future.delayed(const Duration(seconds: 1));
-    isImporting = false;
-    notify();
+    try {
+      final result = await FilePicker.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['csv', 'txt', 'json'],
+      );
+      if (result.files.isEmpty || result.files.first.path == null) return;
+      final file = File(result.files.first.path!);
+      final ext = result.files.first.extension?.toLowerCase() ?? '';
+      final service = IngestionService(aiService: sl<AIProductService>());
+
+      if (ext == 'json') {
+        final decoded = jsonDecode(await file.readAsString());
+        final rows = decoded is List
+            ? decoded
+            : decoded is Map<String, dynamic> && decoded['products'] is List
+                ? decoded['products']
+                : const [];
+        for (final row in rows) {
+          if (row is Map) {
+            final product = service.mapper.mapJsonToProductStudio(
+              Map<String, dynamic>.from(row),
+            );
+            bulkScanItems.add(BulkScanItem(
+              product: product,
+              status: isBulkRowComplete(product)
+                  ? BulkScanStatus.ready
+                  : BulkScanStatus.review,
+            ));
+          }
+        }
+      } else {
+        final mapping = await service.processCSV(await file.readAsString(), null);
+        for (final row in mapping.rows) {
+          bulkScanItems.add(BulkScanItem(
+            product: row.product,
+            status: isBulkRowComplete(row.product)
+                ? BulkScanStatus.ready
+                : BulkScanStatus.review,
+          ));
+        }
+      }
+      _reconcileBulkDuplicateStatus();
+      notify();
+    } catch (e) {
+      final context = navigationContext;
+      if (context != null && context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Import failed: $e')),
+        );
+      }
+    } finally {
+      isImporting = false;
+      notify();
+    }
   }
   
-  void addManualImportRow() { importItems.insert(0, BulkScanItem(product: ProductStudioData.empty(), status: BulkScanStatus.review)); notify(); }
-  void addImportReadyToCatalog() async {
+  void addManualImportRow() { bulkScanItems.insert(0, BulkScanItem(product: ProductStudioData.empty(), status: BulkScanStatus.review)); notify(); }
+  Future<void> addImportReadyToCatalog() async {
+    await addBulkReadyToCatalog();
+    return;
+    /*
     setSaving(true);
     try {
       for (var item in importItems) {
@@ -51,26 +103,12 @@ extension ProductStudioControllerSession on ProductStudioController {
     } finally {
       setSaving(false);
     }
+    */
   }
-  void updateImportItemField(int i, Function(ProductStudioData) f) {
-    if (i < importItems.length) {
-      f(importItems[i].product);
-      notify();
-    }
-  }
-  void toggleImportSelectAll(bool v) {
-    for (var item in importItems) {
-      item.isSelected = v;
-    }
-    notify();
-  }
-  void toggleImportSelectItem(int i, bool v) {
-    if (i < importItems.length) {
-      importItems[i].isSelected = v;
-      notify();
-    }
-  }
-  void deleteSelectedImportItems() { importItems.removeWhere((item) => item.isSelected); notify(); }
+  void updateImportItemField(int i, Function(ProductStudioData) f) => updateBulkItemField(i, f);
+  void toggleImportSelectAll(bool v) => toggleBulkSelectAll(v);
+  void toggleImportSelectItem(int i, bool v) => toggleBulkSelectItem(i, v);
+  void deleteSelectedImportItems() => deleteSelectedBulkItems();
 
   String _bulkDuplicateKey(ProductStudioData product) {
     final normalizedBarcode = product.barcode.trim();
