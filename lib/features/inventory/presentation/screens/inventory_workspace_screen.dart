@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:zeno/app/theme_colors.dart';
 import 'package:zeno/navigation/navigation_controller.dart';
 import 'package:zeno/features/inventory/domain/models/product.dart';
 import 'package:zeno/features/inventory/domain/models/extensions/product_extensions.dart';
@@ -26,6 +27,8 @@ class _InventoryWorkspaceScreenState extends State<InventoryWorkspaceScreen> {
   String _activeStatusFilter = "ALL"; // ALL | IN_STOCK | OUT_OF_STOCK
   String _activeTimeFilter = "ALL";   // ALL | NEW | 3M | 6M | 12M | 1Y
   String _searchQuery = "";
+  int _currentPage = 1;
+  static const int _pageSize = 25;
   final Set<String> _selectedProductIds = {};
   final Set<String> _expandedProductIds = {};
   late final ProductController _productController;
@@ -64,6 +67,11 @@ class _InventoryWorkspaceScreenState extends State<InventoryWorkspaceScreen> {
   Widget build(BuildContext context) {
     final currentProducts = _products;
     final filteredProducts = _getFilteredProducts(currentProducts);
+    final totalFiltered = filteredProducts.length;
+    final totalPages = totalFiltered == 0 ? 1 : ((totalFiltered - 1) ~/ _pageSize) + 1;
+    final safePage = _currentPage.clamp(1, totalPages);
+    final startIndex = totalFiltered == 0 ? 0 : (safePage - 1) * _pageSize;
+    final pageProducts = filteredProducts.skip(startIndex).take(_pageSize).toList();
 
     return CallbackShortcuts(
       bindings: {
@@ -72,7 +80,7 @@ class _InventoryWorkspaceScreenState extends State<InventoryWorkspaceScreen> {
       child: FocusScope(
         autofocus: true,
         child: Scaffold(
-          backgroundColor: const Color(0xFFF8FAFC),
+          backgroundColor: Theme.of(context).extension<ZenoSemanticColors>()?.bgTier1 ?? const Color(0xFFF3F6FF),
           body: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
             child: Center(
@@ -97,15 +105,21 @@ class _InventoryWorkspaceScreenState extends State<InventoryWorkspaceScreen> {
                           setState(() => _activeStatusFilter = val),
                       onTimeFilterChanged: (val) =>
                           setState(() => _activeTimeFilter = val),
-                      onSearchQueryChanged: (val) =>
-                          setState(() => _searchQuery = val),
+                      onSearchQueryChanged: (val) => setState(() {
+                        _searchQuery = val;
+                        _currentPage = 1;
+                      }),
                     ),
                     const SizedBox(height: 14),
 
                     // 4. MASTER DATA TABLE CARD
                     InventoryTableCard(
                       allProducts: currentProducts,
-                      filteredProducts: filteredProducts,
+                      filteredProducts: pageProducts,
+                      totalFilteredProducts: totalFiltered,
+                      currentPage: safePage,
+                      pageSize: _pageSize,
+                      onPageChanged: (page) => setState(() => _currentPage = page),
                       selectedProductIds: _selectedProductIds,
                       onSelectAllChanged: (val) {
                         setState(() {
@@ -167,6 +181,12 @@ class _InventoryWorkspaceScreenState extends State<InventoryWorkspaceScreen> {
   // HEADER SECTION
   // ==========================================================================
   Widget _buildHeaderSection() {
+    final colors = Theme.of(context).extension<ZenoSemanticColors>();
+    final accent = colors?.accentPrimary ?? const Color(0xFF6366F1);
+    final border = colors?.borderSubtle ?? const Color(0xFFD9DFF2);
+    final textPrimary = colors?.textPrimary ?? const Color(0xFF26324A);
+    final textSecondary = colors?.textSecondary ?? const Color(0xFF64748B);
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -179,7 +199,7 @@ class _InventoryWorkspaceScreenState extends State<InventoryWorkspaceScreen> {
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.w800,
-                color: Color(0xFF0F172A),
+                color: textPrimary,
                 letterSpacing: -0.5,
               ),
             ),
@@ -189,7 +209,7 @@ class _InventoryWorkspaceScreenState extends State<InventoryWorkspaceScreen> {
               style: TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.w700,
-                color: Color(0xFF64748B),
+                color: textSecondary,
                 letterSpacing: 0.8,
               ),
             ),
@@ -204,7 +224,7 @@ class _InventoryWorkspaceScreenState extends State<InventoryWorkspaceScreen> {
               style: OutlinedButton.styleFrom(
                 foregroundColor: const Color(0xFF0F172A),
                 backgroundColor: Colors.white,
-                side: const BorderSide(color: Color(0xFFE2E8F0)),
+                side: BorderSide(color: border),
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 shape: RoundedRectangleBorder(
@@ -220,7 +240,7 @@ class _InventoryWorkspaceScreenState extends State<InventoryWorkspaceScreen> {
               icon: const Icon(Icons.add_rounded, size: 16),
               label: const Text("＋ Add Product (F4)"),
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF4F46E5),
+                backgroundColor: accent,
                 foregroundColor: Colors.white,
                 elevation: 0,
                 padding:
