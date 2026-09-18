@@ -67,7 +67,7 @@ extension _BulkScanWorkspaceActionsState on _BulkScanWorkspaceState {
       decoration: BoxDecoration(
         color: const Color(0xFFFFFFFF).withValues(alpha:0.9),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const colors.accentPrimary.withValues(alpha:0.2)),
+        border: Border.all(color: colors.accentPrimary.withValues(alpha:0.2)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha:0.04),
@@ -82,9 +82,9 @@ extension _BulkScanWorkspaceActionsState on _BulkScanWorkspaceState {
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              color: const colors.accentPrimary.withValues(alpha:0.08),
+              color: colors.accentPrimary.withValues(alpha:0.08),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: const colors.accentPrimary.withValues(alpha:0.2)),
+              border: Border.all(color: colors.accentPrimary.withValues(alpha:0.2)),
             ),
             child: const Icon(Icons.inventory_2_outlined, color: colors.accentPrimary, size: 24),
           ),
@@ -94,7 +94,7 @@ extension _BulkScanWorkspaceActionsState on _BulkScanWorkspaceState {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: const [
                 Text(
-                  'Bulk workspace ready',
+                  'Product ingestion workspace ready',
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w800,
@@ -103,7 +103,7 @@ extension _BulkScanWorkspaceActionsState on _BulkScanWorkspaceState {
                 ),
                 SizedBox(height: 4),
                 Text(
-                  'Scan a barcode, add a manual row, or upload supplier bills to start filling the bulk sheet.',
+                  'Scan one or many items, import a file, or upload a bill/image. Everything stays in one editable product sheet.',
                   style: TextStyle(
                     fontSize: 13,
                     color: colors.textSecondary,
@@ -118,14 +118,14 @@ extension _BulkScanWorkspaceActionsState on _BulkScanWorkspaceState {
             runSpacing: 12,
             children: [
               ZenoButton(
-                label: 'MANUAL ROW',
+                label: 'ADD ROW',
                 icon: Icons.add_rounded,
                 variant: ZenoButtonVariant.secondary,
                 onPressed: () => widget.controller.handleBulkBarcodeScanned(
                     'MANUAL-${DateTime.now().millisecond}'),
               ),
               ZenoButton(
-                label: 'UPLOAD BILLS',
+                label: 'UPLOAD BILL',
                 icon: Icons.receipt_long_outlined,
                 onPressed: _pickAndProcessBill,
               ),
@@ -143,15 +143,15 @@ extension _BulkScanWorkspaceActionsState on _BulkScanWorkspaceState {
       padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
         border: Border(
-          top: BorderSide(color: const colors.accentPrimary.withValues(alpha:0.2)),
-          bottom: BorderSide(color: const colors.accentPrimary.withValues(alpha:0.2)),
+          top: BorderSide(color: colors.accentPrimary.withValues(alpha:0.2)),
+          bottom: BorderSide(color: colors.accentPrimary.withValues(alpha:0.2)),
         ),
       ),
       child: Row(
         children: [
           Text(
               "${widget.controller.bulkScanItems.where((i) => i.isSelected).length} SELECTED",
-              style: const TextStyle(
+              style: TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.w800,
                   color: colors.textPrimary)),
@@ -175,24 +175,24 @@ extension _BulkScanWorkspaceActionsState on _BulkScanWorkspaceState {
   Widget _buildTopActionBar({required bool compact}) {
     final actionButtons = <Widget>[
       ZenoButton(
-        label: "START SCANNING",
+        label: "SCAN",
         icon: Icons.camera_alt_outlined,
         variant: ZenoButtonVariant.secondary,
         size: compact ? ZenoButtonSize.sm : ZenoButtonSize.md,
-        onPressed: () {},
+        onPressed: _startScanning,
       ),
       const SizedBox(width: 10),
       Container(
         width: compact ? 180 : 250,
         height: compact ? 36 : 40,
         decoration: BoxDecoration(
-          color: const colors.accentPrimary.withValues(alpha: 0.04).withValues(alpha:0.95),
+          color: colors.accentPrimary.withValues(alpha: 0.04).withValues(alpha:0.95),
           borderRadius: BorderRadius.circular(6),
-          border: Border.all(color: const colors.accentPrimary.withValues(alpha:0.2)),
+          border: Border.all(color: colors.accentPrimary.withValues(alpha:0.2)),
         ),
         padding: const EdgeInsets.symmetric(horizontal: 12),
         child: TextField(
-          decoration: const InputDecoration(
+          decoration: InputDecoration(
             hintText: "Enter Barcode...",
             hintStyle: TextStyle(fontSize: 13, color: colors.textSecondary),
             border: InputBorder.none,
@@ -202,7 +202,7 @@ extension _BulkScanWorkspaceActionsState on _BulkScanWorkspaceState {
       ),
       const SizedBox(width: 10),
       ZenoButton(
-        label: "MANUAL ROW",
+        label: "ADD ROW",
         variant: ZenoButtonVariant.secondary,
         icon: Icons.add_rounded,
         size: compact ? ZenoButtonSize.sm : ZenoButtonSize.md,
@@ -211,7 +211,7 @@ extension _BulkScanWorkspaceActionsState on _BulkScanWorkspaceState {
       ),
       const SizedBox(width: 10),
       ZenoButton(
-        label: "UPLOAD BILLS",
+        label: "UPLOAD BILL",
         icon: Icons.receipt_long_outlined,
         size: compact ? ZenoButtonSize.sm : ZenoButtonSize.md,
         onPressed: () => _pickAndProcessBill(),
@@ -223,7 +223,7 @@ extension _BulkScanWorkspaceActionsState on _BulkScanWorkspaceState {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
         color: const Color(0xFFFFFFFF).withValues(alpha:0.9),
-        border: Border.all(color: const colors.accentPrimary.withValues(alpha:0.2)),
+        border: Border.all(color: colors.accentPrimary.withValues(alpha:0.2)),
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
@@ -248,8 +248,8 @@ extension _BulkScanWorkspaceActionsState on _BulkScanWorkspaceState {
             padding: const EdgeInsets.symmetric(horizontal: 12),
             decoration: BoxDecoration(
               border: Border(
-                left: BorderSide(color: const colors.accentPrimary.withValues(alpha:0.2)),
-                right: BorderSide(color: const colors.accentPrimary.withValues(alpha:0.2)),
+                left: BorderSide(color: colors.accentPrimary.withValues(alpha:0.2)),
+                right: BorderSide(color: colors.accentPrimary.withValues(alpha:0.2)),
               ),
             ),
             child: Row(
@@ -257,19 +257,19 @@ extension _BulkScanWorkspaceActionsState on _BulkScanWorkspaceState {
                 _StatToken(
                     label: "SCANNED",
                     value: "${widget.controller.bulkScanItems.length}",
-                    color: const colors.accentPrimary),
+                    color: colors.accentPrimary),
                 const SizedBox(width: 16),
                 _StatToken(
                     label: "READY",
                     value:
                         "${widget.controller.bulkScanItems.where((i) => i.status == BulkScanStatus.ready).length}",
-                    color: const colors.accentPrimary),
+                    color: colors.accentPrimary),
                 const SizedBox(width: 16),
                 _StatToken(
                     label: "REVIEW",
                     value:
                         "${widget.controller.bulkScanItems.where((i) => i.status == BulkScanStatus.review || i.status == BulkScanStatus.notFound).length + widget.controller.bulkScanItems.where((i) => i.status == BulkScanStatus.duplicate).length}",
-                    color: const colors.statusWarning),
+                    color: colors.statusWarning),
               ],
             ),
           ),
@@ -291,7 +291,7 @@ extension _BulkScanWorkspaceActionsState on _BulkScanWorkspaceState {
             const ZenoTheme.auroraLightBackground.withValues(alpha: 0.95),
           ],
         ),
-        border: Border(top: BorderSide(color: const colors.accentPrimary.withValues(alpha: 0.2))),
+        border: Border(top: BorderSide(color: colors.accentPrimary.withValues(alpha: 0.2))),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.04),
@@ -306,13 +306,13 @@ extension _BulkScanWorkspaceActionsState on _BulkScanWorkspaceState {
           ZenoButton(
             label: "CANCEL",
             variant: ZenoButtonVariant.secondary,
-            onPressed: () {},
+            onPressed: _openBulkEditDialog,
           ),
           const SizedBox(width: 12),
           ZenoButton(
             label: "SAVE AS DRAFT",
             variant: ZenoButtonVariant.secondary,
-            onPressed: () {},
+            onPressed: _cancelSession,
           ),
           const SizedBox(width: 12),
           ZenoButton(
