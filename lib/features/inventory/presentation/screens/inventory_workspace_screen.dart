@@ -82,7 +82,7 @@ class _InventoryWorkspaceScreenState extends State<InventoryWorkspaceScreen> {
         child: Scaffold(
           backgroundColor: Theme.of(context).extension<ZenoSemanticColors>()?.bgTier1 ?? const Color(0xFFF3F6FF),
           body: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
             child: Center(
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 1440),
