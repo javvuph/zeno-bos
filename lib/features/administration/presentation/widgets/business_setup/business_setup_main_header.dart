@@ -25,7 +25,7 @@ class BusinessSetupMainHeader extends StatelessWidget {
       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         Text("Business Setup", style: ZenoTypography.displayLG(colors.textPrimary).copyWith(fontSize: 24, fontWeight: FontWeight.w600, letterSpacing: -0.4)),
         Row(children: [
-          Container(width: 240, height: 6, decoration: BoxDecoration(color: colors.accentPrimary.withValues(alpha: 0.10), borderRadius: BorderRadius.circular(ZenoRadius.full)), child: Align(alignment: Alignment.centerLeft, child: FractionallySizedBox(widthFactor: (progressPct / 100).clamp(0.0, 1.0), child: Container(decoration: BoxDecoration(color: colors.accentPrimary, borderRadius: BorderRadius.circular(ZenoRadius.full))))),
+          Container(width: 240, height: 6, decoration: BoxDecoration(color: colors.accentPrimary.withValues(alpha: 0.10), borderRadius: BorderRadius.circular(ZenoRadius.full)), child: Align(alignment: Alignment.centerLeft, child: FractionallySizedBox(widthFactor: (progressPct / 100).clamp(0.0, 1.0), child: Container(decoration: BoxDecoration(color: colors.accentPrimary, borderRadius: BorderRadius.circular(ZenoRadius.full)))))),
           const SizedBox(width: ZenoSpacing.md),
           Text("Progress: ${progressPct}%", style: ZenoTypography.bodyMD(colors.accentPrimary).copyWith(fontWeight: FontWeight.w700)),
         ]),

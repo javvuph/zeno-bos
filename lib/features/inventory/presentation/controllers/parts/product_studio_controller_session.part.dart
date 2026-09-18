@@ -16,13 +16,13 @@ extension ProductStudioControllerSession on ProductStudioController {
     isImporting = true;
     notify();
     try {
-      final result = await FilePicker.pickFiles(
+      final files = await FilePicker.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['csv', 'txt', 'json'],
       );
-      if (result.files.isEmpty || result.files.first.path == null) return;
-      final file = File(result.files.first.path!);
-      final ext = result.files.first.extension?.toLowerCase() ?? '';
+      if (files == null || files.isEmpty || files.first.path == null) return;
+      final file = File(files.first.path!);
+      final ext = files.first.extension?.toLowerCase() ?? '';
       final service = IngestionService(aiService: sl<AIProductService>());
 
       if (ext == 'json') {

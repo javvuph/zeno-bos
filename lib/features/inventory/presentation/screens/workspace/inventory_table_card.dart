@@ -161,7 +161,7 @@ class InventoryTableCard extends StatelessWidget {
 
           // TABLE BODY OR EMPTY STATE
           filteredProducts.isEmpty
-              ? _buildEmptyState()
+              ? _buildEmptyState(context)
               : Column(
                   children: filteredProducts.map((product) {
                     return InventoryProductRow(
@@ -220,7 +220,7 @@ class InventoryTableCard extends StatelessWidget {
     );
   }
 
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(BuildContext context) {
     final colors = Theme.of(context).extension<ZenoSemanticColors>();
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 60, horizontal: 20),

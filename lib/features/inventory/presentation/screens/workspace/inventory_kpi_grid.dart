@@ -51,22 +51,26 @@ class InventoryKpiGrid extends StatelessWidget {
           physics: const NeverScrollableScrollPhysics(),
           children: [
             _buildKpiCard(
+              context,
               title: "TOTAL PRODUCTS",
               number: "$totalStyles",
               subtitle: "$totalStyles Styles • ${totalUnits.toStringAsFixed(0)} Units",
             ),
             _buildKpiCard(
+              context,
               title: "INVENTORY VALUE",
               number: "₹${totalValuationAtCost.toStringAsFixed(0)}",
               subtitle: "At Cost • Live",
             ),
             _buildKpiCard(
+              context,
               title: "STOCK AT RISK",
               number: "$stockAtRisk",
               subtitle: "Below threshold",
               numberColor: const Color(0xFFB45309),
             ),
             _buildKpiCard(
+              context,
               title: "⏳ 6M+ AGING STOCK",
               number: "$count6M Styles",
               subtitle: "Needs clearance review",
@@ -76,6 +80,7 @@ class InventoryKpiGrid extends StatelessWidget {
               numberColor: const Color(0xFFB45309),
             ),
             _buildKpiCard(
+              context,
               title: "🚨 1Y+ DEAD STOCK ALERT",
               number: "$count1Y Styles",
               subtitle: "Critical aged stock",
@@ -90,7 +95,8 @@ class InventoryKpiGrid extends StatelessWidget {
     );
   }
 
-  Widget _buildKpiCard({
+  Widget _buildKpiCard(
+    BuildContext context, {
     required String title,
     required String number,
     required String subtitle,
