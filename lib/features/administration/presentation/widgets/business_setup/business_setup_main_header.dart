@@ -27,7 +27,7 @@ class BusinessSetupMainHeader extends StatelessWidget {
         Row(children: [
           Container(width: 240, height: 6, decoration: BoxDecoration(color: colors.accentPrimary.withValues(alpha: 0.10), borderRadius: BorderRadius.circular(ZenoRadius.full)), child: Align(alignment: Alignment.centerLeft, child: FractionallySizedBox(widthFactor: (progressPct / 100).clamp(0.0, 1.0), child: Container(decoration: BoxDecoration(color: colors.accentPrimary, borderRadius: BorderRadius.circular(ZenoRadius.full))))),
           const SizedBox(width: ZenoSpacing.md),
-          Text("Progress: $" + "{progressPct}%", style: ZenoTypography.bodyMD(colors.accentPrimary).copyWith(fontWeight: FontWeight.w700)),
+          Text("Progress: ${progressPct}%", style: ZenoTypography.bodyMD(colors.accentPrimary).copyWith(fontWeight: FontWeight.w700)),
         ]),
       ]),
       const SizedBox(height: ZenoSpacing.md),
@@ -37,8 +37,8 @@ class BusinessSetupMainHeader extends StatelessWidget {
       }))),
       const SizedBox(height: ZenoSpacing.md),
       Container(padding: const EdgeInsets.symmetric(horizontal: ZenoSpacing.md, vertical: ZenoSpacing.sm), decoration: BoxDecoration(color: colors.accentPrimary.withValues(alpha: 0.06), border: Border.all(color: colors.accentPrimary.withValues(alpha: 0.16)), borderRadius: BorderRadius.circular(ZenoRadius.md)), child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        Text("Step $" + "{currentStep + 1} of $" + "{totalSteps}: $" + "{stepTitle}", style: ZenoTypography.bodyMD(colors.accentPrimary).copyWith(fontWeight: FontWeight.w700)),
-        Text("$" + "{setupData.selectedMainBusiness} • $" + "{setupData.selectedScale.name.toUpperCase()}", style: ZenoTypography.bodyMD(colors.textSecondary).copyWith(fontWeight: FontWeight.w600)),
+        Text("Step ${currentStep + 1} of ${totalSteps}: ${stepTitle}", style: ZenoTypography.bodyMD(colors.accentPrimary).copyWith(fontWeight: FontWeight.w700)),
+        Text("${setupData.selectedMainBusiness} • ${setupData.selectedScale.name.toUpperCase()}", style: ZenoTypography.bodyMD(colors.textSecondary).copyWith(fontWeight: FontWeight.w600)),
       ])),
     ]);
   }
