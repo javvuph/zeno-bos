@@ -109,8 +109,13 @@ class _ProductStudioScreenState extends State<ProductStudioScreen> {
     if (controller.currentMode == ProductCreationMode.manual) {
       return AuroraWorkstation(controller: controller, colors: colors);
     }
-    if (controller.currentMode == ProductCreationMode.scan) return ScanWorkspace(controller: controller, colors: colors);
-    if (controller.currentMode == ProductCreationMode.bulkScan) return BulkScanWorkspace(controller: controller, colors: colors);
-    return ImportWorkspace(controller: controller, colors: colors);
+    // Scan and Import use the same Bulk workspace. Both flows feed the same
+    // editable session sheet and the same SAVE -> Inventory pipeline.
+    if (controller.currentMode == ProductCreationMode.scan ||
+        controller.currentMode == ProductCreationMode.bulkScan ||
+        controller.currentMode == ProductCreationMode.import) {
+      return BulkScanWorkspace(controller: controller, colors: colors);
+    }
+    return AuroraWorkstation(controller: controller, colors: colors);
   }
 }
