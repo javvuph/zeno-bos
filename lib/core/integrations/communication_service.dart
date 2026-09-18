@@ -1,5 +1,4 @@
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_sms/flutter_sms.dart' as sms;
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:flutter/foundation.dart';
 
@@ -26,7 +25,16 @@ class CommunicationService {
   Future<void> sendSMS(
       {required List<String> recipients, required String message}) async {
     try {
-      await sms.sendSMS(message: message, recipients: recipients);
+      final uri = Uri(
+        scheme: 'sms',
+        path: recipients.join(','),
+        queryParameters: {'body': message},
+      );
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri);
+      } else {
+        debugPrint("Could not launch SMS");
+      }
     } catch (e) {
       debugPrint("SMS Failed: $e");
     }
