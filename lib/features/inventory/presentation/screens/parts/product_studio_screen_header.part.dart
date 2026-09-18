@@ -1,6 +1,8 @@
 part of '../product_studio_screen.dart';
 
 extension _ProductStudioScreenHeaderState on _ProductStudioScreenState {
+  ZenoSemanticColors get colors => Theme.of(context).extension<ZenoSemanticColors>()!;
+
   Widget _buildSubHeader(ZenoSemanticColors colors) {
     final activeSubCategories = controller.enabledProductTypes;
     final currentSubCategory = controller.activeProfile.isNotEmpty
