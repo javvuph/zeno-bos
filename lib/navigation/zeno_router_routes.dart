@@ -46,7 +46,9 @@ Widget? resolveRoutePart1(String route, Map<String, dynamic>? params) {
     case 'sales/pos':
       return const BillingStudioScreen();
     case 'sales/new':
-      return const NewBillScreen();
+      // New Sale uses the canonical Billing Studio so all sale-entry paths
+      // share the same provider, inventory integration, and billing state.
+      return const BillingStudioScreen();
     case 'sales/fnb-billing':
       return FnbBillingScreen(
         tableId: params?['tableId'] as String?,
