@@ -65,7 +65,7 @@ extension _BulkScanWorkspaceActionsState on _BulkScanWorkspaceState {
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
       decoration: BoxDecoration(
-        color: const Color(0xFFFFFFFF).withValues(alpha:0.9),
+        color: colors.bgSurface.withValues(alpha:0.9),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: colors.accentPrimary.withValues(alpha:0.2)),
         boxShadow: [
@@ -86,13 +86,13 @@ extension _BulkScanWorkspaceActionsState on _BulkScanWorkspaceState {
               borderRadius: BorderRadius.circular(12),
               border: Border.all(color: colors.accentPrimary.withValues(alpha:0.2)),
             ),
-            child: const Icon(Icons.inventory_2_outlined, color: colors.accentPrimary, size: 24),
+            child: Icon(Icons.inventory_2_outlined, color: colors.accentPrimary, size: 24),
           ),
           const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
+              children: [
                 Text(
                   'Product ingestion workspace ready',
                   style: TextStyle(
@@ -151,7 +151,7 @@ extension _BulkScanWorkspaceActionsState on _BulkScanWorkspaceState {
   Widget _buildBottomActionBar() {
     return Container(
       height: 48,
-      color: const Color(0xFFFFFFFF).withValues(alpha:0.8),
+      color: colors.bgSurface.withValues(alpha:0.8),
       padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
         border: Border(
