@@ -173,7 +173,7 @@ class _StatToken extends StatelessWidget {
               fontWeight: FontWeight.bold,
               letterSpacing: 0.5,
               textBaseline: TextBaseline.alphabetic,
-              color: colors.textSecondary)),
+              color: Theme.of(context).extension<ZenoSemanticColors>()?.textSecondary ?? const Color(0xFF64748B))),
       Text(value,
           style: TextStyle(
               fontSize: 14, fontWeight: FontWeight.w700, color: color)),
@@ -190,8 +190,8 @@ class ColHeader extends StatelessWidget {
     return Container(
       width: width,
       decoration: BoxDecoration(
-        border: Border(right: BorderSide(color: const colors.accentPrimary.withValues(alpha: 0.2))),
-        color: colors.bgTier2,
+        border: Border(right: BorderSide(color: (Theme.of(context).extension<ZenoSemanticColors>()?.accentPrimary ?? const Color(0xFF6366F1)).withValues(alpha: 0.2))),
+        color: Theme.of(context).extension<ZenoSemanticColors>()?.bgTier2 ?? const Color(0xFFF3F6FF),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       alignment: Alignment.centerLeft,
@@ -202,7 +202,7 @@ class ColHeader extends StatelessWidget {
               fontWeight: FontWeight.w600,
               letterSpacing: 0.5,
               textBaseline: TextBaseline.alphabetic,
-              color: colors.textSecondary)),
+              color: Theme.of(context).extension<ZenoSemanticColors>()?.textSecondary ?? const Color(0xFF64748B))),
     );
   }
 }
