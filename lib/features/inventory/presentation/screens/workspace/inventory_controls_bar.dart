@@ -32,9 +32,9 @@ class InventoryControlsBar extends StatelessWidget {
           spacing: 8,
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
-            _buildFilterTab("All Products", "ALL"),
-            _buildFilterTab("In Stock", "IN_STOCK"),
-            _buildFilterTab("Out of Stock", "OUT_OF_STOCK"),
+            _buildFilterTab("All Products", "ALL", accent, border, textSecondary),
+            _buildFilterTab("In Stock", "IN_STOCK", accent, border, textSecondary),
+            _buildFilterTab("Out of Stock", "OUT_OF_STOCK", accent, border, textSecondary),
             const SizedBox(width: 4),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -120,7 +120,7 @@ class InventoryControlsBar extends StatelessWidget {
     );
   }
 
-  Widget _buildFilterTab(String label, String value) {
+  Widget _buildFilterTab(String label, String value, Color accent, Color border, Color textSecondary) {
     final isActive = activeStatusFilter == value;
     return InkWell(
       onTap: () => onStatusFilterChanged(value),
