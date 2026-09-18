@@ -31,7 +31,7 @@ class AuroraWorkstation extends StatelessWidget {
       listenable: controller,
       builder: (context, _) {
         return Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
                 colors.bgTier1.withValues(alpha: 0.55),
