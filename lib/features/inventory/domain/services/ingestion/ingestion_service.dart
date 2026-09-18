@@ -1,4 +1,6 @@
 
+import 'dart:convert';
+import 'dart:io';
 import 'ingestion_models.dart';
 import 'ingestion_parser.dart';
 import 'ingestion_mapper.dart';
@@ -127,157 +129,54 @@ class IngestionService {
     return messages;
   }
 
-  /// Extracts data from an image/bill using AI.
+  /// Extracts product data from a selected bill/image file using the configured AI service.
   Future<ProductStudioData> processAIBill(dynamic file) async {
     final list = await processAIBillMultiple(file);
     return list.isNotEmpty ? list.first : ProductStudioData.empty();
   }
 
-  /// Extracts ALL line items from single or multiple bill images/files using AI.
   Future<List<ProductStudioData>> processAIBillMultiple(dynamic file) async {
-    final sampleInvoiceItems = [
-      {
-        "product_name": "Floral Print Summer Dress",
-        "colour": "Floral Print",
-        "size": "L",
-        "sku": "DRS-FLR-L",
-        "barcode_gtin": "89010010001",
-        "opening_stock": 50,
-        "purchase_cost": 850.0,
-        "selling_price": 1360.0,
-        "mrp": 1500.0,
-        "hsn_tax_code": "6104",
-        "tax_rate": 18.0,
-        "primary_supplier": "Urban Chic Fashions"
-      },
-      {
-        "product_name": "Distressed Blue Denim Jeans",
-        "colour": "Blue",
-        "size": "M",
-        "sku": "JNS-BLU-M",
-        "barcode_gtin": "89010010002",
-        "opening_stock": 75,
-        "purchase_cost": 1200.0,
-        "selling_price": 1920.0,
-        "mrp": 2200.0,
-        "hsn_tax_code": "6203",
-        "tax_rate": 18.0,
-        "primary_supplier": "Urban Chic Fashions"
-      },
-      {
-        "product_name": "Oversized Cotton T-Shirt",
-        "colour": "White",
-        "size": "S",
-        "sku": "TSH-OVR-S",
-        "barcode_gtin": "89010010003",
-        "opening_stock": 100,
-        "purchase_cost": 450.0,
-        "selling_price": 720.0,
-        "mrp": 850.0,
-        "hsn_tax_code": "6109",
-        "tax_rate": 18.0,
-        "primary_supplier": "Urban Chic Fashions"
-      },
-      {
-        "product_name": "Silk Blend Blouse",
-        "colour": "Pink",
-        "size": "M",
-        "sku": "BLS-SLK-M",
-        "barcode_gtin": "89010010004",
-        "opening_stock": 40,
-        "purchase_cost": 950.0,
-        "selling_price": 1520.0,
-        "mrp": 1800.0,
-        "hsn_tax_code": "6206",
-        "tax_rate": 18.0,
-        "primary_supplier": "Urban Chic Fashions"
-      },
-      {
-        "product_name": "High-Waisted Skirt",
-        "colour": "Beige",
-        "size": "L",
-        "sku": "SKT-HGW-L",
-        "barcode_gtin": "89010010005",
-        "opening_stock": 60,
-        "purchase_cost": 780.0,
-        "selling_price": 1248.0,
-        "mrp": 1400.0,
-        "hsn_tax_code": "6204",
-        "tax_rate": 18.0,
-        "primary_supplier": "Urban Chic Fashions"
-      },
-      {
-        "product_name": "Leather Jacket",
-        "colour": "Black",
-        "size": "M",
-        "sku": "JKT-LTH-M",
-        "barcode_gtin": "89010010006",
-        "opening_stock": 25,
-        "purchase_cost": 3200.0,
-        "selling_price": 5120.0,
-        "mrp": 5990.0,
-        "hsn_tax_code": "6201",
-        "tax_rate": 18.0,
-        "primary_supplier": "Urban Chic Fashions"
-      },
-      {
-        "product_name": "Knitted Cardigan",
-        "colour": "Grey",
-        "size": "S",
-        "sku": "CRD-KNT-S",
-        "barcode_gtin": "89010010007",
-        "opening_stock": 50,
-        "purchase_cost": 1100.0,
-        "selling_price": 1760.0,
-        "mrp": 1990.0,
-        "hsn_tax_code": "6110",
-        "tax_rate": 18.0,
-        "primary_supplier": "Urban Chic Fashions"
-      },
-      {
-        "product_name": "Palazzo Pants",
-        "colour": "Black",
-        "size": "L",
-        "sku": "PNT-PLZ-L",
-        "barcode_gtin": "89010010008",
-        "opening_stock": 80,
-        "purchase_cost": 650.0,
-        "selling_price": 1040.0,
-        "mrp": 1200.0,
-        "hsn_tax_code": "6204",
-        "tax_rate": 18.0,
-        "primary_supplier": "Urban Chic Fashions"
-      },
-      {
-        "product_name": "Evening Clutch Bag",
-        "colour": "Black",
-        "size": "Free Size",
-        "sku": "BAG-EVN-BLK",
-        "barcode_gtin": "89010010009",
-        "opening_stock": 30,
-        "purchase_cost": 1400.0,
-        "selling_price": 2240.0,
-        "mrp": 2500.0,
-        "hsn_tax_code": "4202",
-        "tax_rate": 18.0,
-        "primary_supplier": "Urban Chic Fashions"
-      },
-      {
-        "product_name": "Sneaker Shoes",
-        "colour": "White",
-        "size": "38",
-        "sku": "SHS-SNK-38",
-        "barcode_gtin": "89010010010",
-        "opening_stock": 45,
-        "purchase_cost": 1800.0,
-        "selling_price": 2880.0,
-        "mrp": 3200.0,
-        "hsn_tax_code": "6404",
-        "tax_rate": 18.0,
-        "primary_supplier": "Urban Chic Fashions"
-      }
-    ];
+    if (aiService == null) {
+      throw StateError('AI product service is not configured');
+    }
 
-    return sampleInvoiceItems.map((json) => mapper.mapJsonToProductStudio(json)).toList();
+    final path = file is String ? file : file?.path?.toString();
+    if (path == null || path.isEmpty) {
+      throw ArgumentError('A valid file path is required');
+    }
+
+    final selectedFile = File(path);
+    if (!await selectedFile.exists()) {
+      throw FileSystemException('Selected file was not found', path);
+    }
+
+    final extension = path.split('.').last.toLowerCase();
+    final bytes = await selectedFile.readAsBytes();
+    final encoded = base64Encode(bytes);
+
+    final promptSource = 'FILE_TYPE: $extension\\nFILE_BASE64:\\n$encoded';
+    final payload = (extension == 'png' ||
+            extension == 'jpg' ||
+            extension == 'jpeg' ||
+            extension == 'webp')
+        ? await aiService!.parseImageToProductPayload(promptSource)
+        : await aiService!.parseBillToProductPayload(promptSource);
+
+    if (payload.isEmpty) {
+      throw StateError('AI returned no product data');
+    }
+
+    final dynamic rawProducts =
+        payload['products'] ?? payload['line_items'] ?? payload['items'];
+    if (rawProducts is List) {
+      return rawProducts
+          .whereType<Map>()
+          .map((row) => mapper.mapJsonToProductStudio(
+                Map<String, dynamic>.from(row),
+              ))
+          .toList();
+    }
+
+    return [mapper.mapJsonToProductStudio(payload)];
   }
 }
