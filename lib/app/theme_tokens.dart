@@ -10,6 +10,7 @@ class ZenoSpacing {
 }
 
 class ZenoRadius {
+  static const double xs = 2.0;
   static const double sm = 4.0;
   static const double md = 8.0;
   static const double lg = 12.0;
@@ -42,21 +43,31 @@ class ZenoSizing {
   static const double iconMD = 18.0;
   static const double iconLG = 24.0;
 
-  static const double rowTactical = 46.0;
-  static const double toolbarHeight = 48.0;
+  static const double rowDense = 40.0;
+  static const double rowTactical = 44.0;
+  static const double toolbarHeight = 40.0;
   static const double headerHeight = 64.0;
   static const double statusBarHeight = 28.0;
   static const double actionRailWidth = 125.0;
   static const double inspectorWidth = 380.0;
 }
 
+class ZenoGlass {
+  static const double lightOpacity = 0.72;
+  static const double lightStrongOpacity = 0.82;
+  static const double darkOpacity = 0.72;
+  static const double blur = 20.0;
+  static const double borderOpacity = 0.18;
+  static const double selectedOpacity = 0.10;
+}
+
 class ZenoElevation {
   static const double none = 0.0;
   static const List<BoxShadow> soft = [
-    BoxShadow(color: Color(0x0D000000), blurRadius: 12, offset: Offset(0, 4)),
+    BoxShadow(color: Color(0x16000000), blurRadius: 16, offset: Offset(0, 5)),
   ];
   static const List<BoxShadow> heavy = [
-    BoxShadow(color: Color(0x1A000000), blurRadius: 24, offset: Offset(0, 8)),
+    BoxShadow(color: Color(0x22000000), blurRadius: 28, offset: Offset(0, 10)),
   ];
 }
 
