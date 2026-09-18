@@ -47,7 +47,7 @@ class InventoryTableCard extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: surface.withValues(alpha: 0.82),
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(12),
         border: Border.all(color: border),
         boxShadow: const [
           BoxShadow(
@@ -63,7 +63,7 @@ class InventoryTableCard extends StatelessWidget {
           Container(
             height: 42,
             decoration: BoxDecoration(
-              color: tier2.withValues(alpha: 0.72),
+              color: tier2.withValues(alpha: 0.58),
               border: Border(bottom: BorderSide(color: border)),
               borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
             ),
