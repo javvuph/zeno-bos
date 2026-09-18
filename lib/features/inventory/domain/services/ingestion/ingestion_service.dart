@@ -135,6 +135,25 @@ class IngestionService {
     return list.isNotEmpty ? list.first : ProductStudioData.empty();
   }
 
+  Future<ProductStudioData> processAIImage(dynamic file) async {
+    if (aiService == null) {
+      throw StateError('AI product service is not configured');
+    }
+    final path = file is String ? file : file?.path?.toString();
+    if (path == null || path.isEmpty) {
+      throw ArgumentError('A valid image path is required');
+    }
+    final bytes = await File(path).readAsBytes();
+    final extension = path.split('.').last.toLowerCase();
+    final payload = await aiService!.parseImageToProductPayload(
+      'FILE_TYPE: ' + extension + '\\nFILE_BASE64:\\n' + base64Encode(bytes),
+    );
+    if (payload.isEmpty) {
+      throw StateError('AI returned no product data');
+    }
+    return mapper.mapJsonToProductStudio(payload);
+  }
+
   Future<List<ProductStudioData>> processAIBillMultiple(dynamic file) async {
     if (aiService == null) {
       throw StateError('AI product service is not configured');
