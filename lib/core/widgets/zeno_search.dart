@@ -38,28 +38,27 @@ class _ZenoSearchState extends State<ZenoSearch> {
         height: 36,
         constraints: const BoxConstraints(maxWidth: 300),
         decoration: BoxDecoration(
-          color: colors.bgTier3,
+          color: colors.bgSurface.withValues(alpha: 0.76),
           borderRadius: BorderRadius.circular(ZenoRadius.md),
           border: Border.all(
-            color: _isFocused ? colors.accentPrimary : colors.borderSubtle,
+            color: _isFocused
+                ? colors.accentPrimary.withValues(alpha: 0.70)
+                : colors.borderSubtle,
             width: ZenoBorderWidth.thin,
           ),
-          boxShadow: _isFocused
-              ? [
-                  BoxShadow(
-                      color: colors.accentPrimary.withValues(alpha: 0.1),
-                      blurRadius: 4)
-                ]
-              : null,
+          boxShadow: _isFocused ? ZenoElevation.soft : null,
         ),
         padding: const EdgeInsets.symmetric(horizontal: ZenoSpacing.sm),
         child: Row(
           children: [
-            Icon(Icons.search,
-                size: 16,
-                color:
-                    _isFocused ? colors.accentPrimary : colors.textSecondary),
-            const SizedBox(width: 8),
+            Icon(
+              Icons.search,
+              size: ZenoSizing.iconMD,
+              color: _isFocused
+                  ? colors.accentPrimary
+                  : colors.textSecondary,
+            ),
+            const SizedBox(width: ZenoSpacing.sm),
             Expanded(
               child: TextField(
                 controller: _controller,
@@ -82,7 +81,11 @@ class _ZenoSearchState extends State<ZenoSearch> {
                   widget.onChanged?.call("");
                   setState(() {});
                 },
-                child: Icon(Icons.close, size: 14, color: colors.textDisabled),
+                child: Icon(
+                  Icons.close,
+                  size: ZenoSizing.iconSM,
+                  color: colors.textDisabled,
+                ),
               ),
           ],
         ),
