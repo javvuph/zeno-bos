@@ -38,7 +38,6 @@ class _ZenoButtonState extends State<ZenoButton> {
     final colors = Theme.of(context).extension<ZenoSemanticColors>()!;
     final bool isEnabled = widget.onPressed != null && !widget.isLoading;
 
-    // Resolve Colors
     Color bgColor;
     Color textColor;
     Color borderColor = Colors.transparent;
@@ -47,38 +46,39 @@ class _ZenoButtonState extends State<ZenoButton> {
       case ZenoButtonVariant.primary:
         bgColor = isEnabled
             ? (_isPressed
-                ? colors.accentPrimary.withValues(alpha: 0.8)
+                ? colors.accentPrimary.withValues(alpha: 0.86)
                 : (_isHovered
-                    ? colors.accentPrimary.withValues(alpha: 0.95)
+                    ? colors.accentPrimary.withValues(alpha: 0.94)
                     : colors.accentPrimary))
-            : colors.textDisabled.withValues(alpha: 0.2);
-        textColor = isEnabled ? Colors.black : colors.textDisabled;
+            : colors.textDisabled.withValues(alpha: 0.18);
+        textColor = isEnabled ? Colors.white : colors.textDisabled;
         break;
       case ZenoButtonVariant.secondary:
         bgColor = isEnabled
-            ? (_isHovered ? colors.bgTier3 : colors.bgTier2)
+            ? (_isHovered
+                ? colors.bgHover.withValues(alpha: 0.88)
+                : colors.bgSurface.withValues(alpha: 0.72))
             : colors.bgTier2;
         textColor = isEnabled ? colors.textPrimary : colors.textDisabled;
         borderColor = colors.borderSubtle;
         break;
       case ZenoButtonVariant.ghost:
-        bgColor = _isHovered ? colors.bgHover : Colors.transparent;
+        bgColor = _isHovered ? colors.bgHover.withValues(alpha: 0.72) : Colors.transparent;
         textColor = isEnabled ? colors.textPrimary : colors.textDisabled;
         break;
       case ZenoButtonVariant.danger:
         bgColor = isEnabled
             ? (_isHovered
-                ? colors.statusDanger.withValues(alpha: 0.1)
+                ? colors.statusDanger.withValues(alpha: 0.10)
                 : Colors.transparent)
             : Colors.transparent;
         textColor = isEnabled ? colors.statusDanger : colors.textDisabled;
         borderColor = isEnabled
-            ? colors.statusDanger.withValues(alpha: 0.3)
+            ? colors.statusDanger.withValues(alpha: 0.30)
             : colors.borderSubtle;
         break;
     }
 
-    // Resolve Sizing
     double height;
     double padding;
     TextStyle textStyle;
@@ -88,25 +88,25 @@ class _ZenoButtonState extends State<ZenoButton> {
 
     switch (widget.size) {
       case ZenoButtonSize.sm:
-        height = 34;
+        height = 32;
         padding = isIconOnly ? 8 : 12;
         textStyle = ZenoTypography.caption(textColor)
-            .copyWith(fontWeight: FontWeight.w800, fontSize: 9.5);
+            .copyWith(fontWeight: FontWeight.w700, fontSize: 10);
         iconSize = 14;
         break;
       case ZenoButtonSize.md:
-        height = 42;
-        padding = isIconOnly ? 10 : 20;
+        height = 36;
+        padding = isIconOnly ? 8 : 16;
         textStyle = ZenoTypography.bodyMD(textColor)
-            .copyWith(fontWeight: FontWeight.w800);
-        iconSize = 18;
+            .copyWith(fontWeight: FontWeight.w700);
+        iconSize = 16;
         break;
       case ZenoButtonSize.lg:
-        height = 54;
-        padding = isIconOnly ? 14 : 32;
+        height = 40;
+        padding = isIconOnly ? 10 : 20;
         textStyle = ZenoTypography.bodyLG(textColor)
-            .copyWith(fontWeight: FontWeight.w900, letterSpacing: 0.5);
-        iconSize = 22;
+            .copyWith(fontWeight: FontWeight.w700);
+        iconSize = 18;
         break;
     }
 
@@ -136,9 +136,10 @@ class _ZenoButtonState extends State<ZenoButton> {
                     isEnabled)
                 ? [
                     BoxShadow(
-                        color: colors.accentPrimary.withValues(alpha: 0.25),
-                        blurRadius: 12,
-                        offset: const Offset(0, 4))
+                      color: colors.accentPrimary.withValues(alpha: 0.18),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
                   ]
                 : null,
           ),
@@ -151,12 +152,17 @@ class _ZenoButtonState extends State<ZenoButton> {
                   width: iconSize,
                   height: iconSize,
                   child: CircularProgressIndicator(
-                      strokeWidth: 2, color: textColor),
+                    strokeWidth: 2,
+                    color: textColor,
+                  ),
                 )
               else ...[
-                if (widget.icon != null) Icon(widget.icon, size: iconSize, color: textColor),
-                if (widget.icon != null && widget.label.isNotEmpty) const SizedBox(width: 10),
-                if (widget.label.isNotEmpty) Text(widget.label.toUpperCase(), style: textStyle),
+                if (widget.icon != null)
+                  Icon(widget.icon, size: iconSize, color: textColor),
+                if (widget.icon != null && widget.label.isNotEmpty)
+                  const SizedBox(width: 8),
+                if (widget.label.isNotEmpty)
+                  Text(widget.label.toUpperCase(), style: textStyle),
               ],
             ],
           ),
