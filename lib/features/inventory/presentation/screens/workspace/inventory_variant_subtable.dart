@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:zeno/app/theme_colors.dart';
 import 'package:zeno/features/inventory/domain/models/product_master_models.dart';
 
 class InventoryVariantSubtable extends StatelessWidget {
@@ -12,19 +13,26 @@ class InventoryVariantSubtable extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
+    final colors = Theme.of(context).extension<ZenoSemanticColors>();
+    final border = colors?.borderSubtle ?? const Color(0xFFD9DFF2);
+    final surface = colors?.bgSurface ?? Colors.white;
+    final tier2 = colors?.bgTier2 ?? const Color(0xFFF3F6FF);
+    final textSecondary = colors?.textSecondary ?? const Color(0xFF64748B);
+    final accent = colors?.accentPrimary ?? const Color(0xFF6366F1);
+
     return Container(
-      color: const Color(0xFFF8FAFC),
+      color: tier2.withValues(alpha: 0.72),
       padding: const EdgeInsets.only(left: 50, right: 18, top: 12, bottom: 16),
       decoration: const BoxDecoration(
         border: Border(
-          left: BorderSide(color: Color(0xFF4F46E5), width: 3),
+          left: BorderSide(color: accent, width: 2),
         ),
       ),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: const Color(0xFFE2E8F0)),
+          color: surface.withValues(alpha: 0.88),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: border),
         ),
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
@@ -33,9 +41,9 @@ class InventoryVariantSubtable extends StatelessWidget {
             headingRowHeight: 32,
             dataRowMinHeight: 34,
             dataRowMaxHeight: 38,
-            headingRowColor: WidgetStateProperty.all(const Color(0xFFF1F5F9)),
+            headingRowColor: WidgetStateProperty.all(tier2.withValues(alpha: 0.82)),
             columns: const [
-              DataColumn(label: Text("COLOUR / SIZE", style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: Color(0xFF64748B)))),
+              DataColumn(label: Text("COLOUR / SIZE", style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: textSecondary))),
               DataColumn(label: Text("SKU", style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: Color(0xFF64748B)))),
               DataColumn(label: Text("BARCODE", style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: Color(0xFF64748B)))),
               DataColumn(label: Text("STOCK", style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: Color(0xFF64748B)))),
@@ -63,7 +71,7 @@ class InventoryVariantSubtable extends StatelessWidget {
 
               return DataRow(
                 cells: [
-                  DataCell(Text("${variant.color} / ${variant.size}", style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Color(0xFF4F46E5)))),
+                  DataCell(Text("${variant.color} / ${variant.size}", style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: accent))),
                   DataCell(Text(variant.sku, style: const TextStyle(fontSize: 11, fontFamily: 'monospace', color: Color(0xFF64748B)))),
                   DataCell(Text(variant.barcode, style: const TextStyle(fontSize: 11, fontFamily: 'monospace', color: Color(0xFF64748B)))),
                   DataCell(Text("${variant.qty.toStringAsFixed(0)} PCS", style: const TextStyle(fontSize: 12, fontFamily: 'monospace', fontWeight: FontWeight.w700))),
