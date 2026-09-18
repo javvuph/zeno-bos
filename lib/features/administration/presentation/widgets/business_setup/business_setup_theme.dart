@@ -10,13 +10,13 @@ class BusinessSetupTheme {
   static const Color textMuted = Color(0xFF98A3B8);
 
   static const LinearGradient bgGradient = LinearGradient(
-    colors: [primaryPurple, secondaryPurple],
+    colors: [Color(0xFFF3F6FF), Color(0xFFEFF2FF), Color(0xFFF8FAFF)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
 
   static const LinearGradient formGradient = LinearGradient(
-    colors: [Color(0x14667EEA), Color(0x0D764BA2)],
+    colors: [Color(0x0F6366F1), Color(0x087C3AED)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
@@ -37,10 +37,16 @@ class BusinessSetupTheme {
 
   static BoxDecoration glassPanelDecoration() {
     return BoxDecoration(
-      color: ZenoTheme.auroraLightSurface.withValues(alpha: 0.95),
+      color: Colors.white.withValues(alpha: 0.78),
       borderRadius: BorderRadius.circular(ZenoRadius.lg),
-      border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
-      boxShadow: ZenoElevation.soft,
+      border: Border.all(color: ZenoTheme.auroraLightBorder.withValues(alpha: 0.82)),
+      boxShadow: const [
+        BoxShadow(
+          color: Color.fromRGBO(15, 23, 42, 0.05),
+          blurRadius: 18,
+          offset: Offset(0, 6),
+        ),
+      ],
     );
   }
 
