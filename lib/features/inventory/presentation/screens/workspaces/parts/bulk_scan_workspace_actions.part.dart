@@ -213,6 +213,15 @@ extension _BulkScanWorkspaceActionsState on _BulkScanWorkspaceState {
         ),
       ),
       ZenoButton(
+        label: "ADD ROW",
+        variant: ZenoButtonVariant.secondary,
+        icon: Icons.add_rounded,
+        size: compact ? ZenoButtonSize.sm : ZenoButtonSize.md,
+        onPressed: () => widget.controller
+            .handleBulkBarcodeScanned("MANUAL-${DateTime.now().millisecond}"),
+      ),
+      const SizedBox(width: 10),
+      ZenoButton(
         label: "UPLOAD BILL",
         icon: Icons.receipt_long_outlined,
         size: compact ? ZenoButtonSize.sm : ZenoButtonSize.md,
