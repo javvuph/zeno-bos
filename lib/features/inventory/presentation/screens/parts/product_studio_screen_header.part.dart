@@ -60,7 +60,7 @@ extension _ProductStudioScreenHeaderState on _ProductStudioScreenState {
                 const SizedBox(width: 8),
                 _modeSegmentSmall("BULK", Icons.layers_rounded, controller.currentMode == ProductCreationMode.bulkScan, () => controller.setCreationMode(ProductCreationMode.bulkScan)),
                 const SizedBox(width: 8),
-                _utilityButtonSmall(Icons.upload_file_rounded, "Import", () => controller.setCreationMode(ProductCreationMode.import)),
+                _utilityButtonSmall(Icons.upload_file_rounded, "Import", () => controller.setCreationMode(ProductCreationMode.bulkScan)),
               ],
             ),
           ),
