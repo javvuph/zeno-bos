@@ -67,7 +67,7 @@ extension _BulkScanWorkspaceActionsState on _BulkScanWorkspaceState {
       decoration: BoxDecoration(
         color: const Color(0xFFFFFFFF).withValues(alpha:0.9),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF0066CC).withValues(alpha:0.2)),
+        border: Border.all(color: const colors.accentPrimary.withValues(alpha:0.2)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha:0.04),
@@ -82,11 +82,11 @@ extension _BulkScanWorkspaceActionsState on _BulkScanWorkspaceState {
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              color: const Color(0xFF0066CC).withValues(alpha:0.08),
+              color: const colors.accentPrimary.withValues(alpha:0.08),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: const Color(0xFF0066CC).withValues(alpha:0.2)),
+              border: Border.all(color: const colors.accentPrimary.withValues(alpha:0.2)),
             ),
-            child: const Icon(Icons.inventory_2_outlined, color: Color(0xFF0066CC), size: 24),
+            child: const Icon(Icons.inventory_2_outlined, color: colors.accentPrimary, size: 24),
           ),
           const SizedBox(width: 16),
           Expanded(
@@ -98,7 +98,7 @@ extension _BulkScanWorkspaceActionsState on _BulkScanWorkspaceState {
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w800,
-                    color: Color(0xFF1a2a3a),
+                    color: colors.textPrimary,
                   ),
                 ),
                 SizedBox(height: 4),
@@ -106,7 +106,7 @@ extension _BulkScanWorkspaceActionsState on _BulkScanWorkspaceState {
                   'Scan a barcode, add a manual row, or upload supplier bills to start filling the bulk sheet.',
                   style: TextStyle(
                     fontSize: 13,
-                    color: Color(0xFF4a5f7f),
+                    color: colors.textSecondary,
                   ),
                 ),
               ],
@@ -143,8 +143,8 @@ extension _BulkScanWorkspaceActionsState on _BulkScanWorkspaceState {
       padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
         border: Border(
-          top: BorderSide(color: const Color(0xFF0066CC).withValues(alpha:0.2)),
-          bottom: BorderSide(color: const Color(0xFF0066CC).withValues(alpha:0.2)),
+          top: BorderSide(color: const colors.accentPrimary.withValues(alpha:0.2)),
+          bottom: BorderSide(color: const colors.accentPrimary.withValues(alpha:0.2)),
         ),
       ),
       child: Row(
@@ -154,7 +154,7 @@ extension _BulkScanWorkspaceActionsState on _BulkScanWorkspaceState {
               style: const TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.w800,
-                  color: Color(0xFF1a2a3a))),
+                  color: colors.textPrimary)),
           const Spacer(),
           ZenoButton(
               label: "BULK EDIT",
@@ -186,15 +186,15 @@ extension _BulkScanWorkspaceActionsState on _BulkScanWorkspaceState {
         width: compact ? 180 : 250,
         height: compact ? 36 : 40,
         decoration: BoxDecoration(
-          color: const Color(0xFFF0F8FF).withValues(alpha:0.95),
+          color: const colors.accentPrimary.withValues(alpha: 0.04).withValues(alpha:0.95),
           borderRadius: BorderRadius.circular(6),
-          border: Border.all(color: const Color(0xFF0066CC).withValues(alpha:0.2)),
+          border: Border.all(color: const colors.accentPrimary.withValues(alpha:0.2)),
         ),
         padding: const EdgeInsets.symmetric(horizontal: 12),
         child: TextField(
           decoration: const InputDecoration(
             hintText: "Enter Barcode...",
-            hintStyle: TextStyle(fontSize: 13, color: Color(0xFF4a5f7f)),
+            hintStyle: TextStyle(fontSize: 13, color: colors.textSecondary),
             border: InputBorder.none,
           ),
           onSubmitted: (v) => widget.controller.handleBulkBarcodeScanned(v),
@@ -223,7 +223,7 @@ extension _BulkScanWorkspaceActionsState on _BulkScanWorkspaceState {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
         color: const Color(0xFFFFFFFF).withValues(alpha:0.9),
-        border: Border.all(color: const Color(0xFF0066CC).withValues(alpha:0.2)),
+        border: Border.all(color: const colors.accentPrimary.withValues(alpha:0.2)),
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
@@ -248,8 +248,8 @@ extension _BulkScanWorkspaceActionsState on _BulkScanWorkspaceState {
             padding: const EdgeInsets.symmetric(horizontal: 12),
             decoration: BoxDecoration(
               border: Border(
-                left: BorderSide(color: const Color(0xFF0066CC).withValues(alpha:0.2)),
-                right: BorderSide(color: const Color(0xFF0066CC).withValues(alpha:0.2)),
+                left: BorderSide(color: const colors.accentPrimary.withValues(alpha:0.2)),
+                right: BorderSide(color: const colors.accentPrimary.withValues(alpha:0.2)),
               ),
             ),
             child: Row(
@@ -257,19 +257,19 @@ extension _BulkScanWorkspaceActionsState on _BulkScanWorkspaceState {
                 _StatToken(
                     label: "SCANNED",
                     value: "${widget.controller.bulkScanItems.length}",
-                    color: const Color(0xFF0066CC)),
+                    color: const colors.accentPrimary),
                 const SizedBox(width: 16),
                 _StatToken(
                     label: "READY",
                     value:
                         "${widget.controller.bulkScanItems.where((i) => i.status == BulkScanStatus.ready).length}",
-                    color: const Color(0xFF0066CC)),
+                    color: const colors.accentPrimary),
                 const SizedBox(width: 16),
                 _StatToken(
                     label: "REVIEW",
                     value:
                         "${widget.controller.bulkScanItems.where((i) => i.status == BulkScanStatus.review || i.status == BulkScanStatus.notFound).length + widget.controller.bulkScanItems.where((i) => i.status == BulkScanStatus.duplicate).length}",
-                    color: const Color(0xFFf97316)),
+                    color: const colors.statusWarning),
               ],
             ),
           ),
@@ -287,11 +287,11 @@ extension _BulkScanWorkspaceActionsState on _BulkScanWorkspaceState {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            const Color(0xFFd4e4f0).withValues(alpha: 0.9),
-            const Color(0xFFe8f0f8).withValues(alpha: 0.95),
+            const ZenoTheme.auroraLightNested.withValues(alpha: 0.9),
+            const ZenoTheme.auroraLightBackground.withValues(alpha: 0.95),
           ],
         ),
-        border: Border(top: BorderSide(color: const Color(0xFF0066CC).withValues(alpha: 0.2))),
+        border: Border(top: BorderSide(color: const colors.accentPrimary.withValues(alpha: 0.2))),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.04),
