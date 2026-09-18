@@ -308,6 +308,8 @@ class _InventoryWorkspaceScreenState extends State<InventoryWorkspaceScreen> {
   }
 
   void _openAdjustStockDialog(ProductMaster product) {
+    final colors = Theme.of(context).extension<ZenoSemanticColors>();
+    final accent = colors?.accentPrimary ?? const Color(0xFF6366F1);
     final currentStock = product.totalStock;
     final stockCtrl = TextEditingController(text: currentStock.toStringAsFixed(0));
 
