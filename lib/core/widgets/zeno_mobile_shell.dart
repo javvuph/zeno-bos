@@ -357,6 +357,8 @@ class _MobileCommandCenter extends StatelessWidget {
         _InsightCard(onTap: () => onRoute('reports')),
         const SizedBox(height: 14),
         _TodayPulse(onRoute: onRoute),
+        const SizedBox(height: 14),
+        _RevenueChartCard(onRoute: onRoute),
         const SizedBox(height: 18),
         Row(children: [
           Expanded(child: _ActionCard(
@@ -491,6 +493,28 @@ class _PulseRow extends StatelessWidget {
   final IconData icon; final String title,value; final Color accent; final VoidCallback onTap;
   const _PulseRow({required this.icon,required this.title,required this.value,required this.accent,required this.onTap});
   @override Widget build(BuildContext context){final c=Theme.of(context).extension<ZenoSemanticColors>()!;return InkWell(onTap:onTap,borderRadius:BorderRadius.circular(12),child:Padding(padding:const EdgeInsets.symmetric(vertical:7),child:Row(children:[Container(width:32,height:32,decoration:BoxDecoration(color:accent.withValues(alpha:.10),borderRadius:BorderRadius.circular(10)),child:Icon(icon,size:17,color:accent)),const SizedBox(width:10),Expanded(child:Text(title,style:TextStyle(fontSize:11,fontWeight:FontWeight.w700,color:c.textPrimary))),Text(value,style:TextStyle(fontSize:10,fontWeight:FontWeight.w800,color:c.textSecondary)),const SizedBox(width:5),Icon(Icons.chevron_right_rounded,size:17,color:c.textDisabled)])));}
+}
+\n
+class _RevenueChartCard extends StatelessWidget {
+  final ValueChanged<String> onRoute;
+  const _RevenueChartCard({required this.onRoute});
+  @override Widget build(BuildContext context){
+    final c=Theme.of(context).extension<ZenoSemanticColors>()!;
+    const values=[12.0,18.0,15.0,24.0,21.0,29.0,26.0];
+    return InkWell(onTap:()=>onRoute('reports'),borderRadius:BorderRadius.circular(20),child:Container(padding:const EdgeInsets.all(15),decoration:BoxDecoration(color:c.bgTier2.withValues(alpha:.92),borderRadius:BorderRadius.circular(20),border:Border.all(color:c.borderSubtle)),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+      Row(children:[Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text('REVENUE FLOW',style:TextStyle(fontSize:10,fontWeight:FontWeight.w900,letterSpacing:1.5,color:c.textSecondary)),const SizedBox(height:3),Text('₹ 24.8K',style:TextStyle(fontSize:21,fontWeight:FontWeight.w900,color:c.textPrimary))]),const Spacer(),Text('+12.4%',style:TextStyle(fontSize:10,fontWeight:FontWeight.w900,color:c.statusSuccess))]),
+      const SizedBox(height:12),
+      SizedBox(height:82,child:CustomPaint(painter:_SparklinePainter(values:values,color:c.accentPrimary),child:const SizedBox.expand())),
+      const SizedBox(height:4),
+      Row(mainAxisAlignment:MainAxisAlignment.spaceBetween,children:[for(final d in ['M','T','W','T','F','S','S'])Text(d,style:TextStyle(fontSize:8,color:c.textDisabled,fontWeight:FontWeight.w700))]),
+    ])));
+  }
+}
+class _SparklinePainter extends CustomPainter {
+  final List<double> values; final Color color;
+  _SparklinePainter({required this.values,required this.color});
+  @override void paint(Canvas canvas,Size size){if(values.isEmpty)return;final max=values.reduce((a,b)=>a>b?a:b),min=values.reduce((a,b)=>a<b?a:b);final path=Path();for(var i=0;i<values.length;i++){final x=i*size.width/(values.length-1);final y=size.height-(values[i]-min)/(max-min+0.01)*size.height*.82-size.height*.05;if(i==0)path.moveTo(x,y);else path.lineTo(x,y);}final paint=Paint()..color=color..strokeWidth=2.5..style=PaintingStyle.stroke..strokeCap=StrokeCap.round;canvas.drawPath(path,paint);final fill=Path.from(path)..lineTo(size.width,size.height)..lineTo(0,size.height)..close();canvas.drawPath(fill,Paint()..shader=LinearGradient(begin:Alignment.topCenter,end:Alignment.bottomCenter,colors:[color.withValues(alpha:.18),Colors.transparent]).createShader(Offset.zero&size));}
+  @override bool shouldRepaint(covariant _SparklinePainter old)=>old.values!=values||old.color!=color;
 }
 \nclass _ActionCard extends StatelessWidget {
   final IconData icon;
