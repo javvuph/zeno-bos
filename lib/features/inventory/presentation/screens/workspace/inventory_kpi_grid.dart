@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:zeno/app/theme_colors.dart';
 import 'package:zeno/features/inventory/domain/models/product_master_models.dart';
 
 class InventoryKpiGrid extends StatelessWidget {
@@ -28,6 +29,12 @@ class InventoryKpiGrid extends StatelessWidget {
       if (aging.months >= 6 && aging.months < 12) count6M++;
       if (aging.months >= 12) count1Y++;
     }
+
+    final colors = Theme.of(context).extension<ZenoSemanticColors>();
+    final border = colors?.borderSubtle ?? const Color(0xFFD9DFF2);
+    final surface = colors?.bgSurface ?? Colors.white;
+    final textPrimary = colors?.textPrimary ?? const Color(0xFF26324A);
+    final textSecondary = colors?.textSecondary ?? const Color(0xFF64748B);
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -95,7 +102,7 @@ class InventoryKpiGrid extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: surface.withValues(alpha: 0.82),
         gradient: gradientColors != null
             ? LinearGradient(
                 begin: Alignment.topCenter,
@@ -105,7 +112,7 @@ class InventoryKpiGrid extends StatelessWidget {
             : null,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: borderColor ?? const Color(0xFFE2E8F0),
+          color: borderColor ?? border,
           width: 1,
         ),
         boxShadow: const [
@@ -125,7 +132,7 @@ class InventoryKpiGrid extends StatelessWidget {
             style: TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w700,
-              color: titleColor ?? const Color(0xFF64748B),
+              color: titleColor ?? textSecondary,
               letterSpacing: 0.5,
             ),
           ),
@@ -136,7 +143,7 @@ class InventoryKpiGrid extends StatelessWidget {
               fontSize: 22,
               fontFamily: 'monospace',
               fontWeight: FontWeight.w800,
-              color: numberColor ?? const Color(0xFF0F172A),
+              color: numberColor ?? textPrimary,
             ),
           ),
           const SizedBox(height: 2),
@@ -145,7 +152,7 @@ class InventoryKpiGrid extends StatelessWidget {
             style: const TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w600,
-              color: Color(0xFF94A3B8),
+              color: textSecondary.withValues(alpha: 0.72),
             ),
           ),
         ],
