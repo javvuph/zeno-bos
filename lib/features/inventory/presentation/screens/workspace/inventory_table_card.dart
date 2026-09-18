@@ -62,7 +62,7 @@ class InventoryTableCard extends StatelessWidget {
           // TABLE HEADER
           Container(
             height: 42,
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               color: tier2.withValues(alpha: 0.72),
               border: Border(bottom: BorderSide(color: border)),
               borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
@@ -179,8 +179,8 @@ class InventoryTableCard extends StatelessWidget {
           // PAGINATION FOOTER
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
-            decoration: const BoxDecoration(
-              color: Colors.white,
+            decoration: BoxDecoration(
+              color: colors?.bgSurface ?? Colors.white,
               border: Border(top: BorderSide(color: Color(0xFFE2E8F0))),
               borderRadius: BorderRadius.vertical(bottom: Radius.circular(12)),
             ),
@@ -189,7 +189,7 @@ class InventoryTableCard extends StatelessWidget {
               children: [
                 Text(
                   "Showing " + (totalFilteredProducts == 0 ? "0" : (((currentPage - 1) * pageSize) + 1).toString()) + "–" + (((currentPage - 1) * pageSize + filteredProducts.length).toString()) + " of " + totalFilteredProducts.toString(),
-                  style: const TextStyle(fontSize: 12, color: Color(0xFF64748B)),
+                  style: TextStyle(fontSize: 12, color: Color(0xFF64748B)),
                 ),
                 Row(
                   children: [
@@ -256,14 +256,14 @@ class InventoryTableCard extends StatelessWidget {
             icon: const Icon(Icons.add_rounded, size: 16),
             label: const Text("＋ Add Your First Product (F4)"),
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF4F46E5),
+              backgroundColor: colors?.accentPrimary ?? const Color(0xFF6366F1),
               foregroundColor: Colors.white,
               elevation: 0,
               padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
-              textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
+              textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
             ),
           ),
         ],
