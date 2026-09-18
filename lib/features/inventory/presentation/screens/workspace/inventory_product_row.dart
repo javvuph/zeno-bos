@@ -32,17 +32,17 @@ class InventoryProductRow extends StatelessWidget {
     final textPrimary = colors?.textPrimary ?? const Color(0xFF26324A);
     final textSecondary = colors?.textSecondary ?? const Color(0xFF64748B);
     final status = stock <= 0
-        ? ("OUT OF STOCK", colors?.statusDanger ?? const Color(0xFFDC2626), const Color(0xFFFEE2E2))
+        ? ("OUT OF STOCK", colors?.statusDanger ?? const Color(0xFFDC2626), (colors?.statusDanger ?? const Color(0xFFDC2626)).withValues(alpha: 0.12))
         : (stock <= product.reorderLevel
-            ? ("LOW STOCK", colors?.statusWarning ?? const Color(0xFFB45309), const Color(0xFFFFF7D6))
-            : ("IN STOCK", colors?.statusSuccess ?? const Color(0xFF15803D), const Color(0xFFE9F9EF)));
+            ? ("LOW STOCK", colors?.statusWarning ?? const Color(0xFFB45309), (colors?.statusWarning ?? const Color(0xFFD97706)).withValues(alpha: 0.14))
+            : ("IN STOCK", colors?.statusSuccess ?? const Color(0xFF15803D), (colors?.statusSuccess ?? const Color(0xFF16A34A)).withValues(alpha: 0.12)));
 
     return Column(
       children: [
         // PARENT ROW (CLEAN TEXT IDENTITY)
         Container(
           height: 52,
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             border: Border(bottom: BorderSide(color: border.withValues(alpha: 0.72))),
           ),
           child: Row(
@@ -70,7 +70,7 @@ class InventoryProductRow extends StatelessWidget {
                         Flexible(
                           child: Text(
                             product.name,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontWeight: FontWeight.w700,
                               fontSize: 13,
                               color: textPrimary,
@@ -102,7 +102,7 @@ class InventoryProductRow extends StatelessWidget {
                       children: [
                         Text(
                           product.sku,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontFamily: 'monospace',
                             fontSize: 11,
                             color: textSecondary,
@@ -111,7 +111,7 @@ class InventoryProductRow extends StatelessWidget {
                         const Text(" • ", style: TextStyle(color: Color(0xFF94A3B8))),
                         Text(
                           "Added ${formatDate(product.addedDate)}",
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 11,
                             color: Color(0xFF64748B),
                           ),
@@ -127,7 +127,7 @@ class InventoryProductRow extends StatelessWidget {
                 width: 120,
                 child: Text(
                   "₹${product.retail.toStringAsFixed(0)}",
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontFamily: 'monospace',
                     fontWeight: FontWeight.w700,
                     fontSize: 13,
@@ -141,7 +141,7 @@ class InventoryProductRow extends StatelessWidget {
                 width: 110,
                 child: Text(
                   "${stock.toStringAsFixed(0)} PCS",
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontFamily: 'monospace',
                     fontWeight: FontWeight.w700,
                     fontSize: 13,
@@ -158,7 +158,7 @@ class InventoryProductRow extends StatelessWidget {
                 width: 130,
                 child: Text(
                   product.location,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 12,
                     color: Color(0xFF64748B),
@@ -174,9 +174,9 @@ class InventoryProductRow extends StatelessWidget {
                         height: 32,
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFF5F3FF),
+                          color: (colors?.accentPurple ?? const Color(0xFF7C3AED)).withValues(alpha: 0.08),
                           borderRadius: BorderRadius.circular(9999),
-                          border: Border.all(color: const Color(0xFFDDD6FE), width: 1.5),
+                          border: Border.all(color: (colors?.accentPurple ?? const Color(0xFF7C3AED)).withValues(alpha: 0.28), width: 1.5),
                         ),
                         alignment: Alignment.center,
                         child: const Text(
@@ -201,7 +201,7 @@ class InventoryProductRow extends StatelessWidget {
                                 : const Color(0xFFEEF2FF),
                             borderRadius: BorderRadius.circular(9999),
                             border: Border.all(
-                              color: const Color(0xFFC7D2FE),
+                              color: (colors?.accentPrimary ?? const Color(0xFF6366F1)).withValues(alpha: 0.28),
                               width: 1.5,
                             ),
                           ),
