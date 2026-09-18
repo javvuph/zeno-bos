@@ -4,116 +4,95 @@ import 'package:zeno/features/inventory/domain/models/product_master_models.dart
 
 class InventoryVariantSubtable extends StatelessWidget {
   final ProductMaster product;
-
   const InventoryVariantSubtable({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
-    if (product.isStandalone || product.variants.isEmpty) {
-      return const SizedBox.shrink();
-    }
-
-    final colors = Theme.of(context).extension<ZenoSemanticColors>();
-    final border = colors?.borderSubtle ?? const Color(0xFFD9DFF2);
-    final surface = colors?.bgSurface ?? Colors.white;
-    final tier2 = colors?.bgTier2 ?? const Color(0xFFF3F6FF);
-    final textSecondary = colors?.textSecondary ?? const Color(0xFF64748B);
-    final accent = colors?.accentPrimary ?? const Color(0xFF6366F1);
-
+    if (product.isStandalone || product.variants.isEmpty) return const SizedBox.shrink();
+    final colors = Theme.of(context).extension<ZenoSemanticColors>()!;
     return Container(
-      color: tier2.withValues(alpha: 0.72),
-      padding: const EdgeInsets.only(left: 50, right: 18, top: 12, bottom: 16),
+      margin: const EdgeInsets.only(left: 50, right: 18, bottom: 16),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        border: Border(left: BorderSide(color: accent, width: 2)),
+        color: colors.bgTier3.withValues(alpha: 0.72),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: colors.borderSubtle),
       ),
-      child: Container(
-        decoration: BoxDecoration(
-          color: surface.withValues(alpha: 0.88),
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: border),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Container(
-              margin: const EdgeInsets.only(bottom: 8),
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              decoration: BoxDecoration(
-                color: surface.withValues(alpha: 0.82),
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: border),
-              ),
-              child: Wrap(
-                spacing: 22,
-                runSpacing: 6,
-                children: [
-                  Text("CATEGORY  " + (product.category.isEmpty ? '—' : product.category), style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: colors?.textPrimary ?? const Color(0xFF26324A))),
-                  Text("BRAND  " + (product.brand.isEmpty ? '—' : product.brand), style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: colors.textPrimary)),
-                  Text("COST  ₹" + product.cost.toStringAsFixed(0), style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: colors.textPrimary)),
-                  Text("MARGIN  " + product.marginPercentage.toStringAsFixed(0) + "%", style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: colors.textPrimary)),
-                  Text("REORDER  " + product.reorderLevel.toStringAsFixed(0) + " PCS", style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: colors.textPrimary)),
-                ],
-              ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: BoxDecoration(
+              color: colors.bgSurface.withValues(alpha: 0.82),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: colors.borderSubtle),
             ),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: DataTable(
-            columnSpacing: 18,
-            headingRowHeight: 32,
-            dataRowMinHeight: 34,
-            dataRowMaxHeight: 38,
-            headingRowColor: WidgetStateProperty.all(tier2.withValues(alpha: 0.82)),
-            columns: const [
-              DataColumn(label: Text("COLOUR / SIZE", style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: textSecondary))),
-              DataColumn(label: Text("SKU", style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: textSecondary))),
-              DataColumn(label: Text("BARCODE", style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: textSecondary))),
-              DataColumn(label: Text("STOCK", style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: textSecondary))),
-              DataColumn(label: Text("STATUS", style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: textSecondary))),
-            ],
-            rows: product.variants.map((variant) {
-              String statusLabel = "IN STOCK";
-              Color statusBg = (colors?.statusSuccess ?? const Color(0xFF16A34A)).withValues(alpha: 0.12);
-              Color statusText = colors?.statusSuccess ?? const Color(0xFF16A34A);
-
-              if (variant.qty == 0) {
-                statusLabel = "OUT OF STOCK";
-                statusBg = (colors?.statusDanger ?? const Color(0xFFDC2626)).withValues(alpha: 0.12);
-                statusText = colors?.statusDanger ?? const Color(0xFFDC2626);
-              } else if (variant.qty <= product.reorderLevel) {
-                statusLabel = "LOW STOCK";
-                statusBg = (colors?.statusWarning ?? const Color(0xFFD97706)).withValues(alpha: 0.14);
-                statusText = colors?.statusWarning ?? const Color(0xFFD97706);
-              }
-
-              return DataRow(
-                cells: [
-                  DataCell(Text("${variant.color} / ${variant.size}", style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: accent))),
-                  DataCell(Text(variant.sku, style: const TextStyle(fontSize: 11, fontFamily: 'monospace', color: Color(0xFF64748B)))),
-                  DataCell(Text(variant.barcode, style: const TextStyle(fontSize: 11, fontFamily: 'monospace', color: Color(0xFF64748B)))),
-                  DataCell(Text("${variant.qty.toStringAsFixed(0)} PCS", style: const TextStyle(fontSize: 12, fontFamily: 'monospace', fontWeight: FontWeight.w700))),
-                  DataCell(
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                      decoration: BoxDecoration(
-                        color: statusBg,
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Text(
-                        statusLabel,
-                        style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w800,
-                          color: statusText,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              );
-            }).toList(),
+            child: Wrap(
+              spacing: 22,
+              runSpacing: 6,
+              children: [
+                _Meta('CATEGORY', product.category, colors),
+                _Meta('BRAND', product.brand, colors),
+                _Meta('COST', '₹' + product.cost.toStringAsFixed(0), colors),
+                _Meta('MARGIN', product.marginPercentage.toStringAsFixed(0) + '%', colors),
+                _Meta('REORDER', product.reorderLevel.toStringAsFixed(0) + ' PCS', colors),
+              ],
+            ),
           ),
-        ),
+          const SizedBox(height: 8),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: DataTable(
+              columnSpacing: 22,
+              headingRowHeight: 32,
+              dataRowMinHeight: 34,
+              dataRowMaxHeight: 38,
+              headingRowColor: WidgetStateProperty.all(colors.bgTier2.withValues(alpha: 0.82)),
+              columns: [
+                DataColumn(label: Text('COLOUR / SIZE', style: _head(colors))),
+                DataColumn(label: Text('SKU', style: _head(colors))),
+                DataColumn(label: Text('BARCODE', style: _head(colors))),
+                DataColumn(label: Text('STOCK', style: _head(colors))),
+                DataColumn(label: Text('STATUS', style: _head(colors))),
+              ],
+              rows: product.variants.map((variant) {
+                final out = variant.qty <= 0;
+                final low = !out && variant.qty <= product.reorderLevel;
+                final status = out ? 'OUT OF STOCK' : (low ? 'LOW STOCK' : 'IN STOCK');
+                final statusColor = out ? colors.statusDanger : (low ? colors.statusWarning : colors.statusSuccess);
+                return DataRow(cells: [
+                  DataCell(Text(variant.color + ' / ' + variant.size, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: colors.accentPrimary))),
+                  DataCell(Text(variant.sku, style: TextStyle(fontSize: 11, fontFamily: 'monospace', color: colors.textSecondary))),
+                  DataCell(Text(variant.barcode, style: TextStyle(fontSize: 11, fontFamily: 'monospace', color: colors.textSecondary))),
+                  DataCell(Text(variant.qty.toStringAsFixed(0) + ' PCS', style: TextStyle(fontSize: 12, fontFamily: 'monospace', fontWeight: FontWeight.w700, color: colors.textPrimary))),
+                  DataCell(Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    decoration: BoxDecoration(color: statusColor.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(6)),
+                    child: Text(status, style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: statusColor)),
+                  )),
+                ]);
+              }).toList(),
+            ),
+          ),
+        ],
       ),
     );
   }
+}
+
+TextStyle _head(ZenoSemanticColors colors) => TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: colors.textSecondary, letterSpacing: 0.35);
+
+class _Meta extends StatelessWidget {
+  final String label;
+  final String value;
+  final ZenoSemanticColors colors;
+  const _Meta(this.label, this.value, this.colors);
+  @override
+  Widget build(BuildContext context) => RichText(
+    text: TextSpan(children: [
+      TextSpan(text: label + '  ', style: TextStyle(fontSize: 9, fontWeight: FontWeight.w800, color: colors.textSecondary)),
+      TextSpan(text: value.isEmpty ? '—' : value, style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: colors.textPrimary)),
+    ]),
+  );
 }
