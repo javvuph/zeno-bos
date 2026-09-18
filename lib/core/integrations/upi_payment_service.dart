@@ -1,36 +1,39 @@
-import 'package:upi_india/upi_india.dart';
 import 'package:flutter/foundation.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class UPIPaymentService {
-  final UpiIndia _upiIndia = UpiIndia();
-
-  Future<List<UpiApp>> getAvailableApps() async {
-    try {
-      return await _upiIndia.getAllUpiApps();
-    } catch (e) {
-      debugPrint("UPI Apps Discovery Failed: $e");
-      return [];
-    }
-  }
-
-  Future<UpiResponse> initiateTransaction({
-    required UpiApp app,
+  /// Opens a UPI payment intent using the Android UPI URI scheme.
+  /// Returns true when the operating system successfully launches a UPI app.
+  Future<bool> initiateTransaction({
     required String receiverUpiId,
     required String receiverName,
     required double amount,
     String transactionRef = '',
     String transactionNote = 'Payment for Invoice',
   }) async {
-    return _upiIndia.startTransaction(
-      app: app,
-      receiverUpiId: receiverUpiId,
-      receiverName: receiverName,
-      transactionRefId: transactionRef.isNotEmpty
-          ? transactionRef
-          : DateTime.now().millisecondsSinceEpoch.toString(),
-      transactionNote: transactionNote,
-      amount: amount,
+    final ref = transactionRef.isNotEmpty
+        ? transactionRef
+        : DateTime.now().millisecondsSinceEpoch.toString();
+
+    final uri = Uri(
+      scheme: 'upi',
+      host: 'pay',
+      queryParameters: {
+        'pa': receiverUpiId,
+        'pn': receiverName,
+        'am': amount.toStringAsFixed(2),
+        'cu': 'INR',
+        'tr': ref,
+        'tn': transactionNote,
+      },
     );
+
+    try {
+      return await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } catch (e) {
+      debugPrint('UPI launch failed: $e');
+      return false;
+    }
   }
 
   String getResponseStatusMessage(String responseCode) {
