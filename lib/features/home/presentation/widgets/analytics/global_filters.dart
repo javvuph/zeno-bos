@@ -17,11 +17,11 @@ class GlobalFilterBar extends StatelessWidget {
     return Container(
       height: 52,
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: const BoxDecoration(
-        color: surface.withValues(alpha: 0.82),
+      decoration: BoxDecoration(
+        color: surface.withValues(alpha: 0.78),
         border: Border(bottom: BorderSide(color: border.withValues(alpha: 0.85))),
       ),
-      child: const Row(
+      child: Row(
         children: [
           Icon(Icons.tune_rounded, size: 16, color: textSecondary),
           SizedBox(width: 16),
@@ -84,7 +84,7 @@ class _ActionButton extends StatelessWidget {
       onPressed: () {},
       icon: Icon(icon, size: 14, color: accent),
       label: Text(label,
-          style: const TextStyle(
+          style: TextStyle(
               fontSize: 11,
               color: accent,
               fontWeight: FontWeight.w700)),
