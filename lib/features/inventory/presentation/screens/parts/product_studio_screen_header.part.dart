@@ -58,6 +58,8 @@ extension _ProductStudioScreenHeaderState on _ProductStudioScreenState {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
+                _modeSegmentSmall("MANUAL", Icons.notes_rounded, controller.currentMode == ProductCreationMode.manual, () => controller.setCreationMode(ProductCreationMode.manual)),
+                const SizedBox(width: 8),
                 _modeSegmentSmall("SCAN", Icons.qr_code_scanner_rounded, controller.currentMode == ProductCreationMode.bulkScan, () => controller.setCreationMode(ProductCreationMode.bulkScan)),
                 const SizedBox(width: 8),
                 _utilityButtonSmall(Icons.upload_file_rounded, "IMPORT", () { controller.setCreationMode(ProductCreationMode.bulkScan); controller.pickImportFile(); }),
