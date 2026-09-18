@@ -9,22 +9,30 @@ class ZenoTheme {
     return base ?? ThemeData.light().textTheme;
   }
 
-  // --- PRIMITIVE PALETTE (Core Values) ---
+  // --- ZENO AURORA GLASS MASTER PALETTE ---
   static const Color obsidian900 = Color(0xFF0A0A0F);
   static const Color obsidian800 = Color(0xFF131722);
   static const Color obsidian700 = Color(0xFF1B1E2B);
   static const Color slate500 = Color(0xFF5A6275);
   static const Color slate400 = Color(0xFF8A92A6);
   static const Color slate300 = Color(0xFFCBD5E1);
-  static const Color cyan500 = Color(0xFF00F0FF);
+
+  static const Color cyan500 = Color(0xFF06B6D4);
   static const Color violet500 = Color(0xFF8B5CF6);
   static const Color magenta500 = Color(0xFFEC4899);
-  static const Color green500 = Color(0xFF00FF88);
-  static const Color amber500 = Color(0xFFFFB800);
-  static const Color ruby500 = Color(0xFFFF4D4D);
+  static const Color green500 = Color(0xFF16A34A);
+  static const Color amber500 = Color(0xFFD97706);
+  static const Color ruby500 = Color(0xFFDC2626);
 
   static const Color indigo500 = Color(0xFF6366F1);
   static const Color indigo600 = Color(0xFF4F46E5);
+  static const Color auroraLightBackground = Color(0xFFF3F6FF);
+  static const Color auroraLightSurface = Color(0xFFFFFFFF);
+  static const Color auroraLightSecondary = Color(0xFFF8FAFC);
+  static const Color auroraLightNested = Color(0xFFF1F4FB);
+  static const Color auroraLightBorder = Color(0xFFD9DFF2);
+  static const Color auroraLightText = Color(0xFF26324A);
+  static const Color auroraLightSecondaryText = Color(0xFF526078);
 
   // --- GRADIENTS ---
   static const LinearGradient aiGlowGradient = LinearGradient(
@@ -91,44 +99,44 @@ class ZenoTheme {
       useMaterial3: true,
       brightness: Brightness.light,
       primaryColor: indigo500,
-      scaffoldBackgroundColor: Colors.white,
-      cardColor: const Color(0xFFF8FAFC),
-      dividerColor: const Color(0xFFE2E8F0),
+      scaffoldBackgroundColor: auroraLightBackground,
+      cardColor: auroraLightSurface,
+      dividerColor: auroraLightBorder,
       extensions: const [
         ZenoSemanticColors(
-          bgTier1: Colors.white,
-          bgTier2: Color(0xFFF8FAFC),
-          bgTier3: Color(0xFFF1F5F9),
-          bgTier4: Color(0xFFF1F5F9),
-          bgSurface: Colors.white,
-          bgHover: Color(0xFFE2E8F0),
-          borderSubtle: Color(0xFFE2E8F0),
-          textPrimary: Color(0xFF1E293B),
-          textSecondary: Color(0xFF475569),
-          textDisabled: Color(0xFF94A3B8),
+          bgTier1: auroraLightBackground,
+          bgTier2: auroraLightSecondary,
+          bgTier3: auroraLightNested,
+          bgTier4: Color(0xFFEDF1FA),
+          bgSurface: auroraLightSurface,
+          bgHover: Color(0xFFE8ECF8),
+          borderSubtle: auroraLightBorder,
+          textPrimary: auroraLightText,
+          textSecondary: auroraLightSecondaryText,
+          textDisabled: Color(0xFF98A3B8),
           accentPrimary: indigo500,
           accentPurple: Color(0xFF7C3AED),
-          statusSuccess: Color(0xFF16A34A),
-          statusWarning: Color(0xFFD97706),
-          statusDanger: Color(0xFFDC2626),
+          statusSuccess: green500,
+          statusWarning: amber500,
+          statusDanger: ruby500,
           statusInfo: Color(0xFF0284C7),
-          amberGold: Color(0xFFD97706),
+          amberGold: amber500,
         ),
       ],
       textTheme: _safeInterTextTheme().apply(
-        bodyColor: const Color(0xFF1E293B),
-        displayColor: const Color(0xFF1E293B),
+        bodyColor: auroraLightText,
+        displayColor: auroraLightText,
       ),
       appBarTheme: const AppBarTheme(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.transparent,
         elevation: 0,
       ),
       colorScheme: const ColorScheme.light(
         primary: indigo500,
         secondary: Color(0xFF7C3AED),
-        surface: Colors.white,
-        onSurface: Color(0xFF1E293B),
-        outline: Color(0xFFE2E8F0),
+        surface: auroraLightSurface,
+        onSurface: auroraLightText,
+        outline: auroraLightBorder,
       ),
     );
   }
