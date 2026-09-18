@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:zeno/app/theme_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:zeno/features/home/presentation/controllers/personalized_dashboard_cubit.dart';
 import 'package:zeno/features/home/presentation/widgets/dashboard/zeno_dashboard_widget.dart';
@@ -123,6 +124,7 @@ class _ZoneColumnState extends State<_ZoneColumn> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<ZenoSemanticColors>();
     return Expanded(
       flex: widget.flex,
       child: Column(
