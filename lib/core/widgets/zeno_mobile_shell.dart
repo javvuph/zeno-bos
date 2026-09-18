@@ -89,10 +89,12 @@ class _ZenoMobileShellState extends State<ZenoMobileShell> {
         ],
       ),
       bottomNavigationBar: _buildBottomBar(colors),
+      floatingActionButton: isHome ? null : _buildContextAction(colors, route),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 
-  PreferredSizeWidget _buildAppBar(
+  Widget? _buildContextAction(ZenoSemanticColors colors, String route) {\n    String label = 'Quick Action';\n    IconData icon = Icons.bolt_rounded;\n    String target = 'dashboard';\n    if (route.startsWith('sales/') || route.startsWith('billing/')) { label = 'New Bill'; icon = Icons.add_shopping_cart_rounded; target = 'sales/pos'; }\n    else if (route.startsWith('inventory/')) { label = 'Add Product'; icon = Icons.add_box_rounded; target = 'inventory/products'; }\n    else if (route.startsWith('orders/')) { label = 'Orders'; icon = Icons.shopping_bag_rounded; target = 'orders/dashboard'; }\n    else if (route.startsWith('customers/')) { label = 'Customer Hub'; icon = Icons.person_add_alt_1_rounded; target = 'customers/mgmt/list'; }\n    else if (route.startsWith('ai/')) { label = 'AI Center'; icon = Icons.auto_awesome_rounded; target = 'ai/home'; }\n    else if (route.startsWith('finance/')) { label = 'Finance'; icon = Icons.account_balance_wallet_rounded; target = 'finance'; }\n    else return null;\n    return Padding(padding: const EdgeInsets.only(bottom: 8), child: FloatingActionButton.extended(onPressed: () => _navigate(target), backgroundColor: colors.accentPrimary, foregroundColor: Colors.black, elevation: 10, icon: Icon(icon, size: 18), label: Text(label, style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 11))));\n  }\n\n  PreferredSizeWidget _buildAppBar(
     BuildContext context,
     ZenoSemanticColors colors,
     String route,
