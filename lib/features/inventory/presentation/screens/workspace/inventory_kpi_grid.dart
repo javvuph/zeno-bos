@@ -155,7 +155,7 @@ class InventoryKpiGrid extends StatelessWidget {
           const SizedBox(height: 2),
           Text(
             subtitle,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w600,
               color: textSecondary.withValues(alpha: 0.72),
