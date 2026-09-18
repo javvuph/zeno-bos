@@ -34,8 +34,8 @@ class AuroraWorkstation extends StatelessWidget {
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                colors.bgTier1.withValues(alpha: 0.55),
-                colors.bgTier3.withValues(alpha: 0.35),
+                colors.bgTier1,
+                colors.bgTier2.withValues(alpha: 0.55),
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -61,9 +61,9 @@ class AuroraWorkstation extends StatelessWidget {
     return Container(
       height: 40,
       padding: const EdgeInsets.symmetric(horizontal: 24),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        border: Border(bottom: BorderSide(color: Color(0x33667EEA))),
+      decoration: BoxDecoration(
+        color: colors.bgSurface.withValues(alpha: 0.78),
+        border: Border(bottom: BorderSide(color: colors.borderSubtle)),
       ),
       child: Row(
         children: tabs.asMap().entries.map((entry) {
@@ -84,7 +84,7 @@ class AuroraWorkstation extends StatelessWidget {
                 Container(
                   width: 1,
                   height: 20,
-                  color: const Color(0x33667EEA),
+                  color: colors.borderSubtle,
                   margin: const EdgeInsets.symmetric(horizontal: 16),
                 ),
             ],
@@ -129,8 +129,9 @@ class _ModernTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const activeColor = Color(0xFF667EEA);
-    const inactiveColor = Color(0xFF666666);
+    final semantic = Theme.of(context).extension<ZenoSemanticColors>();
+    final activeColor = semantic?.accentPrimary ?? const Color(0xFF6366F1);
+    final inactiveColor = semantic?.textSecondary ?? const Color(0xFF64748B);
 
     return InkWell(
       onTap: onTap,
@@ -165,8 +166,11 @@ class _ModernTab extends StatelessWidget {
             width: label.length * 7.0 + 20, 
             decoration: BoxDecoration(
               gradient: isActive
-                  ? const LinearGradient(
-                      colors: [Color(0xFF667EEA), Color(0xFF764BA2)],
+                  ? LinearGradient(
+                      colors: [
+                        activeColor,
+                        semantic?.accentPurple ?? const Color(0xFF7C3AED),
+                      ],
                     )
                   : null,
               color: isActive ? null : Colors.transparent,
