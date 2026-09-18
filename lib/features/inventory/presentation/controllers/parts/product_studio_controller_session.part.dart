@@ -149,7 +149,7 @@ extension ProductStudioControllerSession on ProductStudioController {
     }
   }
 
-  void handleBulkBarcodeScanned(String b) async {
+  Future<void> handleBulkBarcodeScanned(String b) async {
     final existing = await repository.getProductByBarcode(b);
     if (existing != null) {
       bulkScanItems.add(BulkScanItem(product: ProductStudioFromDomain.fromDomain(existing), status: BulkScanStatus.duplicate));
@@ -178,7 +178,7 @@ extension ProductStudioControllerSession on ProductStudioController {
     return errors;
   }
 
-  void addBulkReadyToCatalog() async {
+  Future<void> addBulkReadyToCatalog() async {
     final invalidRows = bulkScanItems
         .where((item) => item.status == BulkScanStatus.ready || item.status == BulkScanStatus.review)
         .where((item) => !isBulkRowComplete(item.product))
