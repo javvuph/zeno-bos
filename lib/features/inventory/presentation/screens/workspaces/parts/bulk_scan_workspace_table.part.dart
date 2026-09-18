@@ -185,7 +185,7 @@ extension _BulkScanWorkspaceTableState on _BulkScanWorkspaceState {
       height: 38,
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
-        border: Border(bottom: BorderSide(color: const Color(0xFF0066CC).withValues(alpha: 0.2))),
+        border: Border(bottom: BorderSide(color: const colors.accentPrimary.withValues(alpha: 0.2))),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -214,7 +214,7 @@ extension _BulkScanWorkspaceTableState on _BulkScanWorkspaceState {
                   decoration: BoxDecoration(
                     border: Border(
                         bottom: BorderSide(
-                            color: selected ? const Color(0xFF0066CC) : Colors.transparent,
+                            color: selected ? const colors.accentPrimary : Colors.transparent,
                             width: 2)),
                   ),
                   child: Text(
@@ -225,8 +225,8 @@ extension _BulkScanWorkspaceTableState on _BulkScanWorkspaceState {
                       letterSpacing: 0.5,
                       textBaseline: TextBaseline.alphabetic,
                       color: selected
-                          ? const Color(0xFF0066CC)
-                          : const Color(0xFF4a5f7f),
+                          ? const colors.accentPrimary
+                          : const colors.textSecondary,
                     ),
                   ),
                 ),
