@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:zeno/app/theme_colors.dart';
 import 'package:zeno/features/inventory/domain/models/product_master_models.dart';
 import 'inventory_product_row.dart';
 
 class InventoryTableCard extends StatelessWidget {
   final List<ProductMaster> allProducts;
   final List<ProductMaster> filteredProducts;
+  final int totalFilteredProducts;
+  final int currentPage;
+  final int pageSize;
+  final ValueChanged<int> onPageChanged;
   final Set<String> selectedProductIds;
   final ValueChanged<bool?> onSelectAllChanged;
   final ValueChanged<String> onSelectRow;
@@ -18,6 +23,10 @@ class InventoryTableCard extends StatelessWidget {
     super.key,
     required this.allProducts,
     required this.filteredProducts,
+    required this.totalFilteredProducts,
+    required this.currentPage,
+    required this.pageSize,
+    required this.onPageChanged,
     required this.selectedProductIds,
     required this.onSelectAllChanged,
     required this.onSelectRow,
@@ -30,11 +39,16 @@ class InventoryTableCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<ZenoSemanticColors>();
+    final border = colors?.borderSubtle ?? const Color(0xFFD9DFF2);
+    final surface = colors?.bgSurface ?? Colors.white;
+    final tier2 = colors?.bgTier2 ?? const Color(0xFFF3F6FF);
+
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFE2E8F0)),
+        color: surface.withValues(alpha: 0.82),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: border),
         boxShadow: const [
           BoxShadow(
             color: Color.fromRGBO(15, 23, 42, 0.04),
@@ -49,8 +63,8 @@ class InventoryTableCard extends StatelessWidget {
           Container(
             height: 42,
             decoration: const BoxDecoration(
-              color: Color(0xFFFAFBFC),
-              border: Border(bottom: BorderSide(color: Color(0xFFE2E8F0))),
+              color: tier2.withValues(alpha: 0.72),
+              border: Border(bottom: BorderSide(color: border)),
               borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
             ),
             child: Row(
@@ -102,6 +116,7 @@ class InventoryTableCard extends StatelessWidget {
                     ),
                   ),
                 ),
+                const SizedBox(width: 110, child: Text("STATUS", style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: Color(0xFF64748B), letterSpacing: 0.5))),
                 const SizedBox(
                   width: 130,
                   child: Text(
@@ -173,13 +188,13 @@ class InventoryTableCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Showing ${filteredProducts.length} styles",
+                  "Showing " + (totalFilteredProducts == 0 ? "0" : (((currentPage - 1) * pageSize) + 1).toString()) + "–" + (((currentPage - 1) * pageSize + filteredProducts.length).toString()) + " of " + totalFilteredProducts.toString(),
                   style: const TextStyle(fontSize: 12, color: Color(0xFF64748B)),
                 ),
                 Row(
                   children: [
                     OutlinedButton(
-                      onPressed: () {},
+                      onPressed: currentPage > 1 ? () => onPageChanged(currentPage - 1) : null,
                       style: OutlinedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                         side: const BorderSide(color: Color(0xFFE2E8F0)),
@@ -188,7 +203,7 @@ class InventoryTableCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 4),
                     OutlinedButton(
-                      onPressed: () {},
+                      onPressed: filteredProducts.length == pageSize ? () => onPageChanged(currentPage + 1) : null,
                       style: OutlinedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                         side: const BorderSide(color: Color(0xFFE2E8F0)),
