@@ -315,8 +315,8 @@ extension _BulkScanWorkspaceActionsState on _BulkScanWorkspaceState {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            const ZenoTheme.auroraLightNested.withValues(alpha: 0.9),
-            const ZenoTheme.auroraLightBackground.withValues(alpha: 0.95),
+            ZenoTheme.auroraLightNested.withValues(alpha: 0.9),
+            ZenoTheme.auroraLightBackground.withValues(alpha: 0.95),
           ],
         ),
         border: Border(top: BorderSide(color: colors.accentPrimary.withValues(alpha: 0.2))),
@@ -426,7 +426,7 @@ extension _BulkScanWorkspaceActionsState on _BulkScanWorkspaceState {
   }
 
   Future<void> _pickAndProcessImage() async {
-    final files = await FilePicker.pickFiles(type: FileType.image, allowMultiple: true);
+    final files = await FilePicker.pickFiles(type: FileType.image);
     if (!mounted || files.isEmpty) return;
     try {
       for (final file in files) {
