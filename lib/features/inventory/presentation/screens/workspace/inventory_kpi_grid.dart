@@ -99,6 +99,12 @@ class InventoryKpiGrid extends StatelessWidget {
     Color? titleColor,
     Color? numberColor,
   }) {
+    final colors = Theme.of(context).extension<ZenoSemanticColors>();
+    final surface = colors?.bgSurface ?? Colors.white;
+    final border = colors?.borderSubtle ?? const Color(0xFFD9DFF2);
+    final textPrimary = colors?.textPrimary ?? const Color(0xFF26324A);
+    final textSecondary = colors?.textSecondary ?? const Color(0xFF64748B);
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
       decoration: BoxDecoration(
