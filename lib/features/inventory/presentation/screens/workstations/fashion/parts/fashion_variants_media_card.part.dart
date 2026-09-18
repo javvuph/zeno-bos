@@ -94,22 +94,17 @@ extension _FashionVariantsTabMediaState on _FashionVariantsTabState {
                       ),
                       const SizedBox(width: 10),
                       Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text('Men\'s Hooded Jacket', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: Color(0xFF1E293B))),
-                            const SizedBox(height: 2),
-                            const Text('Type: Jacket | Gender: Men\nStyle: Hooded, Casual', style: TextStyle(fontSize: 9, color: Color(0xFF64748B))),
-                            const SizedBox(height: 6),
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                              decoration: BoxDecoration(
-                                color: Colors.green.withValues(alpha: 0.1),
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              child: const Text('✓ Auto-filled from image', style: TextStyle(fontSize: 8, fontWeight: FontWeight.bold, color: Colors.green)),
-                            ),
-                          ],
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFF3F6FF),
+                            borderRadius: BorderRadius.circular(7),
+                            border: Border.all(color: const Color(0xFFD9DFF2)),
+                          ),
+                          child: const Text(
+                            'Upload one photo from any angle. ZENO AI will use it as the source image for the selected colour workflow.',
+                            style: TextStyle(fontSize: 9, height: 1.35, color: Color(0xFF64748B)),
+                          ),
                         ),
                       ),
                     ],
@@ -129,79 +124,89 @@ extension _FashionVariantsTabMediaState on _FashionVariantsTabState {
             ),
             const SizedBox(height: 8),
 
-            // Color Swatches Row
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: controller.availableColors.map((cName) {
-                  final isCurrent = cName == activeColor;
-                  final colorVal = controller.getColorValue(cName);
-                  return Padding(
-                    padding: const EdgeInsets.only(right: 6),
-                    child: InkWell(
-                      onTap: () => setState(() => controller.setActiveMediaColor(cName)),
-                      borderRadius: BorderRadius.circular(6),
-                      child: Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(6),
-                          border: Border.all(
-                            color: isCurrent ? const Color(0xFF667EEA) : Colors.grey.shade300,
-                            width: isCurrent ? 2 : 1,
-                          ),
-                        ),
-                        child: Column(
-                          children: [
-                            Container(
-                              width: 22,
-                              height: 22,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: colorVal,
-                                border: Border.all(color: cName.toLowerCase() == 'white' ? Colors.grey.shade300 : Colors.black12),
-                              ),
-                            ),
-                            const SizedBox(height: 2),
-                            Text(cName, style: TextStyle(fontSize: 8, fontWeight: isCurrent ? FontWeight.bold : FontWeight.normal)),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                }).toList(),
-              ),
-            ),
+            // The media workspace follows the single active colour selected in the left attributes panel.
+            _buildActiveColourChip(activeColor),
             const SizedBox(height: 14),
 
-            // Generate 4 Angles Button
+            // AI generation action: one source photo -> angle workflow for the selected colour set.
             Container(
               width: double.infinity,
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
-                  colors: [Color(0xFF667EEA), Color(0xFF764BA2)],
+                  colors: [Color(0xFF6366F1), Color(0xFF7C3AED)],
                 ),
                 borderRadius: BorderRadius.circular(8),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFF667EEA).withValues(alpha: 0.3),
-                    blurRadius: 6,
-                    offset: const Offset(0, 2),
+                    color: const Color(0xFF6366F1).withValues(alpha: 0.22),
+                    blurRadius: 10,
+                    offset: const Offset(0, 3),
                   ),
                 ],
               ),
               child: ElevatedButton.icon(
-                onPressed: () async {
-                  await controller.aiGenerate4AnglesForColor(activeColor, context);
-                  if (context.mounted) setState(() {});
-                },
-                icon: const Icon(Icons.auto_awesome, size: 14, color: Colors.white),
-                label: const Text('Generate 4 Angles for All Colours', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.white)),
+                onPressed: _aiGenerating
+                    ? null
+                    : () async {
+                        setState(() => _aiGenerating = true);
+                        try {
+                          await controller.aiGenerateForNewSpaces(context);
+                        } finally {
+                          if (context.mounted) setState(() => _aiGenerating = false);
+                        }
+                      },
+                icon: _aiGenerating
+                    ? const SizedBox(
+                        width: 14,
+                        height: 14,
+                        child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                      )
+                    : const Icon(Icons.auto_awesome_rounded, size: 15, color: Colors.white),
+                label: Text(
+                  _aiGenerating ? 'AI IS GENERATING • PLEASE WAIT' : 'AI GENERATE 4 ANGLES • ALL COLOURS',
+                  style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: Colors.white, letterSpacing: 0.2),
+                ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.transparent,
+                  disabledBackgroundColor: Colors.transparent,
                   shadowColor: Colors.transparent,
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                 ),
+              ),
+            ),
+            const SizedBox(height: 8),
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 180),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+              decoration: BoxDecoration(
+                color: _aiGenerating
+                    ? const Color(0xFF06B6D4).withValues(alpha: 0.08)
+                    : const Color(0xFFF3F6FF),
+                borderRadius: BorderRadius.circular(7),
+                border: Border.all(
+                  color: _aiGenerating
+                      ? const Color(0xFF06B6D4).withValues(alpha: 0.35)
+                      : const Color(0xFFD9DFF2),
+                ),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    _aiGenerating ? Icons.sync_rounded : Icons.auto_awesome_rounded,
+                    size: 14,
+                    color: _aiGenerating ? const Color(0xFF06B6D4) : const Color(0xFF6366F1),
+                  ),
+                  const SizedBox(width: 7),
+                  Expanded(
+                    child: Text(
+                      _aiGenerating
+                          ? 'AI processing source image → FRONT • BACK • SIDE • DETAIL'
+                          : 'AI workflow: 1 source photo → 4 angles → selected colours',
+                      style: const TextStyle(fontSize: 9, fontWeight: FontWeight.w700, color: Color(0xFF475569)),
+                    ),
+                  ),
+                ],
               ),
             ),
             const SizedBox(height: 16),
@@ -211,13 +216,7 @@ extension _FashionVariantsTabMediaState on _FashionVariantsTabState {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text('Colour Media Library', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: Color(0xFF1E293B))),
-                Row(
-                  children: [
-                    _buildTabChip('All', false),
-                    const SizedBox(width: 4),
-                    _buildTabChip('$activeColor (4)', true),
-                  ],
-                ),
+                _buildActiveColourChip(activeColor, compact: true),
               ],
             ),
             const SizedBox(height: 10),
@@ -287,26 +286,54 @@ extension _FashionVariantsTabMediaState on _FashionVariantsTabState {
               ),
             ),
             const SizedBox(height: 12),
-
-            // Secondary Action: Apply to all colors
-            SizedBox(
-              width: double.infinity,
-              child: OutlinedButton(
-                onPressed: () {
-                  controller.aiApplyToAllSelectedColors(activeColor, context);
-                  setState(() {});
-                },
-                style: OutlinedButton.styleFrom(
-                  backgroundColor: const Color(0xFFF5F7FF),
-                  side: BorderSide(color: const Color(0xFF667EEA).withValues(alpha: 0.3)),
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-                ),
-                child: Text('Apply $activeColor Photo to All Selected Colours', style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Color(0xFF667EEA))),
-              ),
-            ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildActiveColourChip(String colorName, {bool compact = false}) {
+    final value = controller.getColorValue(colorName);
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: compact ? 7 : 8, vertical: compact ? 4 : 5),
+      decoration: BoxDecoration(
+        color: colors.accentPrimary.withValues(alpha: 0.07),
+        borderRadius: BorderRadius.circular(7),
+        border: Border.all(
+          color: colors.accentPrimary.withValues(alpha: 0.42),
+          width: 1.2,
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: compact ? 13 : 16,
+            height: compact ? 13 : 16,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: value,
+              border: Border.all(
+                color: colorName.toLowerCase() == 'white'
+                    ? const Color(0xFFD9DFF2)
+                    : Colors.black12,
+              ),
+            ),
+          ),
+          const SizedBox(width: 6),
+          Text(
+            colorName,
+            style: TextStyle(
+              fontSize: compact ? 9 : 10,
+              fontWeight: FontWeight.w800,
+              color: colors.textPrimary,
+            ),
+          ),
+          if (!compact) ...[
+            const SizedBox(width: 5),
+            Icon(Icons.check_circle_rounded, size: 13, color: colors.accentPrimary),
+          ],
+        ],
       ),
     );
   }
@@ -328,17 +355,6 @@ extension _FashionVariantsTabMediaState on _FashionVariantsTabState {
         const SizedBox(width: 4),
         Text(label, style: TextStyle(fontSize: 9, fontWeight: active ? FontWeight.bold : FontWeight.normal, color: active ? const Color(0xFF1E293B) : Colors.grey)),
       ],
-    );
-  }
-
-  Widget _buildTabChip(String label, bool active) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-      decoration: BoxDecoration(
-        color: active ? const Color(0xFF667EEA) : Colors.grey.shade100,
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: Text(label, style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: active ? Colors.white : Colors.grey.shade700)),
     );
   }
 
