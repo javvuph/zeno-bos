@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:zeno/app/theme.dart';
 
@@ -40,25 +41,32 @@ class _ZenoCardState extends State<ZenoCard> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<ZenoSemanticColors>()!;
     final bool isClickable = widget.onTap != null;
+    final bool useGlass = widget.color == null;
 
-    return MouseRegion(
-      onEnter: (_) => setState(() => _isHovered = true),
-      onExit: (_) => setState(() => _isHovered = false),
-      cursor: isClickable ? SystemMouseCursors.click : SystemMouseCursors.basic,
-      child: GestureDetector(
-        onTap: widget.onTap,
+    final card = ClipRRect(
+      borderRadius: BorderRadius.circular(ZenoRadius.lg),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(
+          sigmaX: useGlass ? ZenoGlass.blur : 0,
+          sigmaY: useGlass ? ZenoGlass.blur : 0,
+        ),
         child: AnimatedContainer(
           duration: ZenoDuration.fast,
           width: widget.width,
           height: widget.height,
           decoration: BoxDecoration(
-            color: widget.color ?? colors.bgTier2,
+            color: widget.color ??
+                colors.bgSurface.withValues(
+                  alpha: Theme.of(context).brightness == Brightness.light
+                      ? ZenoGlass.lightOpacity
+                      : ZenoGlass.darkOpacity,
+                ),
             borderRadius: BorderRadius.circular(ZenoRadius.lg),
             border: Border.all(
               color: widget.isSelected
                   ? colors.accentPrimary
                   : (_isHovered && isClickable
-                      ? colors.accentPrimary.withValues(alpha: 0.5)
+                      ? colors.accentPrimary.withValues(alpha: 0.50)
                       : colors.borderSubtle),
               width: widget.isSelected
                   ? ZenoBorderWidth.thick
@@ -84,8 +92,9 @@ class _ZenoCardState extends State<ZenoCard> {
                             children: [
                               Text(
                                 widget.title!.toUpperCase(),
-                                style: ZenoTypography.caption(widget.titleColor ?? colors.textPrimary)
-                                    .copyWith(
+                                style: ZenoTypography.caption(
+                                  widget.titleColor ?? colors.textPrimary,
+                                ).copyWith(
                                   fontWeight: FontWeight.w900,
                                   letterSpacing: 1.0,
                                 ),
@@ -104,8 +113,7 @@ class _ZenoCardState extends State<ZenoCard> {
                 ),
               Flexible(
                 child: Padding(
-                  padding:
-                      widget.padding ?? const EdgeInsets.all(12),
+                  padding: widget.padding ?? const EdgeInsets.all(ZenoSpacing.md),
                   child: widget.child,
                 ),
               ),
@@ -113,6 +121,13 @@ class _ZenoCardState extends State<ZenoCard> {
           ),
         ),
       ),
+    );
+
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      cursor: isClickable ? SystemMouseCursors.click : SystemMouseCursors.basic,
+      child: GestureDetector(onTap: widget.onTap, child: card),
     );
   }
 }
@@ -146,7 +161,7 @@ class ZenoStatCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(ZenoSpacing.sm),
             decoration: BoxDecoration(
-              color: accent.withValues(alpha: 0.1),
+              color: accent.withValues(alpha: 0.10),
               borderRadius: BorderRadius.circular(ZenoRadius.md),
             ),
             child: Icon(icon, color: accent, size: ZenoSizing.iconLG),
@@ -162,7 +177,7 @@ class ZenoStatCard extends StatelessWidget {
                   style: ZenoTypography.micro(colors.textSecondary)
                       .copyWith(letterSpacing: 0.5),
                 ),
-                const SizedBox(height: 2),
+                const SizedBox(height: ZenoSpacing.xs / 2),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.baseline,
                   textBaseline: TextBaseline.alphabetic,
@@ -173,15 +188,13 @@ class ZenoStatCard extends StatelessWidget {
                           .copyWith(fontWeight: FontWeight.w900),
                     ),
                     if (change != null) ...[
-                      const SizedBox(width: 8),
+                      const SizedBox(width: ZenoSpacing.sm),
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(
-                            isPositive
-                                ? Icons.trending_up
-                                : Icons.trending_down,
-                            size: 10,
+                            isPositive ? Icons.trending_up : Icons.trending_down,
+                            size: ZenoSizing.iconSM - 4,
                             color: isPositive
                                 ? colors.statusSuccess
                                 : colors.statusDanger,
@@ -189,10 +202,11 @@ class ZenoStatCard extends StatelessWidget {
                           const SizedBox(width: 2),
                           Text(
                             change!,
-                            style: ZenoTypography.micro(isPositive
-                                    ? colors.statusSuccess
-                                    : colors.statusDanger)
-                                .copyWith(fontWeight: FontWeight.w900),
+                            style: ZenoTypography.micro(
+                              isPositive
+                                  ? colors.statusSuccess
+                                  : colors.statusDanger,
+                            ).copyWith(fontWeight: FontWeight.w900),
                           ),
                         ],
                       ),
