@@ -11,7 +11,7 @@ extension _ProductStudioScreenHeaderState on _ProductStudioScreenState {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
         color: colors.bgTier2,
-        border: const Border(bottom: BorderSide(color: Color(0xFFD1E0F0), width: 1)),
+        border: Border(bottom: BorderSide(color: colors.borderSubtle, width: 1)),
       ),
       child: Row(
         children: [
@@ -22,15 +22,15 @@ extension _ProductStudioScreenHeaderState on _ProductStudioScreenState {
               Container(
                 width: 32, height: 32,
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(colors: [Color(0xFF7C3AED), Color(0xFF4F46E5)]),
+                  gradient: LinearGradient(colors: [colors.accentPurple, colors.accentPrimary]),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: const Icon(Icons.shopping_bag_rounded, color: Colors.white, size: 16),
               ),
               const SizedBox(width: 10),
-              const Text(
+              Text(
                 "Product Studio",
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: Colors.black, letterSpacing: -0.3),
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: colors.textPrimary, letterSpacing: -0.3),
               ),
               const SizedBox(width: 16),
               _tagSmall("0%"),
@@ -49,14 +49,14 @@ extension _ProductStudioScreenHeaderState on _ProductStudioScreenState {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.6),
+              color: colors.bgSurface.withValues(alpha: 0.6),
               borderRadius: BorderRadius.circular(8),
               border: Border.all(color: colors.borderSubtle, width: 1),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                _modeSegmentSmall("SCAN", Icons.qr_code_scanner_rounded, controller.currentMode == ProductCreationMode.scan, () => controller.setCreationMode(ProductCreationMode.bulkScan)),
+                _modeSegmentSmall("SCAN", Icons.qr_code_scanner_rounded, controller.currentMode == ProductCreationMode.bulkScan, () => controller.setCreationMode(ProductCreationMode.bulkScan)),
                 const SizedBox(width: 8),
                 _utilityButtonSmall(Icons.upload_file_rounded, "IMPORT", () => controller.setCreationMode(ProductCreationMode.bulkScan)),
               ],
