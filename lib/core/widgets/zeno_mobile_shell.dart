@@ -359,6 +359,8 @@ class _MobileCommandCenter extends StatelessWidget {
         _TodayPulse(onRoute: onRoute),
         const SizedBox(height: 14),
         _RevenueChartCard(onRoute: onRoute),
+        const SizedBox(height: 14),
+        _RecentActivity(onRoute: onRoute),
         const SizedBox(height: 18),
         Row(children: [
           Expanded(child: _ActionCard(
@@ -515,6 +517,14 @@ class _SparklinePainter extends CustomPainter {
   _SparklinePainter({required this.values,required this.color});
   @override void paint(Canvas canvas,Size size){if(values.isEmpty)return;final max=values.reduce((a,b)=>a>b?a:b),min=values.reduce((a,b)=>a<b?a:b);final path=Path();for(var i=0;i<values.length;i++){final x=i*size.width/(values.length-1);final y=size.height-(values[i]-min)/(max-min+0.01)*size.height*.82-size.height*.05;if(i==0)path.moveTo(x,y);else path.lineTo(x,y);}final paint=Paint()..color=color..strokeWidth=2.5..style=PaintingStyle.stroke..strokeCap=StrokeCap.round;canvas.drawPath(path,paint);final fill=Path.from(path)..lineTo(size.width,size.height)..lineTo(0,size.height)..close();canvas.drawPath(fill,Paint()..shader=LinearGradient(begin:Alignment.topCenter,end:Alignment.bottomCenter,colors:[color.withValues(alpha:.18),Colors.transparent]).createShader(Offset.zero&size));}
   @override bool shouldRepaint(covariant _SparklinePainter old)=>old.values!=values||old.color!=color;
+}
+\n
+class _RecentActivity extends StatelessWidget {
+  final ValueChanged<String> onRoute;
+  const _RecentActivity({required this.onRoute});
+  @override Widget build(BuildContext context){final c=Theme.of(context).extension<ZenoSemanticColors>()!;return Container(padding:const EdgeInsets.all(15),decoration:BoxDecoration(color:c.bgTier2.withValues(alpha:.92),borderRadius:BorderRadius.circular(20),border:Border.all(color:c.borderSubtle)),child:Column(children:[Row(children:[Text('RECENT ACTIVITY',style:TextStyle(fontSize:10,fontWeight:FontWeight.w900,letterSpacing:1.5,color:c.textSecondary)),const Spacer(),TextButton(onPressed:()=>onRoute('sales/pos'),child:Text('VIEW ALL',style:TextStyle(fontSize:9,fontWeight:FontWeight.w900,color:c.accentPrimary)))]),_ActivityRow(icon:Icons.receipt_long_rounded,title:'New sale completed',meta:'INV-1048 • 2 min ago',amount:'+ ₹2,480',accent:c.statusSuccess),_ActivityRow(icon:Icons.local_shipping_outlined,title:'Order dispatched',meta:'ORD-2081 • 18 min ago',amount:'In transit',accent:c.accentPrimary),_ActivityRow(icon:Icons.person_add_alt_1_rounded,title:'Customer added',meta:'CRM • 31 min ago',amount:'New',accent:c.accentPurple)]));}
+}
+class _ActivityRow extends StatelessWidget {final IconData icon;final String title,meta,amount;final Color accent;const _ActivityRow({required this.icon,required this.title,required this.meta,required this.amount,required this.accent});@override Widget build(BuildContext context){final c=Theme.of(context).extension<ZenoSemanticColors>()!;return Padding(padding:const EdgeInsets.symmetric(vertical:7),child:Row(children:[Container(width:34,height:34,decoration:BoxDecoration(color:accent.withValues(alpha:.10),borderRadius:BorderRadius.circular(10)),child:Icon(icon,size:17,color:accent)),const SizedBox(width:10),Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text(title,style:TextStyle(fontSize:11,fontWeight:FontWeight.w800,color:c.textPrimary)),const SizedBox(height:2),Text(meta,style:TextStyle(fontSize:8,color:c.textSecondary))]),),Text(amount,style:TextStyle(fontSize:9,fontWeight:FontWeight.w900,color:accent))]));}
 }
 \nclass _ActionCard extends StatelessWidget {
   final IconData icon;
