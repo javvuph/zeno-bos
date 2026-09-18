@@ -216,6 +216,22 @@ extension _BulkScanWorkspaceActionsState on _BulkScanWorkspaceState {
         size: compact ? ZenoButtonSize.sm : ZenoButtonSize.md,
         onPressed: () => _pickAndProcessBill(),
       ),
+      const SizedBox(width: 10),
+      ZenoButton(
+        label: "IMPORT",
+        icon: Icons.file_open_outlined,
+        variant: ZenoButtonVariant.secondary,
+        size: compact ? ZenoButtonSize.sm : ZenoButtonSize.md,
+        onPressed: widget.controller.pickImportFile,
+      ),
+      const SizedBox(width: 10),
+      ZenoButton(
+        label: "UPLOAD IMAGE",
+        icon: Icons.image_outlined,
+        variant: ZenoButtonVariant.secondary,
+        size: compact ? ZenoButtonSize.sm : ZenoButtonSize.md,
+        onPressed: _pickAndProcessImage,
+      ),
     ];
 
     return Container(
