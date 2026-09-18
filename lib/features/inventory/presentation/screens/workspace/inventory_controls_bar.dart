@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:zeno/app/theme_colors.dart';
 
 class InventoryControlsBar extends StatelessWidget {
   final String activeStatusFilter;
@@ -18,6 +19,12 @@ class InventoryControlsBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<ZenoSemanticColors>();
+    final border = colors?.borderSubtle ?? const Color(0xFFD9DFF2);
+    final textPrimary = colors?.textPrimary ?? const Color(0xFF26324A);
+    final textSecondary = colors?.textSecondary ?? const Color(0xFF64748B);
+    final accent = colors?.accentPrimary ?? const Color(0xFF6366F1);
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -34,7 +41,7 @@ class InventoryControlsBar extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: const Color(0xFFE2E8F0)),
+                border: Border.all(color: border),
               ),
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
@@ -121,10 +128,10 @@ class InventoryControlsBar extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
         decoration: BoxDecoration(
-          color: isActive ? const Color(0xFFEEF2FF) : Colors.white,
+          color: isActive ? accent.withValues(alpha: 0.10) : Colors.white.withValues(alpha: 0.78),
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: isActive ? const Color(0xFFC7D2FE) : const Color(0xFFE2E8F0),
+            color: isActive ? accent.withValues(alpha: 0.30) : border,
           ),
         ),
         child: Text(
@@ -132,7 +139,7 @@ class InventoryControlsBar extends StatelessWidget {
           style: TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w700,
-            color: isActive ? const Color(0xFF4F46E5) : const Color(0xFF64748B),
+            color: isActive ? accent : textSecondary,
           ),
         ),
       ),
