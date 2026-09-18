@@ -6,35 +6,40 @@ class BiometricAuthService {
   final LocalAuthentication _auth = LocalAuthentication();
 
   Future<bool> isBiometricAvailable() async {
-    final bool canAuthenticateWithBiometrics = await _auth.canCheckBiometrics;
-    final bool canAuthenticate =
-        canAuthenticateWithBiometrics || await _auth.isDeviceSupported();
-    return canAuthenticate;
+    try {
+      final bool canCheck = await _auth.canCheckBiometrics;
+      final bool supported = await _auth.isDeviceSupported();
+      return canCheck || supported;
+    } on PlatformException catch (e) {
+      debugPrint("Biometrics availability failed: $e");
+      return false;
+    }
   }
 
   Future<List<BiometricType>> getAvailableBiometrics() async {
     try {
       return await _auth.getAvailableBiometrics();
     } on PlatformException catch (e) {
-      debugPrint("Biometrics Retrieval Failed: $e");
+      debugPrint("Biometrics retrieval failed: $e");
       return <BiometricType>[];
     }
   }
 
-  Future<bool> authenticate(
-      {String reason = 'Please authenticate to proceed'}) async {
+  Future<bool> authenticate({
+    String reason = 'Please authenticate to proceed',
+  }) async {
     try {
-      final bool didAuthenticate = await _auth.authenticate(
+      return await _auth.authenticate(
         localizedReason: reason,
-        biometricOnly: true,
-        persistAcrossBackgrounding: true,
+        options: const AuthenticationOptions(
+          useErrorDialogs: true,
+          stickyAuth: true,
+          sensitiveTransaction: true,
+          biometricOnly: true,
+        ),
       );
-      return didAuthenticate;
-    } on LocalAuthException catch (e) {
-      debugPrint("Biometric Authentication Failed: $e");
-      return false;
     } on PlatformException catch (e) {
-      debugPrint("Platform Error: $e");
+      debugPrint("Biometric authentication failed: $e");
       return false;
     }
   }
