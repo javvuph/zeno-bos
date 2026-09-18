@@ -4,9 +4,7 @@ import 'package:zeno/app/theme.dart';
 import 'package:zeno/core/widgets/zeno_workspace.dart';
 import 'package:zeno/features/inventory/presentation/controllers/product_studio_controller.dart';
 import 'package:zeno/features/inventory/domain/models/product_studio_enums.dart';
-import 'package:zeno/features/inventory/presentation/screens/workspaces/scan_workspace.dart';
 import 'package:zeno/features/inventory/presentation/screens/workspaces/bulk_scan_workspace.dart';
-import 'package:zeno/features/inventory/presentation/screens/workspaces/import_workspace.dart';
 import 'aurora/aurora_workstation.dart';
 
 part 'parts/product_studio_screen_header.part.dart';
