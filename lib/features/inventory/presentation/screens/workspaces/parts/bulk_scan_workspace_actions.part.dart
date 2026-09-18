@@ -324,4 +324,96 @@ extension _BulkScanWorkspaceActionsState on _BulkScanWorkspaceState {
       ),
     );
   }
+
+  void _startScanning() {
+    final controller = TextEditingController();
+    showDialog<void>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Scan Product'),
+        content: TextField(
+          controller: controller,
+          autofocus: true,
+          decoration: const InputDecoration(labelText: 'Barcode', hintText: 'Scan or enter barcode'),
+          onSubmitted: (value) async {
+            Navigator.of(dialogContext).pop();
+            await widget.controller.handleBulkBarcodeScanned(value);
+          },
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(dialogContext).pop(), child: const Text('Cancel')),
+          FilledButton(
+            onPressed: () async {
+              final value = controller.text;
+              Navigator.of(dialogContext).pop();
+              await widget.controller.handleBulkBarcodeScanned(value);
+            },
+            child: const Text('Add'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _cancelSession() {
+    widget.controller.bulkScanItems.clear();
+    widget.controller.notify();
+  }
+
+  Future<void> _openBulkEditDialog() async {
+    final cost = TextEditingController();
+    final sell = TextEditingController();
+    final reorder = TextEditingController();
+    await showDialog<void>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Bulk Edit Selected'),
+        content: SizedBox(
+          width: 360,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(controller: cost, keyboardType: const TextInputType.numberWithOptions(decimal: true), decoration: const InputDecoration(labelText: 'Cost Price (optional)')),
+              TextField(controller: sell, keyboardType: const TextInputType.numberWithOptions(decimal: true), decoration: const InputDecoration(labelText: 'Selling Price (optional)')),
+              TextField(controller: reorder, keyboardType: const TextInputType.numberWithOptions(decimal: true), decoration: const InputDecoration(labelText: 'Reorder Level (optional)')),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(dialogContext).pop(), child: const Text('Cancel')),
+          FilledButton(
+            onPressed: () async {
+              await widget.controller.bulkEditSelected(
+                costPrice: double.tryParse(cost.text),
+                sellingPrice: double.tryParse(sell.text),
+                reorderLevel: double.tryParse(reorder.text),
+              );
+              if (dialogContext.mounted) Navigator.of(dialogContext).pop();
+            },
+            child: const Text('Apply'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _pickAndProcessImage() async {
+    final files = await FilePicker.pickFiles(type: FileType.image, allowMultiple: true);
+    if (!mounted || files.isEmpty) return;
+    try {
+      for (final file in files) {
+        if (file.path == null) continue;
+        final product = await _ingestionService.processAIBill(file.path!);
+        widget.controller.bulkScanItems.add(BulkScanItem(
+          product: product,
+          status: widget.controller.isBulkRowComplete(product) ? BulkScanStatus.ready : BulkScanStatus.review,
+        ));
+      }
+      widget.controller.notify();
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Image processing failed: $e')));
+      }
+    }
+  }
 }
