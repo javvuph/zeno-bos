@@ -334,13 +334,13 @@ extension _BulkScanWorkspaceActionsState on _BulkScanWorkspaceState {
           ZenoButton(
             label: "CANCEL",
             variant: ZenoButtonVariant.secondary,
-            onPressed: _openBulkEditDialog,
+            onPressed: _cancelSession,
           ),
           const SizedBox(width: 12),
           ZenoButton(
             label: "SAVE AS DRAFT",
             variant: ZenoButtonVariant.secondary,
-            onPressed: _cancelSession,
+            onPressed: widget.controller.saveBulkAsDraft,
           ),
           const SizedBox(width: 12),
           ZenoButton(
@@ -431,7 +431,7 @@ extension _BulkScanWorkspaceActionsState on _BulkScanWorkspaceState {
     try {
       for (final file in files) {
         if (file.path == null) continue;
-        final product = await _ingestionService.processAIBill(file.path!);
+        final product = await _ingestionService.processAIImage(file.path!);
         widget.controller.bulkScanItems.add(BulkScanItem(
           product: product,
           status: widget.controller.isBulkRowComplete(product) ? BulkScanStatus.ready : BulkScanStatus.review,
