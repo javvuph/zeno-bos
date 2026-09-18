@@ -34,9 +34,32 @@ class InventoryVariantSubtable extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
           border: Border.all(color: border),
         ),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: DataTable(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Container(
+              margin: const EdgeInsets.only(bottom: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                color: surface.withValues(alpha: 0.82),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: border),
+              ),
+              child: Wrap(
+                spacing: 22,
+                runSpacing: 6,
+                children: [
+                  Text("CATEGORY  " + (product.category.isEmpty ? '—' : product.category), style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: colors.textPrimary)),
+                  Text("BRAND  " + (product.brand.isEmpty ? '—' : product.brand), style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: colors.textPrimary)),
+                  Text("COST  ₹" + product.cost.toStringAsFixed(0), style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: colors.textPrimary)),
+                  Text("MARGIN  " + product.marginPercentage.toStringAsFixed(0) + "%", style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: colors.textPrimary)),
+                  Text("REORDER  " + product.reorderLevel.toStringAsFixed(0) + " PCS", style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: colors.textPrimary)),
+                ],
+              ),
+            ),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: DataTable(
             columnSpacing: 18,
             headingRowHeight: 32,
             dataRowMinHeight: 34,
@@ -44,15 +67,10 @@ class InventoryVariantSubtable extends StatelessWidget {
             headingRowColor: WidgetStateProperty.all(tier2.withValues(alpha: 0.82)),
             columns: const [
               DataColumn(label: Text("COLOUR / SIZE", style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: textSecondary))),
-              DataColumn(label: Text("SKU", style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: Color(0xFF64748B)))),
-              DataColumn(label: Text("BARCODE", style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: Color(0xFF64748B)))),
-              DataColumn(label: Text("STOCK", style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: Color(0xFF64748B)))),
-              DataColumn(label: Text("CATEGORY", style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: Color(0xFF64748B)))),
-              DataColumn(label: Text("BRAND", style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: Color(0xFF64748B)))),
-              DataColumn(label: Text("COST", style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: Color(0xFF64748B)))),
-              DataColumn(label: Text("MARGIN", style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: Color(0xFF64748B)))),
-              DataColumn(label: Text("REORDER", style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: Color(0xFF64748B)))),
-              DataColumn(label: Text("STATUS", style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: Color(0xFF64748B)))),
+              DataColumn(label: Text("SKU", style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: textSecondary))),
+              DataColumn(label: Text("BARCODE", style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: textSecondary))),
+              DataColumn(label: Text("STOCK", style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: textSecondary))),
+              DataColumn(label: Text("STATUS", style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: textSecondary))),
             ],
             rows: product.variants.map((variant) {
               String statusLabel = "IN STOCK";
@@ -75,11 +93,7 @@ class InventoryVariantSubtable extends StatelessWidget {
                   DataCell(Text(variant.sku, style: const TextStyle(fontSize: 11, fontFamily: 'monospace', color: Color(0xFF64748B)))),
                   DataCell(Text(variant.barcode, style: const TextStyle(fontSize: 11, fontFamily: 'monospace', color: Color(0xFF64748B)))),
                   DataCell(Text("${variant.qty.toStringAsFixed(0)} PCS", style: const TextStyle(fontSize: 12, fontFamily: 'monospace', fontWeight: FontWeight.w700))),
-                  DataCell(Text(product.category, style: const TextStyle(fontSize: 12))),
-                  DataCell(Text(product.brand, style: const TextStyle(fontSize: 12))),
                   DataCell(Text("₹${product.cost.toStringAsFixed(0)}", style: const TextStyle(fontSize: 12, fontFamily: 'monospace'))),
-                  DataCell(Text("${product.marginPercentage.toStringAsFixed(0)}%", style: const TextStyle(fontSize: 12, fontFamily: 'monospace'))),
-                  DataCell(Text("${product.reorderLevel.toStringAsFixed(0)} PCS", style: const TextStyle(fontSize: 12, fontFamily: 'monospace'))),
                   DataCell(
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
