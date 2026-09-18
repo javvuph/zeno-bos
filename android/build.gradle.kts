@@ -18,7 +18,6 @@ subprojects {
                     setNamespace.invoke(androidExt, "com.example.$safeName")
                 }
             } catch (e: Exception) {
-                // Extension might be different or method missing
             }
         }
     }
