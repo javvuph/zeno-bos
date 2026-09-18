@@ -98,9 +98,8 @@ extension ProductStudioControllerLogic on ProductStudioController {
     if (_isPickingImage) return;
     _isPickingImage = true;
     try {
-      final file = await FilePicker.pickFile(
-        type: FileType.image,
-      );
+      final result = await FilePicker.platform.pickFiles(type: FileType.image);
+      final file = result?.files.single;
       if (file != null && file.path != null) {
         _product.primaryImageUrl = file.path!;
         SystemSound.play(SystemSoundType.click);
@@ -158,11 +157,12 @@ extension ProductStudioControllerLogic on ProductStudioController {
     if (_isPickingImage) return;
     _isPickingImage = true;
     try {
-      final files = await FilePicker.pickFiles(
+      final result = await FilePicker.platform.pickFiles(
         type: FileType.image,
+        allowMultiple: true,
       );
-      if (files.isNotEmpty) {
-        for (var file in files) {
+      if (result != null) {
+        for (final file in result.files) {
           if (file.path != null) {
             _product.galleryUrls.add(file.path!);
             SystemSound.play(SystemSoundType.click);
