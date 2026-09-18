@@ -4,6 +4,7 @@ import 'package:zeno/core/di/service_locator.dart';
 import 'package:zeno/core/widgets/keyboard_shortcuts.dart';
 import 'package:zeno/core/widgets/zeno_shell.dart';
 import 'package:zeno/core/widgets/zeno_mobile_shell.dart';
+import 'package:zeno/navigation/navigation_controller.dart';
 import 'package:zeno/features/inventory/presentation/controllers/inventory_bloc.dart';
 import 'package:zeno/features/inventory/data/services/ai_product_service.dart';
 import 'package:zeno/features/home/presentation/controllers/personalized_dashboard_cubit.dart';
