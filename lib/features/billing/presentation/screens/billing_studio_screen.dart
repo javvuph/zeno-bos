@@ -8,7 +8,7 @@ import 'package:zeno/features/billing/presentation/widgets/billing_shortcuts.dar
 import 'package:zeno/features/billing/presentation/widgets/billing_top_toolbar.dart';
 import 'package:zeno/features/billing/presentation/widgets/studio/billing_sidebar.dart';
 import 'package:zeno/features/billing/presentation/widgets/studio/active_customer_banner.dart';
-import 'package:zeno/features/billing/presentation/widgets/studio/online_orders_belt.dart';
+import 'package:zeno/features/billing/presentation/widgets/studio/billing_product_browser.dart';
 import 'package:zeno/features/billing/presentation/widgets/studio/smart_cart_grid.dart';
 import 'package:zeno/features/billing/presentation/widgets/studio/bill_summary_sidebar.dart';
 import 'package:zeno/features/billing/presentation/widgets/studio/billing_status_bar.dart';
@@ -68,9 +68,13 @@ class _BillingStudioScreenState extends State<BillingStudioScreen> {
                             color: const Color(0xFFF8FAFC),
                             child: Column(
                               children: [
-                                const OnlineOrdersBelt(),
+                                Expanded(
+                                  flex: 5,
+                                  child: BillingProductBrowser(),
+                                ),
                                 const ActiveCustomerBanner(),
                                 Expanded(
+                                  flex: 6,
                                   child: SmartCartGrid(key: _cartGridKey),
                                 ),
                               ],
