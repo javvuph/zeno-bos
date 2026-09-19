@@ -7,6 +7,7 @@ import 'package:zeno/features/billing/presentation/controllers/billing_state.dar
 import 'package:zeno/features/billing/presentation/controllers/billing_event.dart';
 import 'package:zeno/core/di/service_locator.dart';
 import 'package:zeno/features/inventory/presentation/controllers/product_controller.dart';
+import 'package:zeno/features/billing/presentation/widgets/studio/billing_product_browser.dart';
 
 part 'parts/smart_cart_grid_action_chip.part.dart';
 
@@ -118,6 +119,12 @@ class SmartCartGridState extends State<SmartCartGrid> {
                       onTap: () => context
                           .read<BillingStudioController>()
                           .add(ClearCartRequested())),
+                  const SizedBox(width: 6),
+                  _ActionChip(
+                      icon: Icons.grid_view_rounded,
+                      label: "GRID",
+                      color: const Color(0xFF6366F1),
+                      onTap: () => _openInventoryGrid(context)),
                 ],
               ),
             ),
@@ -266,6 +273,73 @@ class SmartCartGridState extends State<SmartCartGrid> {
               ),
             ),
           ],
+        );
+      },
+    );
+  }
+
+  void _openInventoryGrid(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (dialogContext) {
+        return Dialog(
+          insetPadding: const EdgeInsets.all(28),
+          backgroundColor: Colors.transparent,
+          child: SizedBox(
+            width: 980,
+            height: 680,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Material(
+                color: Colors.white,
+                child: Column(
+                  children: [
+                    Container(
+                      height: 48,
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        border: Border(
+                          bottom: BorderSide(color: Color(0xFFE2E8F0)),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.grid_view_rounded,
+                              size: 18, color: Color(0xFF6366F1)),
+                          const SizedBox(width: 8),
+                          const Text(
+                            'INVENTORY PRODUCTS',
+                            style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w900,
+                              letterSpacing: .8,
+                              color: Color(0xFF1E293B),
+                            ),
+                          ),
+                          const Spacer(),
+                          const Text(
+                            'Select a product to add to the bill',
+                            style: TextStyle(
+                                fontSize: 9, color: Color(0xFF64748B)),
+                          ),
+                          const SizedBox(width: 12),
+                          IconButton(
+                            tooltip: 'Close',
+                            onPressed: () => Navigator.of(dialogContext).pop(),
+                            icon: const Icon(Icons.close_rounded,
+                                size: 18, color: Color(0xFF64748B)),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Expanded(child: BillingProductBrowser()),
+                  ],
+                ),
+              ),
+            ),
+          ),
         );
       },
     );
