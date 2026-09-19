@@ -608,6 +608,29 @@ class _MobileFinanceViewState extends State<_MobileFinanceView>{
   Widget _metric(ZenoSemanticColors c,String l,String v,IconData i)=>Container(padding:const EdgeInsets.all(11),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(15),border:Border.all(color:c.borderSubtle)),child:Column(children:[Icon(i,size:18,color:c.accentPrimary),const SizedBox(height:6),Text(v,style:TextStyle(fontSize:14,fontWeight:FontWeight.w900,color:c.textPrimary)),Text(l,style:TextStyle(fontSize:7,fontWeight:FontWeight.w800,color:c.textSecondary))]));
   Widget _action(ZenoSemanticColors c,String l,IconData i,VoidCallback tap)=>InkWell(onTap:tap,borderRadius:BorderRadius.circular(15),child:Container(padding:const EdgeInsets.symmetric(vertical:14),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(15),border:Border.all(color:c.borderSubtle)),child:Column(children:[Icon(i,color:c.accentPrimary,size:21),const SizedBox(height:6),Text(l,style:TextStyle(fontSize:7,fontWeight:FontWeight.w900,color:c.textPrimary))])));
 }
+class _MobileReportsView extends StatelessWidget {
+  final ValueChanged<String> onRoute;
+  const _MobileReportsView({required this.onRoute});
+  @override Widget build(BuildContext context){
+    final c=Theme.of(context).extension<ZenoSemanticColors>()!;
+    final cards=<Map<String,Object>>[
+      {'t':'SALES ANALYTICS','s':'Revenue, orders & growth','i':Icons.trending_up_rounded},
+      {'t':'INVENTORY ANALYTICS','s':'Stock, movement & valuation','i':Icons.inventory_2_rounded},
+      {'t':'CUSTOMER ANALYTICS','s':'Retention & customer value','i':Icons.people_alt_rounded},
+      {'t':'FINANCE REPORTS','s':'Profit, expenses & cash flow','i':Icons.account_balance_rounded},
+      {'t':'OPERATIONS','s':'Fulfillment & delivery performance','i':Icons.local_shipping_rounded},
+      {'t':'AI INSIGHTS','s':'Patterns & recommendations','i':Icons.auto_awesome_rounded},
+    ];
+    return ListView(padding:const EdgeInsets.fromLTRB(14,10,14,110),children:[
+      Container(padding:const EdgeInsets.all(17),decoration:BoxDecoration(gradient:ZenoTheme.aiGlowGradient,borderRadius:BorderRadius.circular(20)),child:Row(children:[const Icon(Icons.analytics_rounded,color:Colors.black,size:30),const SizedBox(width:11),Column(crossAxisAlignment:CrossAxisAlignment.start,children:[const Text('REPORTS & ANALYTICS',style:TextStyle(fontSize:15,fontWeight:FontWeight.w900,color:Colors.black)),const Text('INSIGHTS • KPIs • DECISIONS',style:TextStyle(fontSize:8,fontWeight:FontWeight.w800,color:Colors.black54,letterSpacing:1.1))])])),
+      const SizedBox(height:12),
+      Row(children:[Expanded(child:_metric(c,'TODAY SALES','—',Icons.point_of_sale_rounded)),const SizedBox(width:8),Expanded(child:_metric(c,'ORDERS','—',Icons.shopping_bag_rounded)),const SizedBox(width:8),Expanded(child:_metric(c,'PROFIT','—',Icons.show_chart_rounded))]),
+      const SizedBox(height:16),Text('ANALYTICS CENTER',style:TextStyle(fontSize:10,fontWeight:FontWeight.w900,letterSpacing:1.4,color:c.textSecondary)),const SizedBox(height:8),
+      ...cards.map((x)=>ListTile(onTap:()=>onRoute('reports/dashboard'),shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(14)),tileColor:c.bgTier2,leading:Icon(x['i'] as IconData,color:c.accentPrimary),title:Text(x['t'] as String,style:TextStyle(fontSize:10,fontWeight:FontWeight.w800,color:c.textPrimary)),subtitle:Text(x['s'] as String,style:TextStyle(fontSize:8,color:c.textSecondary)),trailing:Icon(Icons.arrow_forward_ios_rounded,size:13,color:c.textSecondary)))
+    ]);
+  }
+  Widget _metric(ZenoSemanticColors c,String l,String v,IconData i)=>Container(padding:const EdgeInsets.all(10),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(15),border:Border.all(color:c.borderSubtle)),child:Column(children:[Icon(i,size:17,color:c.accentPrimary),const SizedBox(height:5),Text(v,style:TextStyle(fontSize:13,fontWeight:FontWeight.w900,color:c.textPrimary)),Text(l,style:TextStyle(fontSize:7,fontWeight:FontWeight.w800,color:c.textSecondary))]));
+}
 class _MobileModuleHub extends StatelessWidget {
   final String route;
   final ValueChanged<String> onRoute;
