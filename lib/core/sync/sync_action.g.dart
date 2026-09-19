@@ -15,7 +15,7 @@ extension GetSyncActionCollection on Isar {
 
 const SyncActionSchema = CollectionSchema(
   name: r'SyncAction',
-  id: -2233887304753894461,
+  id: -(2233887304753 * 1000000 + 894461),
   properties: {
     r'collectionName': PropertySchema(
       id: 0,
@@ -71,7 +71,7 @@ const SyncActionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'collectionName': IndexSchema(
-      id: -4238329797778617380,
+      id: -(4238329797778 * 1000000 + 617380),
       name: r'collectionName',
       unique: false,
       replace: false,
@@ -84,7 +84,7 @@ const SyncActionSchema = CollectionSchema(
       ],
     ),
     r'entityUuid': IndexSchema(
-      id: -1414110998250231744,
+      id: -(1414110998250 * 1000000 + 231744),
       name: r'entityUuid',
       unique: false,
       replace: false,
@@ -97,7 +97,7 @@ const SyncActionSchema = CollectionSchema(
       ],
     ),
     r'createdAt': IndexSchema(
-      id: -3433535483987302584,
+      id: -(3433535483987 * 1000000 + 302584),
       name: r'createdAt',
       unique: false,
       replace: false,
@@ -110,7 +110,7 @@ const SyncActionSchema = CollectionSchema(
       ],
     ),
     r'retryCount': IndexSchema(
-      id: -6696539646125529453,
+      id: -(6696539646125 * 1000000 + 529453),
       name: r'retryCount',
       unique: false,
       replace: false,
@@ -123,7 +123,7 @@ const SyncActionSchema = CollectionSchema(
       ],
     ),
     r'isFailed': IndexSchema(
-      id: -4657969900486401139,
+      id: -(4657969900486 * 1000000 + 401139),
       name: r'isFailed',
       unique: false,
       replace: false,
@@ -136,7 +136,7 @@ const SyncActionSchema = CollectionSchema(
       ],
     ),
     r'idempotencyKey': IndexSchema(
-      id: 6522471565226449816,
+      id: (6522471565226 * 1000000 + 449816),
       name: r'idempotencyKey',
       unique: false,
       replace: false,
