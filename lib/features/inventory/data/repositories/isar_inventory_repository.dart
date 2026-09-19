@@ -1,6 +1,5 @@
 import 'package:zeno/core/database/database_service.dart';
 import 'package:zeno/core/database/collections/inventory_collections.dart';
-import 'package:zeno/core/database/collections/inventory_collections.dart' show ProductCollection;
 import '../../domain/repositories/i_inventory_repository.dart';
 import '../../domain/models/warehouse.dart';
 import '../../domain/models/storage_location.dart';
