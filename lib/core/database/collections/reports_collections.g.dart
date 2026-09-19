@@ -16,7 +16,7 @@ extension GetReportDefinitionCollectionCollection on Isar {
 
 const ReportDefinitionCollectionSchema = CollectionSchema(
   name: r'ReportDefinitionCollection',
-  id: 3684625589356244345,
+  id: (3684625589356 * 1000000 + 244345),
   properties: {
     r'aggregationJson': PropertySchema(
       id: 0,
@@ -116,7 +116,7 @@ const ReportDefinitionCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -129,7 +129,7 @@ const ReportDefinitionCollectionSchema = CollectionSchema(
       ],
     ),
     r'name': IndexSchema(
-      id: 879695947855722453,
+      id: (879695947855 * 1000000 + 722453),
       name: r'name',
       unique: false,
       replace: false,
@@ -142,7 +142,7 @@ const ReportDefinitionCollectionSchema = CollectionSchema(
       ],
     ),
     r'module': IndexSchema(
-      id: -8372774152552671714,
+      id: -(8372774152552 * 1000000 + 671714),
       name: r'module',
       unique: false,
       replace: false,
@@ -155,7 +155,7 @@ const ReportDefinitionCollectionSchema = CollectionSchema(
       ],
     ),
     r'ownerId': IndexSchema(
-      id: -7594796109721319539,
+      id: -(7594796109721 * 1000000 + 319539),
       name: r'ownerId',
       unique: false,
       replace: false,
@@ -3815,7 +3815,7 @@ extension GetDashboardDefinitionCollectionCollection on Isar {
 
 const DashboardDefinitionCollectionSchema = CollectionSchema(
   name: r'DashboardDefinitionCollection',
-  id: 786008024867890645,
+  id: (786008024867 * 1000000 + 890645),
   properties: {
     r'createdAt': PropertySchema(
       id: 0,
@@ -3860,7 +3860,7 @@ const DashboardDefinitionCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -3873,7 +3873,7 @@ const DashboardDefinitionCollectionSchema = CollectionSchema(
       ],
     ),
     r'title': IndexSchema(
-      id: -7636685945352118059,
+      id: -(7636685945352 * 1000000 + 118059),
       name: r'title',
       unique: false,
       replace: false,
@@ -3886,7 +3886,7 @@ const DashboardDefinitionCollectionSchema = CollectionSchema(
       ],
     ),
     r'scope': IndexSchema(
-      id: 152078781581678656,
+      id: (152078781581 * 1000000 + 678656),
       name: r'scope',
       unique: false,
       replace: false,
@@ -3899,7 +3899,7 @@ const DashboardDefinitionCollectionSchema = CollectionSchema(
       ],
     ),
     r'ownerId': IndexSchema(
-      id: -7594796109721319539,
+      id: -(7594796109721 * 1000000 + 319539),
       name: r'ownerId',
       unique: false,
       replace: false,
@@ -5564,7 +5564,7 @@ extension GetReportScheduleCollectionCollection on Isar {
 
 const ReportScheduleCollectionSchema = CollectionSchema(
   name: r'ReportScheduleCollection',
-  id: -4440961297617545797,
+  id: -(4440961297617 * 1000000 + 545797),
   properties: {
     r'createdAt': PropertySchema(
       id: 0,
@@ -5614,7 +5614,7 @@ const ReportScheduleCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -5627,7 +5627,7 @@ const ReportScheduleCollectionSchema = CollectionSchema(
       ],
     ),
     r'reportId': IndexSchema(
-      id: 1732854644896652467,
+      id: (1732854644896 * 1000000 + 652467),
       name: r'reportId',
       unique: false,
       replace: false,
