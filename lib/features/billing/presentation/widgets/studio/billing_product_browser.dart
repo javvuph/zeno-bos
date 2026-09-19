@@ -6,6 +6,7 @@ import 'package:zeno/features/billing/presentation/controllers/billing_studio_co
 import 'package:zeno/features/billing/presentation/controllers/billing_event.dart';
 import 'package:zeno/features/inventory/domain/models/product.dart';
 import 'package:zeno/features/inventory/presentation/controllers/product_controller.dart';
+import 'package:zeno/features/billing/presentation/widgets/variant_selection_dialog.dart';
 
 class BillingProductBrowser extends StatefulWidget {
   const BillingProductBrowser({super.key});
@@ -43,8 +44,31 @@ class _BillingProductBrowserState extends State<BillingProductBrowser> {
     return ['ALL', ...values];
   }
   void _add(Product p) {
-    if (p.sku.value.isEmpty) return;
-    context.read<BillingStudioController>().add(AddItemRequested(p.sku.value));
+    if (p.variants.isEmpty) {
+      final key = p.sku.value.isNotEmpty
+          ? p.sku.value
+          : (p.barcode?.value ?? p.id);
+      context.read<BillingStudioController>().add(AddItemRequested(key));
+      return;
+    }
+
+    showDialog(
+      context: context,
+      builder: (dialogContext) => VariantSelectionDialog(
+        variants: p.variants
+            .map((v) => v.displayName.isEmpty ? v.sku.value : v.displayName)
+            .toList(),
+        onSelected: (selected) {
+          final variant = p.variants.firstWhere(
+            (v) => (v.displayName.isEmpty ? v.sku.value : v.displayName) == selected,
+          );
+          final key = variant.sku.value.isNotEmpty
+              ? variant.sku.value
+              : (variant.barcode?.value ?? variant.id);
+          context.read<BillingStudioController>().add(AddItemRequested(key));
+        },
+      ),
+    );
   }
 
   @override Widget build(BuildContext context) {
