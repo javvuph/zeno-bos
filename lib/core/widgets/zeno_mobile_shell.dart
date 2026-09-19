@@ -675,6 +675,27 @@ class _MobileAiViewState extends State<_MobileAiView>{
   }
   Widget _tool(ZenoSemanticColors c,String t,IconData i,VoidCallback tap)=>InkWell(onTap:tap,borderRadius:BorderRadius.circular(15),child:Container(padding:const EdgeInsets.all(15),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(15),border:Border.all(color:c.borderSubtle)),child:Column(children:[Icon(i,color:c.accentPrimary,size:22),const SizedBox(height:7),Text(t,style:TextStyle(fontSize:7,fontWeight:FontWeight.w900,color:c.textPrimary))])));
 }
+class _MobileMarketingView extends StatelessWidget {
+  final ValueChanged<String> onRoute;
+  const _MobileMarketingView({required this.onRoute});
+  @override Widget build(BuildContext context){
+    final c=Theme.of(context).extension<ZenoSemanticColors>()!;
+    final items=<Map<String,Object>>[
+      {'t':'CAMPAIGNS','s':'Create, schedule & track campaigns','r':'marketing/campaigns','i':Icons.campaign_rounded},
+      {'t':'CUSTOMER SEGMENTS','s':'Target groups & audiences','r':'marketing/segments','i':Icons.groups_rounded},
+      {'t':'OFFERS & COUPONS','s':'Promotions and discount rules','r':'marketing/offers','i':Icons.local_offer_rounded},
+      {'t':'LOYALTY','s':'Rewards, points & retention','r':'marketing/loyalty','i':Icons.loyalty_rounded},
+    ];
+    return ListView(padding:const EdgeInsets.fromLTRB(14,10,14,110),children:[
+      Container(padding:const EdgeInsets.all(17),decoration:BoxDecoration(gradient:ZenoTheme.aiGlowGradient,borderRadius:BorderRadius.circular(20)),child:Row(children:[const Icon(Icons.campaign_rounded,color:Colors.black,size:30),const SizedBox(width:11),const Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text('MARKETING',style:TextStyle(fontSize:16,fontWeight:FontWeight.w900,color:Colors.black)),Text('CAMPAIGNS • OFFERS • LOYALTY',style:TextStyle(fontSize:8,fontWeight:FontWeight.w800,color:Colors.black54,letterSpacing:1.1))])])),
+      const SizedBox(height:12),
+      Row(children:[Expanded(child:_metric(c,'CAMPAIGNS','—',Icons.campaign_rounded)),const SizedBox(width:8),Expanded(child:_metric(c,'CUSTOMERS','—',Icons.people_alt_rounded)),const SizedBox(width:8),Expanded(child:_metric(c,'CONVERSION','—',Icons.trending_up_rounded))]),
+      const SizedBox(height:16),Text('MARKETING CENTER',style:TextStyle(fontSize:10,fontWeight:FontWeight.w900,letterSpacing:1.4,color:c.textSecondary)),const SizedBox(height:8),
+      ...items.map((x)=>ListTile(onTap:()=>onRoute(x['r'] as String),shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(14)),tileColor:c.bgTier2,leading:Icon(x['i'] as IconData,color:c.accentPrimary),title:Text(x['t'] as String,style:TextStyle(fontSize:10,fontWeight:FontWeight.w800,color:c.textPrimary)),subtitle:Text(x['s'] as String,style:TextStyle(fontSize:8,color:c.textSecondary)),trailing:Icon(Icons.arrow_forward_ios_rounded,size:13,color:c.textSecondary)))
+    ]);
+  }
+  Widget _metric(ZenoSemanticColors c,String l,String v,IconData i)=>Container(padding:const EdgeInsets.all(10),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(15),border:Border.all(color:c.borderSubtle)),child:Column(children:[Icon(i,size:17,color:c.accentPrimary),const SizedBox(height:5),Text(v,style:TextStyle(fontSize:13,fontWeight:FontWeight.w900,color:c.textPrimary)),Text(l,style:TextStyle(fontSize:7,fontWeight:FontWeight.w800,color:c.textSecondary))]));
+}
 class _MobileModuleHub extends StatelessWidget {
   final String route;
   final ValueChanged<String> onRoute;
