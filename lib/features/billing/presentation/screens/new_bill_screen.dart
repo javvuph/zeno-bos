@@ -13,7 +13,6 @@ import '../widgets/variant_selection_dialog.dart';
 
 part 'parts/new_bill_summary_pay.part.dart';
 part 'parts/new_bill_cart_zone.part.dart';
-part 'parts/new_bill_vessel.part.dart';
 
 class NewBillScreen extends StatelessWidget {
   const NewBillScreen({super.key});
@@ -79,7 +78,6 @@ class NewBillScreen extends StatelessWidget {
         },
         child: Column(
           children: [
-            _buildTopVessel(colors),
             Expanded(
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
