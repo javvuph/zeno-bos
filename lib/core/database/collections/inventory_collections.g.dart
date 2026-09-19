@@ -15,7 +15,7 @@ extension GetProductCollectionCollection on Isar {
 
 const ProductCollectionSchema = CollectionSchema(
   name: r'ProductCollection',
-  id: 8879472144375957566,
+  id: (8879472144375 * 1000000 + 957566),
   properties: {
     r'ageRestriction': PropertySchema(
       id: 0,
@@ -924,7 +924,7 @@ const ProductCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -937,7 +937,7 @@ const ProductCollectionSchema = CollectionSchema(
       ],
     ),
     r'name': IndexSchema(
-      id: 879695947855722453,
+      id: (879695947855 * 1000000 + 722453),
       name: r'name',
       unique: false,
       replace: false,
@@ -950,7 +950,7 @@ const ProductCollectionSchema = CollectionSchema(
       ],
     ),
     r'sku': IndexSchema(
-      id: -3348042439688860591,
+      id: -(3348042439688 * 1000000 + 860591),
       name: r'sku',
       unique: true,
       replace: true,
@@ -963,7 +963,7 @@ const ProductCollectionSchema = CollectionSchema(
       ],
     ),
     r'barcode': IndexSchema(
-      id: 1156800733621869998,
+      id: (1156800733621 * 1000000 + 869998),
       name: r'barcode',
       unique: false,
       replace: false,
@@ -976,7 +976,7 @@ const ProductCollectionSchema = CollectionSchema(
       ],
     ),
     r'categoryId': IndexSchema(
-      id: -8798048739239305339,
+      id: -(8798048739239 * 1000000 + 305339),
       name: r'categoryId',
       unique: false,
       replace: false,
@@ -989,7 +989,7 @@ const ProductCollectionSchema = CollectionSchema(
       ],
     ),
     r'brandId': IndexSchema(
-      id: -8013928053307719822,
+      id: -(8013928053307 * 1000000 + 719822),
       name: r'brandId',
       unique: false,
       replace: false,
@@ -33874,7 +33874,7 @@ extension GetCategoryCollectionCollection on Isar {
 
 const CategoryCollectionSchema = CollectionSchema(
   name: r'CategoryCollection',
-  id: 8175446950304347596,
+  id: (8175446950304 * 1000000 + 347596),
   properties: {
     r'isDeleted': PropertySchema(
       id: 0,
@@ -33904,7 +33904,7 @@ const CategoryCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: false,
@@ -33917,7 +33917,7 @@ const CategoryCollectionSchema = CollectionSchema(
       ],
     ),
     r'name': IndexSchema(
-      id: 879695947855722453,
+      id: (879695947855 * 1000000 + 722453),
       name: r'name',
       unique: false,
       replace: false,
@@ -34948,7 +34948,7 @@ extension GetBrandCollectionCollection on Isar {
 
 const BrandCollectionSchema = CollectionSchema(
   name: r'BrandCollection',
-  id: 7126040208809140524,
+  id: (7126040208809 * 1000000 + 140524),
   properties: {
     r'isDeleted': PropertySchema(
       id: 0,
@@ -34973,7 +34973,7 @@ const BrandCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: false,
@@ -34986,7 +34986,7 @@ const BrandCollectionSchema = CollectionSchema(
       ],
     ),
     r'name': IndexSchema(
-      id: 879695947855722453,
+      id: (879695947855 * 1000000 + 722453),
       name: r'name',
       unique: false,
       replace: false,
@@ -35805,7 +35805,7 @@ extension GetWarehouseCollectionCollection on Isar {
 
 const WarehouseCollectionSchema = CollectionSchema(
   name: r'WarehouseCollection',
-  id: 6004724891598072973,
+  id: (6004724891598 * 1000000 + 72973),
   properties: {
     r'address': PropertySchema(
       id: 0,
@@ -35845,7 +35845,7 @@ const WarehouseCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: false,
@@ -35858,7 +35858,7 @@ const WarehouseCollectionSchema = CollectionSchema(
       ],
     ),
     r'name': IndexSchema(
-      id: 879695947855722453,
+      id: (879695947855 * 1000000 + 722453),
       name: r'name',
       unique: false,
       replace: false,
@@ -35871,7 +35871,7 @@ const WarehouseCollectionSchema = CollectionSchema(
       ],
     ),
     r'code': IndexSchema(
-      id: 329780482934683790,
+      id: (329780482934 * 1000000 + 683790),
       name: r'code',
       unique: true,
       replace: false,
@@ -37216,7 +37216,7 @@ extension GetStockItemCollectionCollection on Isar {
 
 const StockItemCollectionSchema = CollectionSchema(
   name: r'StockItemCollection',
-  id: -1726851307761416133,
+  id: -(1726851307761 * 1000000 + 416133),
   properties: {
     r'lastUpdated': PropertySchema(
       id: 0,
@@ -37251,7 +37251,7 @@ const StockItemCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'productId': IndexSchema(
-      id: 5580769080710688203,
+      id: (5580769080710 * 1000000 + 688203),
       name: r'productId',
       unique: false,
       replace: false,
@@ -37264,7 +37264,7 @@ const StockItemCollectionSchema = CollectionSchema(
       ],
     ),
     r'warehouseId': IndexSchema(
-      id: -3759612439572445753,
+      id: -(3759612439572 * 1000000 + 445753),
       name: r'warehouseId',
       unique: false,
       replace: false,
@@ -38307,7 +38307,7 @@ extension StockItemCollectionQueryProperty
 
 const BatchEmbedSchema = Schema(
   name: r'BatchEmbed',
-  id: 2831340005744821679,
+  id: (2831340005744 * 1000000 + 821679),
   properties: {
     r'batchNumber': PropertySchema(
       id: 0,
@@ -39718,7 +39718,7 @@ extension BatchEmbedQueryObject
 
 const SupplierRelationshipEmbedSchema = Schema(
   name: r'SupplierRelationshipEmbed',
-  id: -8823074322466134575,
+  id: -(8823074322466 * 1000000 + 134575),
   properties: {
     r'isPrimary': PropertySchema(
       id: 0,
@@ -41099,7 +41099,7 @@ extension SupplierRelationshipEmbedQueryObject on QueryBuilder<
 
 const RecipeIngredientEmbedSchema = Schema(
   name: r'RecipeIngredientEmbed',
-  id: -5376287989972886490,
+  id: -(5376287989972 * 1000000 + 886490),
   properties: {
     r'cost': PropertySchema(
       id: 0,
@@ -41950,7 +41950,7 @@ extension RecipeIngredientEmbedQueryObject on QueryBuilder<
 
 const ProductVariantEmbedSchema = Schema(
   name: r'ProductVariantEmbed',
-  id: -5659740376374231449,
+  id: -(5659740376374 * 1000000 + 231449),
   properties: {
     r'barcode': PropertySchema(
       id: 0,
