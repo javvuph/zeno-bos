@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:zeno/core/database/database_service.dart';
+import 'package:zeno/core/database/collections/transaction_collections.dart';
+import 'package:zeno/core/database/collections/finance_collections.dart';
+import 'package:zeno/core/di/service_locator.dart';
+import 'package:isar/isar.dart';
 import 'package:zeno/app/theme.dart';
 import 'package:zeno/features/home/presentation/widgets/analytics/bi_charts_factory.dart';
 import 'package:zeno/features/home/presentation/controllers/bi_mock_data.dart';
@@ -30,8 +35,44 @@ class CoreAnalyticalRow extends StatelessWidget {
   }
 }
 
-class _RevenueIntelligenceChart extends StatelessWidget {
+class _RevenueIntelligenceChart extends StatefulWidget {
   const _RevenueIntelligenceChart();
+
+  @override
+  State<_RevenueIntelligenceChart> createState() => _RevenueIntelligenceChartState();
+}
+
+class _RevenueIntelligenceChartState extends State<_RevenueIntelligenceChart> {
+  List<SalesPoint> _points = const [];
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    final db = sl<DatabaseService>().isar;
+    final end = DateTime.now();
+    final start = DateTime(end.year, end.month, end.day).subtract(const Duration(days: 29));
+    final orders = await db.collection<SalesOrderCollection>()
+        .filter().dateBetween(start, end).statusEqualTo('completed').findAll();
+    final expenses = await db.collection<ExpenseCollection>()
+        .filter().dateBetween(start, end).findAll();
+
+    final points = <SalesPoint>[];
+    for (var i = 0; i < 30; i++) {
+      final day = DateTime(start.year, start.month, start.day + i);
+      final next = day.add(const Duration(days: 1));
+      final revenue = orders.where((o) => !o.date.isBefore(day) && o.date.isBefore(next))
+          .fold<double>(0, (sum, o) => sum + o.totalAmount);
+      final expense = expenses.where((e) => !e.date.isBefore(day) && e.date.isBefore(next))
+          .fold<double>(0, (sum, e) => sum + e.amount);
+      points.add(SalesPoint(day, revenue, expense, revenue - expense));
+    }
+
+    if (mounted) setState(() => _points = points);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +105,7 @@ class _RevenueIntelligenceChart extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    "Real-Time Ledger Sync • Updated 2 mins ago",
+                    "Real-time Billing + Finance • Last 30 days",
                     style: TextStyle(fontSize: 10, color: colors.textSecondary),
                   ),
                 ],
@@ -74,8 +115,7 @@ class _RevenueIntelligenceChart extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Expanded(
-            child: BIChartsFactory.buildSalesTrendChart(
-                BIMockData.getSalesTrend()),
+            child: BIChartsFactory.buildSalesTrendChart(_points),
           ),
           const SizedBox(height: 12),
           Container(
@@ -88,21 +128,21 @@ class _RevenueIntelligenceChart extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    _legendItem("🔵 Gross Sales (\$1.48M)",
+                    _legendItem("🔵 Gross Sales",
                         const Color(0xFF3366FF), colors),
                     const SizedBox(width: 16),
-                    _legendItem("🔴 Total Expenses (\$1.14M)",
+                    _legendItem("🔴 Recorded Expenses",
                         const Color(0xFFFF1744), colors),
                     const SizedBox(width: 16),
                     _legendItem(
-                        "🟢 Net Profit (\$342K)", const Color(0xFF00C853), colors),
+                        "🟢 Operating Result", const Color(0xFF00C853), colors),
                     const SizedBox(width: 16),
                     _legendItem("📊 Order Volume", colors.textDisabled, colors,
                         isBar: true),
                   ],
                 ),
                 const Text(
-                  "🟢 SQL LIVE FEED CONNECTED",
+                  "🟢 LIVE BILLING + FINANCE FEED",
                   style: TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.w700,
