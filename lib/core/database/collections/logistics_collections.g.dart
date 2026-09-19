@@ -16,7 +16,7 @@ extension GetDeliveryOrderCollectionCollection on Isar {
 
 const DeliveryOrderCollectionSchema = CollectionSchema(
   name: r'DeliveryOrderCollection',
-  id: -9141994390961773436,
+  id: -(9141994390961 * 1000000 + 773436),
   properties: {
     r'actualTime': PropertySchema(
       id: 0,
@@ -96,7 +96,7 @@ const DeliveryOrderCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -109,7 +109,7 @@ const DeliveryOrderCollectionSchema = CollectionSchema(
       ],
     ),
     r'salesOrderId': IndexSchema(
-      id: 3098809703514900379,
+      id: (3098809703514 * 1000000 + 900379),
       name: r'salesOrderId',
       unique: false,
       replace: false,
@@ -122,7 +122,7 @@ const DeliveryOrderCollectionSchema = CollectionSchema(
       ],
     ),
     r'customerId': IndexSchema(
-      id: 1498639901530368639,
+      id: (1498639901530 * 1000000 + 368639),
       name: r'customerId',
       unique: false,
       replace: false,
@@ -135,7 +135,7 @@ const DeliveryOrderCollectionSchema = CollectionSchema(
       ],
     ),
     r'status': IndexSchema(
-      id: -107785170620420283,
+      id: -(107785170620 * 1000000 + 420283),
       name: r'status',
       unique: false,
       replace: false,
@@ -3070,7 +3070,7 @@ extension GetVehicleCollectionCollection on Isar {
 
 const VehicleCollectionSchema = CollectionSchema(
   name: r'VehicleCollection',
-  id: -2736448094763534364,
+  id: -(2736448094763 * 1000000 + 534364),
   properties: {
     r'isActive': PropertySchema(
       id: 0,
@@ -3105,7 +3105,7 @@ const VehicleCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -3118,7 +3118,7 @@ const VehicleCollectionSchema = CollectionSchema(
       ],
     ),
     r'plateNumber': IndexSchema(
-      id: -970090593085357719,
+      id: -(970090593085 * 1000000 + 357719),
       name: r'plateNumber',
       unique: true,
       replace: false,
@@ -4362,7 +4362,7 @@ extension GetDriverCollectionCollection on Isar {
 
 const DriverCollectionSchema = CollectionSchema(
   name: r'DriverCollection',
-  id: 6699419063263334712,
+  id: (6699419063263 * 1000000 + 334712),
   properties: {
     r'licenseNumber': PropertySchema(
       id: 0,
@@ -4397,7 +4397,7 @@ const DriverCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -4410,7 +4410,7 @@ const DriverCollectionSchema = CollectionSchema(
       ],
     ),
     r'name': IndexSchema(
-      id: 879695947855722453,
+      id: (879695947855 * 1000000 + 722453),
       name: r'name',
       unique: false,
       replace: false,
@@ -4423,7 +4423,7 @@ const DriverCollectionSchema = CollectionSchema(
       ],
     ),
     r'status': IndexSchema(
-      id: -107785170620420283,
+      id: -(107785170620 * 1000000 + 420283),
       name: r'status',
       unique: false,
       replace: false,
