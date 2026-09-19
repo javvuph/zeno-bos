@@ -15,7 +15,7 @@ extension GetProductEntityCollection on Isar {
 
 const ProductEntitySchema = CollectionSchema(
   name: r'ProductEntity',
-  id: 4867088266565710661,
+  id: (4867088266565 * 1000000 + 710661),
   properties: {
     r'basePrice': PropertySchema(
       id: 0,
@@ -55,7 +55,7 @@ const ProductEntitySchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'sku': IndexSchema(
-      id: -3348042439688860591,
+      id: -(3348042439688 * 1000000 + 860591),
       name: r'sku',
       unique: true,
       replace: true,
@@ -68,7 +68,7 @@ const ProductEntitySchema = CollectionSchema(
       ],
     ),
     r'isSynced': IndexSchema(
-      id: -39763503327887510,
+      id: -(39763503327 * 1000000 + 887510),
       name: r'isSynced',
       unique: false,
       replace: false,
