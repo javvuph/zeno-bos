@@ -434,7 +434,7 @@ class _MobileBillingView extends StatelessWidget {
             TextField(onSubmitted:(v){if(v.trim().isNotEmpty)context.read<BillingStudioController>().add(AddItemRequested(v.trim()));},decoration:InputDecoration(prefixIcon:Icon(Icons.qr_code_scanner_rounded,color:colors.accentPrimary),hintText:'Scan barcode or enter SKU…',filled:true,fillColor:colors.bgTier2,border:OutlineInputBorder(borderRadius:BorderRadius.circular(16),borderSide:BorderSide(color:colors.borderSubtle)))),
             const SizedBox(height:10),
             if(bill.items.isEmpty) Padding(padding:const EdgeInsets.all(35),child:Center(child:Text('CART READY • SCAN PRODUCT',style:TextStyle(fontWeight:FontWeight.w900,color:colors.textSecondary))))
-            else ...bill.items.map((item)=>Container(margin:const EdgeInsets.only(bottom:8),padding:const EdgeInsets.all(12),decoration:BoxDecoration(color:colors.bgTier2,borderRadius:BorderRadius.circular(15),border:Border.all(color:colors.borderSubtle)),child:Row(children:[Expanded(child:Text(item.productName,style:TextStyle(fontWeight:FontWeight.w800,color:colors.textPrimary))),Text('x${item.quantity}',style:TextStyle(fontWeight:FontWeight.w800,color:colors.textSecondary)),const SizedBox(width:12),Text('₹${item.total.toStringAsFixed(2)}',style:TextStyle(fontWeight:FontWeight.w900,color:colors.accentPrimary))]))),
+            else ...bill.items.map((item)=>Container(margin:const EdgeInsets.only(bottom:8),padding:const EdgeInsets.all(12),decoration:BoxDecoration(color:colors.bgTier2,borderRadius:BorderRadius.circular(15),border:Border.all(color:colors.borderSubtle)),child:Row(children:[Expanded(child:Text(item.productName,style:TextStyle(fontWeight:FontWeight.w800,color:colors.textPrimary))),Text('x${item.quantity}',style:TextStyle(fontWeight:FontWeight.w800,color:colors.textSecondary)),const SizedBox(width:12),Text('₹${item.totalAmount.toStringAsFixed(2)}',style:TextStyle(fontWeight:FontWeight.w900,color:colors.accentPrimary))]))),
             Container(padding:const EdgeInsets.all(15),decoration:BoxDecoration(color:colors.bgTier2,borderRadius:BorderRadius.circular(18)),child:Row(mainAxisAlignment:MainAxisAlignment.spaceBetween,children:[Text('TOTAL',style:TextStyle(fontWeight:FontWeight.w900,color:colors.textSecondary)),Text('₹${bill.grandTotal.toStringAsFixed(2)}',style:TextStyle(fontSize:24,fontWeight:FontWeight.w900,color:colors.accentPrimary))])),
             const SizedBox(height:10),
             SizedBox(width:double.infinity,height:52,child:ElevatedButton(onPressed:bill.items.isEmpty?null:()=>showDialog(context:context,builder:(_)=>PaymentDialog(bill:bill,onPaymentConfirmed:(p)=>context.read<BillingStudioController>().add(PaymentInitiated(p)))),child:const Text('CHECKOUT',style:TextStyle(fontWeight:FontWeight.w900))))
@@ -551,8 +551,7 @@ class _MobileCommandCenter extends StatelessWidget {
         Row(
           children: [
             Expanded(
-              child: Text('Good morning,
-run your business.', style: TextStyle(
+              child: Text('Good morning,\nrun your business.', style: TextStyle(
                 fontSize: 27, height: 1.05, fontWeight: FontWeight.w900,
                 letterSpacing: -0.8, color: c.textPrimary,
               )),
