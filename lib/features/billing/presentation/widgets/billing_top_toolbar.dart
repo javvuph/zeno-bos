@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:zeno/features/billing/presentation/controllers/billing_studio_controller.dart';
 import 'package:zeno/features/billing/presentation/controllers/billing_state.dart';
 import 'package:zeno/features/billing/presentation/controllers/billing_event.dart';
-import 'package:zeno/features/billing/presentation/widgets/zeno_command_vessel.dart';
 
 class BillingTopToolbar extends StatelessWidget {
   const BillingTopToolbar({super.key});
@@ -32,19 +31,7 @@ class BillingTopToolbar extends StatelessWidget {
 
               const Spacer(),
 
-              // 2. COMMAND VESSEL
-              const Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ZenoCommandVessel(),
-                  SizedBox(height: 2),
-                  _VesselTags(),
-                ],
-              ),
-
-              const Spacer(),
-
-              // 3. ACTIONS
+              // 2. ACTIONS
               _ToolbarBtn(
                   icon: Icons.undo_rounded,
                   label: "Undo",
@@ -226,39 +213,6 @@ class _TagPill extends StatelessWidget {
           ],
         ],
       ),
-    );
-  }
-}
-
-class _VesselTags extends StatelessWidget {
-  const _VesselTags();
-  @override
-  Widget build(BuildContext context) {
-    return const Row(
-      children: [
-        _Link(label: "+/customer name"),
-        _Link(label: "/order id"),
-        _Link(label: "/discount"),
-        _Link(label: "/hold"),
-        _Link(label: "/clear"),
-        _Link(label: "/help"),
-      ],
-    );
-  }
-}
-
-class _Link extends StatelessWidget {
-  final String label;
-  const _Link({required this.label});
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: Text(label,
-          style: const TextStyle(
-              fontSize: 9,
-              fontWeight: FontWeight.w700,
-              color: Color(0xFF3B82F6))),
     );
   }
 }
