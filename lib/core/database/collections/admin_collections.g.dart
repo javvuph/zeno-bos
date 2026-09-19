@@ -15,7 +15,7 @@ extension GetCompanyCollectionCollection on Isar {
 
 const CompanyCollectionSchema = CollectionSchema(
   name: r'CompanyCollection',
-  id: 6932128078287845146,
+  id: (6932128078287 * 1000000 + 845146),
   properties: {
     r'address': PropertySchema(
       id: 0,
@@ -70,7 +70,7 @@ const CompanyCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -83,7 +83,7 @@ const CompanyCollectionSchema = CollectionSchema(
       ],
     ),
     r'name': IndexSchema(
-      id: 879695947855722453,
+      id: (879695947855 * 1000000 + 722453),
       name: r'name',
       unique: false,
       replace: false,
@@ -1995,7 +1995,7 @@ extension GetBranchCollectionCollection on Isar {
 
 const BranchCollectionSchema = CollectionSchema(
   name: r'BranchCollection',
-  id: 4998290274415431726,
+  id: (4998290274415 * 1000000 + 431726),
   properties: {
     r'address': PropertySchema(
       id: 0,
@@ -2040,7 +2040,7 @@ const BranchCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -2053,7 +2053,7 @@ const BranchCollectionSchema = CollectionSchema(
       ],
     ),
     r'companyId': IndexSchema(
-      id: 482756417767355356,
+      id: (482756417767 * 1000000 + 355356),
       name: r'companyId',
       unique: false,
       replace: false,
@@ -2066,7 +2066,7 @@ const BranchCollectionSchema = CollectionSchema(
       ],
     ),
     r'name': IndexSchema(
-      id: 879695947855722453,
+      id: (879695947855 * 1000000 + 722453),
       name: r'name',
       unique: false,
       replace: false,
@@ -2079,7 +2079,7 @@ const BranchCollectionSchema = CollectionSchema(
       ],
     ),
     r'code': IndexSchema(
-      id: 329780482934683790,
+      id: (329780482934 * 1000000 + 683790),
       name: r'code',
       unique: true,
       replace: false,
@@ -3764,7 +3764,7 @@ extension GetUserCollectionCollection on Isar {
 
 const UserCollectionSchema = CollectionSchema(
   name: r'UserCollection',
-  id: 1551134645489327298,
+  id: (1551134645489 * 1000000 + 327298),
   properties: {
     r'branchPermissions': PropertySchema(
       id: 0,
@@ -3804,7 +3804,7 @@ const UserCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -3817,7 +3817,7 @@ const UserCollectionSchema = CollectionSchema(
       ],
     ),
     r'email': IndexSchema(
-      id: -26095440403582047,
+      id: -(26095440403 * 1000000 + 582047),
       name: r'email',
       unique: true,
       replace: false,
@@ -5538,7 +5538,7 @@ extension GetRoleCollectionCollection on Isar {
 
 const RoleCollectionSchema = CollectionSchema(
   name: r'RoleCollection',
-  id: 2923137395873067609,
+  id: (2923137395873 * 1000000 + 67609),
   properties: {
     r'description': PropertySchema(
       id: 0,
@@ -5573,7 +5573,7 @@ const RoleCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -5586,7 +5586,7 @@ const RoleCollectionSchema = CollectionSchema(
       ],
     ),
     r'name': IndexSchema(
-      id: 879695947855722453,
+      id: (879695947855 * 1000000 + 722453),
       name: r'name',
       unique: true,
       replace: false,
@@ -6820,7 +6820,7 @@ extension GetBusinessSettingsCollectionCollection on Isar {
 
 const BusinessSettingsCollectionSchema = CollectionSchema(
   name: r'BusinessSettingsCollection',
-  id: -2132427145923507696,
+  id: -(2132427145923 * 1000000 + 507696),
   properties: {
     r'currencyCode': PropertySchema(
       id: 0,
@@ -8898,7 +8898,7 @@ extension GetAuditLogCollectionCollection on Isar {
 
 const AuditLogCollectionSchema = CollectionSchema(
   name: r'AuditLogCollection',
-  id: -8238340324760180664,
+  id: -(8238340324760 * 1000000 + 180664),
   properties: {
     r'action': PropertySchema(
       id: 0,
@@ -8938,7 +8938,7 @@ const AuditLogCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -8951,7 +8951,7 @@ const AuditLogCollectionSchema = CollectionSchema(
       ],
     ),
     r'module': IndexSchema(
-      id: -8372774152552671714,
+      id: -(8372774152552 * 1000000 + 671714),
       name: r'module',
       unique: false,
       replace: false,
@@ -8964,7 +8964,7 @@ const AuditLogCollectionSchema = CollectionSchema(
       ],
     ),
     r'timestamp': IndexSchema(
-      id: 1852253767416892198,
+      id: (1852253767416 * 1000000 + 892198),
       name: r'timestamp',
       unique: false,
       replace: false,
@@ -10485,7 +10485,7 @@ extension GetSecurityLogCollectionCollection on Isar {
 
 const SecurityLogCollectionSchema = CollectionSchema(
   name: r'SecurityLogCollection',
-  id: -6524076021368618224,
+  id: -(6524076021368 * 1000000 + 618224),
   properties: {
     r'eventType': PropertySchema(
       id: 0,
@@ -10525,7 +10525,7 @@ const SecurityLogCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -10538,7 +10538,7 @@ const SecurityLogCollectionSchema = CollectionSchema(
       ],
     ),
     r'timestamp': IndexSchema(
-      id: 1852253767416892198,
+      id: (1852253767416 * 1000000 + 892198),
       name: r'timestamp',
       unique: false,
       replace: false,
