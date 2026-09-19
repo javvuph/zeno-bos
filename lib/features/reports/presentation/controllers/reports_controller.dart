@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:zeno/core/database/database_service.dart';
+import 'package:zeno/core/database/collections/transaction_collections.dart';
+import 'package:zeno/core/database/collections/finance_collections.dart';
+import 'package:zeno/core/di/service_locator.dart';
+import 'package:isar/isar.dart';
 import '../../domain/models/report_definition.dart';
 import '../../domain/repositories/i_reports_repository.dart';
 import '../../domain/services/report_engine.dart';
@@ -15,6 +20,12 @@ class ReportsController extends ChangeNotifier {
   }
 
   bool _isLoading = false;
+  double _totalRevenue = 0.0;
+  double _netProfit = 0.0;
+  double _cashPosition = 0.0;
+  int _salesGrowth = 0;
+  double _totalExpenses = 0.0;
+  double _taxLiability = 0.0;
   bool get isLoading => _isLoading;
 
   List<ReportDefinition> _customReports = [];
@@ -66,23 +77,44 @@ class ReportsController extends ChangeNotifier {
   }
 
   Future<void> refreshDashboard() async {
-    // Logic to refresh all dashboard data
+    final db = sl<DatabaseService>().isar;
+    final now = DateTime.now();
+    final start = DateTime(now.year, now.month, 1);
+    final previousStart = DateTime(now.year, now.month - 1, 1);
+    final previousEnd = start.subtract(const Duration(microseconds: 1));
+    final sales = await db.collection<SalesOrderCollection>().filter().dateBetween(start, now).statusEqualTo('completed').findAll();
+    final previousSales = await db.collection<SalesOrderCollection>().filter().dateBetween(previousStart, previousEnd).statusEqualTo('completed').findAll();
+    final expenses = await db.collection<ExpenseCollection>().filter().dateBetween(start, now).findAll();
+    final revenue = sales.fold<double>(0, (sum, s) => sum + s.totalAmount);
+    final previousRevenue = previousSales.fold<double>(0, (sum, s) => sum + s.totalAmount);
+    final expenseTotal = expenses.fold<double>(0, (sum, e) => sum + e.amount);
+    final tax = sales.fold<double>(0, (sum, s) => sum + s.totalTax);
+    final salesChange = previousRevenue == 0 ? (revenue == 0 ? 0.0 : 100.0) : ((revenue - previousRevenue) / previousRevenue) * 100;
+    final cash = await db.collection<AccountCollection>().filter().codeEqualTo('1000').findFirst();
+    _totalRevenue = revenue;
+    _totalExpenses = expenseTotal;
+    _netProfit = revenue - expenseTotal;
+    _taxLiability = tax;
+    _cashPosition = cash?.currentBalance ?? 0.0;
+    _salesGrowth = salesChange.round();
     notifyListeners();
   }
 
-  // BI Dashboard KPIs
+  // BI Dashboard KPIs — sourced from saved Billing / Finance records.
   List<DashboardKPI> get dashboardKPIs => [
-    const DashboardKPI(id: 'rev', label: 'Revenue', value: '₹0', change: 0.0, icon: Icons.trending_up, color: Colors.green),
-    const DashboardKPI(id: 'pro', label: 'Profit', value: '₹0', change: 0.0, icon: Icons.account_balance_wallet, color: Colors.blue),
-    const DashboardKPI(id: 'exp', label: 'Expenses', value: '₹0', change: 0.0, icon: Icons.shopping_cart, color: Colors.red),
-    const DashboardKPI(id: 'tax', label: 'Tax Liability', value: '₹0', change: 0.0, icon: Icons.gavel, color: Colors.orange),
+    DashboardKPI(id: 'rev', label: 'Revenue', value: _money(_totalRevenue), change: _salesGrowth.toDouble(), icon: Icons.trending_up, color: Colors.green),
+    DashboardKPI(id: 'pro', label: 'Profit', value: _money(_netProfit), change: _totalRevenue == 0 ? 0 : (_netProfit / _totalRevenue) * 100, icon: Icons.account_balance_wallet, color: Colors.blue),
+    DashboardKPI(id: 'exp', label: 'Expenses', value: _money(_totalExpenses), change: 0.0, icon: Icons.shopping_cart, color: Colors.red),
+    DashboardKPI(id: 'tax', label: 'Tax Liability', value: _money(_taxLiability), change: 0.0, icon: Icons.gavel, color: Colors.orange),
   ];
 
+  static String _money(double value) => '₹' + value.toStringAsFixed(2);
+
   // Dashboard Stats
-  double get totalRevenue => 0.0; 
-  double get netProfit => 0.0;
-  double get cashPosition => 0.0;
-  int get salesGrowth => 0; 
+  double get totalRevenue => _totalRevenue;
+  double get netProfit => _netProfit;
+  double get cashPosition => _cashPosition;
+  int get salesGrowth => _salesGrowth;
 
   Map<String, dynamic> get aiRestockAdvice => {
     "category": "Fresh Produce",
