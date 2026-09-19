@@ -16,7 +16,7 @@ extension GetEmployeeCollectionCollection on Isar {
 
 const EmployeeCollectionSchema = CollectionSchema(
   name: r'EmployeeCollection',
-  id: 5332590496774953879,
+  id: (5332590496774 * 1000000 + 953879),
   properties: {
     r'addressLine1': PropertySchema(
       id: 0,
@@ -221,7 +221,7 @@ const EmployeeCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -234,7 +234,7 @@ const EmployeeCollectionSchema = CollectionSchema(
       ],
     ),
     r'employeeCode': IndexSchema(
-      id: 7493838445661731167,
+      id: (7493838445661 * 1000000 + 731167),
       name: r'employeeCode',
       unique: true,
       replace: false,
@@ -247,7 +247,7 @@ const EmployeeCollectionSchema = CollectionSchema(
       ],
     ),
     r'firstName': IndexSchema(
-      id: -2537032818573098835,
+      id: -(2537032818573 * 1000000 + 98835),
       name: r'firstName',
       unique: false,
       replace: false,
@@ -260,7 +260,7 @@ const EmployeeCollectionSchema = CollectionSchema(
       ],
     ),
     r'lastName': IndexSchema(
-      id: 8422632250150515205,
+      id: (8422632250150 * 1000000 + 515205),
       name: r'lastName',
       unique: false,
       replace: false,
@@ -273,7 +273,7 @@ const EmployeeCollectionSchema = CollectionSchema(
       ],
     ),
     r'companyId': IndexSchema(
-      id: 482756417767355356,
+      id: (482756417767 * 1000000 + 355356),
       name: r'companyId',
       unique: false,
       replace: false,
@@ -286,7 +286,7 @@ const EmployeeCollectionSchema = CollectionSchema(
       ],
     ),
     r'branchId': IndexSchema(
-      id: 2037049677925728410,
+      id: (2037049677925 * 1000000 + 728410),
       name: r'branchId',
       unique: false,
       replace: false,
@@ -299,7 +299,7 @@ const EmployeeCollectionSchema = CollectionSchema(
       ],
     ),
     r'departmentId': IndexSchema(
-      id: -6304464459915199197,
+      id: -(6304464459915 * 1000000 + 199197),
       name: r'departmentId',
       unique: false,
       replace: false,
@@ -312,7 +312,7 @@ const EmployeeCollectionSchema = CollectionSchema(
       ],
     ),
     r'designationId': IndexSchema(
-      id: 7698469016630293300,
+      id: (7698469016630 * 1000000 + 293300),
       name: r'designationId',
       unique: false,
       replace: false,
@@ -325,7 +325,7 @@ const EmployeeCollectionSchema = CollectionSchema(
       ],
     ),
     r'status': IndexSchema(
-      id: -107785170620420283,
+      id: -(107785170620 * 1000000 + 420283),
       name: r'status',
       unique: false,
       replace: false,
@@ -8285,7 +8285,7 @@ extension GetAttendanceCollectionCollection on Isar {
 
 const AttendanceCollectionSchema = CollectionSchema(
   name: r'AttendanceCollection',
-  id: 3456058879993160087,
+  id: (3456058879993 * 1000000 + 160087),
   properties: {
     r'clockIn': PropertySchema(
       id: 0,
@@ -8345,7 +8345,7 @@ const AttendanceCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'employeeId': IndexSchema(
-      id: 1283453093523034672,
+      id: (1283453093523 * 1000000 + 34672),
       name: r'employeeId',
       unique: false,
       replace: false,
@@ -8358,7 +8358,7 @@ const AttendanceCollectionSchema = CollectionSchema(
       ],
     ),
     r'clockIn': IndexSchema(
-      id: 2898206528224234958,
+      id: (2898206528224 * 1000000 + 234958),
       name: r'clockIn',
       unique: false,
       replace: false,
@@ -10050,7 +10050,7 @@ extension GetPayrollCollectionCollection on Isar {
 
 const PayrollCollectionSchema = CollectionSchema(
   name: r'PayrollCollection',
-  id: 1780511031968285574,
+  id: (1780511031968 * 1000000 + 285574),
   properties: {
     r'allowances': PropertySchema(
       id: 0,
@@ -10135,7 +10135,7 @@ const PayrollCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -10148,7 +10148,7 @@ const PayrollCollectionSchema = CollectionSchema(
       ],
     ),
     r'employeeId': IndexSchema(
-      id: 1283453093523034672,
+      id: (1283453093523 * 1000000 + 34672),
       name: r'employeeId',
       unique: false,
       replace: false,
@@ -10161,7 +10161,7 @@ const PayrollCollectionSchema = CollectionSchema(
       ],
     ),
     r'month': IndexSchema(
-      id: -3594385961712742690,
+      id: -(3594385961712 * 1000000 + 742690),
       name: r'month',
       unique: false,
       replace: false,
@@ -10174,7 +10174,7 @@ const PayrollCollectionSchema = CollectionSchema(
       ],
     ),
     r'isPaid': IndexSchema(
-      id: -8955270508682588844,
+      id: -(8955270508682 * 1000000 + 588844),
       name: r'isPaid',
       unique: false,
       replace: false,
@@ -12705,7 +12705,7 @@ extension GetLeaveCollectionCollection on Isar {
 
 const LeaveCollectionSchema = CollectionSchema(
   name: r'LeaveCollection',
-  id: -5721144903326480914,
+  id: -(5721144903326 * 1000000 + 480914),
   properties: {
     r'approvedById': PropertySchema(
       id: 0,
@@ -12755,7 +12755,7 @@ const LeaveCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -12768,7 +12768,7 @@ const LeaveCollectionSchema = CollectionSchema(
       ],
     ),
     r'employeeId': IndexSchema(
-      id: 1283453093523034672,
+      id: (1283453093523 * 1000000 + 34672),
       name: r'employeeId',
       unique: false,
       replace: false,
@@ -12781,7 +12781,7 @@ const LeaveCollectionSchema = CollectionSchema(
       ],
     ),
     r'status': IndexSchema(
-      id: -107785170620420283,
+      id: -(107785170620 * 1000000 + 420283),
       name: r'status',
       unique: false,
       replace: false,
@@ -14539,7 +14539,7 @@ extension GetDepartmentCollectionCollection on Isar {
 
 const DepartmentCollectionSchema = CollectionSchema(
   name: r'DepartmentCollection',
-  id: -4029594380042767630,
+  id: -(4029594380042 * 1000000 + 767630),
   properties: {
     r'companyId': PropertySchema(
       id: 0,
@@ -14564,7 +14564,7 @@ const DepartmentCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -14577,7 +14577,7 @@ const DepartmentCollectionSchema = CollectionSchema(
       ],
     ),
     r'name': IndexSchema(
-      id: 879695947855722453,
+      id: (879695947855 * 1000000 + 722453),
       name: r'name',
       unique: false,
       replace: false,
@@ -15538,7 +15538,7 @@ extension GetDesignationCollectionCollection on Isar {
 
 const DesignationCollectionSchema = CollectionSchema(
   name: r'DesignationCollection',
-  id: 1934852748453948127,
+  id: (1934852748453 * 1000000 + 948127),
   properties: {
     r'name': PropertySchema(
       id: 0,
@@ -15558,7 +15558,7 @@ const DesignationCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -15571,7 +15571,7 @@ const DesignationCollectionSchema = CollectionSchema(
       ],
     ),
     r'name': IndexSchema(
-      id: 879695947855722453,
+      id: (879695947855 * 1000000 + 722453),
       name: r'name',
       unique: false,
       replace: false,
@@ -16347,7 +16347,7 @@ extension GetShiftCollectionCollection on Isar {
 
 const ShiftCollectionSchema = CollectionSchema(
   name: r'ShiftCollection',
-  id: -8195632981365416109,
+  id: -(8195632981365 * 1000000 + 416109),
   properties: {
     r'endHour': PropertySchema(
       id: 0,
@@ -16392,7 +16392,7 @@ const ShiftCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -17614,7 +17614,7 @@ extension GetRecruitmentOpeningCollectionCollection on Isar {
 
 const RecruitmentOpeningCollectionSchema = CollectionSchema(
   name: r'RecruitmentOpeningCollection',
-  id: 9122871485390895045,
+  id: (9122871485390 * 1000000 + 895045),
   properties: {
     r'closingDate': PropertySchema(
       id: 0,
@@ -17659,7 +17659,7 @@ const RecruitmentOpeningCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -19182,7 +19182,7 @@ extension GetRecruitmentCandidateCollectionCollection on Isar {
 
 const RecruitmentCandidateCollectionSchema = CollectionSchema(
   name: r'RecruitmentCandidateCollection',
-  id: -44988395201935273,
+  id: -(44988395201 * 1000000 + 935273),
   properties: {
     r'email': PropertySchema(
       id: 0,
@@ -19237,7 +19237,7 @@ const RecruitmentCandidateCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -21232,7 +21232,7 @@ extension GetPerformanceReviewCollectionCollection on Isar {
 
 const PerformanceReviewCollectionSchema = CollectionSchema(
   name: r'PerformanceReviewCollection',
-  id: -6308138210214131438,
+  id: -(6308138210214 * 1000000 + 131438),
   properties: {
     r'employeeId': PropertySchema(
       id: 0,
@@ -21277,7 +21277,7 @@ const PerformanceReviewCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -21290,7 +21290,7 @@ const PerformanceReviewCollectionSchema = CollectionSchema(
       ],
     ),
     r'employeeId': IndexSchema(
-      id: 1283453093523034672,
+      id: (1283453093523 * 1000000 + 34672),
       name: r'employeeId',
       unique: false,
       replace: false,
@@ -22847,7 +22847,7 @@ extension GetTrainingProgramCollectionCollection on Isar {
 
 const TrainingProgramCollectionSchema = CollectionSchema(
   name: r'TrainingProgramCollection',
-  id: -6833873199090006968,
+  id: -(6833873199090 * 1000000 + 6968),
   properties: {
     r'assignedEmployeeIds': PropertySchema(
       id: 0,
@@ -22887,7 +22887,7 @@ const TrainingProgramCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -24265,7 +24265,7 @@ extension GetEmployeeDocumentCollectionCollection on Isar {
 
 const EmployeeDocumentCollectionSchema = CollectionSchema(
   name: r'EmployeeDocumentCollection',
-  id: 419596759954253147,
+  id: (419596759954 * 1000000 + 253147),
   properties: {
     r'documentType': PropertySchema(
       id: 0,
@@ -24310,7 +24310,7 @@ const EmployeeDocumentCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -24323,7 +24323,7 @@ const EmployeeDocumentCollectionSchema = CollectionSchema(
       ],
     ),
     r'employeeId': IndexSchema(
-      id: 1283453093523034672,
+      id: (1283453093523 * 1000000 + 34672),
       name: r'employeeId',
       unique: false,
       replace: false,
