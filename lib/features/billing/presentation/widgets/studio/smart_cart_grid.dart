@@ -346,12 +346,21 @@ class SmartCartGridState extends State<SmartCartGrid> {
   }
 
   int _stockFor(BillItem item) {
-    final product = _inventory.allProducts.cast<dynamic>().firstWhere(
-      (p) => p.id == item.productId,
-      orElse: () => null,
-    );
-    if (product == null) return 0;
-    return product.stockLevel.round();
+    for (final product in _inventory.allProducts) {
+      if (product.id == item.productId) {
+        return product.stockLevel.round();
+      }
+
+      // Variant bill lines use the saved variant UUID as their productId.
+      if (product.variants.isNotEmpty) {
+        for (final variant in product.variants) {
+          if (variant.id == item.productId || variant.sku.value == item.sku) {
+            return variant.stockLevel.round();
+          }
+        }
+      }
+    }
+    return 0;
   }
 
   void _updateQty(BuildContext context, BillItem item, int delta) {
