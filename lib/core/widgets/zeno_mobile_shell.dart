@@ -71,6 +71,11 @@ class _ZenoMobileShellState extends State<ZenoMobileShell> {
     if (index >= 0) _bottomIndex = index;
   }
 
+  bool _isMobileModuleRoute(String route) {
+    const prefixes = ['orders/','customers/','procurement/','finance/','reports/','ai/','hr/','admin/','marketing/','automation/','integrations/'];
+    return prefixes.any(route.startsWith);
+  }
+
   void _navigate(String route) => widget.navigationController.navigateTo(route);
 
   void _selectBottom(int index) => _navigate(_bottomRoutes[index]);
@@ -102,7 +107,9 @@ class _ZenoMobileShellState extends State<ZenoMobileShell> {
                           ? const _MobileBillingView()
                           : (route == 'inventory/products' || route == 'inventory/master')
                               ? const _MobileInventoryView()
-                          : ZenoRouter.getScreen(
+                              : _isMobileModuleRoute(route)
+                                  ? _MobileModuleHub(route: route, onRoute: _navigate)
+                                  : ZenoRouter.getScreen(
                               route,
                               params: widget.navigationController.activeTab.params,
                             ),
@@ -478,6 +485,63 @@ class _MobileInventoryViewState extends State<_MobileInventoryView> {
   Widget _empty(ZenoSemanticColors c)=>Container(padding:const EdgeInsets.all(30),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(18)),child:Center(child:Text('NO STOCK DATA',style:TextStyle(fontWeight:FontWeight.w900,color:c.textSecondary))));
   Widget _stockRow(ZenoSemanticColors c,StockLevel s)=>Container(margin:const EdgeInsets.only(bottom:7),padding:const EdgeInsets.all(12),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(15),border:Border.all(color:c.borderSubtle)),child:Row(children:[Icon(Icons.inventory_2_outlined,color:c.accentPrimary),const SizedBox(width:9),Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text(s.productId,style:TextStyle(fontSize:10,fontWeight:FontWeight.w900,color:c.textPrimary)),Text('Physical ${s.physical.toStringAsFixed(0)} • Reserved ${s.reserved.toStringAsFixed(0)}',style:TextStyle(fontSize:8,color:c.textSecondary))])),Text('${(s.physical-s.reserved).toStringAsFixed(0)}',style:TextStyle(fontSize:15,fontWeight:FontWeight.w900,color:(s.physical-s.reserved)<=0?c.statusDanger:c.statusSuccess))]));
 }
+class _MobileModuleHub extends StatelessWidget {
+  final String route;
+  final ValueChanged<String> onRoute;
+  const _MobileModuleHub({required this.route,required this.onRoute});
+  String get title {
+    if(route.startsWith('orders/')) return 'ORDERS & DELIVERY';
+    if(route.startsWith('customers/')) return 'CUSTOMER HUB';
+    if(route.startsWith('procurement/')) return 'PROCUREMENT';
+    if(route.startsWith('finance/')) return 'FINANCE CENTER';
+    if(route.startsWith('reports/')) return 'REPORTS & ANALYTICS';
+    if(route.startsWith('ai/')) return 'AI COMMAND CENTER';
+    if(route.startsWith('hr/')) return 'TEAM & HR';
+    if(route.startsWith('admin/')) return 'ADMINISTRATION';
+    if(route.startsWith('marketing/')) return 'MARKETING';
+    if(route.startsWith('automation/')) return 'AUTOMATION';
+    if(route.startsWith('integrations/')) return 'INTEGRATIONS';
+    return 'ZENO WORKSPACE';
+  }
+  IconData get icon {
+    if(route.startsWith('orders/')) return Icons.local_shipping_rounded;
+    if(route.startsWith('customers/')) return Icons.people_alt_rounded;
+    if(route.startsWith('procurement/')) return Icons.shopping_cart_checkout_rounded;
+    if(route.startsWith('finance/')) return Icons.account_balance_wallet_rounded;
+    if(route.startsWith('reports/')) return Icons.insights_rounded;
+    if(route.startsWith('ai/')) return Icons.auto_awesome_rounded;
+    if(route.startsWith('hr/')) return Icons.badge_rounded;
+    if(route.startsWith('admin/')) return Icons.admin_panel_settings_rounded;
+    if(route.startsWith('marketing/')) return Icons.campaign_rounded;
+    if(route.startsWith('automation/')) return Icons.bolt_rounded;
+    if(route.startsWith('integrations/')) return Icons.hub_rounded;
+    return Icons.apps_rounded;
+  }
+  List<(String,IconData,String)> get actions {
+    if(route.startsWith('orders/')) return [('Orders',Icons.shopping_bag_rounded,'orders/dashboard'),('Delivery',Icons.local_shipping_rounded,'orders/dashboard'),('New Order',Icons.add_circle_outline,'orders/dashboard')];
+    if(route.startsWith('customers/')) return [('Customers',Icons.people_alt_rounded,'customers/mgmt/list'),('New Customer',Icons.person_add_alt_1_rounded,'customers/mgmt/list'),('CRM',Icons.insights_rounded,'crm')];
+    if(route.startsWith('procurement/')) return [('Suppliers',Icons.local_shipping_outlined,'suppliers'),('Purchase',Icons.receipt_long_rounded,'procurement'),('Stock',Icons.inventory_2_outlined,'inventory')];
+    if(route.startsWith('finance/')) return [('Finance',Icons.account_balance_wallet_rounded,'finance'),('Payments',Icons.payments_rounded,'finance'),('Reports',Icons.analytics_rounded,'reports')];
+    if(route.startsWith('reports/')) return [('Analytics',Icons.insights_rounded,'reports'),('Sales',Icons.point_of_sale_rounded,'sales/pos'),('Finance',Icons.account_balance_wallet_rounded,'finance')];
+    if(route.startsWith('ai/')) return [('AI Center',Icons.auto_awesome_rounded,'ai/home'),('Insights',Icons.insights_rounded,'reports'),('Inventory AI',Icons.inventory_2_rounded,'inventory')];
+    if(route.startsWith('hr/')) return [('Staff',Icons.badge_rounded,'staff'),('Attendance',Icons.schedule_rounded,'hr'),('Roles',Icons.admin_panel_settings_rounded,'admin')];
+    if(route.startsWith('admin/')) return [('Business Setup',Icons.store_rounded,'admin/business-setup'),('Security',Icons.security_rounded,'admin'),('Settings',Icons.settings_rounded,'settings')];
+    if(route.startsWith('marketing/')) return [('Campaigns',Icons.campaign_rounded,'marketing'),('Customers',Icons.people_alt_rounded,'customers/mgmt/list'),('Analytics',Icons.insights_rounded,'reports')];
+    if(route.startsWith('automation/')) return [('Workflows',Icons.account_tree_rounded,'automation'),('Alerts',Icons.notifications_active_rounded,'notifications'),('AI',Icons.auto_awesome_rounded,'ai/home')];
+    return [('Dashboard',Icons.grid_view_rounded,'dashboard'),('Billing',Icons.point_of_sale_rounded,'sales/pos'),('Inventory',Icons.inventory_2_rounded,'inventory')];
+  }
+  @override Widget build(BuildContext context){
+    final c=Theme.of(context).extension<ZenoSemanticColors>()!;
+    final a=actions;
+    return ListView(padding:const EdgeInsets.fromLTRB(14,10,14,110),children:[
+      Container(padding:const EdgeInsets.all(18),decoration:BoxDecoration(gradient:ZenoTheme.aiGlowGradient,borderRadius:BorderRadius.circular(20)),child:Row(children:[Icon(icon,size:30,color:Colors.black),const SizedBox(width:11),Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text(title,style:const TextStyle(fontSize:16,fontWeight:FontWeight.w900,color:Colors.black)),Text('MOBILE WORKSPACE • LIVE',style:TextStyle(fontSize:8,fontWeight:FontWeight.w800,color:Colors.black.withOpacity(.65),letterSpacing:1.1))]))])),
+      const SizedBox(height:12),Text('QUICK WORKSPACE',style:TextStyle(fontSize:10,fontWeight:FontWeight.w900,letterSpacing:1.5,color:c.textSecondary)),const SizedBox(height:8),
+      GridView.count(shrinkWrap:true,physics:const NeverScrollableScrollPhysics(),crossAxisCount:2,crossAxisSpacing:9,mainAxisSpacing:9,childAspectRatio:1.45,children:[for(final x in a) InkWell(onTap:()=>onRoute(x.$3),borderRadius:BorderRadius.circular(17),child:Container(padding:const EdgeInsets.all(14),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(17),border:Border.all(color:c.borderSubtle)),child:Column(crossAxisAlignment:CrossAxisAlignment.start,mainAxisAlignment:MainAxisAlignment.center,children:[Icon(x.$2,size:23,color:c.accentPrimary),const SizedBox(height:9),Text(x.$1,style:TextStyle(fontSize:11,fontWeight:FontWeight.w900,color:c.textPrimary)),const SizedBox(height:3),Text('OPEN WORKSPACE',style:TextStyle(fontSize:7,fontWeight:FontWeight.w700,color:c.textSecondary))]))) ]),
+      const SizedBox(height:14),Container(padding:const EdgeInsets.all(14),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(17),border:Border.all(color:c.borderSubtle)),child:Row(children:[Icon(Icons.auto_awesome_rounded,color:c.accentPrimary),const SizedBox(width:10),Expanded(child:Text('ZENO keeps your mobile workflow connected to the same business data and navigation system.',style:TextStyle(fontSize:10,height:1.45,color:c.textSecondary)))])),
+    ]);
+  }
+}
+
 class _MobileCommandCenter extends StatelessWidget {
   final ValueChanged<String> onRoute;
   const _MobileCommandCenter({required this.onRoute});
