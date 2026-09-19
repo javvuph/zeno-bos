@@ -166,7 +166,13 @@ class BillingStudioController extends Bloc<BillingEvent, BillingState> {
 
   Future<void> _onPaymentInitiated(
       PaymentInitiated event, Emitter<BillingState> emit) async {
-    if (state.activeBill.isLocked) return;
+    // Ignore duplicate payment taps while checkout is already completing.
+    if (state.activeBill.isLocked ||
+        state.status == BillingStatus.processing ||
+        state.status == BillingStatus.success ||
+        event.payment.amount <= 0) {
+      return;
+    }
 
     final updatedPayments = List<Payment>.from(state.activeBill.payments)
       ..add(event.payment);
