@@ -23,6 +23,18 @@ class IsarBillingRepository implements IBillingRepository {
 
   @override
   Future<void> saveBill(Bill bill) async {
+    // A completed bill is immutable from the billing completion path.
+    // This prevents a repeated checkout call from re-running inventory,
+    // finance, recipe, KOT, and customer side effects.
+    final existingOrder = await db.isar
+        .collection<SalesOrderCollection>()
+        .filter()
+        .uuidEqualTo(bill.id)
+        .findFirst();
+    if (bill.status == 'Completed' && existingOrder?.status == 'completed') {
+      return;
+    }
+
     final order = SalesOrderCollection()
       ..uuid = bill.id
       ..orderNumber = bill.id
