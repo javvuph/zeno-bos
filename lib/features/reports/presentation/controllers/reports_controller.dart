@@ -82,7 +82,7 @@ class ReportsController extends ChangeNotifier {
     final start = DateTime(now.year, now.month, 1);
     final previousStart = DateTime(now.year, now.month - 1, 1);
     final previousEnd = start.subtract(const Duration(microseconds: 1));
-    final sales = await db.collection<SalesOrderCollection>().filter().dateBetween(start, now).statusEqualTo('completed').findAll();
+    final sales = await db.collection<SalesOrderCollection>().filter().dateBetween(start, now).and().statusEqualTo('completed').findAll();
     final previousSales = await db.collection<SalesOrderCollection>().filter().dateBetween(previousStart, previousEnd).statusEqualTo('completed').findAll();
     final expenses = await db.collection<ExpenseCollection>().filter().dateBetween(start, now).findAll();
     final revenue = sales.fold<double>(0, (sum, s) => sum + s.totalAmount);
