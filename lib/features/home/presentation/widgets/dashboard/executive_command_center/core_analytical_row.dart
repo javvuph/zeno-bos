@@ -56,7 +56,7 @@ class _RevenueIntelligenceChartState extends State<_RevenueIntelligenceChart> {
     final end = DateTime.now();
     final start = DateTime(end.year, end.month, end.day).subtract(const Duration(days: 29));
     final orders = await db.collection<SalesOrderCollection>()
-        .filter().dateBetween(start, end).statusEqualTo('completed').findAll();
+        .filter().dateBetween(start, end).and().statusEqualTo('completed').findAll();
     final expenses = await db.collection<ExpenseCollection>()
         .filter().dateBetween(start, end).findAll();
 
