@@ -1,14 +1,61 @@
 import 'package:flutter/material.dart';
+import 'package:zeno/core/database/database_service.dart';
+import 'package:zeno/core/database/collections/inventory_collections.dart';
+import 'package:zeno/core/di/service_locator.dart';
+import 'package:isar/isar.dart';
 import 'package:zeno/app/theme.dart';
 import 'package:zeno/features/home/presentation/widgets/bi_widgets.dart';
-import 'package:zeno/features/home/presentation/controllers/bi_mock_data.dart';
 
-class LowStockCentre extends StatelessWidget {
+class LowStockCentre extends StatefulWidget {
   const LowStockCentre({super.key});
 
   @override
+  State<LowStockCentre> createState() => _LowStockCentreState();
+}
+
+class _LowStockCentreState extends State<LowStockCentre> {
+  List<Map<String, dynamic>> items = const [];
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    final products = await sl<DatabaseService>().isar.collection<ProductCollection>()
+        .filter().isDeletedEqualTo(false).findAll();
+    final result = <Map<String, dynamic>>[];
+    for (final p in products) {
+      final variants = p.variants ?? const <ProductVariantEmbed>[];
+      if (variants.isEmpty) {
+        final stock = p.openingStock ?? 0.0;
+        final reorder = p.reorderLevel ?? 0.0;
+        if (stock <= reorder) {
+          result.add({'name': p.name, 'stock': stock, 'min': p.minStock ?? 0, 'reorder': reorder,
+            'priority': stock <= 0 ? 'Critical' : 'High', 'daysRemaining': 0,
+            'expectedOut': stock <= 0 ? 'Out of stock' : 'Below reorder', 'warehouse': 'Default',
+            'supplier': p.supplierContact ?? 'Not set'});
+        }
+      } else {
+        for (final v in variants) {
+          final stock = v.stockLevel ?? 0.0;
+          final reorder = p.reorderLevel ?? 0.0;
+          if (stock <= reorder) {
+            final label = [v.color, v.size].where((x) => x != null && x!.isNotEmpty).join(' / ');
+            result.add({'name': label.isEmpty ? p.name : p.name + ' • ' + label, 'stock': stock,
+              'min': p.minStock ?? 0, 'reorder': reorder, 'priority': stock <= 0 ? 'Critical' : 'High',
+              'daysRemaining': 0, 'expectedOut': stock <= 0 ? 'Out of stock' : 'Below reorder',
+              'warehouse': 'Default', 'supplier': p.supplierContact ?? 'Not set'});
+          }
+        }
+      }
+    }
+    if (mounted) setState(() => items = result);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final items = BIMockData.getLowStockItems();
 
     return BISectionContainer(
       title: "Low Stock Command Centre",
