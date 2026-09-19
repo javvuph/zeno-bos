@@ -25,6 +25,8 @@ import 'package:zeno/features/orders/domain/models/sales_order_status.dart';
 import 'package:zeno/features/delivery/presentation/controllers/delivery_controller.dart';
 import 'package:zeno/features/delivery/domain/repositories/i_delivery_repository.dart';
 import 'package:zeno/features/delivery/domain/models/delivery_order.dart';
+import 'package:zeno/features/customers/presentation/controllers/customer_controller.dart';
+import 'package:zeno/features/customers/domain/repositories/i_customer_repository.dart';
 
 /// ZENO mobile presentation layer.
 /// Reuses the existing navigation, routes and business logic while giving
