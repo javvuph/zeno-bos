@@ -52,6 +52,13 @@ class IsarBillingRepository implements IBillingRepository {
             ..status = p.status)
           .toList();
 
+    // Validate variant stock before persisting a completed sale. This keeps
+    // the billing flow from completing a sale that would push a saved
+    // colour/size variant below zero stock.
+    if (bill.status == 'Completed') {
+      await _validateVariantStockForCompletion(bill);
+    }
+
     await db.isar.writeTxn(() async {
       await db.isar.collection<SalesOrderCollection>().put(order);
 
@@ -72,6 +79,48 @@ class IsarBillingRepository implements IBillingRepository {
 
     if (bill.status == 'Completed') {
       await _handleCompletionSideEffects(bill);
+    }
+  }
+
+  Future<void> _validateVariantStockForCompletion(Bill bill) async {
+    if (bill.items.isEmpty) return;
+
+    final products = await db.isar
+        .collection<ProductCollection>()
+        .filter()
+        .isDeletedEqualTo(false)
+        .findAll();
+
+    for (final item in bill.items) {
+      // Returns increase variant stock, so only positive sale quantities need
+      // an availability check.
+      if (item.quantity <= 0 || item.variant.isEmpty) continue;
+
+      ProductVariantEmbed? matchedVariant;
+      for (final product in products) {
+        final variants = product.variants ?? const <ProductVariantEmbed>[];
+        for (final variant in variants) {
+          if (variant.uuid == item.productId || variant.sku == item.sku) {
+            matchedVariant = variant;
+            break;
+          }
+        }
+        if (matchedVariant != null) break;
+      }
+
+      if (matchedVariant == null) {
+        throw StateError(
+          'Variant not found for ${item.productName} (${item.sku}).',
+        );
+      }
+
+      if (matchedVariant.stockLevel < item.quantity.toDouble()) {
+        throw StateError(
+          'Insufficient stock for ${item.productName} ${item.variant}. '
+          'Available: ${matchedVariant.stockLevel.round()}, '
+          'requested: ${item.quantity}.',
+        );
+      }
     }
   }
 
