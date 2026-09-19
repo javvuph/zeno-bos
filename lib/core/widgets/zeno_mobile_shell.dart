@@ -717,6 +717,28 @@ class _MobileAutomationViewState extends State<_MobileAutomationView>{
   }
   Widget _metric(ZenoSemanticColors c,String l,String v,IconData i)=>Container(padding:const EdgeInsets.all(10),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(15),border:Border.all(color:c.borderSubtle)),child:Column(children:[Icon(i,size:17,color:c.accentPrimary),const SizedBox(height:5),Text(v,style:TextStyle(fontSize:13,fontWeight:FontWeight.w900,color:c.textPrimary)),Text(l,style:TextStyle(fontSize:7,fontWeight:FontWeight.w800,color:c.textSecondary)]));
 }
+class _MobileAdminView extends StatelessWidget {
+  final ValueChanged<String> onRoute;
+  const _MobileAdminView({required this.onRoute});
+  @override Widget build(BuildContext context){
+    final c=Theme.of(context).extension<ZenoSemanticColors>()!;
+    final items=<Map<String,Object>>[
+      {'t':'BUSINESS SETUP','s':'Store identity, tax & operations','r':'admin/business-setup','i':Icons.store_rounded},
+      {'t':'SECURITY','s':'Access, PINs, roles & permissions','r':'admin/security','i':Icons.security_rounded},
+      {'t':'USERS & ROLES','s':'Staff access and RBAC','r':'admin/users','i':Icons.manage_accounts_rounded},
+      {'t':'SYSTEM SETTINGS','s':'Preferences, receipts & devices','r':'admin/settings','i':Icons.settings_rounded},
+      {'t':'AUDIT LOG','s':'Track important system activity','r':'admin/audit','i':Icons.fact_check_rounded},
+    ];
+    return ListView(padding:const EdgeInsets.fromLTRB(14,10,14,110),children:[
+      Container(padding:const EdgeInsets.all(17),decoration:BoxDecoration(gradient:ZenoTheme.aiGlowGradient,borderRadius:BorderRadius.circular(20)),child:Row(children:[const Icon(Icons.admin_panel_settings_rounded,color:Colors.black,size:30),const SizedBox(width:11),const Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text('ADMINISTRATION',style:TextStyle(fontSize:16,fontWeight:FontWeight.w900,color:Colors.black)),Text('SECURITY • SETTINGS • CONTROL',style:TextStyle(fontSize:8,fontWeight:FontWeight.w800,color:Colors.black54,letterSpacing:1.1))])])),
+      const SizedBox(height:12),
+      Row(children:[Expanded(child:_metric(c,'USERS','—',Icons.people_alt_rounded)),const SizedBox(width:8),Expanded(child:_metric(c,'SECURITY','ON',Icons.shield_rounded)),const SizedBox(width:8),Expanded(child:_metric(c,'STATUS','READY',Icons.check_circle_rounded))]),
+      const SizedBox(height:16),Text('CONTROL CENTER',style:TextStyle(fontSize:10,fontWeight:FontWeight.w900,letterSpacing:1.4,color:c.textSecondary)),const SizedBox(height:8),
+      ...items.map((x)=>ListTile(onTap:()=>onRoute(x['r'] as String),shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(14)),tileColor:c.bgTier2,leading:Icon(x['i'] as IconData,color:c.accentPrimary),title:Text(x['t'] as String,style:TextStyle(fontSize:10,fontWeight:FontWeight.w800,color:c.textPrimary)),subtitle:Text(x['s'] as String,style:TextStyle(fontSize:8,color:c.textSecondary)),trailing:Icon(Icons.arrow_forward_ios_rounded,size:13,color:c.textSecondary)))
+    ]);
+  }
+  Widget _metric(ZenoSemanticColors c,String l,String v,IconData i)=>Container(padding:const EdgeInsets.all(10),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(15),border:Border.all(color:c.borderSubtle)),child:Column(children:[Icon(i,size:17,color:c.accentPrimary),const SizedBox(height:5),Text(v,style:TextStyle(fontSize:13,fontWeight:FontWeight.w900,color:c.textPrimary)),Text(l,style:TextStyle(fontSize:7,fontWeight:FontWeight.w800,color:c.textSecondary))]));
+}
 class _MobileModuleHub extends StatelessWidget {
   final String route;
   final ValueChanged<String> onRoute;
