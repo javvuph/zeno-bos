@@ -1127,14 +1127,37 @@ class _AiCommandCard extends StatelessWidget {
 }
 
 
-class _KpiStrip extends StatelessWidget {
+class _KpiStrip extends StatefulWidget {
   const _KpiStrip();
-  @override Widget build(BuildContext context) {
+  @override State<_KpiStrip> createState()=>_KpiStripState();
+}
+class _KpiStripState extends State<_KpiStrip> {
+  late final SalesController sales;
+  late final DeliveryController delivery;
+  late final CustomerController customers;
+  late final InventoryController inventory;
+  @override void initState(){
+    super.initState();
+    sales=SalesController(sl<ISalesRepository>());
+    delivery=DeliveryController(sl<IDeliveryRepository>());
+    customers=CustomerController(sl<ICustomerRepository>());
+    inventory=InventoryController(sl<IInventoryRepository>());
+    sales.addListener(_refresh); delivery.addListener(_refresh); customers.addListener(_refresh); inventory.addListener(_refresh);
+    sales.loadOrders(); delivery.loadDeliveries(); customers.loadCustomers(); inventory.refreshAll();
+  }
+  void _refresh(){if(mounted)setState((){});}
+  @override void dispose(){sales.removeListener(_refresh);delivery.removeListener(_refresh);customers.removeListener(_refresh);inventory.removeListener(_refresh);sales.dispose();delivery.dispose();customers.dispose();inventory.dispose();super.dispose();}
+  @override Widget build(BuildContext context){
     final c=Theme.of(context).extension<ZenoSemanticColors>()!;
-    return SizedBox(height:104, child: ListView(scrollDirection:Axis.horizontal, children:[
-      _KpiCard(label:'TODAY SALES',value:'₹ 24.8K',change:'+12.4%',icon:Icons.trending_up_rounded,accent:c.accentPrimary),
-      _KpiCard(label:'ORDERS',value:'128',change:'+8.2%',icon:Icons.shopping_bag_outlined,accent:c.accentPurple),
-      _KpiCard(label:'PROFIT',value:'₹ 6.4K',change:'+9.7%',icon:Icons.account_balance_wallet_outlined,accent:c.statusSuccess),
+    final orders=sales.orders.length;
+    final revenue=sales.totalSalesVolume;
+    final stock=inventory.allStockLevels.length;
+    return SizedBox(height:104,child:ListView(scrollDirection:Axis.horizontal,children:[
+      _KpiCard(label:'SALES VOLUME',value:'₹ '+revenue.toStringAsFixed(0),change:'ORDER DATA',icon:Icons.trending_up_rounded,accent:c.accentPrimary),
+      _KpiCard(label:'ORDERS',value:orders.toString(),change:'LIVE DATA',icon:Icons.shopping_bag_outlined,accent:c.accentPurple),
+      _KpiCard(label:'CUSTOMERS',value:customers.customers.length.toString(),change:'CRM DATA',icon:Icons.people_alt_outlined,accent:c.statusSuccess),
+      _KpiCard(label:'STOCK SKUs',value:stock.toString(),change:'INVENTORY',icon:Icons.inventory_2_outlined,accent:c.amberGold),
+      _KpiCard(label:'DELIVERIES',value:delivery.deliveries.length.toString(),change:'TRACKING',icon:Icons.local_shipping_outlined,accent:c.accentPrimary),
     ]));
   }
 }
@@ -1149,19 +1172,19 @@ class _InsightCard extends StatelessWidget {
 }
 
 
-class _TodayPulse extends StatelessWidget {
+class _TodayPulse extends StatefulWidget {
   final ValueChanged<String> onRoute;
   const _TodayPulse({required this.onRoute});
-  @override Widget build(BuildContext context){
-    final c=Theme.of(context).extension<ZenoSemanticColors>()!;
-    return Container(padding:const EdgeInsets.all(15),decoration:BoxDecoration(color:c.bgTier2.withValues(alpha:.92),borderRadius:BorderRadius.circular(20),border:Border.all(color:c.borderSubtle)),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
-      Row(children:[Text('TODAY PULSE',style:TextStyle(fontSize:10,fontWeight:FontWeight.w900,letterSpacing:1.5,color:c.textSecondary)),const Spacer(),Text('LIVE',style:TextStyle(fontSize:8,fontWeight:FontWeight.w900,letterSpacing:1,color:c.statusSuccess))]),
-      const SizedBox(height:13),
-      _PulseRow(icon:Icons.warning_amber_rounded,title:'Low stock',value:'7 products',accent:c.amberGold,onTap:()=>onRoute('inventory/products')),
-      _PulseRow(icon:Icons.local_shipping_outlined,title:'Deliveries',value:'12 active',accent:c.accentPrimary,onTap:()=>onRoute('orders/dashboard')),
-      _PulseRow(icon:Icons.people_outline_rounded,title:'Customers',value:'18 new',accent:c.accentPurple,onTap:()=>onRoute('customers')),
-    ]));
-  }
+  @override State<_TodayPulse> createState()=>_TodayPulseState();
+}
+class _TodayPulseState extends State<_TodayPulse>{
+  late final InventoryController inventory;
+  late final DeliveryController delivery;
+  late final CustomerController customers;
+  @override void initState(){super.initState();inventory=InventoryController(sl<IInventoryRepository>());delivery=DeliveryController(sl<IDeliveryRepository>());customers=CustomerController(sl<ICustomerRepository>());inventory.addListener(_r);delivery.addListener(_r);customers.addListener(_r);inventory.refreshAll();delivery.loadDeliveries();customers.loadCustomers();}
+  void _r(){if(mounted)setState((){});}
+  @override void dispose(){inventory.removeListener(_r);delivery.removeListener(_r);customers.removeListener(_r);inventory.dispose();delivery.dispose();customers.dispose();super.dispose();}
+  @override Widget build(BuildContext context){final c=Theme.of(context).extension<ZenoSemanticColors>()!;final low=inventory.allStockLevels.where((s)=>s.available<=0).length;return Container(padding:const EdgeInsets.all(15),decoration:BoxDecoration(color:c.bgTier2.withValues(alpha:.92),borderRadius:BorderRadius.circular(20),border:Border.all(color:c.borderSubtle)),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Row(children:[Text('TODAY PULSE',style:TextStyle(fontSize:10,fontWeight:FontWeight.w900,letterSpacing:1.5,color:c.textSecondary)),const Spacer(),Text('LIVE',style:TextStyle(fontSize:8,fontWeight:FontWeight.w900,letterSpacing:1,color:c.statusSuccess))]),const SizedBox(height:13),_PulseRow(icon:Icons.warning_amber_rounded,title:'Out of stock',value:low.toString()+' SKUs',accent:c.amberGold,onTap:()=>widget.onRoute('inventory/products')),_PulseRow(icon:Icons.local_shipping_outlined,title:'Active deliveries',value:delivery.activeDeliveryCount.toString(),accent:c.accentPrimary,onTap:()=>widget.onRoute('orders/dashboard')),_PulseRow(icon:Icons.people_outline_rounded,title:'Customer base',value:customers.customers.length.toString(),accent:c.accentPurple,onTap:()=>widget.onRoute('customers'))]));}
 }
 class _PulseRow extends StatelessWidget {
   final IconData icon; final String title,value; final Color accent; final VoidCallback onTap;
