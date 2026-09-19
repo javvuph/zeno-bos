@@ -16,7 +16,7 @@ extension GetCustomerCollectionCollection on Isar {
 
 const CustomerCollectionSchema = CollectionSchema(
   name: r'CustomerCollection',
-  id: 8387885109214179962,
+  id: (8387885109214 * 1000000 + 179962),
   properties: {
     r'addresses': PropertySchema(
       id: 0,
@@ -178,7 +178,7 @@ const CustomerCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -191,7 +191,7 @@ const CustomerCollectionSchema = CollectionSchema(
       ],
     ),
     r'customerCode': IndexSchema(
-      id: 7083394596576351214,
+      id: (7083394596576 * 1000000 + 351214),
       name: r'customerCode',
       unique: true,
       replace: false,
@@ -204,7 +204,7 @@ const CustomerCollectionSchema = CollectionSchema(
       ],
     ),
     r'name': IndexSchema(
-      id: 879695947855722453,
+      id: (879695947855 * 1000000 + 722453),
       name: r'name',
       unique: false,
       replace: false,
@@ -217,7 +217,7 @@ const CustomerCollectionSchema = CollectionSchema(
       ],
     ),
     r'email': IndexSchema(
-      id: -26095440403582047,
+      id: -(26095440403 * 1000000 + 582047),
       name: r'email',
       unique: true,
       replace: false,
@@ -230,7 +230,7 @@ const CustomerCollectionSchema = CollectionSchema(
       ],
     ),
     r'phone': IndexSchema(
-      id: -6308098324157559207,
+      id: -(6308098324157 * 1000000 + 559207),
       name: r'phone',
       unique: true,
       replace: false,
@@ -243,7 +243,7 @@ const CustomerCollectionSchema = CollectionSchema(
       ],
     ),
     r'isDeleted': IndexSchema(
-      id: -786475870904832312,
+      id: -(786475870904 * 1000000 + 832312),
       name: r'isDeleted',
       unique: false,
       replace: false,
@@ -6019,7 +6019,7 @@ extension GetCustomerGroupCollectionCollection on Isar {
 
 const CustomerGroupCollectionSchema = CollectionSchema(
   name: r'CustomerGroupCollection',
-  id: -2557643730192295229,
+  id: -(2557643730192 * 1000000 + 295229),
   properties: {
     r'color': PropertySchema(
       id: 0,
@@ -6054,7 +6054,7 @@ const CustomerGroupCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -6067,7 +6067,7 @@ const CustomerGroupCollectionSchema = CollectionSchema(
       ],
     ),
     r'name': IndexSchema(
-      id: 879695947855722453,
+      id: (879695947855 * 1000000 + 722453),
       name: r'name',
       unique: false,
       replace: false,
@@ -7470,7 +7470,7 @@ extension GetCustomerCategoryCollectionCollection on Isar {
 
 const CustomerCategoryCollectionSchema = CollectionSchema(
   name: r'CustomerCategoryCollection',
-  id: 5945931140317461509,
+  id: (5945931140317 * 1000000 + 461509),
   properties: {
     r'code': PropertySchema(
       id: 0,
@@ -7495,7 +7495,7 @@ const CustomerCategoryCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -7508,7 +7508,7 @@ const CustomerCategoryCollectionSchema = CollectionSchema(
       ],
     ),
     r'code': IndexSchema(
-      id: 329780482934683790,
+      id: (329780482934 * 1000000 + 683790),
       name: r'code',
       unique: true,
       replace: false,
@@ -8527,7 +8527,7 @@ extension GetSalesTerritoryCollectionCollection on Isar {
 
 const SalesTerritoryCollectionSchema = CollectionSchema(
   name: r'SalesTerritoryCollection',
-  id: 6267221213518285300,
+  id: (6267221213518 * 1000000 + 285300),
   properties: {
     r'code': PropertySchema(
       id: 0,
@@ -8562,7 +8562,7 @@ const SalesTerritoryCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -8575,7 +8575,7 @@ const SalesTerritoryCollectionSchema = CollectionSchema(
       ],
     ),
     r'code': IndexSchema(
-      id: 329780482934683790,
+      id: (329780482934 * 1000000 + 683790),
       name: r'code',
       unique: true,
       replace: false,
@@ -9987,7 +9987,7 @@ extension GetCustomerInteractionCollectionCollection on Isar {
 
 const CustomerInteractionCollectionSchema = CollectionSchema(
   name: r'CustomerInteractionCollection',
-  id: 2271736976496759744,
+  id: (2271736976496 * 1000000 + 759744),
   properties: {
     r'customerId': PropertySchema(
       id: 0,
@@ -10032,7 +10032,7 @@ const CustomerInteractionCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -10045,7 +10045,7 @@ const CustomerInteractionCollectionSchema = CollectionSchema(
       ],
     ),
     r'customerId': IndexSchema(
-      id: 1498639901530368639,
+      id: (1498639901530 * 1000000 + 368639),
       name: r'customerId',
       unique: false,
       replace: false,
@@ -11702,7 +11702,7 @@ extension GetLeadCollectionCollection on Isar {
 
 const LeadCollectionSchema = CollectionSchema(
   name: r'LeadCollection',
-  id: -6587774733515181168,
+  id: -(6587774733515 * 1000000 + 181168),
   properties: {
     r'aiInsightsJson': PropertySchema(
       id: 0,
@@ -11777,7 +11777,7 @@ const LeadCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -11790,7 +11790,7 @@ const LeadCollectionSchema = CollectionSchema(
       ],
     ),
     r'name': IndexSchema(
-      id: 879695947855722453,
+      id: (879695947855 * 1000000 + 722453),
       name: r'name',
       unique: false,
       replace: false,
@@ -11803,7 +11803,7 @@ const LeadCollectionSchema = CollectionSchema(
       ],
     ),
     r'email': IndexSchema(
-      id: -26095440403582047,
+      id: -(26095440403 * 1000000 + 582047),
       name: r'email',
       unique: false,
       replace: false,
@@ -11816,7 +11816,7 @@ const LeadCollectionSchema = CollectionSchema(
       ],
     ),
     r'phone': IndexSchema(
-      id: -6308098324157559207,
+      id: -(6308098324157 * 1000000 + 559207),
       name: r'phone',
       unique: false,
       replace: false,
@@ -14535,7 +14535,7 @@ extension GetActivityCollectionCollection on Isar {
 
 const ActivityCollectionSchema = CollectionSchema(
   name: r'ActivityCollection',
-  id: -3818461430164993423,
+  id: -(3818461430164 * 1000000 + 993423),
   properties: {
     r'assignedToId': PropertySchema(
       id: 0,
@@ -14625,7 +14625,7 @@ const ActivityCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -14638,7 +14638,7 @@ const ActivityCollectionSchema = CollectionSchema(
       ],
     ),
     r'scheduledAt': IndexSchema(
-      id: -1483275037155116518,
+      id: -(1483275037155 * 1000000 + 116518),
       name: r'scheduledAt',
       unique: false,
       replace: false,
@@ -14651,7 +14651,7 @@ const ActivityCollectionSchema = CollectionSchema(
       ],
     ),
     r'assignedToId': IndexSchema(
-      id: 5029750254656825152,
+      id: (5029750254656 * 1000000 + 825152),
       name: r'assignedToId',
       unique: false,
       replace: false,
@@ -14664,7 +14664,7 @@ const ActivityCollectionSchema = CollectionSchema(
       ],
     ),
     r'customerId': IndexSchema(
-      id: 1498639901530368639,
+      id: (1498639901530 * 1000000 + 368639),
       name: r'customerId',
       unique: false,
       replace: false,
@@ -17968,7 +17968,7 @@ extension GetCampaignCollectionCollection on Isar {
 
 const CampaignCollectionSchema = CollectionSchema(
   name: r'CampaignCollection',
-  id: -4648212052618381550,
+  id: -(4648212052618 * 1000000 + 381550),
   properties: {
     r'actualCost': PropertySchema(
       id: 0,
@@ -18048,7 +18048,7 @@ const CampaignCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -18061,7 +18061,7 @@ const CampaignCollectionSchema = CollectionSchema(
       ],
     ),
     r'title': IndexSchema(
-      id: -7636685945352118059,
+      id: -(7636685945352 * 1000000 + 118059),
       name: r'title',
       unique: false,
       replace: false,
@@ -18074,7 +18074,7 @@ const CampaignCollectionSchema = CollectionSchema(
       ],
     ),
     r'startDate': IndexSchema(
-      id: 7723980484494730382,
+      id: (7723980484494 * 1000000 + 730382),
       name: r'startDate',
       unique: false,
       replace: false,
@@ -20735,7 +20735,7 @@ extension GetTicketCollectionCollection on Isar {
 
 const TicketCollectionSchema = CollectionSchema(
   name: r'TicketCollection',
-  id: -8428948067396431253,
+  id: -(8428948067396 * 1000000 + 431253),
   properties: {
     r'assignedToId': PropertySchema(
       id: 0,
@@ -20815,7 +20815,7 @@ const TicketCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -20828,7 +20828,7 @@ const TicketCollectionSchema = CollectionSchema(
       ],
     ),
     r'ticketNumber': IndexSchema(
-      id: -7338781723366702771,
+      id: -(7338781723366 * 1000000 + 702771),
       name: r'ticketNumber',
       unique: true,
       replace: false,
@@ -20841,7 +20841,7 @@ const TicketCollectionSchema = CollectionSchema(
       ],
     ),
     r'customerId': IndexSchema(
-      id: 1498639901530368639,
+      id: (1498639901530 * 1000000 + 368639),
       name: r'customerId',
       unique: false,
       replace: false,
@@ -23663,7 +23663,7 @@ extension GetSupplierCollectionCollection on Isar {
 
 const SupplierCollectionSchema = CollectionSchema(
   name: r'SupplierCollection',
-  id: 7491295254928364657,
+  id: (7491295254928 * 1000000 + 364657),
   properties: {
     r'address': PropertySchema(
       id: 0,
@@ -23763,7 +23763,7 @@ const SupplierCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -23776,7 +23776,7 @@ const SupplierCollectionSchema = CollectionSchema(
       ],
     ),
     r'supplierCode': IndexSchema(
-      id: -6908271452855759711,
+      id: -(6908271452855 * 1000000 + 759711),
       name: r'supplierCode',
       unique: true,
       replace: false,
@@ -23789,7 +23789,7 @@ const SupplierCollectionSchema = CollectionSchema(
       ],
     ),
     r'name': IndexSchema(
-      id: 879695947855722453,
+      id: (879695947855 * 1000000 + 722453),
       name: r'name',
       unique: false,
       replace: false,
@@ -23802,7 +23802,7 @@ const SupplierCollectionSchema = CollectionSchema(
       ],
     ),
     r'email': IndexSchema(
-      id: -26095440403582047,
+      id: -(26095440403 * 1000000 + 582047),
       name: r'email',
       unique: true,
       replace: false,
@@ -23815,7 +23815,7 @@ const SupplierCollectionSchema = CollectionSchema(
       ],
     ),
     r'phone': IndexSchema(
-      id: -6308098324157559207,
+      id: -(6308098324157 * 1000000 + 559207),
       name: r'phone',
       unique: true,
       replace: false,
@@ -23828,7 +23828,7 @@ const SupplierCollectionSchema = CollectionSchema(
       ],
     ),
     r'isDeleted': IndexSchema(
-      id: -786475870904832312,
+      id: -(786475870904 * 1000000 + 832312),
       name: r'isDeleted',
       unique: false,
       replace: false,
@@ -27301,7 +27301,7 @@ extension SupplierCollectionQueryProperty
 
 const CustomerAddressEmbeddedSchema = Schema(
   name: r'CustomerAddressEmbedded',
-  id: -2651366347593495635,
+  id: -(2651366347593 * 1000000 + 495635),
   properties: {
     r'addressLine1': PropertySchema(
       id: 0,
@@ -28734,7 +28734,7 @@ extension CustomerAddressEmbeddedQueryObject on QueryBuilder<
 
 const CustomerContactEmbeddedSchema = Schema(
   name: r'CustomerContactEmbedded',
-  id: 8268102696027179741,
+  id: (8268102696027 * 1000000 + 179741),
   properties: {
     r'email': PropertySchema(
       id: 0,
