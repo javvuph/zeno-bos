@@ -31,8 +31,11 @@ class IsarBillingRepository implements IBillingRepository {
       ..date = bill.timestamp
       ..status = bill.status.toLowerCase()
       ..totalAmount = bill.grandTotal
+      ..subTotal = bill.subtotal
+      ..totalDiscount = bill.totalDiscount
       ..totalTax = bill.totalTax
-      ..currency = 'USD'
+      ..exchangeRate = 1.0
+      ..currency = 'INR'
       ..items = bill.items
           .map((item) => TransactionItem()
             ..productId = item.productId
@@ -208,6 +211,7 @@ class IsarBillingRepository implements IBillingRepository {
         await db.isar.writeTxn(() async {
           customer.lifetimeSpent += bill.grandTotal;
           customer.loyaltyPoints += (bill.grandTotal / 10).floor();
+          customer.lastPurchaseAt = bill.timestamp;
           customer.updatedAt = DateTime.now();
           await db.isar.collection<CustomerCollection>().put(customer);
         });
