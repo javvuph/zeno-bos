@@ -16,7 +16,7 @@ extension GetPurchaseOrderCollectionCollection on Isar {
 
 const PurchaseOrderCollectionSchema = CollectionSchema(
   name: r'PurchaseOrderCollection',
-  id: -164795920453140714,
+  id: -(164795920453 * 1000000 + 140714),
   properties: {
     r'approvalStatus': PropertySchema(
       id: 0,
@@ -122,7 +122,7 @@ const PurchaseOrderCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -135,7 +135,7 @@ const PurchaseOrderCollectionSchema = CollectionSchema(
       ],
     ),
     r'orderNumber': IndexSchema(
-      id: 7506692016205733885,
+      id: (7506692016205 * 1000000 + 733885),
       name: r'orderNumber',
       unique: true,
       replace: false,
@@ -148,7 +148,7 @@ const PurchaseOrderCollectionSchema = CollectionSchema(
       ],
     ),
     r'supplierId': IndexSchema(
-      id: -7509772217447508349,
+      id: -(7509772217447 * 1000000 + 508349),
       name: r'supplierId',
       unique: false,
       replace: false,
@@ -161,7 +161,7 @@ const PurchaseOrderCollectionSchema = CollectionSchema(
       ],
     ),
     r'buyerId': IndexSchema(
-      id: 720979758479371927,
+      id: (720979758479 * 1000000 + 371927),
       name: r'buyerId',
       unique: false,
       replace: false,
@@ -174,7 +174,7 @@ const PurchaseOrderCollectionSchema = CollectionSchema(
       ],
     ),
     r'date': IndexSchema(
-      id: -7552997827385218417,
+      id: -(7552997827385 * 1000000 + 218417),
       name: r'date',
       unique: false,
       replace: false,
@@ -187,7 +187,7 @@ const PurchaseOrderCollectionSchema = CollectionSchema(
       ],
     ),
     r'status': IndexSchema(
-      id: -107785170620420283,
+      id: -(107785170620 * 1000000 + 420283),
       name: r'status',
       unique: false,
       replace: false,
@@ -3779,7 +3779,7 @@ extension GetPurchaseRequisitionCollectionCollection on Isar {
 
 const PurchaseRequisitionCollectionSchema = CollectionSchema(
   name: r'PurchaseRequisitionCollection',
-  id: -9044123387613096616,
+  id: -(9044123387613 * 1000000 + 96616),
   properties: {
     r'createdAt': PropertySchema(
       id: 0,
@@ -3825,7 +3825,7 @@ const PurchaseRequisitionCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -3838,7 +3838,7 @@ const PurchaseRequisitionCollectionSchema = CollectionSchema(
       ],
     ),
     r'requestedById': IndexSchema(
-      id: 2212552512050762765,
+      id: (2212552512050 * 1000000 + 762765),
       name: r'requestedById',
       unique: false,
       replace: false,
@@ -3851,7 +3851,7 @@ const PurchaseRequisitionCollectionSchema = CollectionSchema(
       ],
     ),
     r'requestedDate': IndexSchema(
-      id: 7204999331155679246,
+      id: (7204999331155 * 1000000 + 679246),
       name: r'requestedDate',
       unique: false,
       replace: false,
@@ -3864,7 +3864,7 @@ const PurchaseRequisitionCollectionSchema = CollectionSchema(
       ],
     ),
     r'status': IndexSchema(
-      id: -107785170620420283,
+      id: -(107785170620 * 1000000 + 420283),
       name: r'status',
       unique: false,
       replace: false,
@@ -5403,7 +5403,7 @@ extension GetRFQCollectionCollection on Isar {
 
 const RFQCollectionSchema = CollectionSchema(
   name: r'RFQCollection',
-  id: -1523891079810340108,
+  id: -(1523891079810 * 1000000 + 340108),
   properties: {
     r'createdAt': PropertySchema(
       id: 0,
@@ -5449,7 +5449,7 @@ const RFQCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -5462,7 +5462,7 @@ const RFQCollectionSchema = CollectionSchema(
       ],
     ),
     r'expiryDate': IndexSchema(
-      id: -1636839555668080254,
+      id: -(1636839555668 * 1000000 + 80254),
       name: r'expiryDate',
       unique: false,
       replace: false,
@@ -5475,7 +5475,7 @@ const RFQCollectionSchema = CollectionSchema(
       ],
     ),
     r'status': IndexSchema(
-      id: -107785170620420283,
+      id: -(107785170620 * 1000000 + 420283),
       name: r'status',
       unique: false,
       replace: false,
@@ -7009,7 +7009,7 @@ extension GetSupplierQuotationCollectionCollection on Isar {
 
 const SupplierQuotationCollectionSchema = CollectionSchema(
   name: r'SupplierQuotationCollection',
-  id: 2531617164321900702,
+  id: (2531617164321 * 1000000 + 900702),
   properties: {
     r'createdAt': PropertySchema(
       id: 0,
@@ -7085,7 +7085,7 @@ const SupplierQuotationCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -7098,7 +7098,7 @@ const SupplierQuotationCollectionSchema = CollectionSchema(
       ],
     ),
     r'rfqId': IndexSchema(
-      id: 2628559203047630038,
+      id: (2628559203047 * 1000000 + 630038),
       name: r'rfqId',
       unique: false,
       replace: false,
@@ -7111,7 +7111,7 @@ const SupplierQuotationCollectionSchema = CollectionSchema(
       ],
     ),
     r'supplierId': IndexSchema(
-      id: -7509772217447508349,
+      id: -(7509772217447 * 1000000 + 508349),
       name: r'supplierId',
       unique: false,
       replace: false,
@@ -7124,7 +7124,7 @@ const SupplierQuotationCollectionSchema = CollectionSchema(
       ],
     ),
     r'quotationNumber': IndexSchema(
-      id: -2731158400638475626,
+      id: -(2731158400638 * 1000000 + 475626),
       name: r'quotationNumber',
       unique: false,
       replace: false,
@@ -7137,7 +7137,7 @@ const SupplierQuotationCollectionSchema = CollectionSchema(
       ],
     ),
     r'quotationDate': IndexSchema(
-      id: -8380932312464946232,
+      id: -(8380932312464 * 1000000 + 946232),
       name: r'quotationDate',
       unique: false,
       replace: false,
@@ -9541,7 +9541,7 @@ extension GetGRNCollectionCollection on Isar {
 
 const GRNCollectionSchema = CollectionSchema(
   name: r'GRNCollection',
-  id: -6647728805342816324,
+  id: -(6647728805342 * 1000000 + 816324),
   properties: {
     r'createdAt': PropertySchema(
       id: 0,
@@ -9597,7 +9597,7 @@ const GRNCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -9610,7 +9610,7 @@ const GRNCollectionSchema = CollectionSchema(
       ],
     ),
     r'poId': IndexSchema(
-      id: 5386305586856013527,
+      id: (5386305586856 * 1000000 + 13527),
       name: r'poId',
       unique: false,
       replace: false,
@@ -9623,7 +9623,7 @@ const GRNCollectionSchema = CollectionSchema(
       ],
     ),
     r'supplierId': IndexSchema(
-      id: -7509772217447508349,
+      id: -(7509772217447 * 1000000 + 508349),
       name: r'supplierId',
       unique: false,
       replace: false,
@@ -9636,7 +9636,7 @@ const GRNCollectionSchema = CollectionSchema(
       ],
     ),
     r'warehouseId': IndexSchema(
-      id: -3759612439572445753,
+      id: -(3759612439572 * 1000000 + 445753),
       name: r'warehouseId',
       unique: false,
       replace: false,
@@ -9649,7 +9649,7 @@ const GRNCollectionSchema = CollectionSchema(
       ],
     ),
     r'receivedDate': IndexSchema(
-      id: 2837984934516465990,
+      id: (2837984934516 * 1000000 + 465990),
       name: r'receivedDate',
       unique: false,
       replace: false,
@@ -9662,7 +9662,7 @@ const GRNCollectionSchema = CollectionSchema(
       ],
     ),
     r'status': IndexSchema(
-      id: -107785170620420283,
+      id: -(107785170620 * 1000000 + 420283),
       name: r'status',
       unique: false,
       replace: false,
@@ -11599,7 +11599,7 @@ extension GetSalesOrderCollectionCollection on Isar {
 
 const SalesOrderCollectionSchema = CollectionSchema(
   name: r'SalesOrderCollection',
-  id: -7793868501647565128,
+  id: -(7793868501647 * 1000000 + 565128),
   properties: {
     r'billingAddressId': PropertySchema(
       id: 0,
@@ -11731,7 +11731,7 @@ const SalesOrderCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -11744,7 +11744,7 @@ const SalesOrderCollectionSchema = CollectionSchema(
       ],
     ),
     r'orderNumber': IndexSchema(
-      id: 7506692016205733885,
+      id: (7506692016205 * 1000000 + 733885),
       name: r'orderNumber',
       unique: true,
       replace: false,
@@ -11757,7 +11757,7 @@ const SalesOrderCollectionSchema = CollectionSchema(
       ],
     ),
     r'customerId': IndexSchema(
-      id: 1498639901530368639,
+      id: (1498639901530 * 1000000 + 368639),
       name: r'customerId',
       unique: false,
       replace: false,
@@ -11770,7 +11770,7 @@ const SalesOrderCollectionSchema = CollectionSchema(
       ],
     ),
     r'warehouseId': IndexSchema(
-      id: -3759612439572445753,
+      id: -(3759612439572 * 1000000 + 445753),
       name: r'warehouseId',
       unique: false,
       replace: false,
@@ -11783,7 +11783,7 @@ const SalesOrderCollectionSchema = CollectionSchema(
       ],
     ),
     r'date': IndexSchema(
-      id: -7552997827385218417,
+      id: -(7552997827385 * 1000000 + 218417),
       name: r'date',
       unique: false,
       replace: false,
@@ -11796,7 +11796,7 @@ const SalesOrderCollectionSchema = CollectionSchema(
       ],
     ),
     r'status': IndexSchema(
-      id: -107785170620420283,
+      id: -(107785170620 * 1000000 + 420283),
       name: r'status',
       unique: false,
       replace: false,
@@ -16209,7 +16209,7 @@ extension GetInvoiceCollectionCollection on Isar {
 
 const InvoiceCollectionSchema = CollectionSchema(
   name: r'InvoiceCollection',
-  id: -6006910760135914002,
+  id: -(6006910760135 * 1000000 + 914002),
   properties: {
     r'balanceDue': PropertySchema(
       id: 0,
@@ -16264,7 +16264,7 @@ const InvoiceCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -16277,7 +16277,7 @@ const InvoiceCollectionSchema = CollectionSchema(
       ],
     ),
     r'invoiceNumber': IndexSchema(
-      id: -6231821761165001198,
+      id: -(6231821761165 * 1000000 + 1198),
       name: r'invoiceNumber',
       unique: true,
       replace: false,
@@ -16290,7 +16290,7 @@ const InvoiceCollectionSchema = CollectionSchema(
       ],
     ),
     r'orderId': IndexSchema(
-      id: -6176610178429382285,
+      id: -(6176610178429 * 1000000 + 382285),
       name: r'orderId',
       unique: false,
       replace: false,
@@ -16303,7 +16303,7 @@ const InvoiceCollectionSchema = CollectionSchema(
       ],
     ),
     r'date': IndexSchema(
-      id: -7552997827385218417,
+      id: -(7552997827385 * 1000000 + 218417),
       name: r'date',
       unique: false,
       replace: false,
@@ -16316,7 +16316,7 @@ const InvoiceCollectionSchema = CollectionSchema(
       ],
     ),
     r'dueDate': IndexSchema(
-      id: -7871003637559820552,
+      id: -(7871003637559 * 1000000 + 820552),
       name: r'dueDate',
       unique: false,
       replace: false,
@@ -16329,7 +16329,7 @@ const InvoiceCollectionSchema = CollectionSchema(
       ],
     ),
     r'status': IndexSchema(
-      id: -107785170620420283,
+      id: -(107785170620 * 1000000 + 420283),
       name: r'status',
       unique: false,
       replace: false,
@@ -18294,7 +18294,7 @@ extension GetQuotationCollectionCollection on Isar {
 
 const QuotationCollectionSchema = CollectionSchema(
   name: r'QuotationCollection',
-  id: 4684455947790100679,
+  id: (4684455947790 * 1000000 + 100679),
   properties: {
     r'branchId': PropertySchema(
       id: 0,
@@ -18385,7 +18385,7 @@ const QuotationCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -18398,7 +18398,7 @@ const QuotationCollectionSchema = CollectionSchema(
       ],
     ),
     r'quotationNumber': IndexSchema(
-      id: -2731158400638475626,
+      id: -(2731158400638 * 1000000 + 475626),
       name: r'quotationNumber',
       unique: true,
       replace: false,
@@ -18411,7 +18411,7 @@ const QuotationCollectionSchema = CollectionSchema(
       ],
     ),
     r'customerId': IndexSchema(
-      id: 1498639901530368639,
+      id: (1498639901530 * 1000000 + 368639),
       name: r'customerId',
       unique: false,
       replace: false,
@@ -21383,7 +21383,7 @@ extension GetOpportunityCollectionCollection on Isar {
 
 const OpportunityCollectionSchema = CollectionSchema(
   name: r'OpportunityCollection',
-  id: -9011255860292543708,
+  id: -(9011255860292 * 1000000 + 543708),
   properties: {
     r'competitorName': PropertySchema(
       id: 0,
@@ -21453,7 +21453,7 @@ const OpportunityCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -21466,7 +21466,7 @@ const OpportunityCollectionSchema = CollectionSchema(
       ],
     ),
     r'customerId': IndexSchema(
-      id: 1498639901530368639,
+      id: (1498639901530 * 1000000 + 368639),
       name: r'customerId',
       unique: false,
       replace: false,
@@ -23875,7 +23875,7 @@ extension OpportunityCollectionQueryProperty on QueryBuilder<
 
 const GRNItemEmbeddedSchema = Schema(
   name: r'GRNItemEmbedded',
-  id: -3009871691399839062,
+  id: -(3009871691399 * 1000000 + 839062),
   properties: {
     r'batchId': PropertySchema(
       id: 0,
@@ -25128,7 +25128,7 @@ extension GRNItemEmbeddedQueryObject
 
 const TransactionItemSchema = Schema(
   name: r'TransactionItem',
-  id: 4862152759336924711,
+  id: (4862152759336 * 1000000 + 924711),
   properties: {
     r'description': PropertySchema(
       id: 0,
@@ -26262,7 +26262,7 @@ extension TransactionItemQueryObject
 
 const PaymentEmbeddedSchema = Schema(
   name: r'PaymentEmbedded',
-  id: 580698690587296694,
+  id: (580698690587 * 1000000 + 296694),
   properties: {
     r'amount': PropertySchema(
       id: 0,
