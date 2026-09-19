@@ -82,17 +82,48 @@ class IsarBillingRepository implements IBillingRepository {
 
     for (var item in bill.items) {
       final bool isItemReturn = item.quantity < 0;
-      transactions.add(StockTransaction(
-        id: 'POS-${isItemReturn ? 'IN' : 'OUT'}-${bill.id}-${item.productId}',
-        stockItemId: item.productId,
-        quantityDelta: -item.quantity.toDouble(),
-        type: isItemReturn ? TransactionType.inReturn : TransactionType.outSale,
-        referenceId: bill.id,
-        timestamp: DateTime.now(),
-        userId: 'current_user',
-      ));
+
+      if (item.variant.isNotEmpty) {
+        // Variant stock is stored on the saved ProductCollection variant.
+        // Update that exact variant instead of the parent product stock.
+        final products = await db.isar
+            .collection<ProductCollection>()
+            .filter()
+            .isDeletedEqualTo(false)
+            .findAll();
+
+        for (final product in products) {
+          final variant = product.variants
+              ?.where((v) =>
+                  v.uuid == item.productId || v.sku == item.sku)
+              .cast<ProductVariantEmbed?>()
+              .firstWhere((v) => v != null, orElse: () => null);
+
+          if (variant != null) {
+            variant.stockLevel =
+                variant.stockLevel - item.quantity.toDouble();
+            await db.isar.writeTxn(() async {
+              await db.isar.collection<ProductCollection>().put(product);
+            });
+            break;
+          }
+        }
+      } else {
+        transactions.add(StockTransaction(
+          id: 'POS-${isItemReturn ? 'IN' : 'OUT'}-${bill.id}-${item.productId}',
+          stockItemId: item.productId,
+          quantityDelta: -item.quantity.toDouble(),
+          type: isItemReturn ? TransactionType.inReturn : TransactionType.outSale,
+          referenceId: bill.id,
+          timestamp: DateTime.now(),
+          userId: 'current_user',
+        ));
+      }
     }
-    await invRepo.recordTransactions(transactions);
+
+    if (transactions.isNotEmpty) {
+      await invRepo.recordTransactions(transactions);
+    }
 
     // 2. Finance
     final finService = sl<BillingFinanceService>();
