@@ -1,3 +1,11 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:zeno/features/billing/presentation/controllers/billing_controller.dart';
+import 'package:zeno/features/billing/presentation/controllers/billing_state.dart';
+import 'package:zeno/features/billing/presentation/controllers/billing_event.dart';
+import 'package:zeno/features/billing/domain/repositories/i_billing_repository.dart';
+import 'package:zeno/features/billing/domain/models/bill.dart';
+import 'package:zeno/features/billing/domain/models/payment.dart';
+import 'package:zeno/features/billing/presentation/dialogs/payment_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:zeno/app/theme.dart';
 import 'package:zeno/navigation/menu_registry.dart';
@@ -87,10 +95,12 @@ class _ZenoMobileShellState extends State<ZenoMobileShell> {
                   ? _MobileCommandCenter(onRoute: _navigate)
                   : route == 'admin/business-setup'
                       ? const _MobileBusinessSetup()
-                      : ZenoRouter.getScreen(
-                          route,
-                          params: widget.navigationController.activeTab.params,
-                        ),
+                      : (route == 'sales/pos' || route == 'sales/new')
+                          ? const _MobileBillingView()
+                          : ZenoRouter.getScreen(
+                              route,
+                              params: widget.navigationController.activeTab.params,
+                            ),
             ),
           ),
         ],
