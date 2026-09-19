@@ -1,3 +1,6 @@
+import 'package:zeno/features/inventory/domain/repositories/i_inventory_repository.dart';
+import 'package:zeno/features/inventory/domain/models/stock_level.dart';
+import 'package:zeno/features/inventory/presentation/controllers/inventory_controller.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:zeno/features/billing/presentation/controllers/billing_controller.dart';
 import 'package:zeno/features/billing/presentation/controllers/billing_state.dart';
@@ -97,6 +100,8 @@ class _ZenoMobileShellState extends State<ZenoMobileShell> {
                       ? const _MobileBusinessSetup()
                       : (route == 'sales/pos' || route == 'sales/new')
                           ? const _MobileBillingView()
+                          : (route == 'inventory/products' || route == 'inventory/master')
+                              ? const _MobileInventoryView()
                           : ZenoRouter.getScreen(
                               route,
                               params: widget.navigationController.activeTab.params,
@@ -437,6 +442,41 @@ class _MobileBillingView extends StatelessWidget {
   Widget _pay(ZenoSemanticColors c,BuildContext context,Bill b)=>Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text('PAYMENT',style:TextStyle(fontSize:10,fontWeight:FontWeight.w900,letterSpacing:1.4,color:c.textSecondary)),const SizedBox(height:8),Row(children:[Expanded(child:_p(c,context,b,'CASH')),const SizedBox(width:8),Expanded(child:_p(c,context,b,'CARD')),const SizedBox(width:8),Expanded(child:_p(c,context,b,'UPI'))]),const SizedBox(height:9),SizedBox(width:double.infinity,height:52,child:ElevatedButton.icon(onPressed:b.items.isEmpty?null:()=>_open(context,b),icon:const Icon(Icons.lock_open_rounded),label:const Text('CHECKOUT • COMPLETE BILL',style:TextStyle(fontWeight:FontWeight.w900)))]);
   Widget _p(ZenoSemanticColors c,BuildContext context,Bill b,String label)=>InkWell(onTap:b.items.isEmpty?null:()=>_open(context,b),child:Container(height:70,decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(14),border:Border.all(color:c.borderSubtle)),child:Center(child:Text(label,style:TextStyle(fontSize:9,fontWeight:FontWeight.w900,color:c.textPrimary)))));
   void _open(BuildContext context,Bill b)=>showDialog(context:context,builder:(_)=>PaymentDialog(bill:b,onPaymentConfirmed:(p)=>context.read<BillingStudioController>().add(PaymentInitiated(p))));
+}
+class _MobileInventoryView extends StatefulWidget {
+  const _MobileInventoryView();
+  @override State<_MobileInventoryView> createState()=>_MobileInventoryViewState();
+}
+class _MobileInventoryViewState extends State<_MobileInventoryView> {
+  late final InventoryController controller;
+  @override void initState(){super.initState(); controller=InventoryController(sl<IInventoryRepository>())..addListener(_refresh)..refreshAll();}
+  void _refresh(){if(mounted)setState((){});}
+  @override void dispose(){controller.removeListener(_refresh);controller.dispose();super.dispose();}
+  @override Widget build(BuildContext context){
+    final c=Theme.of(context).extension<ZenoSemanticColors>()!;
+    final low=controller.allStockLevels.where((s)=>s.physical-s.reserved<=0).length;
+    return ListView(padding:const EdgeInsets.fromLTRB(14,10,14,110),children:[
+      Container(padding:const EdgeInsets.all(16),decoration:BoxDecoration(gradient:ZenoTheme.aiGlowGradient,borderRadius:BorderRadius.circular(20)),child:Row(children:[const Icon(Icons.inventory_2_rounded,color:Colors.black,size:30),const SizedBox(width:10),Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[const Text('INVENTORY CONTROL',style:TextStyle(fontSize:16,fontWeight:FontWeight.w900)),Text(controller.isLoading?'SYNCING STOCK…':'LIVE STOCK • ${controller.allStockLevels.length} ITEMS',style:TextStyle(fontSize:9,color:c.textSecondary))]))])),
+      const SizedBox(height:10),
+      Row(children:[Expanded(child:_metric(c,'STOCK UNITS','${controller.totalPhysicalStock.toStringAsFixed(0)}',Icons.inventory_2_outlined)),const SizedBox(width:8),Expanded(child:_metric(c,'RESERVED','${controller.totalReservedStock.toStringAsFixed(0)}',Icons.lock_outline)),const SizedBox(width:8),Expanded(child:_metric(c,'OUT / LOW','$low',Icons.warning_amber_rounded))]),
+      const SizedBox(height:12),
+      Container(padding:const EdgeInsets.symmetric(horizontal:12),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(16),border:Border.all(color:c.borderSubtle)),child:TextField(onSubmitted:(v){if(v.trim().isNotEmpty){}},decoration:InputDecoration(icon:Icon(Icons.search_rounded,color:c.accentPrimary),hintText:'Search SKU, product or barcode…',hintStyle:TextStyle(fontSize:10,color:c.textSecondary),border:InputBorder.none))),
+      const SizedBox(height:12),
+      _actionGrid(c,context),
+      const SizedBox(height:14),
+      Text('STOCK HEALTH',style:TextStyle(fontSize:10,fontWeight:FontWeight.w900,letterSpacing:1.4,color:c.textSecondary)),
+      const SizedBox(height:8),
+      if(controller.isLoading) const Center(child:Padding(padding:EdgeInsets.all(30),child:CircularProgressIndicator()))
+      else if(controller.allStockLevels.isEmpty) _empty(c)
+      else ...controller.allStockLevels.take(12).map((s)=>_stockRow(c,s)),
+    ]);
+  }
+  Widget _metric(ZenoSemanticColors c,String l,String v,IconData icon)=>Container(padding:const EdgeInsets.all(11),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(15),border:Border.all(color:c.borderSubtle)),child:Column(children:[Icon(icon,size:18,color:c.accentPrimary),const SizedBox(height:6),Text(v,style:TextStyle(fontSize:15,fontWeight:FontWeight.w900,color:c.textPrimary)),Text(l,style:TextStyle(fontSize:7,fontWeight:FontWeight.w800,color:c.textSecondary))]));
+  Widget _actionGrid(ZenoSemanticColors c,BuildContext x)=>GridView.count(shrinkWrap:true,physics:const NeverScrollableScrollPhysics(),crossAxisCount:4,mainAxisSpacing:8,crossAxisSpacing:8,childAspectRatio:.95,children:[_action(c,x,'ADD PRODUCT',Icons.add_box_outlined,'inventory/products'),_action(c,x,'STOCK IN',Icons.login_rounded,'inventory/transfers'),_action(c,x,'STOCK OUT',Icons.logout_rounded,'inventory/transfers'),_action(c,x,'SCAN',Icons.qr_code_scanner_rounded,'inventory/scanner')]);
+  Widget _action(ZenoSemanticColors c,BuildContext x,String l,IconData i,String r)=>InkWell(onTap:()=>widgetNav(x,r),child:Container(decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(15),border:Border.all(color:c.borderSubtle)),child:Column(mainAxisAlignment:MainAxisAlignment.center,children:[Icon(i,color:c.accentPrimary,size:22),const SizedBox(height:6),Text(l,textAlign:TextAlign.center,style:TextStyle(fontSize:7,fontWeight:FontWeight.w900,color:c.textPrimary))])));
+  void widgetNav(BuildContext x,String r)=>Navigator.of(x).popUntil((route)=>route.isFirst);
+  Widget _empty(ZenoSemanticColors c)=>Container(padding:const EdgeInsets.all(30),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(18)),child:Center(child:Text('NO STOCK DATA',style:TextStyle(fontWeight:FontWeight.w900,color:c.textSecondary))));
+  Widget _stockRow(ZenoSemanticColors c,StockLevel s)=>Container(margin:const EdgeInsets.only(bottom:7),padding:const EdgeInsets.all(12),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(15),border:Border.all(color:c.borderSubtle)),child:Row(children:[Icon(Icons.inventory_2_outlined,color:c.accentPrimary),const SizedBox(width:9),Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text(s.productId,style:TextStyle(fontSize:10,fontWeight:FontWeight.w900,color:c.textPrimary)),Text('Physical ${s.physical.toStringAsFixed(0)} • Reserved ${s.reserved.toStringAsFixed(0)}',style:TextStyle(fontSize:8,color:c.textSecondary))])),Text('${(s.physical-s.reserved).toStringAsFixed(0)}',style:TextStyle(fontSize:15,fontWeight:FontWeight.w900,color:(s.physical-s.reserved)<=0?c.statusDanger:c.statusSuccess))]));
 }
 class _MobileCommandCenter extends StatelessWidget {
   final ValueChanged<String> onRoute;
