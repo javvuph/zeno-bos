@@ -171,9 +171,76 @@ class IsarBillingRepository implements IBillingRepository {
 
   @override
   Future<BillItem?> findProduct(String query) async {
-    final product = await db.isar.collection<ProductCollection>().filter().skuEqualTo(query).or().barcodeEqualTo(query).or().nameContains(query, caseSensitive: false).findFirst();
-    if (product == null) return null;
-    return BillItem(productId: product.uuid, productName: product.name, sku: product.sku, variant: '', unitPrice: product.basePrice, totalAmount: product.basePrice, taxes: [TaxDetails(label: 'GST', percentage: product.taxRate, amount: 0)]);
+    final normalized = query.trim();
+    if (normalized.isEmpty) return null;
+
+    final products = await db.isar
+        .collection<ProductCollection>()
+        .filter()
+        .isDeletedEqualTo(false)
+        .findAll();
+
+    // Exact parent product SKU/barcode.
+    for (final p in products) {
+      if (p.sku == normalized || p.barcode == normalized) {
+        return BillItem(
+          productId: p.uuid,
+          productName: p.name,
+          sku: p.sku,
+          variant: '',
+          unitPrice: p.basePrice,
+          totalAmount: p.basePrice,
+          taxes: [TaxDetails(label: 'GST', percentage: p.taxRate, amount: 0)],
+        );
+      }
+    }
+
+    // Exact saved variant SKU/barcode/ID.
+    for (final p in products) {
+      final variants = p.variants ?? const <ProductVariantEmbed>[];
+      for (final v in variants) {
+        if (v.sku != normalized &&
+            v.barcode != normalized &&
+            v.uuid != normalized) {
+          continue;
+        }
+
+        final variantLabel = [
+          if ((v.color ?? '').trim().isNotEmpty) v.color!.trim(),
+          if ((v.size ?? '').trim().isNotEmpty) v.size!.trim(),
+        ].join(' / ');
+
+        final price = p.basePrice + (v.priceAdjustment ?? 0.0);
+        return BillItem(
+          // Variant UUID is the line identity, preventing two variants
+          // of the same parent product from merging into one line.
+          productId: v.uuid ?? normalized,
+          productName: p.name,
+          sku: v.sku ?? '',
+          variant: variantLabel,
+          unitPrice: price,
+          totalAmount: price,
+          taxes: [TaxDetails(label: 'GST', percentage: p.taxRate, amount: 0)],
+        );
+      }
+    }
+
+    // Normal product-name search.
+    for (final p in products) {
+      if (p.name.toLowerCase().contains(normalized.toLowerCase())) {
+        return BillItem(
+          productId: p.uuid,
+          productName: p.name,
+          sku: p.sku,
+          variant: '',
+          unitPrice: p.basePrice,
+          totalAmount: p.basePrice,
+          taxes: [TaxDetails(label: 'GST', percentage: p.taxRate, amount: 0)],
+        );
+      }
+    }
+
+    return null;
   }
 
   @override
