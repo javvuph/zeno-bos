@@ -19,6 +19,12 @@ import 'package:zeno/features/administration/domain/models/organization.dart';
 import 'package:zeno/features/administration/domain/models/settings.dart';
 import 'package:zeno/core/di/service_locator.dart';
 import 'package:zeno/features/administration/domain/repositories/i_administration_repository.dart';
+import 'package:zeno/features/orders/presentation/controllers/sales_controller.dart';
+import 'package:zeno/features/orders/domain/repositories/i_sales_repository.dart';
+import 'package:zeno/features/orders/domain/models/sales_order_status.dart';
+import 'package:zeno/features/delivery/presentation/controllers/delivery_controller.dart';
+import 'package:zeno/features/delivery/domain/repositories/i_delivery_repository.dart';
+import 'package:zeno/features/delivery/domain/models/delivery_order.dart';
 
 /// ZENO mobile presentation layer.
 /// Reuses the existing navigation, routes and business logic while giving
@@ -481,6 +487,35 @@ class _MobileInventoryViewState extends State<_MobileInventoryView> {
   Widget _empty(ZenoSemanticColors c)=>Container(padding:const EdgeInsets.all(30),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(18)),child:Center(child:Text('NO STOCK DATA',style:TextStyle(fontWeight:FontWeight.w900,color:c.textSecondary))));
   Widget _stockRow(ZenoSemanticColors c,StockLevel s)=>Container(margin:const EdgeInsets.only(bottom:7),padding:const EdgeInsets.all(12),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(15),border:Border.all(color:c.borderSubtle)),child:Row(children:[Icon(Icons.inventory_2_outlined,color:c.accentPrimary),const SizedBox(width:9),Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text(s.productId,style:TextStyle(fontSize:10,fontWeight:FontWeight.w900,color:c.textPrimary)),Text('Physical ${s.physical.toStringAsFixed(0)} • Reserved ${s.reserved.toStringAsFixed(0)}',style:TextStyle(fontSize:8,color:c.textSecondary))])),Text('${(s.physical-s.reserved).toStringAsFixed(0)}',style:TextStyle(fontSize:15,fontWeight:FontWeight.w900,color:(s.physical-s.reserved)<=0?c.statusDanger:c.statusSuccess))]));
 }
+class _MobileOrdersView extends StatefulWidget {
+  final ValueChanged<String> onRoute;
+  const _MobileOrdersView({required this.onRoute});
+  @override State<_MobileOrdersView> createState()=>_MobileOrdersViewState();
+}
+class _MobileOrdersViewState extends State<_MobileOrdersView> {
+  late final SalesController sales;
+  late final DeliveryController delivery;
+  @override void initState(){super.initState();sales=SalesController(sl<ISalesRepository>())..addListener(_refresh)..loadOrders();delivery=DeliveryController(sl<IDeliveryRepository>())..addListener(_refresh)..loadDeliveries();}
+  void _refresh(){if(mounted)setState((){});}
+  @override void dispose(){sales.removeListener(_refresh);delivery.removeListener(_refresh);sales.dispose();delivery.dispose();super.dispose();}
+  @override Widget build(BuildContext context){
+    final c=Theme.of(context).extension<ZenoSemanticColors>()!; final orders=sales.orders; final ds=delivery.deliveries;
+    return ListView(padding:const EdgeInsets.fromLTRB(14,10,14,110),children:[
+      Container(padding:const EdgeInsets.all(17),decoration:BoxDecoration(gradient:ZenoTheme.aiGlowGradient,borderRadius:BorderRadius.circular(20)),child:Row(children:[const Icon(Icons.local_shipping_rounded,color:Colors.black,size:30),const SizedBox(width:11),Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[const Text('ORDERS & DELIVERY',style:TextStyle(fontSize:16,fontWeight:FontWeight.w900,color:Colors.black)),Text(sales.isLoading||delivery.isLoading?'SYNCING OPERATIONS…':'ORDER FULFILLMENT • LIVE',style:TextStyle(fontSize:8,fontWeight:FontWeight.w800,color:Colors.black54,letterSpacing:1.1))]))])),
+      const SizedBox(height:10),Row(children:[Expanded(child:_metric(c,'ORDERS',orders.length.toString(),Icons.shopping_bag_rounded)),const SizedBox(width:8),Expanded(child:_metric(c,'OUT',delivery.activeDeliveryCount.toString(),Icons.delivery_dining_rounded)),const SizedBox(width:8),Expanded(child:_metric(c,'ASSIGN',delivery.pendingAssignmentCount.toString(),Icons.person_pin_circle_rounded))]),
+      const SizedBox(height:12),Row(children:[Expanded(child:_action(c,'NEW ORDER',Icons.add_circle_outline_rounded,()=>widget.onRoute('sales/pos'))),const SizedBox(width:8),Expanded(child:_action(c,'DELIVERY',Icons.local_shipping_rounded,()=>widget.onRoute('orders/dashboard'))),const SizedBox(width:8),Expanded(child:_action(c,'CUSTOMER',Icons.person_outline_rounded,()=>widget.onRoute('customers/mgmt/list')))]),
+      const SizedBox(height:16),Text('FULFILLMENT PIPELINE',style:TextStyle(fontSize:10,fontWeight:FontWeight.w900,letterSpacing:1.4,color:c.textSecondary)),const SizedBox(height:8),_pipeline(c,orders),
+      const SizedBox(height:16),Row(children:[Expanded(child:Text('ACTIVE DELIVERIES',style:TextStyle(fontSize:10,fontWeight:FontWeight.w900,letterSpacing:1.4,color:c.textSecondary))),Text(ds.length.toString()+' TOTAL',style:TextStyle(fontSize:8,fontWeight:FontWeight.w800,color:c.textDisabled))]),const SizedBox(height:8),
+      if(ds.isEmpty)_empty(c,'NO ACTIVE DELIVERY TASKS') else ...ds.take(8).map((d)=>_deliveryRow(c,d)),
+    ]);
+  }
+  Widget _metric(ZenoSemanticColors c,String l,String v,IconData i)=>Container(padding:const EdgeInsets.all(11),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(15),border:Border.all(color:c.borderSubtle)),child:Column(children:[Icon(i,size:18,color:c.accentPrimary),const SizedBox(height:6),Text(v,style:TextStyle(fontSize:15,fontWeight:FontWeight.w900,color:c.textPrimary)),Text(l,style:TextStyle(fontSize:7,fontWeight:FontWeight.w800,color:c.textSecondary))]));
+  Widget _action(ZenoSemanticColors c,String l,IconData i,VoidCallback tap)=>InkWell(onTap:tap,borderRadius:BorderRadius.circular(15),child:Container(padding:const EdgeInsets.symmetric(vertical:14,horizontal:4),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(15),border:Border.all(color:c.borderSubtle)),child:Column(children:[Icon(i,color:c.accentPrimary,size:21),const SizedBox(height:6),Text(l,textAlign:TextAlign.center,style:TextStyle(fontSize:7,fontWeight:FontWeight.w900,color:c.textPrimary))])));
+  Widget _pipeline(ZenoSemanticColors c,List orders){final map=<SalesOrderStatus,int>{};for(final s in SalesOrderStatus.values){map[s]=0;}for(final o in orders){map[o.status]=(map[o.status]??0)+1;}final states=[SalesOrderStatus.confirmed,SalesOrderStatus.processing,SalesOrderStatus.picking,SalesOrderStatus.packing,SalesOrderStatus.shipped];return SingleChildScrollView(scrollDirection:Axis.horizontal,child:Row(children:[for(final s in states)Container(width:105,margin:const EdgeInsets.only(right:8),padding:const EdgeInsets.all(12),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(15),border:Border.all(color:c.borderSubtle)),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text(s.name.toUpperCase(),style:TextStyle(fontSize:7,fontWeight:FontWeight.w900,color:c.textSecondary)),const SizedBox(height:8),Text((map[s]??0).toString(),style:TextStyle(fontSize:19,fontWeight:FontWeight.w900,color:c.accentPrimary))]))]));}
+  Widget _deliveryRow(ZenoSemanticColors c,DeliveryOrder d)=>Container(margin:const EdgeInsets.only(bottom:7),padding:const EdgeInsets.all(12),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(15),border:Border.all(color:c.borderSubtle)),child:Row(children:[Icon(Icons.local_shipping_rounded,color:c.accentPrimary),const SizedBox(width:9),Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text(d.id,style:TextStyle(fontSize:10,fontWeight:FontWeight.w900,color:c.textPrimary)),Text(d.address,overflow:TextOverflow.ellipsis,style:TextStyle(fontSize:8,color:c.textSecondary))])),Text(d.status.name.replaceAll('_',' ').toUpperCase(),style:TextStyle(fontSize:7,fontWeight:FontWeight.w900,color:c.accentPrimary))]));
+  Widget _empty(ZenoSemanticColors c,String t)=>Container(padding:const EdgeInsets.all(26),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(17),border:Border.all(color:c.borderSubtle)),child:Center(child:Text(t,style:TextStyle(fontSize:9,fontWeight:FontWeight.w900,color:c.textSecondary))));
+}
+
 class _MobileModuleHub extends StatelessWidget {
   final String route;
   final ValueChanged<String> onRoute;
