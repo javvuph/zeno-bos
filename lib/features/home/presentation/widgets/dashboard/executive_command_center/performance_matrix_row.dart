@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:zeno/core/database/database_service.dart';
+import 'package:zeno/core/database/collections/transaction_collections.dart';
+import 'package:zeno/core/di/service_locator.dart';
+import 'package:isar/isar.dart';
 import 'package:zeno/app/theme.dart';
 import 'package:zeno/features/home/presentation/controllers/bi_mock_data.dart';
 import 'package:zeno/core/widgets/zeno_table.dart';
@@ -83,14 +87,53 @@ class _BusinessHealthMatrix extends StatelessWidget {
   }
 }
 
-class _ProductLeaderboard extends StatelessWidget {
+class _ProductLeaderboard extends StatefulWidget {
   const _ProductLeaderboard();
 
   @override
-  Widget build(BuildContext context) {
-    final colors = Theme.of(context).extension<ZenoSemanticColors>()!;
+  State<_ProductLeaderboard> createState() => _ProductLeaderboardState();
+}
 
-    final List<Map<String, dynamic>> topProducts = [];
+class _ProductLeaderboardState extends State<_ProductLeaderboard> {
+  List<Map<String, dynamic>> topProducts = const [];
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    final orders = await sl<DatabaseService>().isar
+        .collection<SalesOrderCollection>()
+        .filter()
+        .statusEqualTo('completed')
+        .findAll();
+
+    final totals = <String, double>{};
+    final names = <String, String>{};
+    for (final order in orders) {
+      for (final item in order.items ?? const <TransactionItem>[]) {
+        final key = item.productId;
+        totals[key] = (totals[key] ?? 0) + item.subtotal;
+        names[key] = item.description;
+      }
+    }
+
+    final rows = totals.entries.toList()
+      ..sort((a, b) => b.value.compareTo(a.value));
+    final result = rows.take(8).map((e) => {
+      'sku': e.key,
+      'name': names[e.key] ?? e.key,
+      'revenue': e.value,
+    }).toList();
+
+    if (mounted) setState(() => topProducts = result);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<ZenoSemanticColors>();
 
     return Container(
       padding: const EdgeInsets.all(16),
