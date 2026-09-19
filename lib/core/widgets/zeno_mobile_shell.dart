@@ -631,6 +631,27 @@ class _MobileReportsView extends StatelessWidget {
   }
   Widget _metric(ZenoSemanticColors c,String l,String v,IconData i)=>Container(padding:const EdgeInsets.all(10),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(15),border:Border.all(color:c.borderSubtle)),child:Column(children:[Icon(i,size:17,color:c.accentPrimary),const SizedBox(height:5),Text(v,style:TextStyle(fontSize:13,fontWeight:FontWeight.w900,color:c.textPrimary)),Text(l,style:TextStyle(fontSize:7,fontWeight:FontWeight.w800,color:c.textSecondary))]));
 }
+class _MobileHrView extends StatelessWidget {
+  final ValueChanged<String> onRoute;
+  const _MobileHrView({required this.onRoute});
+  @override Widget build(BuildContext context){
+    final c=Theme.of(context).extension<ZenoSemanticColors>()!;
+    final items=<Map<String,Object>>[
+      {'t':'STAFF DIRECTORY','s':'Employees, roles & contact details','r':'hr/staff','i':Icons.badge_rounded},
+      {'t':'ATTENDANCE','s':'Check-in, shifts & working hours','r':'hr/attendance','i':Icons.schedule_rounded},
+      {'t':'PAYROLL','s':'Payroll processing & records','r':'hr/payroll','i':Icons.payments_rounded},
+      {'t':'PERMISSIONS','s':'Roles, access & approvals','r':'admin/security','i':Icons.admin_panel_settings_rounded},
+    ];
+    return ListView(padding:const EdgeInsets.fromLTRB(14,10,14,110),children:[
+      Container(padding:const EdgeInsets.all(17),decoration:BoxDecoration(gradient:ZenoTheme.aiGlowGradient,borderRadius:BorderRadius.circular(20)),child:Row(children:[const Icon(Icons.groups_rounded,color:Colors.black,size:30),const SizedBox(width:11),const Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text('TEAM & HR',style:TextStyle(fontSize:16,fontWeight:FontWeight.w900,color:Colors.black)),Text('STAFF • ATTENDANCE • PAYROLL',style:TextStyle(fontSize:8,fontWeight:FontWeight.w800,color:Colors.black54,letterSpacing:1.1))])])),
+      const SizedBox(height:12),
+      Row(children:[Expanded(child:_metric(c,'STAFF','—',Icons.people_rounded)),const SizedBox(width:8),Expanded(child:_metric(c,'PRESENT','—',Icons.how_to_reg_rounded)),const SizedBox(width:8),Expanded(child:_metric(c,'PAYROLL','—',Icons.payments_rounded))]),
+      const SizedBox(height:16),Text('TEAM WORKSPACE',style:TextStyle(fontSize:10,fontWeight:FontWeight.w900,letterSpacing:1.4,color:c.textSecondary)),const SizedBox(height:8),
+      ...items.map((x)=>ListTile(onTap:()=>onRoute(x['r'] as String),shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(14)),tileColor:c.bgTier2,leading:Icon(x['i'] as IconData,color:c.accentPrimary),title:Text(x['t'] as String,style:TextStyle(fontSize:10,fontWeight:FontWeight.w800,color:c.textPrimary)),subtitle:Text(x['s'] as String,style:TextStyle(fontSize:8,color:c.textSecondary)),trailing:Icon(Icons.arrow_forward_ios_rounded,size:13,color:c.textSecondary)))
+    ]);
+  }
+  Widget _metric(ZenoSemanticColors c,String l,String v,IconData i)=>Container(padding:const EdgeInsets.all(10),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(15),border:Border.all(color:c.borderSubtle)),child:Column(children:[Icon(i,size:17,color:c.accentPrimary),const SizedBox(height:5),Text(v,style:TextStyle(fontSize:13,fontWeight:FontWeight.w900,color:c.textPrimary)),Text(l,style:TextStyle(fontSize:7,fontWeight:FontWeight.w800,color:c.textSecondary))]));
+}
 class _MobileModuleHub extends StatelessWidget {
   final String route;
   final ValueChanged<String> onRoute;
