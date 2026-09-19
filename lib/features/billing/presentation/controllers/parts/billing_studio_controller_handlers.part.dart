@@ -36,11 +36,7 @@ extension BillingStudioControllerHandlers on BillingStudioController {
     final recalculatedBill = BillingMathEngine.calculateBillTotals(updatedBill);
 
     _pushToHistory(recalculatedBill, emit);
-    
-    if (product.productName.contains('Shirt') && product.variant.contains('/')) {
-      add(VariantSelectionRequested(product.productId, const ['Red / S', 'Blue / M', 'Black / L']));
-    }
-    
+
     emit(state.copyWith(status: BillingStatus.active));
   }
 
