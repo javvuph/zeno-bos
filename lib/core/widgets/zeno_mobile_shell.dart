@@ -739,6 +739,28 @@ class _MobileAdminView extends StatelessWidget {
   }
   Widget _metric(ZenoSemanticColors c,String l,String v,IconData i)=>Container(padding:const EdgeInsets.all(10),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(15),border:Border.all(color:c.borderSubtle)),child:Column(children:[Icon(i,size:17,color:c.accentPrimary),const SizedBox(height:5),Text(v,style:TextStyle(fontSize:13,fontWeight:FontWeight.w900,color:c.textPrimary)),Text(l,style:TextStyle(fontSize:7,fontWeight:FontWeight.w800,color:c.textSecondary))]));
 }
+class _MobileIntegrationsView extends StatelessWidget {
+  final ValueChanged<String> onRoute;
+  const _MobileIntegrationsView({required this.onRoute});
+  @override Widget build(BuildContext context){
+    final c=Theme.of(context).extension<ZenoSemanticColors>()!;
+    final items=<Map<String,Object>>[
+      {'t':'PAYMENTS','s':'UPI, cards, wallets & gateways','i':Icons.payments_rounded},
+      {'t':'MESSAGING','s':'WhatsApp, SMS & notifications','i':Icons.chat_rounded},
+      {'t':'ACCOUNTING','s':'Accounting and finance sync','i':Icons.account_balance_rounded},
+      {'t':'DELIVERY','s':'Courier and delivery connections','i':Icons.local_shipping_rounded},
+      {'t':'API & WEBHOOKS','s':'Developer access and events','i':Icons.api_rounded},
+    ];
+    return ListView(padding:const EdgeInsets.fromLTRB(14,10,14,110),children:[
+      Container(padding:const EdgeInsets.all(17),decoration:BoxDecoration(gradient:ZenoTheme.aiVioletGradient,borderRadius:BorderRadius.circular(20)),child:Row(children:[const Icon(Icons.extension_rounded,color:Colors.white,size:30),const SizedBox(width:11),const Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text('INTEGRATIONS',style:TextStyle(fontSize:16,fontWeight:FontWeight.w900,color:Colors.white)),Text('CONNECT • SYNC • EXTEND',style:TextStyle(fontSize:8,fontWeight:FontWeight.w800,color:Colors.white70,letterSpacing:1.1))])])),
+      const SizedBox(height:12),
+      Row(children:[Expanded(child:_metric(c,'CONNECTED','—',Icons.link_rounded)),const SizedBox(width:8),Expanded(child:_metric(c,'SYNC','READY',Icons.sync_rounded)),const SizedBox(width:8),Expanded(child:_metric(c,'API','READY',Icons.api_rounded))]),
+      const SizedBox(height:16),Text('INTEGRATION CENTER',style:TextStyle(fontSize:10,fontWeight:FontWeight.w900,letterSpacing:1.4,color:c.textSecondary)),const SizedBox(height:8),
+      ...items.map((x)=>ListTile(onTap:()=>onRoute('integrations'),shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(14)),tileColor:c.bgTier2,leading:Icon(x['i'] as IconData,color:c.accentPrimary),title:Text(x['t'] as String,style:TextStyle(fontSize:10,fontWeight:FontWeight.w800,color:c.textPrimary)),subtitle:Text(x['s'] as String,style:TextStyle(fontSize:8,color:c.textSecondary)),trailing:Icon(Icons.arrow_forward_ios_rounded,size:13,color:c.textSecondary)))
+    ]);
+  }
+  Widget _metric(ZenoSemanticColors c,String l,String v,IconData i)=>Container(padding:const EdgeInsets.all(10),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(15),border:Border.all(color:c.borderSubtle)),child:Column(children:[Icon(i,size:17,color:c.accentPrimary),const SizedBox(height:5),Text(v,style:TextStyle(fontSize:13,fontWeight:FontWeight.w900,color:c.textPrimary)),Text(l,style:TextStyle(fontSize:7,fontWeight:FontWeight.w800,color:c.textSecondary)]));
+}
 class _MobileModuleHub extends StatelessWidget {
   final String route;
   final ValueChanged<String> onRoute;
