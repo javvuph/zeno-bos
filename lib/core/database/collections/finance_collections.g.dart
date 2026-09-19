@@ -15,7 +15,7 @@ extension GetAccountCollectionCollection on Isar {
 
 const AccountCollectionSchema = CollectionSchema(
   name: r'AccountCollection',
-  id: -7613046521360937330,
+  id: -(7613046521360 * 1000000 + 937330),
   properties: {
     r'category': PropertySchema(
       id: 0,
@@ -75,7 +75,7 @@ const AccountCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -88,7 +88,7 @@ const AccountCollectionSchema = CollectionSchema(
       ],
     ),
     r'code': IndexSchema(
-      id: 329780482934683790,
+      id: (329780482934 * 1000000 + 683790),
       name: r'code',
       unique: true,
       replace: false,
@@ -101,7 +101,7 @@ const AccountCollectionSchema = CollectionSchema(
       ],
     ),
     r'name': IndexSchema(
-      id: 879695947855722453,
+      id: (879695947855 * 1000000 + 722453),
       name: r'name',
       unique: false,
       replace: false,
@@ -114,7 +114,7 @@ const AccountCollectionSchema = CollectionSchema(
       ],
     ),
     r'category': IndexSchema(
-      id: -7560358558326323820,
+      id: -(7560358558326 * 1000000 + 323820),
       name: r'category',
       unique: false,
       replace: false,
@@ -127,7 +127,7 @@ const AccountCollectionSchema = CollectionSchema(
       ],
     ),
     r'type': IndexSchema(
-      id: 5117122708147080838,
+      id: (5117122708147 * 1000000 + 80838),
       name: r'type',
       unique: false,
       replace: false,
@@ -2242,7 +2242,7 @@ extension GetJournalEntryCollectionCollection on Isar {
 
 const JournalEntryCollectionSchema = CollectionSchema(
   name: r'JournalEntryCollection',
-  id: -6325316395299921961,
+  id: -(6325316395299 * 1000000 + 921961),
   properties: {
     r'createdAt': PropertySchema(
       id: 0,
@@ -2298,7 +2298,7 @@ const JournalEntryCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -2311,7 +2311,7 @@ const JournalEntryCollectionSchema = CollectionSchema(
       ],
     ),
     r'referenceNumber': IndexSchema(
-      id: -1505394869653403563,
+      id: -(1505394869653 * 1000000 + 403563),
       name: r'referenceNumber',
       unique: true,
       replace: false,
@@ -2324,7 +2324,7 @@ const JournalEntryCollectionSchema = CollectionSchema(
       ],
     ),
     r'date': IndexSchema(
-      id: -7552997827385218417,
+      id: -(7552997827385 * 1000000 + 218417),
       name: r'date',
       unique: false,
       replace: false,
@@ -2337,7 +2337,7 @@ const JournalEntryCollectionSchema = CollectionSchema(
       ],
     ),
     r'status': IndexSchema(
-      id: -107785170620420283,
+      id: -(107785170620 * 1000000 + 420283),
       name: r'status',
       unique: false,
       replace: false,
@@ -4443,7 +4443,7 @@ extension GetBankAccountCollectionCollection on Isar {
 
 const BankAccountCollectionSchema = CollectionSchema(
   name: r'BankAccountCollection',
-  id: -791678607737506809,
+  id: -(791678607737 * 1000000 + 506809),
   properties: {
     r'accountNumber': PropertySchema(
       id: 0,
@@ -4513,7 +4513,7 @@ const BankAccountCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -4526,7 +4526,7 @@ const BankAccountCollectionSchema = CollectionSchema(
       ],
     ),
     r'name': IndexSchema(
-      id: 879695947855722453,
+      id: (879695947855 * 1000000 + 722453),
       name: r'name',
       unique: false,
       replace: false,
@@ -4539,7 +4539,7 @@ const BankAccountCollectionSchema = CollectionSchema(
       ],
     ),
     r'accountNumber': IndexSchema(
-      id: -3113303652791322435,
+      id: -(3113303652791 * 1000000 + 322435),
       name: r'accountNumber',
       unique: true,
       replace: false,
@@ -7038,7 +7038,7 @@ extension GetBankTransactionCollectionCollection on Isar {
 
 const BankTransactionCollectionSchema = CollectionSchema(
   name: r'BankTransactionCollection',
-  id: 6096300757738430617,
+  id: (6096300757738 * 1000000 + 430617),
   properties: {
     r'amount': PropertySchema(
       id: 0,
@@ -7093,7 +7093,7 @@ const BankTransactionCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -7106,7 +7106,7 @@ const BankTransactionCollectionSchema = CollectionSchema(
       ],
     ),
     r'bankAccountId': IndexSchema(
-      id: -7107590253631006507,
+      id: -(7107590253631 * 1000000 + 6507),
       name: r'bankAccountId',
       unique: false,
       replace: false,
@@ -7119,7 +7119,7 @@ const BankTransactionCollectionSchema = CollectionSchema(
       ],
     ),
     r'date': IndexSchema(
-      id: -7552997827385218417,
+      id: -(7552997827385 * 1000000 + 218417),
       name: r'date',
       unique: false,
       replace: false,
@@ -9188,7 +9188,7 @@ extension GetExpenseCollectionCollection on Isar {
 
 const ExpenseCollectionSchema = CollectionSchema(
   name: r'ExpenseCollection',
-  id: -5107833236542359561,
+  id: -(5107833236542 * 1000000 + 359561),
   properties: {
     r'amount': PropertySchema(
       id: 0,
@@ -9258,7 +9258,7 @@ const ExpenseCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -9271,7 +9271,7 @@ const ExpenseCollectionSchema = CollectionSchema(
       ],
     ),
     r'employeeId': IndexSchema(
-      id: 1283453093523034672,
+      id: (1283453093523 * 1000000 + 34672),
       name: r'employeeId',
       unique: false,
       replace: false,
@@ -9284,7 +9284,7 @@ const ExpenseCollectionSchema = CollectionSchema(
       ],
     ),
     r'date': IndexSchema(
-      id: -7552997827385218417,
+      id: -(7552997827385 * 1000000 + 218417),
       name: r'date',
       unique: false,
       replace: false,
@@ -11826,7 +11826,7 @@ extension GetExpenseClaimCollectionCollection on Isar {
 
 const ExpenseClaimCollectionSchema = CollectionSchema(
   name: r'ExpenseClaimCollection',
-  id: -7016984773507732413,
+  id: -(7016984773507 * 1000000 + 732413),
   properties: {
     r'approvedById': PropertySchema(
       id: 0,
@@ -11871,7 +11871,7 @@ const ExpenseClaimCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -11884,7 +11884,7 @@ const ExpenseClaimCollectionSchema = CollectionSchema(
       ],
     ),
     r'employeeId': IndexSchema(
-      id: 1283453093523034672,
+      id: (1283453093523 * 1000000 + 34672),
       name: r'employeeId',
       unique: false,
       replace: false,
@@ -13455,7 +13455,7 @@ extension GetAccountsPayableCollectionCollection on Isar {
 
 const AccountsPayableCollectionSchema = CollectionSchema(
   name: r'AccountsPayableCollection',
-  id: 996100256754100392,
+  id: (996100256754 * 1000000 + 100392),
   properties: {
     r'amount': PropertySchema(
       id: 0,
@@ -13500,7 +13500,7 @@ const AccountsPayableCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -13513,7 +13513,7 @@ const AccountsPayableCollectionSchema = CollectionSchema(
       ],
     ),
     r'supplierId': IndexSchema(
-      id: -7509772217447508349,
+      id: -(7509772217447 * 1000000 + 508349),
       name: r'supplierId',
       unique: false,
       replace: false,
@@ -13526,7 +13526,7 @@ const AccountsPayableCollectionSchema = CollectionSchema(
       ],
     ),
     r'vendorBillId': IndexSchema(
-      id: 4560122158352802366,
+      id: (4560122158352 * 1000000 + 802366),
       name: r'vendorBillId',
       unique: false,
       replace: false,
@@ -13539,7 +13539,7 @@ const AccountsPayableCollectionSchema = CollectionSchema(
       ],
     ),
     r'status': IndexSchema(
-      id: -107785170620420283,
+      id: -(107785170620 * 1000000 + 420283),
       name: r'status',
       unique: false,
       replace: false,
@@ -15178,7 +15178,7 @@ extension GetPaymentCollectionCollection on Isar {
 
 const PaymentCollectionSchema = CollectionSchema(
   name: r'PaymentCollection',
-  id: -5123072659602051704,
+  id: -(5123072659602 * 1000000 + 51704),
   properties: {
     r'amount': PropertySchema(
       id: 0,
@@ -15213,7 +15213,7 @@ const PaymentCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -15226,7 +15226,7 @@ const PaymentCollectionSchema = CollectionSchema(
       ],
     ),
     r'payableId': IndexSchema(
-      id: -7006976525387795357,
+      id: -(7006976525387 * 1000000 + 795357),
       name: r'payableId',
       unique: false,
       replace: false,
@@ -16391,7 +16391,7 @@ extension GetBudgetCollectionCollection on Isar {
 
 const BudgetCollectionSchema = CollectionSchema(
   name: r'BudgetCollection',
-  id: 981769204137938589,
+  id: (981769204137 * 1000000 + 938589),
   properties: {
     r'allocatedAmount': PropertySchema(
       id: 0,
@@ -16456,7 +16456,7 @@ const BudgetCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -16469,7 +16469,7 @@ const BudgetCollectionSchema = CollectionSchema(
       ],
     ),
     r'code': IndexSchema(
-      id: 329780482934683790,
+      id: (329780482934 * 1000000 + 683790),
       name: r'code',
       unique: true,
       replace: false,
@@ -18855,7 +18855,7 @@ extension GetCostCenterCollectionCollection on Isar {
 
 const CostCenterCollectionSchema = CollectionSchema(
   name: r'CostCenterCollection',
-  id: 394526219393845282,
+  id: (394526219393 * 1000000 + 845282),
   properties: {
     r'code': PropertySchema(
       id: 0,
@@ -18900,7 +18900,7 @@ const CostCenterCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -18913,7 +18913,7 @@ const CostCenterCollectionSchema = CollectionSchema(
       ],
     ),
     r'code': IndexSchema(
-      id: 329780482934683790,
+      id: (329780482934 * 1000000 + 683790),
       name: r'code',
       unique: true,
       replace: false,
@@ -18926,7 +18926,7 @@ const CostCenterCollectionSchema = CollectionSchema(
       ],
     ),
     r'name': IndexSchema(
-      id: 879695947855722453,
+      id: (879695947855 * 1000000 + 722453),
       name: r'name',
       unique: false,
       replace: false,
@@ -20617,7 +20617,7 @@ extension GetFixedAssetCollectionCollection on Isar {
 
 const FixedAssetCollectionSchema = CollectionSchema(
   name: r'FixedAssetCollection',
-  id: -4043524972790567116,
+  id: -(4043524972790 * 1000000 + 567116),
   properties: {
     r'acquisitionDate': PropertySchema(
       id: 0,
@@ -20722,7 +20722,7 @@ const FixedAssetCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -20735,7 +20735,7 @@ const FixedAssetCollectionSchema = CollectionSchema(
       ],
     ),
     r'assetCode': IndexSchema(
-      id: -6527712643294193716,
+      id: -(6527712643294 * 1000000 + 193716),
       name: r'assetCode',
       unique: true,
       replace: false,
@@ -20748,7 +20748,7 @@ const FixedAssetCollectionSchema = CollectionSchema(
       ],
     ),
     r'name': IndexSchema(
-      id: 879695947855722453,
+      id: (879695947855 * 1000000 + 722453),
       name: r'name',
       unique: false,
       replace: false,
@@ -20761,7 +20761,7 @@ const FixedAssetCollectionSchema = CollectionSchema(
       ],
     ),
     r'acquisitionDate': IndexSchema(
-      id: 9183573760837909644,
+      id: (9183573760837 * 1000000 + 909644),
       name: r'acquisitionDate',
       unique: false,
       replace: false,
@@ -20774,7 +20774,7 @@ const FixedAssetCollectionSchema = CollectionSchema(
       ],
     ),
     r'status': IndexSchema(
-      id: -107785170620420283,
+      id: -(107785170620 * 1000000 + 420283),
       name: r'status',
       unique: false,
       replace: false,
@@ -24305,7 +24305,7 @@ extension GetAssetMaintenanceCollectionCollection on Isar {
 
 const AssetMaintenanceCollectionSchema = CollectionSchema(
   name: r'AssetMaintenanceCollection',
-  id: -3970585512693320530,
+  id: -(3970585512693 * 1000000 + 320530),
   properties: {
     r'assetId': PropertySchema(
       id: 0,
@@ -24350,7 +24350,7 @@ const AssetMaintenanceCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -24363,7 +24363,7 @@ const AssetMaintenanceCollectionSchema = CollectionSchema(
       ],
     ),
     r'assetId': IndexSchema(
-      id: 174362542210192109,
+      id: (174362542210 * 1000000 + 192109),
       name: r'assetId',
       unique: false,
       replace: false,
@@ -25934,7 +25934,7 @@ extension GetTaxRuleCollectionCollection on Isar {
 
 const TaxRuleCollectionSchema = CollectionSchema(
   name: r'TaxRuleCollection',
-  id: -3514231809220850954,
+  id: -(3514231809220 * 1000000 + 850954),
   properties: {
     r'category': PropertySchema(
       id: 0,
@@ -25999,7 +25999,7 @@ const TaxRuleCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -26012,7 +26012,7 @@ const TaxRuleCollectionSchema = CollectionSchema(
       ],
     ),
     r'code': IndexSchema(
-      id: 329780482934683790,
+      id: (329780482934 * 1000000 + 683790),
       name: r'code',
       unique: true,
       replace: false,
@@ -28157,7 +28157,7 @@ extension GetTaxReturnCollectionCollection on Isar {
 
 const TaxReturnCollectionSchema = CollectionSchema(
   name: r'TaxReturnCollection',
-  id: 5943117640260419206,
+  id: (5943117640260 * 1000000 + 419206),
   properties: {
     r'filingDate': PropertySchema(
       id: 0,
@@ -28212,7 +28212,7 @@ const TaxReturnCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -28225,7 +28225,7 @@ const TaxReturnCollectionSchema = CollectionSchema(
       ],
     ),
     r'periodId': IndexSchema(
-      id: -6505556862018726625,
+      id: -(6505556862018 * 1000000 + 726625),
       name: r'periodId',
       unique: false,
       replace: false,
@@ -30006,7 +30006,7 @@ extension GetClosingTaskCollectionCollection on Isar {
 
 const ClosingTaskCollectionSchema = CollectionSchema(
   name: r'ClosingTaskCollection',
-  id: -6640011879822918403,
+  id: -(6640011879822 * 1000000 + 918403),
   properties: {
     r'assignedTo': PropertySchema(
       id: 0,
@@ -30061,7 +30061,7 @@ const ClosingTaskCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -30074,7 +30074,7 @@ const ClosingTaskCollectionSchema = CollectionSchema(
       ],
     ),
     r'periodId': IndexSchema(
-      id: -6505556862018726625,
+      id: -(6505556862018 * 1000000 + 726625),
       name: r'periodId',
       unique: false,
       replace: false,
@@ -31976,7 +31976,7 @@ extension GetFiscalPeriodCollectionCollection on Isar {
 
 const FiscalPeriodCollectionSchema = CollectionSchema(
   name: r'FiscalPeriodCollection',
-  id: -2681356207096766898,
+  id: -(2681356207096 * 1000000 + 766898),
   properties: {
     r'endDate': PropertySchema(
       id: 0,
@@ -32016,7 +32016,7 @@ const FiscalPeriodCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -33194,7 +33194,7 @@ extension FiscalPeriodCollectionQueryProperty on QueryBuilder<
 
 const JournalLineEmbeddedSchema = Schema(
   name: r'JournalLineEmbedded',
-  id: 579556795023579428,
+  id: (579556795023 * 1000000 + 579428),
   properties: {
     r'accountId': PropertySchema(
       id: 0,
