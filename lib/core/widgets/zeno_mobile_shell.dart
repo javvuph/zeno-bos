@@ -696,6 +696,27 @@ class _MobileMarketingView extends StatelessWidget {
   }
   Widget _metric(ZenoSemanticColors c,String l,String v,IconData i)=>Container(padding:const EdgeInsets.all(10),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(15),border:Border.all(color:c.borderSubtle)),child:Column(children:[Icon(i,size:17,color:c.accentPrimary),const SizedBox(height:5),Text(v,style:TextStyle(fontSize:13,fontWeight:FontWeight.w900,color:c.textPrimary)),Text(l,style:TextStyle(fontSize:7,fontWeight:FontWeight.w800,color:c.textSecondary))]));
 }
+class _MobileAutomationView extends StatefulWidget {
+  final ValueChanged<String> onRoute;
+  const _MobileAutomationView({required this.onRoute});
+  @override State<_MobileAutomationView> createState()=>_MobileAutomationViewState();
+}
+class _MobileAutomationViewState extends State<_MobileAutomationView>{
+  final rules=<String>['Low-stock alert','Daily sales summary','Pending delivery reminder'];
+  @override Widget build(BuildContext context){
+    final c=Theme.of(context).extension<ZenoSemanticColors>()!;
+    return ListView(padding:const EdgeInsets.fromLTRB(14,10,14,110),children:[
+      Container(padding:const EdgeInsets.all(17),decoration:BoxDecoration(gradient:ZenoTheme.aiVioletGradient,borderRadius:BorderRadius.circular(20)),child:Row(children:[const Icon(Icons.auto_awesome_motion_rounded,color:Colors.white,size:30),const SizedBox(width:11),const Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text('AUTOMATION',style:TextStyle(fontSize:16,fontWeight:FontWeight.w900,color:Colors.white)),Text('TRIGGERS • WORKFLOWS • ACTIONS',style:TextStyle(fontSize:8,fontWeight:FontWeight.w800,color:Colors.white70,letterSpacing:1.1))])])),
+      const SizedBox(height:12),
+      Row(children:[Expanded(child:_metric(c,'ACTIVE','3',Icons.play_circle_rounded)),const SizedBox(width:8),Expanded(child:_metric(c,'RUNS TODAY','—',Icons.bolt_rounded)),const SizedBox(width:8),Expanded(child:_metric(c,'SAVED TIME','—',Icons.timer_rounded))]),
+      const SizedBox(height:12),
+      InkWell(onTap:()=>setState(()=>rules.add('New workflow')),borderRadius:BorderRadius.circular(15),child:Container(padding:const EdgeInsets.all(14),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(15),border:Border.all(color:c.borderSubtle)),child:Row(children:[Icon(Icons.add_circle_outline_rounded,color:c.accentPrimary),const SizedBox(width:10),Text('CREATE AUTOMATION',style:TextStyle(fontSize:9,fontWeight:FontWeight.w900,color:c.textPrimary))]))),
+      const SizedBox(height:16),Text('WORKFLOWS',style:TextStyle(fontSize:10,fontWeight:FontWeight.w900,letterSpacing:1.4,color:c.textSecondary)),const SizedBox(height:8),
+      ...rules.map((x)=>ListTile(onTap:()=>widget.onRoute('automation/rules'),shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(14)),tileColor:c.bgTier2,leading:Icon(Icons.bolt_rounded,color:c.accentPrimary),title:Text(x,style:TextStyle(fontSize:10,fontWeight:FontWeight.w800,color:c.textPrimary)),trailing:Switch(value:true,onChanged:(_){ })))
+    ]);
+  }
+  Widget _metric(ZenoSemanticColors c,String l,String v,IconData i)=>Container(padding:const EdgeInsets.all(10),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(15),border:Border.all(color:c.borderSubtle)),child:Column(children:[Icon(i,size:17,color:c.accentPrimary),const SizedBox(height:5),Text(v,style:TextStyle(fontSize:13,fontWeight:FontWeight.w900,color:c.textPrimary)),Text(l,style:TextStyle(fontSize:7,fontWeight:FontWeight.w800,color:c.textSecondary)]));
+}
 class _MobileModuleHub extends StatelessWidget {
   final String route;
   final ValueChanged<String> onRoute;
