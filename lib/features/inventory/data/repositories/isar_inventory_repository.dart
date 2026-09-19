@@ -1,5 +1,6 @@
 import 'package:zeno/core/database/database_service.dart';
 import 'package:zeno/core/database/collections/inventory_collections.dart';
+import 'package:zeno/core/database/collections/inventory_collections.dart' show ProductCollection;
 import '../../domain/repositories/i_inventory_repository.dart';
 import '../../domain/models/warehouse.dart';
 import '../../domain/models/storage_location.dart';
@@ -80,10 +81,25 @@ class IsarInventoryRepository implements IInventoryRepository {
           existing.lastUpdated = DateTime.now();
           await collection.put(existing);
         } else {
+          // If this is the first stock transaction for a normal product,
+          // start from the product's opening stock instead of zero. Without
+          // this, the first POS sale could create a negative stock record even
+          // when Product Studio already supplied opening quantity.
+          double startingQuantity = 0.0;
+          final product = await db.isar
+              .collection<ProductCollection>()
+              .filter()
+              .uuidEqualTo(transaction.stockItemId)
+              .isDeletedEqualTo(false)
+              .findFirst();
+          if (product != null && (product.variants == null || product.variants!.isEmpty)) {
+            startingQuantity = product.openingStock;
+          }
+
           final newItem = StockItemCollection()
             ..productId = transaction.stockItemId
             ..warehouseId = 'default'
-            ..quantity = transaction.quantityDelta
+            ..quantity = startingQuantity + transaction.quantityDelta
             ..reservedQuantity = 0.0;
           await collection.put(newItem);
         }
