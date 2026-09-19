@@ -16,7 +16,7 @@ extension GetRestaurantFloorCollectionCollection on Isar {
 
 const RestaurantFloorCollectionSchema = CollectionSchema(
   name: r'RestaurantFloorCollection',
-  id: 3838010049610036186,
+  id: (3838010049610 * 1000000 + 36186),
   properties: {
     r'isActive': PropertySchema(
       id: 0,
@@ -46,7 +46,7 @@ const RestaurantFloorCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -59,7 +59,7 @@ const RestaurantFloorCollectionSchema = CollectionSchema(
       ],
     ),
     r'name': IndexSchema(
-      id: 879695947855722453,
+      id: (879695947855 * 1000000 + 722453),
       name: r'name',
       unique: false,
       replace: false,
@@ -997,7 +997,7 @@ extension GetRestaurantTableCollectionCollection on Isar {
 
 const RestaurantTableCollectionSchema = CollectionSchema(
   name: r'RestaurantTableCollection',
-  id: -156201911427996851,
+  id: -(156201911427 * 1000000 + 996851),
   properties: {
     r'activeOrderId': PropertySchema(
       id: 0,
@@ -1067,7 +1067,7 @@ const RestaurantTableCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -1080,7 +1080,7 @@ const RestaurantTableCollectionSchema = CollectionSchema(
       ],
     ),
     r'tableNumber': IndexSchema(
-      id: -3323858932237924188,
+      id: -(3323858932237 * 1000000 + 924188),
       name: r'tableNumber',
       unique: false,
       replace: false,
@@ -1093,7 +1093,7 @@ const RestaurantTableCollectionSchema = CollectionSchema(
       ],
     ),
     r'floorId': IndexSchema(
-      id: -5614466107289224596,
+      id: -(5614466107289 * 1000000 + 224596),
       name: r'floorId',
       unique: false,
       replace: false,
@@ -1106,7 +1106,7 @@ const RestaurantTableCollectionSchema = CollectionSchema(
       ],
     ),
     r'status': IndexSchema(
-      id: -107785170620420283,
+      id: -(107785170620 * 1000000 + 420283),
       name: r'status',
       unique: false,
       replace: false,
@@ -3408,7 +3408,7 @@ extension GetKotCollectionCollection on Isar {
 
 const KotCollectionSchema = CollectionSchema(
   name: r'KotCollection',
-  id: 7820154192914925277,
+  id: (7820154192914 * 1000000 + 925277),
   properties: {
     r'createdAt': PropertySchema(
       id: 0,
@@ -3469,7 +3469,7 @@ const KotCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -3482,7 +3482,7 @@ const KotCollectionSchema = CollectionSchema(
       ],
     ),
     r'orderId': IndexSchema(
-      id: -6176610178429382285,
+      id: -(6176610178429 * 1000000 + 382285),
       name: r'orderId',
       unique: false,
       replace: false,
@@ -3495,7 +3495,7 @@ const KotCollectionSchema = CollectionSchema(
       ],
     ),
     r'station': IndexSchema(
-      id: -1945757363763444516,
+      id: -(1945757363763 * 1000000 + 444516),
       name: r'station',
       unique: false,
       replace: false,
@@ -3508,7 +3508,7 @@ const KotCollectionSchema = CollectionSchema(
       ],
     ),
     r'status': IndexSchema(
-      id: -107785170620420283,
+      id: -(107785170620 * 1000000 + 420283),
       name: r'status',
       unique: false,
       replace: false,
@@ -5622,7 +5622,7 @@ extension KotCollectionQueryProperty
 
 const KotItemEmbeddedSchema = Schema(
   name: r'KotItemEmbedded',
-  id: 7831128593729068711,
+  id: (7831128593729 * 1000000 + 68711),
   properties: {
     r'modifiers': PropertySchema(
       id: 0,
