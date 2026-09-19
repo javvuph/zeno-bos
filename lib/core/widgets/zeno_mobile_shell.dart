@@ -106,7 +106,7 @@ class _ZenoMobileShellState extends State<ZenoMobileShell> {
                       : (route == 'sales/pos' || route == 'sales/new')
                           ? const _MobileBillingView()
                           : (route == 'inventory/products' || route == 'inventory/master')
-                              ? const _MobileInventoryView()
+                              ? _MobileInventoryView(onRoute: _navigate)
                               : _isMobileModuleRoute(route)
                                   ? _MobileModuleHub(route: route, onRoute: _navigate)
                                   : ZenoRouter.getScreen(
@@ -446,7 +446,8 @@ class _MobileBillingView extends StatelessWidget {
 }
 
 class _MobileInventoryView extends StatefulWidget {
-  const _MobileInventoryView();
+  final ValueChanged<String> onRoute;
+  const _MobileInventoryView({required this.onRoute});
   @override State<_MobileInventoryView> createState()=>_MobileInventoryViewState();
 }
 class _MobileInventoryViewState extends State<_MobileInventoryView> {
@@ -476,7 +477,7 @@ class _MobileInventoryViewState extends State<_MobileInventoryView> {
   Widget _metric(ZenoSemanticColors c,String l,String v,IconData icon)=>Container(padding:const EdgeInsets.all(11),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(15),border:Border.all(color:c.borderSubtle)),child:Column(children:[Icon(icon,size:18,color:c.accentPrimary),const SizedBox(height:6),Text(v,style:TextStyle(fontSize:15,fontWeight:FontWeight.w900,color:c.textPrimary)),Text(l,style:TextStyle(fontSize:7,fontWeight:FontWeight.w800,color:c.textSecondary))]));
   Widget _actionGrid(ZenoSemanticColors c,BuildContext x)=>GridView.count(shrinkWrap:true,physics:const NeverScrollableScrollPhysics(),crossAxisCount:4,mainAxisSpacing:8,crossAxisSpacing:8,childAspectRatio:.95,children:[_action(c,x,'ADD PRODUCT',Icons.add_box_outlined,'inventory/products'),_action(c,x,'STOCK IN',Icons.login_rounded,'inventory/transfers'),_action(c,x,'STOCK OUT',Icons.logout_rounded,'inventory/transfers'),_action(c,x,'SCAN',Icons.qr_code_scanner_rounded,'inventory/scanner')]);
   Widget _action(ZenoSemanticColors c,BuildContext x,String l,IconData i,String r)=>InkWell(onTap:()=>widgetNav(x,r),child:Container(decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(15),border:Border.all(color:c.borderSubtle)),child:Column(mainAxisAlignment:MainAxisAlignment.center,children:[Icon(i,color:c.accentPrimary,size:22),const SizedBox(height:6),Text(l,textAlign:TextAlign.center,style:TextStyle(fontSize:7,fontWeight:FontWeight.w900,color:c.textPrimary))])));
-  void widgetNav(BuildContext x,String r)=>Navigator.of(x).popUntil((route)=>route.isFirst);
+  void widgetNav(BuildContext x,String r)=>widget.onRoute(r);
   Widget _empty(ZenoSemanticColors c)=>Container(padding:const EdgeInsets.all(30),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(18)),child:Center(child:Text('NO STOCK DATA',style:TextStyle(fontWeight:FontWeight.w900,color:c.textSecondary))));
   Widget _stockRow(ZenoSemanticColors c,StockLevel s)=>Container(margin:const EdgeInsets.only(bottom:7),padding:const EdgeInsets.all(12),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(15),border:Border.all(color:c.borderSubtle)),child:Row(children:[Icon(Icons.inventory_2_outlined,color:c.accentPrimary),const SizedBox(width:9),Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text(s.productId,style:TextStyle(fontSize:10,fontWeight:FontWeight.w900,color:c.textPrimary)),Text('Physical ${s.physical.toStringAsFixed(0)} • Reserved ${s.reserved.toStringAsFixed(0)}',style:TextStyle(fontSize:8,color:c.textSecondary))])),Text('${(s.physical-s.reserved).toStringAsFixed(0)}',style:TextStyle(fontSize:15,fontWeight:FontWeight.w900,color:(s.physical-s.reserved)<=0?c.statusDanger:c.statusSuccess))]));
 }
