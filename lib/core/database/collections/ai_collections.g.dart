@@ -15,7 +15,7 @@ extension GetAIModelCollectionCollection on Isar {
 
 const AIModelCollectionSchema = CollectionSchema(
   name: r'AIModelCollection',
-  id: -6987243704907867122,
+  id: -(6987243704907 * 1000000 + 867122),
   properties: {
     r'capabilitiesJson': PropertySchema(
       id: 0,
@@ -55,7 +55,7 @@ const AIModelCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -68,7 +68,7 @@ const AIModelCollectionSchema = CollectionSchema(
       ],
     ),
     r'name': IndexSchema(
-      id: 879695947855722453,
+      id: (879695947855 * 1000000 + 722453),
       name: r'name',
       unique: false,
       replace: false,
@@ -1442,7 +1442,7 @@ extension GetAISessionCollectionCollection on Isar {
 
 const AISessionCollectionSchema = CollectionSchema(
   name: r'AISessionCollection',
-  id: 5254798530313151229,
+  id: (5254798530313 * 1000000 + 151229),
   properties: {
     r'lastMessageTime': PropertySchema(
       id: 0,
@@ -1487,7 +1487,7 @@ const AISessionCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -1500,7 +1500,7 @@ const AISessionCollectionSchema = CollectionSchema(
       ],
     ),
     r'userId': IndexSchema(
-      id: -2005826577402374815,
+      id: -(2005826577402 * 1000000 + 374815),
       name: r'userId',
       unique: false,
       replace: false,
@@ -1513,7 +1513,7 @@ const AISessionCollectionSchema = CollectionSchema(
       ],
     ),
     r'moduleContext': IndexSchema(
-      id: -1404378150100196718,
+      id: -(1404378150100 * 1000000 + 196718),
       name: r'moduleContext',
       unique: false,
       replace: false,
@@ -3144,7 +3144,7 @@ extension GetAIUsageCollectionCollection on Isar {
 
 const AIUsageCollectionSchema = CollectionSchema(
   name: r'AIUsageCollection',
-  id: 5459909735853543441,
+  id: (5459909735853 * 1000000 + 543441),
   properties: {
     r'completionTokens': PropertySchema(
       id: 0,
@@ -3189,7 +3189,7 @@ const AIUsageCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'modelId': IndexSchema(
-      id: -1910745378942518156,
+      id: -(1910745378942 * 1000000 + 518156),
       name: r'modelId',
       unique: false,
       replace: false,
@@ -3202,7 +3202,7 @@ const AIUsageCollectionSchema = CollectionSchema(
       ],
     ),
     r'timestamp': IndexSchema(
-      id: 1852253767416892198,
+      id: (1852253767416 * 1000000 + 892198),
       name: r'timestamp',
       unique: false,
       replace: false,
@@ -4493,7 +4493,7 @@ extension GetAIAutomationCollectionCollection on Isar {
 
 const AIAutomationCollectionSchema = CollectionSchema(
   name: r'AIAutomationCollection',
-  id: 1416057363656988134,
+  id: (1416057363656 * 1000000 + 988134),
   properties: {
     r'actionJson': PropertySchema(
       id: 0,
@@ -4533,7 +4533,7 @@ const AIAutomationCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -4546,7 +4546,7 @@ const AIAutomationCollectionSchema = CollectionSchema(
       ],
     ),
     r'name': IndexSchema(
-      id: 879695947855722453,
+      id: (879695947855 * 1000000 + 722453),
       name: r'name',
       unique: false,
       replace: false,
