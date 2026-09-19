@@ -15,7 +15,7 @@ extension GetSyncConflictCollection on Isar {
 
 const SyncConflictSchema = CollectionSchema(
   name: r'SyncConflict',
-  id: -8770548852093850888,
+  id: -(8770548852093 * 1000000 + 850888),
   properties: {
     r'collectionName': PropertySchema(
       id: 0,
@@ -71,7 +71,7 @@ const SyncConflictSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'collectionName': IndexSchema(
-      id: -4238329797778617380,
+      id: -(4238329797778 * 1000000 + 617380),
       name: r'collectionName',
       unique: false,
       replace: false,
@@ -84,7 +84,7 @@ const SyncConflictSchema = CollectionSchema(
       ],
     ),
     r'entityUuid': IndexSchema(
-      id: -1414110998250231744,
+      id: -(1414110998250 * 1000000 + 231744),
       name: r'entityUuid',
       unique: false,
       replace: false,
@@ -97,7 +97,7 @@ const SyncConflictSchema = CollectionSchema(
       ],
     ),
     r'conflictAt': IndexSchema(
-      id: 960179196648833740,
+      id: (960179196648 * 1000000 + 833740),
       name: r'conflictAt',
       unique: false,
       replace: false,
