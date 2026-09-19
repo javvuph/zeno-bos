@@ -553,6 +553,36 @@ class _MobileCustomersViewState extends State<_MobileCustomersView>{
   Widget _empty(ZenoSemanticColors c,String t)=>Container(padding:const EdgeInsets.all(26),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(17),border:Border.all(color:c.borderSubtle)),child:Center(child:Text(t,style:TextStyle(fontSize:9,fontWeight:FontWeight.w900,color:c.textSecondary))));
 }
 
+import 'package:zeno/features/procurement/presentation/controllers/procurement_controller.dart';
+import 'package:zeno/features/procurement/domain/repositories/i_procurement_repository.dart';
+import 'package:zeno/features/finance/presentation/controllers/finance_controller.dart';
+import 'package:zeno/features/finance/domain/repositories/i_finance_repository.dart';
+class _MobileProcurementView extends StatefulWidget {
+  final ValueChanged<String> onRoute;
+  const _MobileProcurementView({required this.onRoute});
+  @override State<_MobileProcurementView> createState()=>_MobileProcurementViewState();
+}
+class _MobileProcurementViewState extends State<_MobileProcurementView>{
+  late final ProcurementController controller;
+  @override void initState(){super.initState();controller=ProcurementController(sl<IProcurementRepository>());}
+  @override void dispose(){controller.dispose();super.dispose();}
+  @override Widget build(BuildContext context){
+    final c=Theme.of(context).extension<ZenoSemanticColors>()!;
+    return ListView(padding:const EdgeInsets.fromLTRB(14,10,14,110),children:[
+      _hubHeader(c,'PROCUREMENT','PURCHASE • SUPPLIERS • RESTOCK',Icons.shopping_cart_checkout_rounded),
+      const SizedBox(height:10),
+      Row(children:[Expanded(child:_metric(c,'PURCHASE ORDERS',controller.purchaseOrders.length.toString(),Icons.receipt_long_rounded)),const SizedBox(width:8),Expanded(child:_metric(c,'SUPPLIERS',controller.suppliers.length.toString(),Icons.local_shipping_rounded))]),
+      const SizedBox(height:12),
+      Row(children:[Expanded(child:_action(c,'NEW PURCHASE',Icons.add_shopping_cart_rounded,()=>widget.onRoute('procurement/purchase-orders'))),const SizedBox(width:8),Expanded(child:_action(c,'SUPPLIERS',Icons.storefront_rounded,()=>widget.onRoute('procurement/suppliers')))]),
+      const SizedBox(height:16),Text('PROCUREMENT WORKSPACE',style:TextStyle(fontSize:10,fontWeight:FontWeight.w900,letterSpacing:1.4,color:c.textSecondary)),const SizedBox(height:8),
+      ...['Purchase Orders','Goods Receiving','Supplier Bills','Reorder Planning'].map((x)=>_workspaceTile(c,x,Icons.arrow_forward_ios_rounded,()=>widget.onRoute('procurement/purchase-orders')))
+    ]);
+  }
+  Widget _hubHeader(ZenoSemanticColors c,String t,String s,IconData i)=>Container(padding:const EdgeInsets.all(17),decoration:BoxDecoration(gradient:ZenoTheme.aiGlowGradient,borderRadius:BorderRadius.circular(20)),child:Row(children:[Icon(i,color:Colors.black,size:30),const SizedBox(width:11),Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text(t,style:const TextStyle(fontSize:16,fontWeight:FontWeight.w900,color:Colors.black)),Text(s,style:const TextStyle(fontSize:8,fontWeight:FontWeight.w800,color:Colors.black54,letterSpacing:1.1))])]));
+  Widget _metric(ZenoSemanticColors c,String l,String v,IconData i)=>Container(padding:const EdgeInsets.all(11),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(15),border:Border.all(color:c.borderSubtle)),child:Column(children:[Icon(i,size:18,color:c.accentPrimary),const SizedBox(height:6),Text(v,style:TextStyle(fontSize:14,fontWeight:FontWeight.w900,color:c.textPrimary)),Text(l,style:TextStyle(fontSize:7,fontWeight:FontWeight.w800,color:c.textSecondary))]));
+  Widget _action(ZenoSemanticColors c,String l,IconData i,VoidCallback tap)=>InkWell(onTap:tap,borderRadius:BorderRadius.circular(15),child:Container(padding:const EdgeInsets.symmetric(vertical:14),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(15),border:Border.all(color:c.borderSubtle)),child:Column(children:[Icon(i,color:c.accentPrimary,size:21),const SizedBox(height:6),Text(l,style:TextStyle(fontSize:7,fontWeight:FontWeight.w900,color:c.textPrimary))])));
+  Widget _workspaceTile(ZenoSemanticColors c,String t,IconData i,VoidCallback tap)=>ListTile(onTap:tap,shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(14)),tileColor:c.bgTier2,leading:Icon(Icons.layers_rounded,color:c.accentPrimary),title:Text(t,style:TextStyle(fontSize:10,fontWeight:FontWeight.w800,color:c.textPrimary)),trailing:Icon(i,size:13,color:c.textSecondary));
+}
 class _MobileModuleHub extends StatelessWidget {
   final String route;
   final ValueChanged<String> onRoute;
