@@ -397,6 +397,37 @@ List<String> subBusinesses=['Clothing','Footwear'],payments=['Cash','Credit Card
 bool taxInclusive=true,autoPrint=false,onlineEnabled=true,rbac=true,pinRequired=true;
 }
 
+class _MobileBillingView extends StatelessWidget {
+  const _MobileBillingView();
+  @override
+  Widget build(BuildContext context) {
+    final c=Theme.of(context).extension<ZenoSemanticColors>()!;
+    return BlocProvider(
+      create: (_) => BillingStudioController(sl<IBillingRepository>()),
+      child: BlocBuilder<BillingStudioController,BillingState>(
+        builder:(context,state){
+          final bill=state.activeBill;
+          return ListView(padding:const EdgeInsets.fromLTRB(14,10,14,110),children:[
+            _head(c,bill),const SizedBox(height:10),_scan(c,context),const SizedBox(height:10),
+            ...bill.items.map((item)=>_line(c,context,item)),
+            if(bill.items.isEmpty)_empty(c),const SizedBox(height:10),_totals(c,bill),const SizedBox(height:10),_pay(c,context,bill)
+          ]);
+        },
+      ),
+    );
+  }
+  Widget _head(ZenoSemanticColors c,Bill b)=>Container(padding:const EdgeInsets.all(15),decoration:BoxDecoration(gradient:ZenoTheme.aiGlowGradient,borderRadius:BorderRadius.circular(20)),child:Row(children:[const Icon(Icons.point_of_sale_rounded,color:Colors.white,size:34),const SizedBox(width:10),Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[const Text('MOBILE POS',style:TextStyle(fontSize:17,fontWeight:FontWeight.w900,color:Colors.white)),Text('BILL • ${b.items.length} ITEMS',style:const TextStyle(fontSize:9,color:Colors.white70))])),const Text('LIVE',style:TextStyle(fontSize:8,fontWeight:FontWeight.w900,color:Colors.white))]));
+  Widget _scan(ZenoSemanticColors c,BuildContext context){final ctl=TextEditingController();return Container(padding:const EdgeInsets.symmetric(horizontal:12),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(16),border:Border.all(color:c.borderSubtle)),child:TextField(controller:ctl,onSubmitted:(v){if(v.trim().isNotEmpty){context.read<BillingStudioController>().add(AddItemRequested(v.trim()));ctl.clear();}},decoration:InputDecoration(icon:Icon(Icons.qr_code_scanner_rounded,color:c.accentPrimary),hintText:'Scan barcode or enter SKU…',hintStyle:TextStyle(fontSize:11,color:c.textSecondary),border:InputBorder.none)));
+  }
+  Widget _line(ZenoSemanticColors c,BuildContext context,BillItem item)=>Container(margin:const EdgeInsets.only(bottom:8),padding:const EdgeInsets.all(12),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(16),border:Border.all(color:c.borderSubtle)),child:Row(children:[Icon(Icons.inventory_2_outlined,color:c.accentPrimary),const SizedBox(width:9),Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text(item.productName,style:TextStyle(fontSize:11,fontWeight:FontWeight.w900,color:c.textPrimary)),Text('SKU ${item.sku}',style:TextStyle(fontSize:8,color:c.textSecondary)),const SizedBox(height:6),Row(children:[_q(c,context,item,-1),Padding(padding:const EdgeInsets.symmetric(horizontal:9),child:Text('${item.quantity}',style:TextStyle(fontWeight:FontWeight.w900,color:c.textPrimary))),_q(c,context,item,1)])])),Text('₹${item.total.toStringAsFixed(0)}',style:TextStyle(fontSize:13,fontWeight:FontWeight.w900,color:c.accentPrimary)),IconButton(onPressed:()=>context.read<BillingStudioController>().add(RemoveItemRequested(item.productId)),icon:Icon(Icons.delete_outline_rounded,color:c.statusDanger,size:19))]));
+  Widget _q(ZenoSemanticColors c,BuildContext context,BillItem item,int d)=>InkWell(onTap:()=>context.read<BillingStudioController>().add(UpdateItemQuantityRequested(item.productId,(item.quantity+d).clamp(1,999))),child:Container(width:28,height:28,decoration:BoxDecoration(color:c.bgTier1,borderRadius:BorderRadius.circular(8),border:Border.all(color:c.borderSubtle)),child:Icon(d<0?Icons.remove:Icons.add,size:15,color:c.accentPrimary)));
+  Widget _empty(ZenoSemanticColors c)=>Container(padding:const EdgeInsets.symmetric(vertical:40),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(18),border:Border.all(color:c.borderSubtle)),child:Column(children:[Icon(Icons.shopping_cart_outlined,size:42,color:c.textDisabled),const SizedBox(height:8),Text('CART READY',style:TextStyle(fontSize:12,fontWeight:FontWeight.w900,color:c.textPrimary)),Text('Scan a product to start billing',style:TextStyle(fontSize:9,color:c.textSecondary))]));
+  Widget _totals(ZenoSemanticColors c,Bill b)=>Container(padding:const EdgeInsets.all(15),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(18),border:Border.all(color:c.borderSubtle)),child:Column(children:[_s(c,'SUBTOTAL','₹${b.subtotal.toStringAsFixed(2)}'),_s(c,'DISCOUNT','-₹${b.totalDiscount.toStringAsFixed(2)}',c.statusSuccess),_s(c,'TAX','₹${b.totalTax.toStringAsFixed(2)}'),const Divider(),Row(mainAxisAlignment:MainAxisAlignment.spaceBetween,children:[Text('TOTAL',style:TextStyle(fontSize:11,fontWeight:FontWeight.w900,color:c.textSecondary)),Text('₹${b.grandTotal.toStringAsFixed(2)}',style:TextStyle(fontSize:25,fontWeight:FontWeight.w900,color:c.accentPrimary))])]));
+  Widget _s(ZenoSemanticColors c,String l,String v,[Color? x])=>Padding(padding:const EdgeInsets.symmetric(vertical:4),child:Row(mainAxisAlignment:MainAxisAlignment.spaceBetween,children:[Text(l,style:TextStyle(fontSize:9,color:c.textSecondary)),Text(v,style:TextStyle(fontSize:10,fontWeight:FontWeight.w800,color:x??c.textPrimary))]));
+  Widget _pay(ZenoSemanticColors c,BuildContext context,Bill b)=>Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text('PAYMENT',style:TextStyle(fontSize:10,fontWeight:FontWeight.w900,letterSpacing:1.4,color:c.textSecondary)),const SizedBox(height:8),Row(children:[Expanded(child:_p(c,context,b,'CASH')),const SizedBox(width:8),Expanded(child:_p(c,context,b,'CARD')),const SizedBox(width:8),Expanded(child:_p(c,context,b,'UPI'))]),const SizedBox(height:9),SizedBox(width:double.infinity,height:52,child:ElevatedButton.icon(onPressed:b.items.isEmpty?null:()=>_open(context,b),icon:const Icon(Icons.lock_open_rounded),label:const Text('CHECKOUT • COMPLETE BILL',style:TextStyle(fontWeight:FontWeight.w900)))]);
+  Widget _p(ZenoSemanticColors c,BuildContext context,Bill b,String label)=>InkWell(onTap:b.items.isEmpty?null:()=>_open(context,b),child:Container(height:70,decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(14),border:Border.all(color:c.borderSubtle)),child:Center(child:Text(label,style:TextStyle(fontSize:9,fontWeight:FontWeight.w900,color:c.textPrimary)))));
+  void _open(BuildContext context,Bill b)=>showDialog(context:context,builder:(_)=>PaymentDialog(bill:b,onPaymentConfirmed:(p)=>context.read<BillingStudioController>().add(PaymentInitiated(p))));
+}
 class _MobileCommandCenter extends StatelessWidget {
   final ValueChanged<String> onRoute;
   const _MobileCommandCenter({required this.onRoute});
