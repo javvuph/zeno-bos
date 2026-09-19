@@ -6,8 +6,6 @@ import 'package:zeno/features/billing/presentation/controllers/billing_studio_co
 import 'package:zeno/features/billing/presentation/controllers/billing_state.dart';
 import 'package:zeno/features/billing/presentation/controllers/billing_event.dart';
 import 'package:zeno/features/billing/domain/repositories/i_billing_repository.dart';
-import 'package:zeno/features/billing/domain/models/bill.dart';
-import 'package:zeno/features/billing/domain/models/payment.dart';
 import 'package:zeno/features/billing/presentation/dialogs/payment_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:zeno/app/theme.dart';
@@ -16,7 +14,6 @@ import 'package:zeno/navigation/navigation_controller.dart';
 import 'package:zeno/navigation/zeno_router.dart';
 import 'package:zeno/features/administration/presentation/controllers/administration_controller.dart';
 import 'package:zeno/features/administration/domain/models/organization.dart';
-import 'package:zeno/features/administration/domain/models/settings.dart';
 import 'package:zeno/core/di/service_locator.dart';
 import 'package:zeno/features/administration/domain/repositories/i_administration_repository.dart';
 import 'package:zeno/features/orders/presentation/controllers/sales_controller.dart';
@@ -1331,7 +1328,7 @@ class _KpiCard extends StatelessWidget {
 }
 class _InsightCard extends StatelessWidget {
   final VoidCallback onTap; const _InsightCard({required this.onTap});
-  @override Widget build(BuildContext context){final c=Theme.of(context).extension<ZenoSemanticColors>()!;return InkWell(onTap:onTap,borderRadius:BorderRadius.circular(18),child:Container(padding:const EdgeInsets.all(15),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(18),border:Border.all(color:c.borderSubtle)),child:Row(children:[Container(width:38,height:38,decoration:BoxDecoration(color:c.accentPurple.withValues(alpha:.10),borderRadius:BorderRadius.circular(12)),child:Icon(Icons.insights_rounded,color:c.accentPurple,size:20)),const SizedBox(width:12),Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text('AI BUSINESS SIGNAL',style:TextStyle(fontSize:9,fontWeight:FontWeight.w900,letterSpacing:1.2,color:c.accentPurple)),const SizedBox(height:4),Text('Fast-moving products are driving today’s sales.',style:TextStyle(fontSize:12,fontWeight:FontWeight.w700,color:c.textPrimary)),const SizedBox(height:3),Text('Open Analytics for the full intelligence view.',style:TextStyle(fontSize:9,color:c.textSecondary))]),),Icon(Icons.arrow_forward_ios_rounded,size:13,color:c.textSecondary)]));}
+  @override Widget build(BuildContext context){final c=Theme.of(context).extension<ZenoSemanticColors>()!;return InkWell(onTap:onTap,borderRadius:BorderRadius.circular(18),child:Container(padding:const EdgeInsets.all(15),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(18),border:Border.all(color:c.borderSubtle)),child:Row(children:[Container(width:38,height:38,decoration:BoxDecoration(color:c.accentPurple.withValues(alpha:.10),borderRadius:BorderRadius.circular(12)),child:Icon(Icons.insights_rounded,color:c.accentPurple,size:20)),const SizedBox(width:12),Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text('AI BUSINESS SIGNAL',style:TextStyle(fontSize:9,fontWeight:FontWeight.w900,letterSpacing:1.2,color:c.accentPurple)),const SizedBox(height:4),Text('Fast-moving products are driving today’s sales.',style:TextStyle(fontSize:12,fontWeight:FontWeight.w700,color:c.textPrimary)),const SizedBox(height:3),Text('Open Analytics for the full intelligence view.',style:TextStyle(fontSize:9,color:c.textSecondary))]),),Icon(Icons.arrow_forward_ios_rounded,size:13,color:c.textSecondary)])));}
 }
 
 
@@ -1688,7 +1685,7 @@ class _OperationsSnapshot extends StatelessWidget {
           const SizedBox(width: 9),
           Expanded(child: _OpsTile(icon: Icons.check_circle_outline_rounded, label: 'Completed', value: '96', accent: c.statusSuccess, onTap: () => onRoute('orders/dashboard'))),
           const SizedBox(width: 9),
-          Expanded(child: _OpsTile(icon: Icons.payments_outlined, label: 'Payments', value: '18', accent: c.accentPrimary, onTap: () => onRoute('finance')),
+          Expanded(child: _OpsTile(icon: Icons.payments_outlined, label: 'Payments', value: '18', accent: c.accentPrimary, onTap: () => onRoute('finance'))),
         ]),
       ],
     );
