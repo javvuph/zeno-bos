@@ -652,6 +652,29 @@ class _MobileHrView extends StatelessWidget {
   }
   Widget _metric(ZenoSemanticColors c,String l,String v,IconData i)=>Container(padding:const EdgeInsets.all(10),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(15),border:Border.all(color:c.borderSubtle)),child:Column(children:[Icon(i,size:17,color:c.accentPrimary),const SizedBox(height:5),Text(v,style:TextStyle(fontSize:13,fontWeight:FontWeight.w900,color:c.textPrimary)),Text(l,style:TextStyle(fontSize:7,fontWeight:FontWeight.w800,color:c.textSecondary))]));
 }
+class _MobileAiView extends StatefulWidget {
+  final ValueChanged<String> onRoute;
+  const _MobileAiView({required this.onRoute});
+  @override State<_MobileAiView> createState()=>_MobileAiViewState();
+}
+class _MobileAiViewState extends State<_MobileAiView>{
+  final TextEditingController input=TextEditingController();
+  final List<String> prompts=['What needs attention today?','Which products should I restock?','Show today’s sales summary'];
+  @override void dispose(){input.dispose();super.dispose();}
+  @override Widget build(BuildContext context){
+    final c=Theme.of(context).extension<ZenoSemanticColors>()!;
+    return ListView(padding:const EdgeInsets.fromLTRB(14,10,14,110),children:[
+      Container(padding:const EdgeInsets.all(18),decoration:BoxDecoration(gradient:ZenoTheme.aiVioletGradient,borderRadius:BorderRadius.circular(20)),child:Row(children:[const Icon(Icons.auto_awesome_rounded,color:Colors.white,size:30),const SizedBox(width:11),const Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text('AI COMMAND CENTER',style:TextStyle(fontSize:15,fontWeight:FontWeight.w900,color:Colors.white)),Text('ASK • ANALYZE • AUTOMATE',style:TextStyle(fontSize:8,fontWeight:FontWeight.w800,color:Colors.white70,letterSpacing:1.1))])])),
+      const SizedBox(height:12),
+      Container(padding:const EdgeInsets.all(12),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(17),border:Border.all(color:c.borderSubtle)),child:Row(children:[Expanded(child:TextField(controller:input,maxLines:3,decoration:InputDecoration(hintText:'Ask ZENO AI anything…',hintStyle:TextStyle(fontSize:10,color:c.textSecondary),border:InputBorder.none))),IconButton(onPressed:()=>setState((){}),icon:Icon(Icons.arrow_upward_rounded,color:c.accentPrimary))])),
+      const SizedBox(height:14),Text('QUICK INTELLIGENCE',style:TextStyle(fontSize:10,fontWeight:FontWeight.w900,letterSpacing:1.4,color:c.textSecondary)),const SizedBox(height:8),
+      ...prompts.map((p)=>ListTile(onTap:()=>setState(()=>input.text=p),shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(14)),tileColor:c.bgTier2,leading:Icon(Icons.bolt_rounded,color:c.accentPrimary),title:Text(p,style:TextStyle(fontSize:10,fontWeight:FontWeight.w800,color:c.textPrimary)),trailing:Icon(Icons.arrow_forward_ios_rounded,size:13,color:c.textSecondary))),
+      const SizedBox(height:14),Text('AI TOOLS',style:TextStyle(fontSize:10,fontWeight:FontWeight.w900,letterSpacing:1.4,color:c.textSecondary)),const SizedBox(height:8),
+      Row(children:[Expanded(child:_tool(c,'INVOICE OCR',Icons.document_scanner_rounded,()=>widget.onRoute('ai/invoice-ocr'))),const SizedBox(width:8),Expanded(child:_tool(c,'FORECAST',Icons.insights_rounded,()=>widget.onRoute('ai/forecast')))]),
+    ]);
+  }
+  Widget _tool(ZenoSemanticColors c,String t,IconData i,VoidCallback tap)=>InkWell(onTap:tap,borderRadius:BorderRadius.circular(15),child:Container(padding:const EdgeInsets.all(15),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(15),border:Border.all(color:c.borderSubtle)),child:Column(children:[Icon(i,color:c.accentPrimary,size:22),const SizedBox(height:7),Text(t,style:TextStyle(fontSize:7,fontWeight:FontWeight.w900,color:c.textPrimary))])));
+}
 class _MobileModuleHub extends StatelessWidget {
   final String route;
   final ValueChanged<String> onRoute;
