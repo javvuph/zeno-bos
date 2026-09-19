@@ -518,6 +518,41 @@ class _MobileOrdersViewState extends State<_MobileOrdersView> {
   Widget _empty(ZenoSemanticColors c,String t)=>Container(padding:const EdgeInsets.all(26),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(17),border:Border.all(color:c.borderSubtle)),child:Center(child:Text(t,style:TextStyle(fontSize:9,fontWeight:FontWeight.w900,color:c.textSecondary))));
 }
 
+class _MobileCustomersView extends StatefulWidget {
+  final ValueChanged<String> onRoute;
+  const _MobileCustomersView({required this.onRoute});
+  @override State<_MobileCustomersView> createState()=>_MobileCustomersViewState();
+}
+class _MobileCustomersViewState extends State<_MobileCustomersView>{
+  late final CustomerController controller;
+  String query='';
+  @override void initState(){super.initState();controller=CustomerController(sl<ICustomerRepository>());}
+  @override void dispose(){controller.dispose();super.dispose();}
+  @override Widget build(BuildContext context){
+    final c=Theme.of(context).extension<ZenoSemanticColors>()!;
+    final customers=controller.customers.where((x){
+      final q=query.trim().toLowerCase();
+      return q.isEmpty || x.name.toLowerCase().contains(q) || x.phone.toLowerCase().contains(q) || x.email.toLowerCase().contains(q);
+    }).toList();
+    return ListView(padding:const EdgeInsets.fromLTRB(14,10,14,110),children:[
+      Container(padding:const EdgeInsets.all(17),decoration:BoxDecoration(gradient:ZenoTheme.aiGlowGradient,borderRadius:BorderRadius.circular(20)),child:Row(children:[const Icon(Icons.people_alt_rounded,color:Colors.black,size:30),const SizedBox(width:11),Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[const Text('CUSTOMER HUB',style:TextStyle(fontSize:16,fontWeight:FontWeight.w900,color:Colors.black)),Text(controller.isLoading?'SYNCING CRM…':'CRM • '+controller.customers.length.toString()+' CUSTOMERS',style:const TextStyle(fontSize:8,fontWeight:FontWeight.w800,color:Colors.black54,letterSpacing:1.1))]))])),
+      const SizedBox(height:10),
+      Row(children:[Expanded(child:_metric(c,'CUSTOMERS',controller.customers.length.toString(),Icons.people_alt_rounded)),const SizedBox(width:8),Expanded(child:_metric(c,'VIP',controller.vipCount.toString(),Icons.star_rounded)),const SizedBox(width:8),Expanded(child:_metric(c,'RECEIVABLE',controller.totalReceivables.toStringAsFixed(0),Icons.account_balance_wallet_rounded))]),
+      const SizedBox(height:12),
+      Container(padding:const EdgeInsets.symmetric(horizontal:12),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(16),border:Border.all(color:c.borderSubtle)),child:TextField(onChanged:(v)=>setState(()=>query=v),decoration:InputDecoration(icon:Icon(Icons.search_rounded,color:c.accentPrimary),hintText:'Search name, phone, email…',hintStyle:TextStyle(fontSize:10,color:c.textSecondary),border:InputBorder.none))),
+      const SizedBox(height:12),
+      Row(children:[Expanded(child:_action(c,'NEW CUSTOMER',Icons.person_add_alt_1_rounded,()=>widget.onRoute('customers/mgmt/list'))),const SizedBox(width:8),Expanded(child:_action(c,'CRM',Icons.insights_rounded,()=>widget.onRoute('crm')))]),
+      const SizedBox(height:16),Text('CUSTOMER DIRECTORY',style:TextStyle(fontSize:10,fontWeight:FontWeight.w900,letterSpacing:1.4,color:c.textSecondary)),const SizedBox(height:8),
+      if(controller.isLoading)const Padding(padding:EdgeInsets.all(30),child:Center(child:CircularProgressIndicator()))
+      else if(customers.isEmpty) _empty(c,'NO CUSTOMERS FOUND')
+      else ...customers.take(15).map((x)=>Container(margin:const EdgeInsets.only(bottom:7),padding:const EdgeInsets.all(12),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(15),border:Border.all(color:c.borderSubtle)),child:Row(children:[CircleAvatar(radius:19,backgroundColor:c.accentPrimary.withValues(alpha:.10),child:Icon(Icons.person_rounded,color:c.accentPrimary)),const SizedBox(width:10),Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text(x.name,style:TextStyle(fontSize:10,fontWeight:FontWeight.w900,color:c.textPrimary)),Text(x.phone.isEmpty?x.email:x.phone,style:TextStyle(fontSize:8,color:c.textSecondary))])),Text(x.tier.name.toUpperCase(),style:TextStyle(fontSize:7,fontWeight:FontWeight.w900,color:c.accentPrimary))]))),
+    ]);
+  }
+  Widget _metric(ZenoSemanticColors c,String l,String v,IconData i)=>Container(padding:const EdgeInsets.all(11),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(15),border:Border.all(color:c.borderSubtle)),child:Column(children:[Icon(i,size:18,color:c.accentPrimary),const SizedBox(height:6),Text(v,style:TextStyle(fontSize:14,fontWeight:FontWeight.w900,color:c.textPrimary)),Text(l,style:TextStyle(fontSize:7,fontWeight:FontWeight.w800,color:c.textSecondary))]));
+  Widget _action(ZenoSemanticColors c,String l,IconData i,VoidCallback tap)=>InkWell(onTap:tap,borderRadius:BorderRadius.circular(15),child:Container(padding:const EdgeInsets.symmetric(vertical:14,horizontal:5),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(15),border:Border.all(color:c.borderSubtle)),child:Column(children:[Icon(i,color:c.accentPrimary,size:21),const SizedBox(height:6),Text(l,textAlign:TextAlign.center,style:TextStyle(fontSize:7,fontWeight:FontWeight.w900,color:c.textPrimary))])));
+  Widget _empty(ZenoSemanticColors c,String t)=>Container(padding:const EdgeInsets.all(26),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(17),border:Border.all(color:c.borderSubtle)),child:Center(child:Text(t,style:TextStyle(fontSize:9,fontWeight:FontWeight.w900,color:c.textSecondary))));
+}
+
 class _MobileModuleHub extends StatelessWidget {
   final String route;
   final ValueChanged<String> onRoute;
