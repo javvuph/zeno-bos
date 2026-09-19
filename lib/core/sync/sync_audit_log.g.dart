@@ -15,7 +15,7 @@ extension GetSyncAuditLogCollection on Isar {
 
 const SyncAuditLogSchema = CollectionSchema(
   name: r'SyncAuditLog',
-  id: -663298250095442715,
+  id: -(663298250095 * 1000000 + 442715),
   properties: {
     r'details': PropertySchema(
       id: 0,
@@ -50,7 +50,7 @@ const SyncAuditLogSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'timestamp': IndexSchema(
-      id: 1852253767416892198,
+      id: (1852253767416 * 1000000 + 892198),
       name: r'timestamp',
       unique: false,
       replace: false,
@@ -63,7 +63,7 @@ const SyncAuditLogSchema = CollectionSchema(
       ],
     ),
     r'module': IndexSchema(
-      id: -8372774152552671714,
+      id: -(8372774152552 * 1000000 + 671714),
       name: r'module',
       unique: false,
       replace: false,
@@ -76,7 +76,7 @@ const SyncAuditLogSchema = CollectionSchema(
       ],
     ),
     r'status': IndexSchema(
-      id: -107785170620420283,
+      id: -(107785170620 * 1000000 + 420283),
       name: r'status',
       unique: false,
       replace: false,
