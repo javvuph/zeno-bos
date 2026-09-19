@@ -16,7 +16,7 @@ extension GetFnbReservationCollectionCollection on Isar {
 
 const FnbReservationCollectionSchema = CollectionSchema(
   name: r'FnbReservationCollection',
-  id: 7379415943721200315,
+  id: (7379415943721 * 1000000 + 200315),
   properties: {
     r'createdAt': PropertySchema(
       id: 0,
@@ -101,7 +101,7 @@ const FnbReservationCollectionSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'uuid': IndexSchema(
-      id: 2134397340427724972,
+      id: (2134397340427 * 1000000 + 724972),
       name: r'uuid',
       unique: true,
       replace: true,
@@ -114,7 +114,7 @@ const FnbReservationCollectionSchema = CollectionSchema(
       ],
     ),
     r'customerName': IndexSchema(
-      id: -1459017457440031537,
+      id: -(1459017457440 * 1000000 + 31537),
       name: r'customerName',
       unique: false,
       replace: false,
@@ -127,7 +127,7 @@ const FnbReservationCollectionSchema = CollectionSchema(
       ],
     ),
     r'phone': IndexSchema(
-      id: -6308098324157559207,
+      id: -(6308098324157 * 1000000 + 559207),
       name: r'phone',
       unique: false,
       replace: false,
@@ -140,7 +140,7 @@ const FnbReservationCollectionSchema = CollectionSchema(
       ],
     ),
     r'reservationDate': IndexSchema(
-      id: 8617720515758623501,
+      id: (8617720515758 * 1000000 + 623501),
       name: r'reservationDate',
       unique: false,
       replace: false,
@@ -153,7 +153,7 @@ const FnbReservationCollectionSchema = CollectionSchema(
       ],
     ),
     r'status': IndexSchema(
-      id: -107785170620420283,
+      id: -(107785170620 * 1000000 + 420283),
       name: r'status',
       unique: false,
       replace: false,
