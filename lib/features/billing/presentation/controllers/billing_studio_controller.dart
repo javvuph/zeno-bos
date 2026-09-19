@@ -195,7 +195,13 @@ class BillingStudioController extends Bloc<BillingEvent, BillingState> {
 
   Future<void> _onBillCompleteRequested(
       BillCompleteRequested event, Emitter<BillingState> emit) async {
-    if (state.activeBill.isLocked) return;
+    // Prevent double-submit/double inventory deduction if checkout is triggered
+    // more than once before the first completion finishes.
+    if (state.activeBill.isLocked ||
+        state.status == BillingStatus.processing ||
+        state.status == BillingStatus.success) {
+      return;
+    }
 
     emit(state.copyWith(status: BillingStatus.processing));
     final bill = state.activeBill.copyWith(status: 'Completed');
