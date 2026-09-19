@@ -662,68 +662,268 @@ class _MobileMarketingView extends StatelessWidget {
 class _MobileAutomationView extends StatefulWidget {
   final ValueChanged<String> onRoute;
   const _MobileAutomationView({required this.onRoute});
-  @override State<_MobileAutomationView> createState()=>_MobileAutomationViewState();
+  @override
+  State<_MobileAutomationView> createState() => _MobileAutomationViewState();
 }
-class _MobileAutomationViewState extends State<_MobileAutomationView>{
-  final rules=<String>['Low-stock alert','Daily sales summary','Pending delivery reminder'];
-  @override Widget build(BuildContext context){
-    final c=Theme.of(context).extension<ZenoSemanticColors>()!;
-    return ListView(padding:const EdgeInsets.fromLTRB(14,10,14,110),children:[
-      Container(padding:const EdgeInsets.all(17),decoration:BoxDecoration(gradient:ZenoTheme.aiVioletGradient,borderRadius:BorderRadius.circular(20)),child:Row(children:[const Icon(Icons.auto_awesome_motion_rounded,color:Colors.white,size:30),const SizedBox(width:11),const Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text('AUTOMATION',style:TextStyle(fontSize:16,fontWeight:FontWeight.w900,color:Colors.white)),Text('TRIGGERS • WORKFLOWS • ACTIONS',style:TextStyle(fontSize:8,fontWeight:FontWeight.w800,color:Colors.white70,letterSpacing:1.1))])])),
-      const SizedBox(height:12),
-      Row(children:[Expanded(child:_metric(c,'ACTIVE','3',Icons.play_circle_rounded)),const SizedBox(width:8),Expanded(child:_metric(c,'RUNS TODAY','—',Icons.bolt_rounded)),const SizedBox(width:8),Expanded(child:_metric(c,'SAVED TIME','—',Icons.timer_rounded))]),
-      const SizedBox(height:12),
-      InkWell(onTap:()=>setState(()=>rules.add('New workflow')),borderRadius:BorderRadius.circular(15),child:Container(padding:const EdgeInsets.all(14),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(15),border:Border.all(color:c.borderSubtle)),child:Row(children:[Icon(Icons.add_circle_outline_rounded,color:c.accentPrimary),const SizedBox(width:10),Text('CREATE AUTOMATION',style:TextStyle(fontSize:9,fontWeight:FontWeight.w900,color:c.textPrimary))]))),
-      const SizedBox(height:16),Text('WORKFLOWS',style:TextStyle(fontSize:10,fontWeight:FontWeight.w900,letterSpacing:1.4,color:c.textSecondary)),const SizedBox(height:8),
-      ...rules.map((x)=>ListTile(onTap:()=>widget.onRoute('automation/rules'),shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(14)),tileColor:c.bgTier2,leading:Icon(Icons.bolt_rounded,color:c.accentPrimary),title:Text(x,style:TextStyle(fontSize:10,fontWeight:FontWeight.w800,color:c.textPrimary)),trailing:Switch(value:true,onChanged:(_){ })))
-    ]);
+
+class _MobileAutomationViewState extends State<_MobileAutomationView> {
+  final List<String> rules = [
+    'Low-stock alert',
+    'Daily sales summary',
+    'Pending delivery reminder',
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    final c = Theme.of(context).extension<ZenoSemanticColors>()!;
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(14, 10, 14, 110),
+      children: [
+        _MobileHero(c, 'AUTOMATION', 'TRIGGERS • WORKFLOWS • ACTIONS',
+            Icons.auto_awesome_motion_rounded, false),
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            Expanded(child: _simpleMetric(c, 'ACTIVE', rules.length.toString(), Icons.play_circle_rounded)),
+            const SizedBox(width: 8),
+            Expanded(child: _simpleMetric(c, 'RUNS TODAY', '—', Icons.bolt_rounded)),
+            const SizedBox(width: 8),
+            Expanded(child: _simpleMetric(c, 'SAVED TIME', '—', Icons.timer_rounded)),
+          ],
+        ),
+        const SizedBox(height: 12),
+        InkWell(
+          onTap: () => setState(() => rules.add('New workflow')),
+          borderRadius: BorderRadius.circular(15),
+          child: Container(
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: c.bgTier2,
+              borderRadius: BorderRadius.circular(15),
+              border: Border.all(color: c.borderSubtle),
+            ),
+            child: Row(
+              children: [
+                Icon(Icons.add_circle_outline_rounded, color: c.accentPrimary),
+                const SizedBox(width: 10),
+                Text('CREATE AUTOMATION',
+                    style: TextStyle(fontSize: 9, fontWeight: FontWeight.w900, color: c.textPrimary)),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 16),
+        Text('WORKFLOWS',
+            style: TextStyle(fontSize: 10, fontWeight: FontWeight.w900, letterSpacing: 1.4, color: c.textSecondary)),
+        const SizedBox(height: 8),
+        ...rules.map(
+          (rule) => ListTile(
+            onTap: () => widget.onRoute('automation/rules'),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+            tileColor: c.bgTier2,
+            leading: Icon(Icons.bolt_rounded, color: c.accentPrimary),
+            title: Text(rule,
+                style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: c.textPrimary)),
+            trailing: const Icon(Icons.toggle_on_rounded),
+          ),
+        ),
+      ],
+    );
   }
-  Widget _metric(ZenoSemanticColors c,String l,String v,IconData i)=>Container(padding:const EdgeInsets.all(10),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(15),border:Border.all(color:c.borderSubtle)),child:Column(children:[Icon(i,size:17,color:c.accentPrimary),const SizedBox(height:5),Text(v,style:TextStyle(fontSize:13,fontWeight:FontWeight.w900,color:c.textPrimary)),Text(l,style:TextStyle(fontSize:7,fontWeight:FontWeight.w800,color:c.textSecondary)]));
+
+  Widget _simpleMetric(ZenoSemanticColors c, String label, String value, IconData icon) {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: c.bgTier2,
+        borderRadius: BorderRadius.circular(15),
+        border: Border.all(color: c.borderSubtle),
+      ),
+      child: Column(
+        children: [
+          Icon(icon, size: 17, color: c.accentPrimary),
+          const SizedBox(height: 5),
+          Text(value, style: TextStyle(fontSize: 13, fontWeight: FontWeight.w900, color: c.textPrimary)),
+          Text(label, style: TextStyle(fontSize: 7, fontWeight: FontWeight.w800, color: c.textSecondary)),
+        ],
+      ),
+    );
+  }
 }
+
 class _MobileAdminView extends StatelessWidget {
   final ValueChanged<String> onRoute;
   const _MobileAdminView({required this.onRoute});
-  @override Widget build(BuildContext context){
-    final c=Theme.of(context).extension<ZenoSemanticColors>()!;
-    final items=<Map<String,Object>>[
-      {'t':'BUSINESS SETUP','s':'Store identity, tax & operations','r':'admin/business-setup','i':Icons.store_rounded},
-      {'t':'SECURITY','s':'Access, PINs, roles & permissions','r':'admin/security','i':Icons.security_rounded},
-      {'t':'USERS & ROLES','s':'Staff access and RBAC','r':'admin/users','i':Icons.manage_accounts_rounded},
-      {'t':'SYSTEM SETTINGS','s':'Preferences, receipts & devices','r':'admin/settings','i':Icons.settings_rounded},
-      {'t':'AUDIT LOG','s':'Track important system activity','r':'admin/audit','i':Icons.fact_check_rounded},
+
+  @override
+  Widget build(BuildContext context) {
+    final c = Theme.of(context).extension<ZenoSemanticColors>()!;
+    final items = <Map<String, Object>>[
+      {'t': 'BUSINESS SETUP', 's': 'Store identity, tax & operations', 'r': 'admin/business-setup', 'i': Icons.store_rounded},
+      {'t': 'SECURITY', 's': 'Access, PINs, roles & permissions', 'r': 'admin/security', 'i': Icons.security_rounded},
+      {'t': 'USERS & ROLES', 's': 'Staff access and RBAC', 'r': 'admin/users', 'i': Icons.manage_accounts_rounded},
+      {'t': 'SYSTEM SETTINGS', 's': 'Preferences, receipts & devices', 'r': 'admin/settings', 'i': Icons.settings_rounded},
+      {'t': 'AUDIT LOG', 's': 'Track important system activity', 'r': 'admin/audit', 'i': Icons.fact_check_rounded},
     ];
-    return ListView(padding:const EdgeInsets.fromLTRB(14,10,14,110),children:[
-      Container(padding:const EdgeInsets.all(17),decoration:BoxDecoration(gradient:ZenoTheme.aiGlowGradient,borderRadius:BorderRadius.circular(20)),child:Row(children:[const Icon(Icons.admin_panel_settings_rounded,color:Colors.black,size:30),const SizedBox(width:11),const Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text('ADMINISTRATION',style:TextStyle(fontSize:16,fontWeight:FontWeight.w900,color:Colors.black)),Text('SECURITY • SETTINGS • CONTROL',style:TextStyle(fontSize:8,fontWeight:FontWeight.w800,color:Colors.black54,letterSpacing:1.1))])])),
-      const SizedBox(height:12),
-      Row(children:[Expanded(child:_metric(c,'USERS','—',Icons.people_alt_rounded)),const SizedBox(width:8),Expanded(child:_metric(c,'SECURITY','ON',Icons.shield_rounded)),const SizedBox(width:8),Expanded(child:_metric(c,'STATUS','READY',Icons.check_circle_rounded))]),
-      const SizedBox(height:16),Text('CONTROL CENTER',style:TextStyle(fontSize:10,fontWeight:FontWeight.w900,letterSpacing:1.4,color:c.textSecondary)),const SizedBox(height:8),
-      ...items.map((x)=>ListTile(onTap:()=>onRoute(x['r'] as String),shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(14)),tileColor:c.bgTier2,leading:Icon(x['i'] as IconData,color:c.accentPrimary),title:Text(x['t'] as String,style:TextStyle(fontSize:10,fontWeight:FontWeight.w800,color:c.textPrimary)),subtitle:Text(x['s'] as String,style:TextStyle(fontSize:8,color:c.textSecondary)),trailing:Icon(Icons.arrow_forward_ios_rounded,size:13,color:c.textSecondary)))
-    ]);
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(14, 10, 14, 110),
+      children: [
+        _MobileHero(c, 'ADMINISTRATION', 'SECURITY • SETTINGS • CONTROL',
+            Icons.admin_panel_settings_rounded, false),
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            Expanded(child: _simpleMetric(c, 'USERS', '—', Icons.people_alt_rounded)),
+            const SizedBox(width: 8),
+            Expanded(child: _simpleMetric(c, 'SECURITY', 'ON', Icons.shield_rounded)),
+            const SizedBox(width: 8),
+            Expanded(child: _simpleMetric(c, 'STATUS', 'READY', Icons.check_circle_rounded)),
+          ],
+        ),
+        const SizedBox(height: 16),
+        Text('CONTROL CENTER',
+            style: TextStyle(fontSize: 10, fontWeight: FontWeight.w900, letterSpacing: 1.4, color: c.textSecondary)),
+        const SizedBox(height: 8),
+        ...items.map(
+          (item) => ListTile(
+            onTap: () => onRoute(item['r'] as String),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+            tileColor: c.bgTier2,
+            leading: Icon(item['i'] as IconData, color: c.accentPrimary),
+            title: Text(item['t'] as String,
+                style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: c.textPrimary)),
+            subtitle: Text(item['s'] as String, style: TextStyle(fontSize: 8, color: c.textSecondary)),
+            trailing: Icon(Icons.arrow_forward_ios_rounded, size: 13, color: c.textSecondary),
+          ),
+        ),
+      ],
+    );
   }
-  Widget _metric(ZenoSemanticColors c,String l,String v,IconData i)=>Container(padding:const EdgeInsets.all(10),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(15),border:Border.all(color:c.borderSubtle)),child:Column(children:[Icon(i,size:17,color:c.accentPrimary),const SizedBox(height:5),Text(v,style:TextStyle(fontSize:13,fontWeight:FontWeight.w900,color:c.textPrimary)),Text(l,style:TextStyle(fontSize:7,fontWeight:FontWeight.w800,color:c.textSecondary))]));
+
+  Widget _simpleMetric(ZenoSemanticColors c, String label, String value, IconData icon) {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: c.bgTier2,
+        borderRadius: BorderRadius.circular(15),
+        border: Border.all(color: c.borderSubtle),
+      ),
+      child: Column(
+        children: [
+          Icon(icon, size: 17, color: c.accentPrimary),
+          const SizedBox(height: 5),
+          Text(value, style: TextStyle(fontSize: 13, fontWeight: FontWeight.w900, color: c.textPrimary)),
+          Text(label, style: TextStyle(fontSize: 7, fontWeight: FontWeight.w800, color: c.textSecondary)),
+        ],
+      ),
+    );
+  }
 }
+
 class _MobileIntegrationsView extends StatelessWidget {
   final ValueChanged<String> onRoute;
   const _MobileIntegrationsView({required this.onRoute});
-  @override Widget build(BuildContext context){
-    final c=Theme.of(context).extension<ZenoSemanticColors>()!;
-    final items=<Map<String,Object>>[
-      {'t':'PAYMENTS','s':'UPI, cards, wallets & gateways','i':Icons.payments_rounded},
-      {'t':'MESSAGING','s':'WhatsApp, SMS & notifications','i':Icons.chat_rounded},
-      {'t':'ACCOUNTING','s':'Accounting and finance sync','i':Icons.account_balance_rounded},
-      {'t':'DELIVERY','s':'Courier and delivery connections','i':Icons.local_shipping_rounded},
-      {'t':'API & WEBHOOKS','s':'Developer access and events','i':Icons.api_rounded},
+
+  @override
+  Widget build(BuildContext context) {
+    final c = Theme.of(context).extension<ZenoSemanticColors>()!;
+    final items = <Map<String, Object>>[
+      {'t': 'PAYMENTS', 's': 'UPI, cards, wallets & gateways', 'i': Icons.payments_rounded},
+      {'t': 'MESSAGING', 's': 'WhatsApp, SMS & notifications', 'i': Icons.chat_rounded},
+      {'t': 'ACCOUNTING', 's': 'Accounting and finance sync', 'i': Icons.account_balance_rounded},
+      {'t': 'DELIVERY', 's': 'Courier and delivery connections', 'i': Icons.local_shipping_rounded},
+      {'t': 'API & WEBHOOKS', 's': 'Developer access and events', 'i': Icons.api_rounded},
     ];
-    return ListView(padding:const EdgeInsets.fromLTRB(14,10,14,110),children:[
-      Container(padding:const EdgeInsets.all(17),decoration:BoxDecoration(gradient:ZenoTheme.aiVioletGradient,borderRadius:BorderRadius.circular(20)),child:Row(children:[const Icon(Icons.extension_rounded,color:Colors.white,size:30),const SizedBox(width:11),const Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text('INTEGRATIONS',style:TextStyle(fontSize:16,fontWeight:FontWeight.w900,color:Colors.white)),Text('CONNECT • SYNC • EXTEND',style:TextStyle(fontSize:8,fontWeight:FontWeight.w800,color:Colors.white70,letterSpacing:1.1))])])),
-      const SizedBox(height:12),
-      Row(children:[Expanded(child:_metric(c,'CONNECTED','—',Icons.link_rounded)),const SizedBox(width:8),Expanded(child:_metric(c,'SYNC','READY',Icons.sync_rounded)),const SizedBox(width:8),Expanded(child:_metric(c,'API','READY',Icons.api_rounded))]),
-      const SizedBox(height:16),Text('INTEGRATION CENTER',style:TextStyle(fontSize:10,fontWeight:FontWeight.w900,letterSpacing:1.4,color:c.textSecondary)),const SizedBox(height:8),
-      ...items.map((x)=>ListTile(onTap:()=>onRoute('integrations'),shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(14)),tileColor:c.bgTier2,leading:Icon(x['i'] as IconData,color:c.accentPrimary),title:Text(x['t'] as String,style:TextStyle(fontSize:10,fontWeight:FontWeight.w800,color:c.textPrimary)),subtitle:Text(x['s'] as String,style:TextStyle(fontSize:8,color:c.textSecondary)),trailing:Icon(Icons.arrow_forward_ios_rounded,size:13,color:c.textSecondary)))
-    ]);
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(14, 10, 14, 110),
+      children: [
+        _MobileHero(c, 'INTEGRATIONS', 'CONNECT • SYNC • EXTEND',
+            Icons.extension_rounded, true),
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            Expanded(child: _simpleMetric(c, 'CONNECTED', '—', Icons.link_rounded)),
+            const SizedBox(width: 8),
+            Expanded(child: _simpleMetric(c, 'SYNC', 'READY', Icons.sync_rounded)),
+            const SizedBox(width: 8),
+            Expanded(child: _simpleMetric(c, 'API', 'READY', Icons.api_rounded)),
+          ],
+        ),
+        const SizedBox(height: 16),
+        Text('INTEGRATION CENTER',
+            style: TextStyle(fontSize: 10, fontWeight: FontWeight.w900, letterSpacing: 1.4, color: c.textSecondary)),
+        const SizedBox(height: 8),
+        ...items.map(
+          (item) => ListTile(
+            onTap: () => onRoute('integrations'),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+            tileColor: c.bgTier2,
+            leading: Icon(item['i'] as IconData, color: c.accentPrimary),
+            title: Text(item['t'] as String,
+                style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: c.textPrimary)),
+            subtitle: Text(item['s'] as String, style: TextStyle(fontSize: 8, color: c.textSecondary)),
+            trailing: Icon(Icons.arrow_forward_ios_rounded, size: 13, color: c.textSecondary),
+          ),
+        ),
+      ],
+    );
   }
-  Widget _metric(ZenoSemanticColors c,String l,String v,IconData i)=>Container(padding:const EdgeInsets.all(10),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(15),border:Border.all(color:c.borderSubtle)),child:Column(children:[Icon(i,size:17,color:c.accentPrimary),const SizedBox(height:5),Text(v,style:TextStyle(fontSize:13,fontWeight:FontWeight.w900,color:c.textPrimary)),Text(l,style:TextStyle(fontSize:7,fontWeight:FontWeight.w800,color:c.textSecondary)]));
+
+  Widget _simpleMetric(ZenoSemanticColors c, String label, String value, IconData icon) {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: c.bgTier2,
+        borderRadius: BorderRadius.circular(15),
+        border: Border.all(color: c.borderSubtle),
+      ),
+      child: Column(
+        children: [
+          Icon(icon, size: 17, color: c.accentPrimary),
+          const SizedBox(height: 5),
+          Text(value, style: TextStyle(fontSize: 13, fontWeight: FontWeight.w900, color: c.textPrimary)),
+          Text(label, style: TextStyle(fontSize: 7, fontWeight: FontWeight.w800, color: c.textSecondary)),
+        ],
+      ),
+    );
+  }
 }
+
+class _MobileHero extends StatelessWidget {
+  final ZenoSemanticColors colors;
+  final String title;
+  final String subtitle;
+  final IconData icon;
+  final bool violet;
+  const _MobileHero(this.colors, this.title, this.subtitle, this.icon, this.violet);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(17),
+      decoration: BoxDecoration(
+        gradient: violet ? ZenoTheme.aiVioletGradient : ZenoTheme.aiGlowGradient,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, color: violet ? Colors.white : Colors.black, size: 30),
+          const SizedBox(width: 11),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w900, color: violet ? Colors.white : Colors.black)),
+                Text(subtitle, style: TextStyle(fontSize: 8, fontWeight: FontWeight.w800, color: violet ? Colors.white70 : Colors.black54, letterSpacing: 1.1)),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _MobileModuleHub extends StatelessWidget {
   final String route;
   final ValueChanged<String> onRoute;
@@ -1138,72 +1338,533 @@ class _InsightCard extends StatelessWidget {
 class _TodayPulse extends StatefulWidget {
   final ValueChanged<String> onRoute;
   const _TodayPulse({required this.onRoute});
-  @override State<_TodayPulse> createState()=>_TodayPulseState();
+  @override
+  State<_TodayPulse> createState() => _TodayPulseState();
 }
-class _TodayPulseState extends State<_TodayPulse>{
+
+class _TodayPulseState extends State<_TodayPulse> {
   late final InventoryController inventory;
   late final DeliveryController delivery;
   late final CustomerController customers;
-  @override void initState(){super.initState();inventory=InventoryController(sl<IInventoryRepository>());delivery=DeliveryController(sl<IDeliveryRepository>());customers=CustomerController(sl<ICustomerRepository>());inventory.addListener(_r);delivery.addListener(_r);customers.addListener(_r);inventory.refreshAll();delivery.loadDeliveries();customers.loadCustomers();}
-  void _r(){if(mounted)setState((){});}
-  @override void dispose(){inventory.removeListener(_r);delivery.removeListener(_r);customers.removeListener(_r);inventory.dispose();delivery.dispose();customers.dispose();super.dispose();}
-  @override Widget build(BuildContext context){final c=Theme.of(context).extension<ZenoSemanticColors>()!;final low=inventory.allStockLevels.where((s)=>s.available<=0).length;return Container(padding:const EdgeInsets.all(15),decoration:BoxDecoration(color:c.bgTier2.withValues(alpha:.92),borderRadius:BorderRadius.circular(20),border:Border.all(color:c.borderSubtle)),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Row(children:[Text('TODAY PULSE',style:TextStyle(fontSize:10,fontWeight:FontWeight.w900,letterSpacing:1.5,color:c.textSecondary)),const Spacer(),Text('LIVE',style:TextStyle(fontSize:8,fontWeight:FontWeight.w900,letterSpacing:1,color:c.statusSuccess))]),const SizedBox(height:13),_PulseRow(icon:Icons.warning_amber_rounded,title:'Out of stock',value:low.toString()+' SKUs',accent:c.amberGold,onTap:()=>widget.onRoute('inventory/products')),_PulseRow(icon:Icons.local_shipping_outlined,title:'Active deliveries',value:delivery.activeDeliveryCount.toString(),accent:c.accentPrimary,onTap:()=>widget.onRoute('orders/dashboard')),_PulseRow(icon:Icons.people_outline_rounded,title:'Customer base',value:customers.customers.length.toString(),accent:c.accentPurple,onTap:()=>widget.onRoute('customers'))]));}
-}
-class _PulseRow extends StatelessWidget {
-  final IconData icon; final String title,value; final Color accent; final VoidCallback onTap;
-  const _PulseRow({required this.icon,required this.title,required this.value,required this.accent,required this.onTap});
-  @override Widget build(BuildContext context){final c=Theme.of(context).extension<ZenoSemanticColors>()!;return InkWell(onTap:onTap,borderRadius:BorderRadius.circular(12),child:Padding(padding:const EdgeInsets.symmetric(vertical:7),child:Row(children:[Container(width:32,height:32,decoration:BoxDecoration(color:accent.withValues(alpha:.10),borderRadius:BorderRadius.circular(10)),child:Icon(icon,size:17,color:accent)),const SizedBox(width:10),Expanded(child:Text(title,style:TextStyle(fontSize:11,fontWeight:FontWeight.w700,color:c.textPrimary))),Text(value,style:TextStyle(fontSize:10,fontWeight:FontWeight.w800,color:c.textSecondary)),const SizedBox(width:5),Icon(Icons.chevron_right_rounded,size:17,color:c.textDisabled)])));}
+
+  @override
+  void initState() {
+    super.initState();
+    inventory = InventoryController(sl<IInventoryRepository>());
+    delivery = DeliveryController(sl<IDeliveryRepository>());
+    customers = CustomerController(sl<ICustomerRepository>());
+    inventory.addListener(_refresh);
+    delivery.addListener(_refresh);
+    customers.addListener(_refresh);
+    inventory.refreshAll();
+    delivery.loadDeliveries();
+    customers.loadCustomers();
+  }
+
+  void _refresh() {
+    if (mounted) setState(() {});
+  }
+
+  @override
+  void dispose() {
+    inventory.removeListener(_refresh);
+    delivery.removeListener(_refresh);
+    customers.removeListener(_refresh);
+    inventory.dispose();
+    delivery.dispose();
+    customers.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final c = Theme.of(context).extension<ZenoSemanticColors>()!;
+    final low = inventory.allStockLevels.where((s) => s.available <= 0).length;
+    return Container(
+      padding: const EdgeInsets.all(15),
+      decoration: BoxDecoration(
+        color: c.bgTier2.withValues(alpha: .92),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: c.borderSubtle),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(children: [
+            Text('TODAY PULSE', style: TextStyle(fontSize: 10, fontWeight: FontWeight.w900, letterSpacing: 1.5, color: c.textSecondary)),
+            const Spacer(),
+            Text('LIVE', style: TextStyle(fontSize: 8, fontWeight: FontWeight.w900, color: c.statusSuccess)),
+          ]),
+          const SizedBox(height: 13),
+          _PulseRow(icon: Icons.warning_amber_rounded, title: 'Out of stock', value: '$low SKUs', accent: c.amberGold, onTap: () => widget.onRoute('inventory/products')),
+          _PulseRow(icon: Icons.local_shipping_outlined, title: 'Active deliveries', value: delivery.activeDeliveryCount.toString(), accent: c.accentPrimary, onTap: () => widget.onRoute('orders/dashboard')),
+          _PulseRow(icon: Icons.people_outline_rounded, title: 'Customer base', value: customers.customers.length.toString(), accent: c.accentPurple, onTap: () => widget.onRoute('customers')),
+        ],
+      ),
+    );
+  }
 }
 
+class _PulseRow extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String value;
+  final Color accent;
+  final VoidCallback onTap;
+  const _PulseRow({required this.icon, required this.title, required this.value, required this.accent, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final c = Theme.of(context).extension<ZenoSemanticColors>()!;
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 7),
+        child: Row(
+          children: [
+            Container(
+              width: 32, height: 32,
+              decoration: BoxDecoration(color: accent.withValues(alpha: .10), borderRadius: BorderRadius.circular(10)),
+              child: Icon(icon, size: 17, color: accent),
+            ),
+            const SizedBox(width: 10),
+            Expanded(child: Text(title, style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: c.textPrimary))),
+            Text(value, style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: c.textSecondary)),
+            const SizedBox(width: 5),
+            Icon(Icons.chevron_right_rounded, size: 17, color: c.textDisabled),
+          ],
+        ),
+      ),
+    );
+  }
+}
 
 class _RevenueChartCard extends StatelessWidget {
   final ValueChanged<String> onRoute;
   const _RevenueChartCard({required this.onRoute});
-  @override Widget build(BuildContext context){
-    final c=Theme.of(context).extension<ZenoSemanticColors>()!;
-    const values=[12.0,18.0,15.0,24.0,21.0,29.0,26.0];
-    return InkWell(onTap:()=>onRoute('reports'),borderRadius:BorderRadius.circular(20),child:Container(padding:const EdgeInsets.all(15),decoration:BoxDecoration(color:c.bgTier2.withValues(alpha:.92),borderRadius:BorderRadius.circular(20),border:Border.all(color:c.borderSubtle)),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
-      Row(children:[Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text('REVENUE FLOW',style:TextStyle(fontSize:10,fontWeight:FontWeight.w900,letterSpacing:1.5,color:c.textSecondary)),const SizedBox(height:3),Text('₹ 24.8K',style:TextStyle(fontSize:21,fontWeight:FontWeight.w900,color:c.textPrimary))]),const Spacer(),Text('+12.4%',style:TextStyle(fontSize:10,fontWeight:FontWeight.w900,color:c.statusSuccess))]),
-      const SizedBox(height:12),
-      SizedBox(height:82,child:CustomPaint(painter:_SparklinePainter(values:values,color:c.accentPrimary),child:const SizedBox.expand())),
-      const SizedBox(height:4),
-      Row(mainAxisAlignment:MainAxisAlignment.spaceBetween,children:[for(final d in ['M','T','W','T','F','S','S'])Text(d,style:TextStyle(fontSize:8,color:c.textDisabled,fontWeight:FontWeight.w700))]),
-    ])));
+
+  @override
+  Widget build(BuildContext context) {
+    final c = Theme.of(context).extension<ZenoSemanticColors>()!;
+    const values = [12.0, 18.0, 15.0, 24.0, 21.0, 29.0, 26.0];
+    return InkWell(
+      onTap: () => onRoute('reports'),
+      borderRadius: BorderRadius.circular(20),
+      child: Container(
+        padding: const EdgeInsets.all(15),
+        decoration: BoxDecoration(color: c.bgTier2.withValues(alpha: .92), borderRadius: BorderRadius.circular(20), border: Border.all(color: c.borderSubtle)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(children: [
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text('REVENUE FLOW', style: TextStyle(fontSize: 10, fontWeight: FontWeight.w900, letterSpacing: 1.5, color: c.textSecondary)),
+                const SizedBox(height: 3),
+                Text('₹ 24.8K', style: TextStyle(fontSize: 21, fontWeight: FontWeight.w900, color: c.textPrimary)),
+              ]),
+              const Spacer(),
+              Text('+12.4%', style: TextStyle(fontSize: 10, fontWeight: FontWeight.w900, color: c.statusSuccess)),
+            ]),
+            const SizedBox(height: 12),
+            SizedBox(height: 82, child: CustomPaint(painter: _SparklinePainter(values: values, color: c.accentPrimary))),
+            const SizedBox(height: 4),
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              for (final d in ['M','T','W','T','F','S','S'])
+                Text(d, style: TextStyle(fontSize: 8, color: c.textDisabled, fontWeight: FontWeight.w700)),
+            ]),
+          ],
+        ),
+      ),
+    );
   }
 }
-class _SparklinePainter extends CustomPainter {
-  final List<double> values; final Color color;
-  _SparklinePainter({required this.values,required this.color});
-  @override void paint(Canvas canvas,Size size){if(values.isEmpty)return;final max=values.reduce((a,b)=>a>b?a:b),min=values.reduce((a,b)=>a<b?a:b);final path=Path();for(var i=0;i<values.length;i++){final x=i*size.width/(values.length-1);final y=size.height-(values[i]-min)/(max-min+0.01)*size.height*.82-size.height*.05;if(i==0)path.moveTo(x,y);else path.lineTo(x,y);}final paint=Paint()..color=color..strokeWidth=2.5..style=PaintingStyle.stroke..strokeCap=StrokeCap.round;canvas.drawPath(path,paint);final fill=Path.from(path)..lineTo(size.width,size.height)..lineTo(0,size.height)..close();canvas.drawPath(fill,Paint()..shader=LinearGradient(begin:Alignment.topCenter,end:Alignment.bottomCenter,colors:[color.withValues(alpha:.18),Colors.transparent]).createShader(Offset.zero&size));}
-  @override bool shouldRepaint(covariant _SparklinePainter old)=>old.values!=values||old.color!=color;
-}
 
+class _SparklinePainter extends CustomPainter {
+  final List<double> values;
+  final Color color;
+  _SparklinePainter({required this.values, required this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (values.isEmpty) return;
+    final maxValue = values.reduce((a, b) => a > b ? a : b);
+    final minValue = values.reduce((a, b) => a < b ? a : b);
+    final path = Path();
+    for (var i = 0; i < values.length; i++) {
+      final x = i * size.width / (values.length - 1);
+      final y = size.height - ((values[i] - minValue) / (maxValue - minValue + .01)) * size.height * .82 - size.height * .05;
+      if (i == 0) {
+        path.moveTo(x, y);
+      } else {
+        path.lineTo(x, y);
+      }
+    }
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = 2.5
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round;
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant _SparklinePainter old) => old.values != values || old.color != color;
+}
 
 class _RecentActivity extends StatelessWidget {
   final ValueChanged<String> onRoute;
   const _RecentActivity({required this.onRoute});
-  @override Widget build(BuildContext context){final c=Theme.of(context).extension<ZenoSemanticColors>()!;return Container(padding:const EdgeInsets.all(15),decoration:BoxDecoration(color:c.bgTier2.withValues(alpha:.92),borderRadius:BorderRadius.circular(20),border:Border.all(color:c.borderSubtle)),child:Column(children:[Row(children:[Text('RECENT ACTIVITY',style:TextStyle(fontSize:10,fontWeight:FontWeight.w900,letterSpacing:1.5,color:c.textSecondary)),const Spacer(),TextButton(onPressed:()=>onRoute('sales/pos'),child:Text('VIEW ALL',style:TextStyle(fontSize:9,fontWeight:FontWeight.w900,color:c.accentPrimary)))]),_ActivityRow(icon:Icons.receipt_long_rounded,title:'New sale completed',meta:'INV-1048 • 2 min ago',amount:'+ ₹2,480',accent:c.statusSuccess),_ActivityRow(icon:Icons.local_shipping_outlined,title:'Order dispatched',meta:'ORD-2081 • 18 min ago',amount:'In transit',accent:c.accentPrimary),_ActivityRow(icon:Icons.person_add_alt_1_rounded,title:'Customer added',meta:'CRM • 31 min ago',amount:'New',accent:c.accentPurple)]));}
+
+  @override
+  Widget build(BuildContext context) {
+    final c = Theme.of(context).extension<ZenoSemanticColors>()!;
+    return Container(
+      padding: const EdgeInsets.all(15),
+      decoration: BoxDecoration(color: c.bgTier2.withValues(alpha: .92), borderRadius: BorderRadius.circular(20), border: Border.all(color: c.borderSubtle)),
+      child: Column(
+        children: [
+          Row(children: [
+            Text('RECENT ACTIVITY', style: TextStyle(fontSize: 10, fontWeight: FontWeight.w900, letterSpacing: 1.5, color: c.textSecondary)),
+            const Spacer(),
+            TextButton(onPressed: () => onRoute('sales/pos'), child: Text('VIEW ALL', style: TextStyle(fontSize: 9, fontWeight: FontWeight.w900, color: c.accentPrimary))),
+          ]),
+          _ActivityRow(icon: Icons.receipt_long_rounded, title: 'New sale completed', meta: 'INV-1048 • 2 min ago', amount: '+ ₹2,480', accent: c.statusSuccess),
+          _ActivityRow(icon: Icons.local_shipping_outlined, title: 'Order dispatched', meta: 'ORD-2081 • 18 min ago', amount: 'In transit', accent: c.accentPrimary),
+          _ActivityRow(icon: Icons.person_add_alt_1_rounded, title: 'Customer added', meta: 'CRM • 31 min ago', amount: 'New', accent: c.accentPurple),
+        ],
+      ),
+    );
+  }
 }
-class _ActivityRow extends StatelessWidget {final IconData icon;final String title,meta,amount;final Color accent;const _ActivityRow({required this.icon,required this.title,required this.meta,required this.amount,required this.accent});@override Widget build(BuildContext context){final c=Theme.of(context).extension<ZenoSemanticColors>()!;return Padding(padding:const EdgeInsets.symmetric(vertical:7),child:Row(children:[Container(width:34,height:34,decoration:BoxDecoration(color:accent.withValues(alpha:.10),borderRadius:BorderRadius.circular(10)),child:Icon(icon,size:17,color:accent)),const SizedBox(width:10),Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text(title,style:TextStyle(fontSize:11,fontWeight:FontWeight.w800,color:c.textPrimary)),const SizedBox(height:2),Text(meta,style:TextStyle(fontSize:8,color:c.textSecondary))]),),Text(amount,style:TextStyle(fontSize:9,fontWeight:FontWeight.w900,color:accent))]));}
+
+class _ActivityRow extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String meta;
+  final String amount;
+  final Color accent;
+  const _ActivityRow({required this.icon, required this.title, required this.meta, required this.amount, required this.accent});
+
+  @override
+  Widget build(BuildContext context) {
+    final c = Theme.of(context).extension<ZenoSemanticColors>()!;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 7),
+      child: Row(children: [
+        Container(width: 34, height: 34, decoration: BoxDecoration(color: accent.withValues(alpha: .10), borderRadius: BorderRadius.circular(10)), child: Icon(icon, size: 17, color: accent)),
+        const SizedBox(width: 10),
+        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text(title, style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: c.textPrimary)),
+          const SizedBox(height: 2),
+          Text(meta, style: TextStyle(fontSize: 8, color: c.textSecondary)),
+        ])),
+        Text(amount, style: TextStyle(fontSize: 9, fontWeight: FontWeight.w900, color: accent)),
+      ]),
+    );
+  }
 }
 
+class _SmartActions extends StatelessWidget {
+  final ValueChanged<String> onRoute;
+  const _SmartActions({required this.onRoute});
 
-class _SmartActions extends StatelessWidget {final ValueChanged<String> onRoute;const _SmartActions({required this.onRoute});@override Widget build(BuildContext context){final c=Theme.of(context).extension<ZenoSemanticColors>()!;return Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text('SMART ACTIONS',style:TextStyle(fontSize:10,fontWeight:FontWeight.w900,letterSpacing:1.5,color:c.textSecondary)),const SizedBox(height:9),Row(children:[Expanded(child:_SmartAction(icon:Icons.qr_code_scanner_rounded,label:'SCAN',accent:c.accentPrimary,onTap:()=>onRoute('inventory/scanner'))),const SizedBox(width:8),Expanded(child:_SmartAction(icon:Icons.receipt_long_rounded,label:'INVOICE',accent:c.accentPurple,onTap:()=>onRoute('sales/pos'))),const SizedBox(width:8),Expanded(child:_SmartAction(icon:Icons.person_search_rounded,label:'CUSTOMER',accent:c.statusSuccess,onTap:()=>onRoute('customers'))),const SizedBox(width:8),Expanded(child:_SmartAction(icon:Icons.auto_awesome_rounded,label:'AI',accent:c.amberGold,onTap:()=>onRoute('ai')))]));}}
-class _SmartAction extends StatelessWidget {final IconData icon;final String label;final Color accent;final VoidCallback onTap;const _SmartAction({required this.icon,required this.label,required this.accent,required this.onTap});@override Widget build(BuildContext context){final c=Theme.of(context).extension<ZenoSemanticColors>()!;return InkWell(onTap:onTap,borderRadius:BorderRadius.circular(15),child:Container(height:72,decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(15),border:Border.all(color:c.borderSubtle)),child:Column(mainAxisAlignment:MainAxisAlignment.center,children:[Icon(icon,size:20,color:accent),const SizedBox(height:7),Text(label,style:TextStyle(fontSize:8,fontWeight:FontWeight.w900,letterSpacing:.9,color:c.textPrimary))])));}}
+  @override
+  Widget build(BuildContext context) {
+    final c = Theme.of(context).extension<ZenoSemanticColors>()!;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('SMART ACTIONS', style: TextStyle(fontSize: 10, fontWeight: FontWeight.w900, letterSpacing: 1.5, color: c.textSecondary)),
+        const SizedBox(height: 9),
+        Row(children: [
+          Expanded(child: _SmartAction(icon: Icons.qr_code_scanner_rounded, label: 'SCAN', accent: c.accentPrimary, onTap: () => onRoute('inventory/scanner'))),
+          const SizedBox(width: 8),
+          Expanded(child: _SmartAction(icon: Icons.receipt_long_rounded, label: 'INVOICE', accent: c.accentPurple, onTap: () => onRoute('sales/pos'))),
+          const SizedBox(width: 8),
+          Expanded(child: _SmartAction(icon: Icons.person_search_rounded, label: 'CUSTOMER', accent: c.statusSuccess, onTap: () => onRoute('customers'))),
+          const SizedBox(width: 8),
+          Expanded(child: _SmartAction(icon: Icons.auto_awesome_rounded, label: 'AI', accent: c.amberGold, onTap: () => onRoute('ai'))),
+        ]),
+      ],
+    );
+  }
+}
 
+class _SmartAction extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final Color accent;
+  final VoidCallback onTap;
+  const _SmartAction({required this.icon, required this.label, required this.accent, required this.onTap});
 
-class _InventoryHealth extends StatelessWidget {final ValueChanged<String> onRoute;const _InventoryHealth({required this.onRoute});@override Widget build(BuildContext context){final c=Theme.of(context).extension<ZenoSemanticColors>()!;return InkWell(onTap:()=>onRoute('inventory/products'),borderRadius:BorderRadius.circular(20),child:Container(padding:const EdgeInsets.all(15),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(20),border:Border.all(color:c.borderSubtle)),child:Column(children:[Row(children:[Text('INVENTORY HEALTH',style:TextStyle(fontSize:10,fontWeight:FontWeight.w900,letterSpacing:1.5,color:c.textSecondary)),const Spacer(),Icon(Icons.arrow_forward_rounded,size:16,color:c.textSecondary)]),const SizedBox(height:13),Row(children:[Expanded(child:_HealthMetric(label:'IN STOCK',value:'84%',accent:c.statusSuccess)),const SizedBox(width:8),Expanded(child:_HealthMetric(label:'LOW STOCK',value:'7',accent:c.amberGold)),const SizedBox(width:8),Expanded(child:_HealthMetric(label:'OUT',value:'2',accent:c.statusDanger))])])));}}
-class _HealthMetric extends StatelessWidget {final String label,value;final Color accent;const _HealthMetric({required this.label,required this.value,required this.accent});@override Widget build(BuildContext context){final c=Theme.of(context).extension<ZenoSemanticColors>()!;return Container(padding:const EdgeInsets.symmetric(vertical:11,horizontal:8),decoration:BoxDecoration(color:accent.withValues(alpha:.06),borderRadius:BorderRadius.circular(13),border:Border.all(color:accent.withValues(alpha:.16))),child:Column(children:[Text(value,style:TextStyle(fontSize:18,fontWeight:FontWeight.w900,color:accent)),const SizedBox(height:3),Text(label,style:TextStyle(fontSize:7,fontWeight:FontWeight.w900,letterSpacing:.8,color:c.textSecondary))]));}}
+  @override
+  Widget build(BuildContext context) {
+    final c = Theme.of(context).extension<ZenoSemanticColors>()!;
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(15),
+      child: Container(
+        height: 72,
+        decoration: BoxDecoration(color: c.bgTier2, borderRadius: BorderRadius.circular(15), border: Border.all(color: c.borderSubtle)),
+        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Icon(icon, size: 20, color: accent),
+          const SizedBox(height: 7),
+          Text(label, style: TextStyle(fontSize: 8, fontWeight: FontWeight.w900, letterSpacing: .9, color: c.textPrimary)),
+        ]),
+      ),
+    );
+  }
+}
 
+class _InventoryHealth extends StatelessWidget {
+  final ValueChanged<String> onRoute;
+  const _InventoryHealth({required this.onRoute});
 
-class _OperationsSnapshot extends StatelessWidget {final ValueChanged<String> onRoute;const _OperationsSnapshot({required this.onRoute});@override Widget build(BuildContext context){final c=Theme.of(context).extension<ZenoSemanticColors>()!;return Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text('OPERATIONS',style:TextStyle(fontSize:10,fontWeight:FontWeight.w900,letterSpacing:1.5,color:c.textSecondary)),const SizedBox(height:9),Row(children:[Expanded(child:_OpsTile(icon:Icons.pending_actions_rounded,label:'Pending',value:'14',accent:c.amberGold,onTap:()=>onRoute('orders/dashboard'))),const SizedBox(width:9),Expanded(child:_OpsTile(icon:Icons.check_circle_outline_rounded,label:'Completed',value:'96',accent:c.statusSuccess,onTap:()=>onRoute('orders/dashboard'))),const SizedBox(width:9),Expanded(child:_OpsTile(icon:Icons.payments_outlined,label:'Payments',value:'18',accent:c.accentPrimary,onTap:()=>onRoute('finance')))]));}}
-class _OpsTile extends StatelessWidget {final IconData icon;final String label,value;final Color accent;final VoidCallback onTap;const _OpsTile({required this.icon,required this.label,required this.value,required this.accent,required this.onTap});@override Widget build(BuildContext context){final c=Theme.of(context).extension<ZenoSemanticColors>()!;return InkWell(onTap:onTap,borderRadius:BorderRadius.circular(16),child:Container(padding:const EdgeInsets.symmetric(vertical:12,horizontal:8),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(16),border:Border.all(color:c.borderSubtle)),child:Column(children:[Icon(icon,size:19,color:accent),const SizedBox(height:7),Text(value,style:TextStyle(fontSize:16,fontWeight:FontWeight.w900,color:c.textPrimary)),const SizedBox(height:2),Text(label,style:TextStyle(fontSize:8,fontWeight:FontWeight.w700,color:c.textSecondary))])));}}
+  @override
+  Widget build(BuildContext context) {
+    final c = Theme.of(context).extension<ZenoSemanticColors>()!;
+    return InkWell(
+      onTap: () => onRoute('inventory/products'),
+      borderRadius: BorderRadius.circular(20),
+      child: Container(
+        padding: const EdgeInsets.all(15),
+        decoration: BoxDecoration(color: c.bgTier2, borderRadius: BorderRadius.circular(20), border: Border.all(color: c.borderSubtle)),
+        child: Column(children: [
+          Row(children: [
+            Text('INVENTORY HEALTH', style: TextStyle(fontSize: 10, fontWeight: FontWeight.w900, letterSpacing: 1.5, color: c.textSecondary)),
+            const Spacer(),
+            Icon(Icons.arrow_forward_rounded, size: 16, color: c.textSecondary),
+          ]),
+          const SizedBox(height: 13),
+          Row(children: [
+            Expanded(child: _HealthMetric(label: 'IN STOCK', value: '84%', accent: c.statusSuccess)),
+            const SizedBox(width: 8),
+            Expanded(child: _HealthMetric(label: 'LOW STOCK', value: '7', accent: c.amberGold)),
+            const SizedBox(width: 8),
+            Expanded(child: _HealthMetric(label: 'OUT', value: '2', accent: c.statusDanger)),
+          ]),
+        ]),
+      ),
+    );
+  }
+}
 
-class _CommandGrid extends StatelessWidget {final ValueChanged<String> onRoute;const _CommandGrid({required this.onRoute});@override Widget build(BuildContext context){final c=Theme.of(context).extension<ZenoSemanticColors>()!;final items=[('New Bill',Icons.receipt_long_rounded,'sales/pos',c.accentPrimary),('Products',Icons.inventory_2_outlined,'inventory',c.accentPrimary),('Customers',Icons.people_alt_outlined,'crm',c.statusSuccess),('Deliveries',Icons.local_shipping_outlined,'orders/dashboard',c.amberGold),('Reports',Icons.insights_rounded,'reports',c.accentPrimary),('AI Center',Icons.auto_awesome_rounded,'ai',c.accentPrimary)];return Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text('COMMANDS',style:TextStyle(fontSize:10,fontWeight:FontWeight.w900,letterSpacing:1.5,color:c.textSecondary)),const SizedBox(height:9),GridView.builder(shrinkWrap:true,physics:const NeverScrollableScrollPhysics(),itemCount:items.length,gridDelegate:const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount:3,crossAxisSpacing:9,mainAxisSpacing:9,childAspectRatio:1.18),itemBuilder:(_,i){final x=items[i];return InkWell(onTap:()=>onRoute(x.$3),borderRadius:BorderRadius.circular(15),child:Container(decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(15),border:Border.all(color:c.borderSubtle)),child:Column(mainAxisAlignment:MainAxisAlignment.center,children:[Icon(x.$2,size:22,color:x.$4),const SizedBox(height:7),Text(x.$1,textAlign:TextAlign.center,style:TextStyle(fontSize:9,fontWeight:FontWeight.w800,color:c.textPrimary))])));})]);}}
+class _HealthMetric extends StatelessWidget {
+  final String label;
+  final String value;
+  final Color accent;
+  const _HealthMetric({required this.label, required this.value, required this.accent});
 
-class _SmartAlerts extends StatelessWidget {final ValueChanged<String> onRoute;const _SmartAlerts({required this.onRoute});@override Widget build(BuildContext context){final c=Theme.of(context).extension<ZenoSemanticColors>()!;final items=[('7 products need restocking','Inventory','inventory',Icons.inventory_2_outlined,c.amberGold),('12 deliveries are active','Delivery','orders/dashboard',Icons.local_shipping_outlined,c.accentPrimary),('3 invoices need attention','Billing','sales/pos',Icons.receipt_long_rounded,c.statusDanger)];return Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Row(mainAxisAlignment:MainAxisAlignment.spaceBetween,children:[Text('SMART ALERTS',style:TextStyle(fontSize:10,fontWeight:FontWeight.w900,letterSpacing:1.5,color:c.textSecondary)),Text('LIVE',style:TextStyle(fontSize:8,fontWeight:FontWeight.w900,color:c.statusSuccess))]),const SizedBox(height:9),...items.map((x)=>Padding(padding:const EdgeInsets.only(bottom:7),child:InkWell(onTap:()=>onRoute(x.$3),borderRadius:BorderRadius.circular(14),child:Container(padding:const EdgeInsets.all(12),decoration:BoxDecoration(color:c.bgTier2,borderRadius:BorderRadius.circular(14),border:Border.all(color:c.borderSubtle)),child:Row(children:[Container(width:34,height:34,decoration:BoxDecoration(color:x.$5.withOpacity(.10),borderRadius:BorderRadius.circular(10)),child:Icon(x.$4,size:18,color:x.$5)),const SizedBox(width:10),Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text(x.$1,style:TextStyle(fontSize:11,fontWeight:FontWeight.w800,color:c.textPrimary)),const SizedBox(height:3),Text(x.$2,style:TextStyle(fontSize:9,color:c.textSecondary))])),Icon(Icons.chevron_right_rounded,size:18,color:c.textDisabled)]))))]);}}
+  @override
+  Widget build(BuildContext context) {
+    final c = Theme.of(context).extension<ZenoSemanticColors>()!;
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 11, horizontal: 8),
+      decoration: BoxDecoration(color: accent.withValues(alpha: .06), borderRadius: BorderRadius.circular(13), border: Border.all(color: accent.withValues(alpha: .16))),
+      child: Column(children: [
+        Text(value, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: accent)),
+        const SizedBox(height: 3),
+        Text(label, style: TextStyle(fontSize: 7, fontWeight: FontWeight.w900, letterSpacing: .8, color: c.textSecondary)),
+      ]),
+    );
+  }
+}
 
-class _AiRecommendations extends StatelessWidget {final ValueChanged<String> onRoute;const _AiRecommendations({required this.onRoute});@override Widget build(BuildContext context){final c=Theme.of(context).extension<ZenoSemanticColors>()!;return Container(padding:const EdgeInsets.all(14),decoration:BoxDecoration(gradient:ZenoTheme.aiGlowGradient,borderRadius:BorderRadius.circular(18),border:Border.all(color:c.accentPrimary.withOpacity(.22))),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Row(children:[Icon(Icons.auto_awesome_rounded,size:17,color:c.accentPrimary),const SizedBox(width:7),Text('ZENO AI RECOMMENDATIONS',style:TextStyle(fontSize:10,fontWeight:FontWeight.w900,letterSpacing:1.2,color:c.textPrimary)),const Spacer(),Container(padding:const EdgeInsets.symmetric(horizontal:7,vertical:3),decoration:BoxDecoration(color:c.bgTier1.withOpacity(.65),borderRadius:BorderRadius.circular(20)),child:Text('AI',style:TextStyle(fontSize:8,fontWeight:FontWeight.w900,color:c.accentPrimary)))]),const SizedBox(height:11),_rec(c,'Restock fast-moving products before tomorrow','Inventory','inventory'),const SizedBox(height:7),_rec(c,'Follow up with customers who have pending orders','CRM','crm')]);}Widget _rec(ZenoSemanticColors c,String title,String tag,String route)=>InkWell(onTap:()=>onRoute(route),borderRadius:BorderRadius.circular(12),child:Container(padding:const EdgeInsets.symmetric(horizontal:10,vertical:9),decoration:BoxDecoration(color:c.bgTier1.withOpacity(.55),borderRadius:BorderRadius.circular(12)),child:Row(children:[Expanded(child:Text(title,style:TextStyle(fontSize:10,fontWeight:FontWeight.w700,color:c.textPrimary))),Text(tag,style:TextStyle(fontSize:8,fontWeight:FontWeight.w800,color:c.textSecondary)),const SizedBox(width:4),Icon(Icons.arrow_forward_ios_rounded,size:10,color:c.textDisabled)])));}
+class _OperationsSnapshot extends StatelessWidget {
+  final ValueChanged<String> onRoute;
+  const _OperationsSnapshot({required this.onRoute});
+
+  @override
+  Widget build(BuildContext context) {
+    final c = Theme.of(context).extension<ZenoSemanticColors>()!;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('OPERATIONS', style: TextStyle(fontSize: 10, fontWeight: FontWeight.w900, letterSpacing: 1.5, color: c.textSecondary)),
+        const SizedBox(height: 9),
+        Row(children: [
+          Expanded(child: _OpsTile(icon: Icons.pending_actions_rounded, label: 'Pending', value: '14', accent: c.amberGold, onTap: () => onRoute('orders/dashboard'))),
+          const SizedBox(width: 9),
+          Expanded(child: _OpsTile(icon: Icons.check_circle_outline_rounded, label: 'Completed', value: '96', accent: c.statusSuccess, onTap: () => onRoute('orders/dashboard'))),
+          const SizedBox(width: 9),
+          Expanded(child: _OpsTile(icon: Icons.payments_outlined, label: 'Payments', value: '18', accent: c.accentPrimary, onTap: () => onRoute('finance')),
+        ]),
+      ],
+    );
+  }
+}
+
+class _OpsTile extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String value;
+  final Color accent;
+  final VoidCallback onTap;
+  const _OpsTile({required this.icon, required this.label, required this.value, required this.accent, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final c = Theme.of(context).extension<ZenoSemanticColors>()!;
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+        decoration: BoxDecoration(color: c.bgTier2, borderRadius: BorderRadius.circular(16), border: Border.all(color: c.borderSubtle)),
+        child: Column(children: [
+          Icon(icon, size: 19, color: accent),
+          const SizedBox(height: 7),
+          Text(value, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w900, color: c.textPrimary)),
+          const SizedBox(height: 2),
+          Text(label, style: TextStyle(fontSize: 8, fontWeight: FontWeight.w700, color: c.textSecondary)),
+        ]),
+      ),
+    );
+  }
+}
+
+class _CommandGrid extends StatelessWidget {
+  final ValueChanged<String> onRoute;
+  const _CommandGrid({required this.onRoute});
+
+  @override
+  Widget build(BuildContext context) {
+    final c = Theme.of(context).extension<ZenoSemanticColors>()!;
+    final items = [
+      ('New Bill', Icons.receipt_long_rounded, 'sales/pos', c.accentPrimary),
+      ('Products', Icons.inventory_2_outlined, 'inventory', c.accentPrimary),
+      ('Customers', Icons.people_alt_outlined, 'crm', c.statusSuccess),
+      ('Deliveries', Icons.local_shipping_outlined, 'orders/dashboard', c.amberGold),
+      ('Reports', Icons.insights_rounded, 'reports', c.accentPrimary),
+      ('AI Center', Icons.auto_awesome_rounded, 'ai', c.accentPrimary),
+    ];
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('COMMANDS', style: TextStyle(fontSize: 10, fontWeight: FontWeight.w900, letterSpacing: 1.5, color: c.textSecondary)),
+        const SizedBox(height: 9),
+        GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: items.length,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, crossAxisSpacing: 9, mainAxisSpacing: 9, childAspectRatio: 1.18),
+          itemBuilder: (_, i) {
+            final item = items[i];
+            return InkWell(
+              onTap: () => onRoute(item.$3),
+              borderRadius: BorderRadius.circular(15),
+              child: Container(
+                decoration: BoxDecoration(color: c.bgTier2, borderRadius: BorderRadius.circular(15), border: Border.all(color: c.borderSubtle)),
+                child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  Icon(item.$2, size: 22, color: item.$4),
+                  const SizedBox(height: 7),
+                  Text(item.$1, textAlign: TextAlign.center, style: TextStyle(fontSize: 9, fontWeight: FontWeight.w800, color: c.textPrimary)),
+                ]),
+              ),
+            );
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class _SmartAlerts extends StatelessWidget {
+  final ValueChanged<String> onRoute;
+  const _SmartAlerts({required this.onRoute});
+
+  @override
+  Widget build(BuildContext context) {
+    final c = Theme.of(context).extension<ZenoSemanticColors>()!;
+    final items = [
+      ('7 products need restocking', 'Inventory', 'inventory', Icons.inventory_2_outlined, c.amberGold),
+      ('12 deliveries are active', 'Delivery', 'orders/dashboard', Icons.local_shipping_outlined, c.accentPrimary),
+      ('3 invoices need attention', 'Billing', 'sales/pos', Icons.receipt_long_rounded, c.statusDanger),
+    ];
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(children: [
+          Text('SMART ALERTS', style: TextStyle(fontSize: 10, fontWeight: FontWeight.w900, letterSpacing: 1.5, color: c.textSecondary)),
+          const Spacer(),
+          Text('LIVE', style: TextStyle(fontSize: 8, fontWeight: FontWeight.w900, color: c.statusSuccess)),
+        ]),
+        const SizedBox(height: 9),
+        ...items.map(
+          (item) => Padding(
+            padding: const EdgeInsets.only(bottom: 7),
+            child: InkWell(
+              onTap: () => onRoute(item.$3),
+              borderRadius: BorderRadius.circular(14),
+              child: Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(color: c.bgTier2, borderRadius: BorderRadius.circular(14), border: Border.all(color: c.borderSubtle)),
+                child: Row(children: [
+                  Container(width: 34, height: 34, decoration: BoxDecoration(color: item.$5.withValues(alpha: .10), borderRadius: BorderRadius.circular(10)), child: Icon(item.$4, size: 18, color: item.$5)),
+                  const SizedBox(width: 10),
+                  Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    Text(item.$1, style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: c.textPrimary)),
+                    const SizedBox(height: 3),
+                    Text(item.$2, style: TextStyle(fontSize: 9, color: c.textSecondary)),
+                  ])),
+                  Icon(Icons.chevron_right_rounded, size: 18, color: c.textDisabled),
+                ]),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _AiRecommendations extends StatelessWidget {
+  final ValueChanged<String> onRoute;
+  const _AiRecommendations({required this.onRoute});
+
+  @override
+  Widget build(BuildContext context) {
+    final c = Theme.of(context).extension<ZenoSemanticColors>()!;
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(gradient: ZenoTheme.aiGlowGradient, borderRadius: BorderRadius.circular(18), border: Border.all(color: c.accentPrimary.withValues(alpha: .22))),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(children: [
+            Icon(Icons.auto_awesome_rounded, size: 17, color: c.accentPrimary),
+            const SizedBox(width: 7),
+            Text('ZENO AI RECOMMENDATIONS', style: TextStyle(fontSize: 10, fontWeight: FontWeight.w900, letterSpacing: 1.2, color: c.textPrimary)),
+            const Spacer(),
+            Text('AI', style: TextStyle(fontSize: 8, fontWeight: FontWeight.w900, color: c.accentPrimary)),
+          ]),
+          const SizedBox(height: 11),
+          _rec(c, 'Restock fast-moving products before tomorrow', 'Inventory', 'inventory'),
+          const SizedBox(height: 7),
+          _rec(c, 'Follow up with customers who have pending orders', 'CRM', 'crm'),
+        ],
+      ),
+    );
+  }
+
+  Widget _rec(ZenoSemanticColors c, String title, String tag, String route) {
+    return InkWell(
+      onTap: () => onRoute(route),
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
+        decoration: BoxDecoration(color: c.bgTier1.withValues(alpha: .55), borderRadius: BorderRadius.circular(12)),
+        child: Row(children: [
+          Expanded(child: Text(title, style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: c.textPrimary))),
+          Text(tag, style: TextStyle(fontSize: 8, fontWeight: FontWeight.w800, color: c.textSecondary)),
+          const SizedBox(width: 4),
+          Icon(Icons.arrow_forward_ios_rounded, size: 10, color: c.textDisabled),
+        ]),
+      ),
+    );
+  }
+}
 
 class _ActionCard extends StatelessWidget {
   final IconData icon;
@@ -1221,11 +1882,7 @@ class _ActionCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: c.bgTier2.withValues(alpha: 0.92),
-          borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: c.borderSubtle),
-        ),
+        decoration: BoxDecoration(color: c.bgTier2.withValues(alpha: .92), borderRadius: BorderRadius.circular(18), border: Border.all(color: c.borderSubtle)),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Icon(icon, size: 22, color: accent),
           const SizedBox(height: 15),
@@ -1256,30 +1913,15 @@ class _WorkspaceTile extends StatelessWidget {
         onTap: onTap,
         child: Container(
           padding: const EdgeInsets.all(13),
-          decoration: BoxDecoration(
-            color: c.bgTier2.withValues(alpha: 0.84),
-            borderRadius: BorderRadius.circular(17),
-            border: Border.all(color: c.borderSubtle),
-          ),
+          decoration: BoxDecoration(color: c.bgTier2.withValues(alpha: .84), borderRadius: BorderRadius.circular(17), border: Border.all(color: c.borderSubtle)),
           child: Row(children: [
-            Container(
-              width: 42, height: 42,
-              decoration: BoxDecoration(
-                color: accent.withValues(alpha: 0.10),
-                borderRadius: BorderRadius.circular(13),
-                border: Border.all(color: accent.withValues(alpha: 0.22)),
-              ),
-              child: Icon(icon, size: 20, color: accent),
-            ),
+            Container(width: 42, height: 42, decoration: BoxDecoration(color: accent.withValues(alpha: .10), borderRadius: BorderRadius.circular(13), border: Border.all(color: accent.withValues(alpha: .22))), child: Icon(icon, size: 20, color: accent)),
             const SizedBox(width: 12),
-            Expanded(child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: c.textPrimary)),
-                const SizedBox(height: 3),
-                Text(subtitle, style: TextStyle(fontSize: 9, color: c.textSecondary)),
-              ],
-            )),
+            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(title, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: c.textPrimary)),
+              const SizedBox(height: 3),
+              Text(subtitle, style: TextStyle(fontSize: 9, color: c.textSecondary)),
+            ])),
             Icon(Icons.chevron_right_rounded, size: 19, color: c.textSecondary),
           ]),
         ),
