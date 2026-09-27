@@ -198,6 +198,6 @@ class StoreSetupController extends ChangeNotifier {
         return industryMatrix[key]!;
       }
     }
-    return ['General Retail', 'Wholesale', 'Service Point'];
+    return const <String>[];
   }
 }
