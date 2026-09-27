@@ -2,7 +2,7 @@ import 'package:zeno/features/inventory/presentation/controllers/registries/sub_
 
 class BusinessSetupConstants {
   static List<String> get mainBusinesses =>
-      businessCategoryMap.keys.toList(growable: false);
+      lockedBusinessCategories;
 
   static List<String> getSubBusinesses(String mainBusiness) {
     final key = businessCategoryMap.keys.firstWhere(
