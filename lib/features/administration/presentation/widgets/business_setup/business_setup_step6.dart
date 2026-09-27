@@ -13,6 +13,19 @@ class BusinessSetupStep6 extends StatelessWidget {
     required this.onFieldChanged,
   });
 
+  String _scaleLabel(BusinessScale scale) {
+    switch (scale) {
+      case BusinessScale.small:
+        return "SINGLE STORE";
+      case BusinessScale.growing:
+        return "MULTIPLE STORE";
+      case BusinessScale.enterprise:
+        return "ENTERPRISE";
+      case BusinessScale.none:
+        return "UNSET";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -140,14 +153,14 @@ class BusinessSetupStep6 extends StatelessWidget {
                   ),
                   borderRadius: BorderRadius.circular(6),
                 ),
-                child: const Column(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("🏪 RETAIL Optimized", style: TextStyle(fontSize: 11, color: Color(0xFF00D4FF), fontFamily: 'monospace', height: 1.6)),
-                    Text("📍 Counter-Service", style: TextStyle(fontSize: 11, color: Color(0xFF00D4FF), fontFamily: 'monospace', height: 1.6)),
-                    Text("📊 FIFO Costing", style: TextStyle(fontSize: 11, color: Color(0xFF00D4FF), fontFamily: 'monospace', height: 1.6)),
-                    Text("🔧 Standard (Predictive Disabled)", style: TextStyle(fontSize: 11, color: Color(0xFF00D4FF), fontFamily: 'monospace', height: 1.6)),
-                    Text("⚡ Direct Processing", style: TextStyle(fontSize: 11, color: Color(0xFF00D4FF), fontFamily: 'monospace', height: 1.6)),
+                    Text("🏪 ${setupData.selectedMainBusiness} Optimized", style: const TextStyle(fontSize: 11, color: Color(0xFF00D4FF), fontFamily: 'monospace', height: 1.6)),
+                    Text("🧩 ${setupData.selectedSubBusinesses.join(", ")}", style: const TextStyle(fontSize: 11, color: Color(0xFF00D4FF), fontFamily: 'monospace', height: 1.6)),
+                    Text("📍 ${setupData.operationMode}", style: const TextStyle(fontSize: 11, color: Color(0xFF00D4FF), fontFamily: 'monospace', height: 1.6)),
+                    Text("📊 ${setupData.costingMethod} Costing", style: const TextStyle(fontSize: 11, color: Color(0xFF00D4FF), fontFamily: 'monospace', height: 1.6)),
+                    Text("⚡ ${_scaleLabel(setupData.selectedScale)}", style: const TextStyle(fontSize: 11, color: Color(0xFF00D4FF), fontFamily: 'monospace', height: 1.6)),
                   ],
                 ),
               ),
