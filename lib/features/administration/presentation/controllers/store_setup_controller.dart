@@ -41,7 +41,7 @@ class StoreSetupController extends ChangeNotifier {
   /// ZENO master business architecture.
   /// WHOLESALE remains the final category by design.
   final List<String> industries =
-      businessCategoryMap.keys.toList(growable: false);
+      lockedBusinessCategories;
 
   final Map<String, List<String>> industryMatrix = businessCategoryMap;
 
