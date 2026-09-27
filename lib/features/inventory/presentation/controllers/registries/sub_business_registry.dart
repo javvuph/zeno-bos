@@ -318,6 +318,34 @@ String resolveCanonicalProfile(String profile, {String? fallback}) {
   return canonicalProfileAliases[value] ?? value;
 }
 
+/// Locked ZENO universal business architecture.
+/// Setup supports every category below; launch POS/workstation support is
+/// intentionally enabled only for Fashion.
+const List<String> lockedBusinessCategories = [
+  "FASHION",
+  "RETAIL",
+  "FOOD & BEVERAGE",
+  "HEALTHCARE",
+  "SERVICES",
+  "ELECTRONICS",
+  "FURNITURE",
+  "HARDWARE & BUILDING",
+  "AUTOMOBILE",
+  "AGRICULTURE",
+  "PET & ANIMAL",
+  "STATIONERY & OFFICE",
+  "BOOK STORE & MEDIA",
+  "TOYS & CHILDREN",
+  "SPORTS",
+  "HOME & DECOR",
+  "WHOLESALE",
+];
+
+const String launchPosBusiness = "FASHION";
+
+bool isLaunchPosBusiness(String business) =>
+    business.trim().toUpperCase() == launchPosBusiness;
+
 final Map<String, List<String>> businessCategoryMap = {
   "FASHION": fashionCanonicalProfiles,
   "RETAIL": retailCanonicalProfiles,
