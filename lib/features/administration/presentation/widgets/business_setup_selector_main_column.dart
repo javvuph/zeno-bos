@@ -7,8 +7,6 @@ class BusinessSetupMainColumn extends StatelessWidget {
   final ValueChanged<String> onSearchChanged;
   final Function(String) onMainChanged;
   final Function(String) getCategoryIcon;
-  final bool Function(String) isComingSoon;
-  final Function(BuildContext) showComingSoonToast;
 
   static const Color _kPurplePrimary = Color(0xFF667EEA);
 
@@ -20,8 +18,6 @@ class BusinessSetupMainColumn extends StatelessWidget {
     required this.onSearchChanged,
     required this.onMainChanged,
     required this.getCategoryIcon,
-    required this.isComingSoon,
-    required this.showComingSoonToast,
   });
 
   @override
@@ -79,14 +75,8 @@ class BusinessSetupMainColumn extends StatelessWidget {
               itemBuilder: (context, index) {
                 final item = items[index];
                 final isSelected = selectedMain.toUpperCase() == item.toUpperCase();
-                final comingSoon = isComingSoon(item);
-
                 return InkWell(
-                  onTap: isLocked
-                      ? null
-                      : (comingSoon
-                          ? () => showComingSoonToast(context)
-                          : () => onMainChanged(item)),
+                  onTap: isLocked ? null : () => onMainChanged(item),
                   borderRadius: BorderRadius.circular(6),
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 150),
@@ -104,7 +94,7 @@ class BusinessSetupMainColumn extends StatelessWidget {
                         Radio<bool>(
                           value: true,
                           groupValue: isSelected ? true : null,
-                          onChanged: isLocked || comingSoon
+                          onChanged: isLocked
                               ? null
                               : (_) => onMainChanged(item),
                           activeColor: _kPurplePrimary,
@@ -120,30 +110,10 @@ class BusinessSetupMainColumn extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                              color: comingSoon
-                                  ? const Color(0xFF999999)
-                                  : (isSelected ? _kPurplePrimary : const Color(0xFF333333)),
+                              color: isSelected ? _kPurplePrimary : const Color(0xFF333333),
                             ),
                           ),
                         ),
-                        if (comingSoon) ...[
-                          const SizedBox(width: 6),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                            decoration: BoxDecoration(
-                              color: const Color(0x1A999999),
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: const Text(
-                              'Coming Soon',
-                              style: TextStyle(
-                                fontSize: 9,
-                                color: Color(0xFF999999),
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                        ],
                       ],
                     ),
                   ),
