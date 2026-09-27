@@ -9,7 +9,7 @@ class BusinessSetupData extends ChangeNotifier {
   String phone = "+91";
   String email = "branch@zeno.store";
   String selectedMainBusiness = "FASHION";
-  List<String> selectedSubBusinesses = ["Clothing (Shirts, Pants, T-Shirts)", "Footwear"];
+  List<String> selectedSubBusinesses = ["Clothing", "Footwear"];
   BusinessScale selectedScale = BusinessScale.small;
 
   // Step 2: Regional & Tax
