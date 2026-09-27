@@ -52,14 +52,9 @@ class BusinessSetupStep1 extends StatelessWidget {
         return Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
-              width: 320,
-              child: identityCard,
-            ),
+            SizedBox(width: 320, child: identityCard),
             const SizedBox(width: 16),
-            Expanded(
-              child: _buildClassificationCard(),
-            ),
+            Expanded(child: _buildClassificationCard()),
           ],
         );
       },
@@ -67,10 +62,12 @@ class BusinessSetupStep1 extends StatelessWidget {
   }
 
   Widget _buildClassificationCard() {
+    final subTypes =
+        BusinessSetupConstants.getSubBusinesses(setupData.selectedMainBusiness);
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Column 1: Main Business
         Expanded(
           child: Container(
             height: 320,
@@ -89,20 +86,25 @@ class BusinessSetupStep1 extends StatelessWidget {
                     itemBuilder: (context, index) {
                       final item = BusinessSetupConstants.mainBusinesses[index];
                       final isSelected = setupData.selectedMainBusiness == item;
+
                       return InkWell(
-                        onTap: () {
-                          setupData.selectedMainBusiness = item;
-                          onFieldChanged();
-                        },
+                        onTap: () => _selectMainBusiness(item),
                         borderRadius: BorderRadius.circular(6),
                         child: Container(
-                          padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 6,
+                            horizontal: 8,
+                          ),
                           margin: const EdgeInsets.symmetric(vertical: 2),
                           decoration: BoxDecoration(
-                            color: isSelected ? const Color(0x1A667EEA) : Colors.transparent,
+                            color: isSelected
+                                ? const Color(0x1A667EEA)
+                                : Colors.transparent,
                             borderRadius: BorderRadius.circular(6),
                             border: Border.all(
-                              color: isSelected ? BusinessSetupTheme.primaryPurple : Colors.transparent,
+                              color: isSelected
+                                  ? BusinessSetupTheme.primaryPurple
+                                  : Colors.transparent,
                             ),
                           ),
                           child: Row(
@@ -111,11 +113,11 @@ class BusinessSetupStep1 extends StatelessWidget {
                                 value: item,
                                 groupValue: setupData.selectedMainBusiness,
                                 onChanged: (v) {
-                                  setupData.selectedMainBusiness = v!;
-                                  onFieldChanged();
+                                  if (v != null) _selectMainBusiness(v);
                                 },
                                 activeColor: BusinessSetupTheme.primaryPurple,
-                                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                materialTapTargetSize:
+                                    MaterialTapTargetSize.shrinkWrap,
                                 visualDensity: VisualDensity.compact,
                               ),
                               const SizedBox(width: 4),
@@ -123,8 +125,12 @@ class BusinessSetupStep1 extends StatelessWidget {
                                 item,
                                 style: TextStyle(
                                   fontSize: 11,
-                                  fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                                  color: isSelected ? BusinessSetupTheme.primaryPurple : BusinessSetupTheme.textDark,
+                                  fontWeight: isSelected
+                                      ? FontWeight.w700
+                                      : FontWeight.w500,
+                                  color: isSelected
+                                      ? BusinessSetupTheme.primaryPurple
+                                      : BusinessSetupTheme.textDark,
                                 ),
                               ),
                             ],
@@ -139,8 +145,6 @@ class BusinessSetupStep1 extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 12),
-
-        // Column 2: Sub-Business Type
         Expanded(
           child: Container(
             height: 320,
@@ -150,76 +154,87 @@ class BusinessSetupStep1 extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.all(12),
-                  child: BusinessSetupTheme.sectionTitle("SUB-BUSINESS TYPE *"),
+                  child: BusinessSetupTheme.sectionTitle(
+                    "SUB-BUSINESS TYPE *",
+                  ),
                 ),
                 Expanded(
-                  child: ListView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    itemCount: BusinessSetupConstants.fashionSubTypes.length,
-                    itemBuilder: (context, index) {
-                      final item = BusinessSetupConstants.fashionSubTypes[index];
-                      final isSelected = setupData.selectedSubBusinesses.contains(item);
-                      return InkWell(
-                        onTap: () {
-                          if (isSelected) {
-                            setupData.selectedSubBusinesses.remove(item);
-                          } else {
-                            setupData.selectedSubBusinesses.add(item);
-                          }
-                          onFieldChanged();
-                        },
-                        borderRadius: BorderRadius.circular(6),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
-                          margin: const EdgeInsets.symmetric(vertical: 2),
-                          decoration: BoxDecoration(
-                            color: isSelected ? const Color(0x1A667EEA) : Colors.transparent,
-                            borderRadius: BorderRadius.circular(6),
-                            border: Border.all(
-                              color: isSelected ? BusinessSetupTheme.primaryPurple : Colors.transparent,
-                            ),
+                  child: subTypes.isEmpty
+                      ? const Center(
+                          child: Text(
+                            "No sub-business types configured",
+                            style: TextStyle(fontSize: 11),
                           ),
-                          child: Row(
-                            children: [
-                              Checkbox(
-                                value: isSelected,
-                                onChanged: (_) {
-                                  if (isSelected) {
-                                    setupData.selectedSubBusinesses.remove(item);
-                                  } else {
-                                    setupData.selectedSubBusinesses.add(item);
-                                  }
-                                  onFieldChanged();
-                                },
-                                activeColor: BusinessSetupTheme.primaryPurple,
-                                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                visualDensity: VisualDensity.compact,
-                              ),
-                              const SizedBox(width: 4),
-                              Expanded(
-                                child: Text(
-                                  item,
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                                    color: isSelected ? BusinessSetupTheme.primaryPurple : BusinessSetupTheme.textDark,
+                        )
+                      : ListView.builder(
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          itemCount: subTypes.length,
+                          itemBuilder: (context, index) {
+                            final item = subTypes[index];
+                            final isSelected =
+                                setupData.selectedSubBusinesses.contains(item);
+
+                            return InkWell(
+                              onTap: () => _toggleSubBusiness(item),
+                              borderRadius: BorderRadius.circular(6),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 6,
+                                  horizontal: 8,
+                                ),
+                                margin:
+                                    const EdgeInsets.symmetric(vertical: 2),
+                                decoration: BoxDecoration(
+                                  color: isSelected
+                                      ? const Color(0x1A667EEA)
+                                      : Colors.transparent,
+                                  borderRadius: BorderRadius.circular(6),
+                                  border: Border.all(
+                                    color: isSelected
+                                        ? BusinessSetupTheme.primaryPurple
+                                        : Colors.transparent,
                                   ),
                                 ),
+                                child: Row(
+                                  children: [
+                                    Checkbox(
+                                      value: isSelected,
+                                      onChanged: (_) =>
+                                          _toggleSubBusiness(item),
+                                      activeColor:
+                                          BusinessSetupTheme.primaryPurple,
+                                      materialTapTargetSize:
+                                          MaterialTapTargetSize.shrinkWrap,
+                                      visualDensity: VisualDensity.compact,
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Expanded(
+                                      child: Text(
+                                        item,
+                                        style: TextStyle(
+                                          fontSize: 11,
+                                          fontWeight: isSelected
+                                              ? FontWeight.w700
+                                              : FontWeight.w500,
+                                          color: isSelected
+                                              ? BusinessSetupTheme
+                                                  .primaryPurple
+                                              : BusinessSetupTheme.textDark,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ],
-                          ),
+                            );
+                          },
                         ),
-                      );
-                    },
-                  ),
                 ),
               ],
             ),
           ),
         ),
         const SizedBox(width: 12),
-
-        // Column 3: Business Scale
         Expanded(
           child: Container(
             height: 320,
@@ -235,11 +250,23 @@ class BusinessSetupStep1 extends StatelessWidget {
                   child: ListView(
                     padding: const EdgeInsets.all(8),
                     children: [
-                      _buildScaleCard("⭕ SMALL", "1 Store / Village", BusinessScale.small),
+                      _buildScaleCard(
+                        "🏪 SINGLE STORE",
+                        "1 Store / Single Location",
+                        BusinessScale.small,
+                      ),
                       const SizedBox(height: 8),
-                      _buildScaleCard("📊 GROWING", "2-3 Branches", BusinessScale.growing),
+                      _buildScaleCard(
+                        "🏬 MULTIPLE STORE",
+                        "Multiple Stores / Branches",
+                        BusinessScale.growing,
+                      ),
                       const SizedBox(height: 8),
-                      _buildScaleCard("🏢 ENTERPRISE", "Multi-Chain & HQ", BusinessScale.enterprise),
+                      _buildScaleCard(
+                        "🏢 ENTERPRISE",
+                        "Enterprise / Chain / HQ",
+                        BusinessScale.enterprise,
+                      ),
                     ],
                   ),
                 ),
@@ -251,8 +278,37 @@ class BusinessSetupStep1 extends StatelessWidget {
     );
   }
 
-  Widget _buildScaleCard(String title, String subtitle, BusinessScale scale) {
+  void _selectMainBusiness(String business) {
+    setupData.selectedMainBusiness = business;
+
+    final validSubTypes = BusinessSetupConstants.getSubBusinesses(business);
+    setupData.selectedSubBusinesses = setupData.selectedSubBusinesses
+        .where(validSubTypes.contains)
+        .toList();
+
+    if (setupData.selectedSubBusinesses.isEmpty && validSubTypes.isNotEmpty) {
+      setupData.selectedSubBusinesses = [validSubTypes.first];
+    }
+
+    onFieldChanged();
+  }
+
+  void _toggleSubBusiness(String item) {
+    if (setupData.selectedSubBusinesses.contains(item)) {
+      setupData.selectedSubBusinesses.remove(item);
+    } else {
+      setupData.selectedSubBusinesses.add(item);
+    }
+    onFieldChanged();
+  }
+
+  Widget _buildScaleCard(
+    String title,
+    String subtitle,
+    BusinessScale scale,
+  ) {
     final isSelected = setupData.selectedScale == scale;
+
     return InkWell(
       onTap: () {
         setupData.selectedScale = scale;
@@ -262,9 +318,13 @@ class BusinessSetupStep1 extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0x1A667EEA) : Colors.white,
+          color: isSelected
+              ? const Color(0x1A667EEA)
+              : Colors.white,
           border: Border.all(
-            color: isSelected ? BusinessSetupTheme.primaryPurple : const Color(0x4D667EEA),
+            color: isSelected
+                ? BusinessSetupTheme.primaryPurple
+                : const Color(0x4D667EEA),
             width: isSelected ? 2 : 1,
           ),
           borderRadius: BorderRadius.circular(8),
@@ -276,13 +336,19 @@ class BusinessSetupStep1 extends StatelessWidget {
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w700,
-                color: isSelected ? BusinessSetupTheme.primaryPurple : BusinessSetupTheme.textDark,
+                color: isSelected
+                    ? BusinessSetupTheme.primaryPurple
+                    : BusinessSetupTheme.textDark,
               ),
             ),
             const SizedBox(height: 2),
             Text(
               subtitle,
-              style: const TextStyle(fontSize: 10, color: BusinessSetupTheme.textMuted),
+              style: const TextStyle(
+                fontSize: 10,
+                color: BusinessSetupTheme.textMuted,
+              ),
+              textAlign: TextAlign.center,
             ),
           ],
         ),
