@@ -143,12 +143,12 @@ class BusinessSetupScaleColumn extends StatelessWidget {
   Widget build(BuildContext context) {
     final scaleOptions = [
       {
-        "key": "SMALL",
+        "key": "SINGLE STORE",
         "title": "🏪 SINGLE STORE",
         "subtitle": "One store / one operating location",
       },
       {
-        "key": "GROWING",
+        "key": "MULTIPLE STORE",
         "title": "🏬 MULTIPLE STORE",
         "subtitle": "Multiple stores / branches",
       },
@@ -183,7 +183,10 @@ class BusinessSetupScaleColumn extends StatelessWidget {
                 final key = option["key"] as String;
                 final title = option["title"] as String;
                 final subtitle = option["subtitle"] as String;
-                final isSelected = selectedScale.toUpperCase() == key;
+                final normalizedScale = selectedScale.toUpperCase();
+                final isSelected = normalizedScale == key ||
+                    (key == "SINGLE STORE" && normalizedScale == "SMALL") ||
+                    (key == "MULTIPLE STORE" && normalizedScale == "GROWING");
 
                 return InkWell(
                   onTap: isLocked ? null : () => onScaleChanged(key),
