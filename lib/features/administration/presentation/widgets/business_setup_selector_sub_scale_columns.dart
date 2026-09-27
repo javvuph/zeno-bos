@@ -144,18 +144,18 @@ class BusinessSetupScaleColumn extends StatelessWidget {
     final scaleOptions = [
       {
         "key": "SMALL",
-        "title": "⭕ SMALL",
-        "subtitle": "1 Store / Village",
+        "title": "🏪 SINGLE STORE",
+        "subtitle": "One store / one operating location",
       },
       {
         "key": "GROWING",
-        "title": "📊 GROWING",
-        "subtitle": "2-3 Branches",
+        "title": "🏬 MULTIPLE STORE",
+        "subtitle": "Multiple stores / branches",
       },
       {
         "key": "ENTERPRISE",
         "title": "🏢 ENTERPRISE",
-        "subtitle": "Multi-Chain & HQ",
+        "subtitle": "Multi-store / HQ operations",
       },
     ];
 
