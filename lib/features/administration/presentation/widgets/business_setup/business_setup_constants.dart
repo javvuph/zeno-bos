@@ -1,26 +1,16 @@
-class BusinessSetupConstants {
-  static const List<String> mainBusinesses = [
-    "FASHION",
-    "RETAIL",
-    "FOOD & BEVERAGE",
-    "HEALTHCARE",
-    "SERVICES",
-    "WHOLESALE",
-    "ELECTRONICS",
-    "FURNITURE",
-  ];
+import 'package:zeno/features/inventory/presentation/controllers/registries/sub_business_registry.dart';
 
-  static const List<String> fashionSubTypes = [
-    "Clothing (Shirts, Pants, T-Shirts)",
-    "Footwear",
-    "Watches",
-    "Eyewear",
-    "Bags & Luggage",
-    "Jewelry & Metals",
-    "Perfumes & Cosmetics",
-    "Boutique",
-    "Bridal Wear",
-  ];
+class BusinessSetupConstants {
+  static List<String> get mainBusinesses =>
+      businessCategoryMap.keys.toList(growable: false);
+
+  static List<String> getSubBusinesses(String mainBusiness) {
+    final key = businessCategoryMap.keys.firstWhere(
+      (k) => k.toUpperCase() == mainBusiness.toUpperCase(),
+      orElse: () => mainBusiness,
+    );
+    return List.unmodifiable(businessCategoryMap[key] ?? const <String>[]);
+  }
 
   static const List<String> terminalTypes = [
     "Terminal 1",
