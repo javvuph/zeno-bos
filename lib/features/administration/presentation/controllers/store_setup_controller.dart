@@ -38,33 +38,19 @@ class StoreSetupController extends ChangeNotifier {
 
   List<StoreBranch> get stores => List.unmodifiable(_stores);
 
-  final List<String> industries = [
-    'RETAIL',
-    'FOOD & BEVERAGE',
-    'FASHION',
-    'HEALTHCARE',
-    'SERVICES',
-    'WHOLESALE',
-    'ELECTRONICS',
-    'FURNITURE',
-    'HARDWARE',
-    'AUTOMOBILE',
-    'AGRICULTURE',
-    'PET SHOP',
-    'STATIONERY',
-    'BOOK STORE',
-    'TOY STORE',
-    'SPORTS STORE',
-    'HOME DECOR',
-    'GENERAL / STANDARD'
-  ];
+  /// ZENO master business architecture.
+  /// WHOLESALE remains the final category by design.
+  final List<String> industries =
+      businessCategoryMap.keys.toList(growable: false);
 
   final Map<String, List<String>> industryMatrix = businessCategoryMap;
 
+  /// User-facing scale labels. Internal StoreBranch compatibility remains
+  /// SMALL/GROWING/ENTERPRISE elsewhere in the current codebase.
   final List<String> businessSizes = [
-    'SMALL',
-    'GROWING',
-    'ENTERPRISE'
+    'SINGLE STORE',
+    'MULTIPLE STORE',
+    'ENTERPRISE',
   ];
 
   final List<String> operationModes = [
