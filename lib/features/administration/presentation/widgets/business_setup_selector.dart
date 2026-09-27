@@ -117,8 +117,6 @@ class _BusinessSetupSelectorState extends State<BusinessSetupSelector> {
                 onSearchChanged: (v) => setState(() => _mainSearchQuery = v),
                 onMainChanged: widget.onMainChanged,
                 getCategoryIcon: _getCategoryIcon,
-                isComingSoon: _isComingSoon,
-                showComingSoonToast: _showComingSoonToast,
               ),
             ),
             const SizedBox(width: 16),
