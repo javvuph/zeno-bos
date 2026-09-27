@@ -16,6 +16,19 @@ class BusinessSetupStep5 extends StatelessWidget {
     required this.onFieldChanged,
   });
 
+  String _scaleLabel(BusinessScale scale) {
+    switch (scale) {
+      case BusinessScale.small:
+        return "SINGLE STORE";
+      case BusinessScale.growing:
+        return "MULTIPLE STORE";
+      case BusinessScale.enterprise:
+        return "ENTERPRISE";
+      case BusinessScale.none:
+        return "UNSET";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -43,9 +56,9 @@ class BusinessSetupStep5 extends StatelessWidget {
                   ),
                   borderRadius: BorderRadius.circular(6),
                 ),
-                child: const Text(
-                  "Staff Accounts: 0 of 10 Used (GROWING Scale)",
-                  style: TextStyle(
+                child: Text(
+                  "Staff Accounts: 0 of 10 Used (${_scaleLabel(setupData.selectedScale)} Scale)",
+                  style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
                     color: BusinessSetupTheme.primaryPurple,
