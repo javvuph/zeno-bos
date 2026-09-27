@@ -57,72 +57,17 @@ class _BusinessSetupSelectorState extends State<BusinessSetupSelector> {
     return '🏪';
   }
 
-  List<String> _getFashionSubTypes() {
-    return [
-      "Clothing (Shirts, Pants, T-Shirts)",
-      "Footwear",
-      "Watches",
-      "Eyewear",
-      "Bags & Luggage",
-      "Jewelry & Metals",
-      "Perfumes & Cosmetics",
-      "Boutique",
-      "Bridal Wear",
-      "Accessories",
-      "Innerwear",
-      "Kids Fashion",
-      "Sportswear",
-    ];
-  }
-
-  bool _isComingSoon(String mainBusiness) {
-    final name = mainBusiness.toUpperCase();
-    const supportedKeywords = ['FASHION', 'RETAIL', 'FOOD', 'BEVERAGE', 'HEALTH'];
-    return !supportedKeywords.any((k) => name.contains(k));
-  }
-
-  void _showComingSoonToast(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(
-          "This workstation is launching in the next update. "
-          "Please select Fashion, Retail, or F&B for the current release.",
-        ),
-        duration: Duration(seconds: 3),
-      ),
-    );
-  }
-
   bool _isSubSelected(String subItem) {
-    if (widget.enabledSubs.contains(subItem)) return true;
-    if (subItem.startsWith("Clothing") &&
-        (widget.enabledSubs.contains("Clothing") ||
-         widget.enabledSubs.contains("Clothing (Shirts, Pants, T-Shirts)"))) {
-      return true;
-    }
-    return false;
+    return widget.enabledSubs.contains(subItem);
   }
 
   void _handleSubToggle(String subItem) {
-    if (subItem.startsWith("Clothing")) {
-      if (widget.enabledSubs.contains("Clothing")) {
-        widget.onSubToggled("Clothing");
-      } else if (widget.enabledSubs.contains("Clothing (Shirts, Pants, T-Shirts)")) {
-        widget.onSubToggled("Clothing (Shirts, Pants, T-Shirts)");
-      } else {
-        widget.onSubToggled("Clothing (Shirts, Pants, T-Shirts)");
-      }
-    } else {
-      widget.onSubToggled(subItem);
-    }
+    widget.onSubToggled(subItem);
   }
 
   @override
   Widget build(BuildContext context) {
-    final isFashion = widget.selectedMain.toUpperCase() == "FASHION";
-    final effectiveSubBusinesses = isFashion
-        ? _getFashionSubTypes()
-        : widget.subBusinesses;
+    final effectiveSubBusinesses = widget.subBusinesses;
 
     final filteredMain = widget.mainBusinesses
         .where((m) => m.toLowerCase().contains(_mainSearchQuery.toLowerCase()))
@@ -143,8 +88,6 @@ class _BusinessSetupSelectorState extends State<BusinessSetupSelector> {
                 onSearchChanged: (v) => setState(() => _mainSearchQuery = v),
                 onMainChanged: widget.onMainChanged,
                 getCategoryIcon: _getCategoryIcon,
-                isComingSoon: _isComingSoon,
-                showComingSoonToast: _showComingSoonToast,
               ),
               const SizedBox(height: 16),
               BusinessSetupSubColumn(
